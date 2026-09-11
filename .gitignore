@@ -17,6 +17,9 @@ artifacts/
 !artifacts/
 !artifacts/projection/
 !artifacts/projection/CmdletModel.json
+!artifacts/generated-normalized/
+!artifacts/generated-normalized/dns-records/
+!artifacts/generated-normalized/dns-records/*.json
 
 # Local module build copy (recreated by the test runner)
 module/**/*.dll

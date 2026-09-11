@@ -1,0 +1,745 @@
+{
+  "operationId": "dns-records-for-a-zone-list-dns-records",
+  "method": "GET",
+  "pathTemplate": "/zones/{zone_id}/dns_records",
+  "resourcePath": [
+    "dns",
+    "records"
+  ],
+  "scopeBindings": [
+    {
+      "parameterName": "zone_id",
+      "scopeType": "Zone",
+      "role": "Parent"
+    }
+  ],
+  "operationSemantic": {
+    "kind": "List",
+    "source": "OperationIdHeuristic",
+    "confidence": "High"
+  },
+  "parameters": [
+    {
+      "name": "zone_id",
+      "location": "path",
+      "required": true,
+      "allowsNull": false,
+      "nullPolicy": "reject-null",
+      "schema": "dns-records_identifier",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": true,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "comment",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_DADF1CBA58A7",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "comment.absent",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_0268C81DE8BC",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "comment.contains",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_CB9B873411E3",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "comment.endswith",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_477C6610239F",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "comment.exact",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_D7D2A756A1C3",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "comment.present",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_CE977A340E3B",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "comment.startswith",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_53242276CD45",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "content",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_50357BE0078D",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "content.contains",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_41743DF328F8",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "content.endswith",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_65640098A447",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "content.exact",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_D211DFAC57E3",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "content.startswith",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_2D82801D8DFC",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "direction",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "defaultValue": "asc",
+      "nullPolicy": "omit",
+      "schema": "dns-records_direction",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "include_shadow_metadata",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "defaultValue": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_7CF1AC347EFF",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/components/parameters/dns-records_include_shadow_metadata"
+    },
+    {
+      "name": "match",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "defaultValue": "all",
+      "nullPolicy": "omit",
+      "schema": "dns-records_match",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "name",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_DBF19B766020",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "name.contains",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_D8DFFBBF4254",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "name.endswith",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_7B841D75B0E6",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "name.exact",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_106347877B97",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "name.startswith",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_BD4D2AF09C0B",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "order",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "defaultValue": "type",
+      "nullPolicy": "omit",
+      "schema": "dns-records_order",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "page",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "defaultValue": 1,
+      "nullPolicy": "omit",
+      "schema": "dns-records_page",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "per_page",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "defaultValue": 100,
+      "nullPolicy": "omit",
+      "schema": "dns-records_per_page",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "proxied",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "defaultValue": false,
+      "nullPolicy": "omit",
+      "schema": "dns-records_proxied",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "search",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "dns-records_search",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "shadowed_by_name",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_93F17A9F097F",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "shadowing_name",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_07001EAED8D0",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "tag",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_EBBBC6B74451",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "tag.absent",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_7E27C06946CE",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "tag.contains",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_AFDB21C3B17D",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "tag.endswith",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_D0A72DEB4547",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "tag.exact",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_AD5FB713CC6D",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "tag.present",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_C05A78CF07F6",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "tag.startswith",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_7088CC9530E7",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "tag_match",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "defaultValue": "all",
+      "nullPolicy": "omit",
+      "schema": "dns-records_tag_match",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    },
+    {
+      "name": "type",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "nullPolicy": "omit",
+      "schema": "dns-records_type",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records/get/parameters"
+    }
+  ],
+  "responses": [
+    {
+      "statusSelector": {
+        "kind": "Exact",
+        "value": "200"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "dns-records_dns_response_collection",
+          "envelopePolicy": "CloudflareResult",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    },
+    {
+      "statusSelector": {
+        "kind": "Class",
+        "value": "4XX"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "Inline_C101411989D0",
+          "envelopePolicy": "ErrorEnvelope",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    }
+  ],
+  "pagination": {
+    "strategy": "V4PagePaginationArray",
+    "requestFields": [
+      "page",
+      "per_page"
+    ],
+    "responseFields": [
+      "result",
+      "result_info"
+    ],
+    "nextPageRule": "page \u002B 1",
+    "stopRule": "empty result page",
+    "evidence": "query page/per_page plus result collection schema"
+  },
+  "sourceLocation": "#/paths/~1zones~1{zone_id}~1dns_records/get",
+  "correctionTrace": []
+}

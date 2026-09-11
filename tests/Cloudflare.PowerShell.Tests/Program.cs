@@ -12,6 +12,7 @@ var tests = new (string Name, Action Run)[]
     ("delete has no body", TestDelete),
     ("put and patch bindings", TestPutPatch),
     ("omitted versus explicit null", TestPresence),
+    ("presence-aware optional and typed union", TestOptionalAndUnion),
     ("stable error contract", TestErrors)
 };
 
@@ -111,6 +112,43 @@ static void TestPresence()
     True(!omitted.ContainsKey("content"));
     True(explicitNull.ContainsKey("content"));
     True(explicitNull.ToJsonString().Contains("\"content\":null", StringComparison.Ordinal));
+}
+
+static void TestOptionalAndUnion()
+{
+    var omitted = Optional<string?>.Omitted;
+    var explicitNull = Optional<string?>.From(null);
+    var value = Optional<string?>.From("value");
+    True(!omitted.IsSpecified);
+    True(explicitNull.IsSpecified && explicitNull.Value is null);
+    True(value.IsSpecified && value.Value == "value");
+    static JsonObject SerializeOptional(Optional<string?> optional)
+    {
+        var json = new JsonObject();
+        if (optional.IsSpecified) json["field"] = optional.Value;
+        return json;
+    }
+    True(!SerializeOptional(omitted).ContainsKey("field"));
+    True(SerializeOptional(explicitNull).ContainsKey("field") && SerializeOptional(explicitNull)["field"] is null);
+    Equal("value", SerializeOptional(value)["field"]!.GetValue<string>());
+
+    var a = new CfARecordInput
+    {
+        Name = Optional<string?>.From("example.com"),
+        Ttl = Optional<int>.From(300),
+        Content = Optional<string?>.From("198.51.100.4")
+    };
+    Equal("A", a.Type);
+    var json = a.ToJson().ToJsonString();
+    True(json.Contains("\"type\":\"A\"", StringComparison.Ordinal));
+    True(!json.Contains("priority", StringComparison.Ordinal));
+
+    var mx = new CfMxRecordInput { Priority = Optional<int>.From(10) };
+    Equal("MX", mx.Type);
+    True(mx.ToJson().ContainsKey("priority"));
+
+    var variants = new CfDnsRecordInput[] { new CfARecordInput(), new CfMxRecordInput(), new CfCaaRecordInput(), new CfHttpsRecordInput(), new CfSvcbRecordInput() };
+    Equal("A,CAA,HTTPS,MX,SVCB", string.Join(',', variants.Select(x => x.Type).OrderBy(x => x, StringComparer.Ordinal)));
 }
 
 static void TestErrors()

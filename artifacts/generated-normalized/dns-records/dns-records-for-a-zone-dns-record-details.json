@@ -1,0 +1,125 @@
+{
+  "operationId": "dns-records-for-a-zone-dns-record-details",
+  "method": "GET",
+  "pathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+  "resourcePath": [
+    "dns",
+    "records"
+  ],
+  "scopeBindings": [
+    {
+      "parameterName": "dns_record_id",
+      "scopeType": "DnsRecord",
+      "role": "Primary"
+    },
+    {
+      "parameterName": "zone_id",
+      "scopeType": "Zone",
+      "role": "Parent"
+    }
+  ],
+  "operationSemantic": {
+    "kind": "Get",
+    "source": "OperationIdHeuristic",
+    "confidence": "High"
+  },
+  "parameters": [
+    {
+      "name": "dns_record_id",
+      "location": "path",
+      "required": true,
+      "allowsNull": false,
+      "nullPolicy": "reject-null",
+      "schema": "dns-records_identifier",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": true,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records~1{dns_record_id}/get/parameters"
+    },
+    {
+      "name": "zone_id",
+      "location": "path",
+      "required": true,
+      "allowsNull": false,
+      "nullPolicy": "reject-null",
+      "schema": "dns-records_identifier",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": true,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1zones~1{zone_id}~1dns_records~1{dns_record_id}/get/parameters"
+    },
+    {
+      "name": "include_shadow_metadata",
+      "location": "query",
+      "required": false,
+      "allowsNull": false,
+      "defaultValue": false,
+      "nullPolicy": "omit",
+      "schema": "Inline_FC261D0FF8EE",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/components/parameters/dns-records_include_shadow_metadata"
+    }
+  ],
+  "responses": [
+    {
+      "statusSelector": {
+        "kind": "Exact",
+        "value": "200"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "dns-records_dns_response_single",
+          "envelopePolicy": "CloudflareResult",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    },
+    {
+      "statusSelector": {
+        "kind": "Class",
+        "value": "4XX"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "Inline_F8F16F1E05F9",
+          "envelopePolicy": "ErrorEnvelope",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    }
+  ],
+  "pagination": {
+    "strategy": "SinglePage",
+    "requestFields": [],
+    "responseFields": [],
+    "nextPageRule": "",
+    "stopRule": "single response",
+    "evidence": "no recognized page-array pattern"
+  },
+  "sourceLocation": "#/paths/~1zones~1{zone_id}~1dns_records~1{dns_record_id}/get",
+  "correctionTrace": []
+}

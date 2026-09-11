@@ -48,7 +48,10 @@ if ([P1ModuleMockHandler]::Requests[0].RequestUri.Query -notmatch 'page=1') { th
 
 [P1ModuleMockHandler]::Reset()
 $handler = [P1ModuleMockHandler]::new()
-$typedInput = [Cloudflare.PowerShell.CfDnsRecordInput]@{ Type = 'A'; Name = 'example.com'; Ttl = 300; Content = '198.51.100.4' }
+$typedInput = [Cloudflare.PowerShell.CfARecordInput]::new()
+$typedInput.Name = [Cloudflare.PowerShell.Optional[string]]::From('example.com')
+$typedInput.Ttl = [Cloudflare.PowerShell.Optional[int]]::From(300)
+$typedInput.Content = [Cloudflare.PowerShell.Optional[string]]::From('198.51.100.4')
 $created = New-CfDnsRecord -ZoneId zone -Record $typedInput -BaseUrl 'https://mock.test/client/v4/' -Token token -Handler $handler -Confirm:$false
 if ($created.Id -ne 'created') { throw 'New-CfDnsRecord did not unwrap typed output.' }
 if ([P1ModuleMockHandler]::Bodies[0] -notmatch '"type":"A"') { throw 'Create body missing discriminator.' }

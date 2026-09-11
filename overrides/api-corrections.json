@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "match": { "operationId": "dns-records-for-a-zone-delete-dns-record" },
+      "actions": {
+        "requestBody": {
+          "declaredContract": true,
+          "effectivePresence": "absent",
+          "observedCorrection": "wrapper-does-not-send-body"
+        }
+      },
+      "reason": "Schema declares a request body but official wrappers send DELETE without a body.",
+      "source": "official TypeScript/Python/Go wrapper comparison"
+    }
+  ]
+}

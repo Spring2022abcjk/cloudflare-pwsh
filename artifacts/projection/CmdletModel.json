@@ -1,69 +1,681 @@
 [
   {
     "CmdletName": "Get-CfDnsRecord",
-    "OperationId": null,
-    "Method": "MULTI",
-    "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
-    "ParameterSet": "Replace,Edit",
     "OperationBindings": [
       {
         "OperationId": "dns-records-for-a-zone-dns-record-details",
-        "Method": "GET",
+        "HttpMethod": "GET",
         "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
-        "ParameterSet": null
+        "PathParameters": [
+          "dns_record_id",
+          "zone_id"
+        ],
+        "QueryParameters": [
+          "include_shadow_metadata"
+        ],
+        "BodyModel": null
       },
       {
         "OperationId": "dns-records-for-a-zone-list-dns-records",
-        "Method": "GET",
+        "HttpMethod": "GET",
         "PathTemplate": "/zones/{zone_id}/dns_records",
-        "ParameterSet": null
+        "PathParameters": [
+          "zone_id"
+        ],
+        "QueryParameters": [
+          "comment",
+          "comment.absent",
+          "comment.contains",
+          "comment.endswith",
+          "comment.exact",
+          "comment.present",
+          "comment.startswith",
+          "content",
+          "content.contains",
+          "content.endswith",
+          "content.exact",
+          "content.startswith",
+          "direction",
+          "include_shadow_metadata",
+          "match",
+          "name",
+          "name.contains",
+          "name.endswith",
+          "name.exact",
+          "name.startswith",
+          "order",
+          "page",
+          "per_page",
+          "proxied",
+          "search",
+          "shadowed_by_name",
+          "shadowing_name",
+          "tag",
+          "tag.absent",
+          "tag.contains",
+          "tag.endswith",
+          "tag.exact",
+          "tag.present",
+          "tag.startswith",
+          "tag_match",
+          "type"
+        ],
+        "BodyModel": null
+      }
+    ],
+    "ParameterSets": [
+      {
+        "Name": "Get",
+        "OperationBinding": {
+          "OperationId": "dns-records-for-a-zone-dns-record-details",
+          "HttpMethod": "GET",
+          "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+          "PathParameters": [
+            "dns_record_id",
+            "zone_id"
+          ],
+          "QueryParameters": [
+            "include_shadow_metadata"
+          ],
+          "BodyModel": null
+        },
+        "RequiredParameters": [
+          "dns_record_id",
+          "zone_id"
+        ],
+        "OptionalParameters": [
+          "include_shadow_metadata"
+        ]
+      },
+      {
+        "Name": "List",
+        "OperationBinding": {
+          "OperationId": "dns-records-for-a-zone-list-dns-records",
+          "HttpMethod": "GET",
+          "PathTemplate": "/zones/{zone_id}/dns_records",
+          "PathParameters": [
+            "zone_id"
+          ],
+          "QueryParameters": [
+            "comment",
+            "comment.absent",
+            "comment.contains",
+            "comment.endswith",
+            "comment.exact",
+            "comment.present",
+            "comment.startswith",
+            "content",
+            "content.contains",
+            "content.endswith",
+            "content.exact",
+            "content.startswith",
+            "direction",
+            "include_shadow_metadata",
+            "match",
+            "name",
+            "name.contains",
+            "name.endswith",
+            "name.exact",
+            "name.startswith",
+            "order",
+            "page",
+            "per_page",
+            "proxied",
+            "search",
+            "shadowed_by_name",
+            "shadowing_name",
+            "tag",
+            "tag.absent",
+            "tag.contains",
+            "tag.endswith",
+            "tag.exact",
+            "tag.present",
+            "tag.startswith",
+            "tag_match",
+            "type"
+          ],
+          "BodyModel": null
+        },
+        "RequiredParameters": [
+          "zone_id"
+        ],
+        "OptionalParameters": [
+          "comment",
+          "comment.absent",
+          "comment.contains",
+          "comment.endswith",
+          "comment.exact",
+          "comment.present",
+          "comment.startswith",
+          "content",
+          "content.contains",
+          "content.endswith",
+          "content.exact",
+          "content.startswith",
+          "direction",
+          "include_shadow_metadata",
+          "match",
+          "name",
+          "name.contains",
+          "name.endswith",
+          "name.exact",
+          "name.startswith",
+          "order",
+          "page",
+          "per_page",
+          "proxied",
+          "search",
+          "shadowed_by_name",
+          "shadowing_name",
+          "tag",
+          "tag.absent",
+          "tag.contains",
+          "tag.endswith",
+          "tag.exact",
+          "tag.present",
+          "tag.startswith",
+          "tag_match",
+          "type"
+        ]
+      }
+    ],
+    "Parameters": [
+      {
+        "Name": "comment",
+        "Type": "Inline_DADF1CBA58A7",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "comment.absent",
+        "Type": "Inline_0268C81DE8BC",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "comment.contains",
+        "Type": "Inline_CB9B873411E3",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "comment.endswith",
+        "Type": "Inline_477C6610239F",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "comment.exact",
+        "Type": "Inline_D7D2A756A1C3",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "comment.present",
+        "Type": "Inline_CE977A340E3B",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "comment.startswith",
+        "Type": "Inline_53242276CD45",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "content",
+        "Type": "Inline_50357BE0078D",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "content.contains",
+        "Type": "Inline_41743DF328F8",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "content.endswith",
+        "Type": "Inline_65640098A447",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "content.exact",
+        "Type": "Inline_D211DFAC57E3",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "content.startswith",
+        "Type": "Inline_2D82801D8DFC",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "direction",
+        "Type": "dns-records_direction",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": "asc"
+      },
+      {
+        "Name": "dns_record_id",
+        "Type": "dns-records_identifier",
+        "Binding": "path",
+        "AppliesTo": [
+          "dns-records-for-a-zone-dns-record-details"
+        ],
+        "RequiredIn": [
+          "dns-records-for-a-zone-dns-record-details"
+        ],
+        "NullPolicy": "reject-null",
+        "DefaultValue": null
+      },
+      {
+        "Name": "include_shadow_metadata",
+        "Type": "Inline_FC261D0FF8EE",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-dns-record-details",
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": false
+      },
+      {
+        "Name": "match",
+        "Type": "dns-records_match",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": "all"
+      },
+      {
+        "Name": "name",
+        "Type": "Inline_DBF19B766020",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "name.contains",
+        "Type": "Inline_D8DFFBBF4254",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "name.endswith",
+        "Type": "Inline_7B841D75B0E6",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "name.exact",
+        "Type": "Inline_106347877B97",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "name.startswith",
+        "Type": "Inline_BD4D2AF09C0B",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "order",
+        "Type": "dns-records_order",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": "type"
+      },
+      {
+        "Name": "page",
+        "Type": "dns-records_page",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": 1
+      },
+      {
+        "Name": "per_page",
+        "Type": "dns-records_per_page",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": 100
+      },
+      {
+        "Name": "proxied",
+        "Type": "dns-records_proxied",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": false
+      },
+      {
+        "Name": "search",
+        "Type": "dns-records_search",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "shadowed_by_name",
+        "Type": "Inline_93F17A9F097F",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "shadowing_name",
+        "Type": "Inline_07001EAED8D0",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "tag",
+        "Type": "Inline_EBBBC6B74451",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "tag_match",
+        "Type": "dns-records_tag_match",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": "all"
+      },
+      {
+        "Name": "tag.absent",
+        "Type": "Inline_7E27C06946CE",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "tag.contains",
+        "Type": "Inline_AFDB21C3B17D",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "tag.endswith",
+        "Type": "Inline_D0A72DEB4547",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "tag.exact",
+        "Type": "Inline_AD5FB713CC6D",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "tag.present",
+        "Type": "Inline_C05A78CF07F6",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "tag.startswith",
+        "Type": "Inline_7088CC9530E7",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "type",
+        "Type": "dns-records_type",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": null
+      },
+      {
+        "Name": "zone_id",
+        "Type": "dns-records_identifier",
+        "Binding": "path",
+        "AppliesTo": [
+          "dns-records-for-a-zone-dns-record-details",
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "RequiredIn": [
+          "dns-records-for-a-zone-dns-record-details",
+          "dns-records-for-a-zone-list-dns-records"
+        ],
+        "NullPolicy": "reject-null",
+        "DefaultValue": null
       }
     ],
     "OutputType": "Cloudflare.PowerShell.CfDnsRecord",
     "PipelineMode": "item",
     "PagingBehavior": "V4PagePaginationArray",
     "SupportsShouldProcess": false,
-    "ConfirmImpact": null,
-    "Parameters": [
-      {
-        "Name": "zone_id",
-        "Type": "Identifier",
-        "Mandatory": true,
-        "Binding": "path",
-        "NullPolicy": "reject-null",
-        "DefaultValue": null
-      },
-      {
-        "Name": "dns_record_id",
-        "Type": "Identifier",
-        "Mandatory": true,
-        "Binding": "path",
-        "NullPolicy": "reject-null",
-        "DefaultValue": null
-      },
-      {
-        "Name": "include_shadow_metadata",
-        "Type": "boolean",
-        "Mandatory": false,
-        "Binding": "query",
-        "NullPolicy": "omit",
-        "DefaultValue": false
-      }
-    ],
-    "CorrectedRequestBody": false
+    "ConfirmImpact": "None",
+    "OverrideTrace": []
   },
   {
     "CmdletName": "New-CfDnsRecord",
-    "OperationId": "dns-records-for-a-zone-create-dns-record",
-    "Method": "POST",
-    "PathTemplate": "/zones/{zone_id}/dns_records",
-    "ParameterSet": null,
     "OperationBindings": [
       {
         "OperationId": "dns-records-for-a-zone-create-dns-record",
-        "Method": "POST",
+        "HttpMethod": "POST",
         "PathTemplate": "/zones/{zone_id}/dns_records",
-        "ParameterSet": null
+        "PathParameters": [
+          "zone_id"
+        ],
+        "QueryParameters": [
+          "include_shadow_metadata"
+        ],
+        "BodyModel": "dns-records_dns-record-post"
+      }
+    ],
+    "ParameterSets": [
+      {
+        "Name": "Create",
+        "OperationBinding": {
+          "OperationId": "dns-records-for-a-zone-create-dns-record",
+          "HttpMethod": "POST",
+          "PathTemplate": "/zones/{zone_id}/dns_records",
+          "PathParameters": [
+            "zone_id"
+          ],
+          "QueryParameters": [
+            "include_shadow_metadata"
+          ],
+          "BodyModel": "dns-records_dns-record-post"
+        },
+        "RequiredParameters": [
+          "zone_id"
+        ],
+        "OptionalParameters": [
+          "include_shadow_metadata"
+        ]
+      }
+    ],
+    "Parameters": [
+      {
+        "Name": "include_shadow_metadata",
+        "Type": "Inline_B69738F93588",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-create-dns-record"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": false
+      },
+      {
+        "Name": "zone_id",
+        "Type": "dns-records_identifier",
+        "Binding": "path",
+        "AppliesTo": [
+          "dns-records-for-a-zone-create-dns-record"
+        ],
+        "RequiredIn": [
+          "dns-records-for-a-zone-create-dns-record"
+        ],
+        "NullPolicy": "reject-null",
+        "DefaultValue": null
       }
     ],
     "OutputType": "Cloudflare.PowerShell.CfDnsRecord",
@@ -71,38 +683,70 @@
     "PagingBehavior": null,
     "SupportsShouldProcess": true,
     "ConfirmImpact": "Medium",
+    "OverrideTrace": []
+  },
+  {
+    "CmdletName": "Remove-CfDnsRecord",
+    "OperationBindings": [
+      {
+        "OperationId": "dns-records-for-a-zone-delete-dns-record",
+        "HttpMethod": "DELETE",
+        "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+        "PathParameters": [
+          "dns_record_id",
+          "zone_id"
+        ],
+        "QueryParameters": [],
+        "BodyModel": ""
+      }
+    ],
+    "ParameterSets": [
+      {
+        "Name": "Delete",
+        "OperationBinding": {
+          "OperationId": "dns-records-for-a-zone-delete-dns-record",
+          "HttpMethod": "DELETE",
+          "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+          "PathParameters": [
+            "dns_record_id",
+            "zone_id"
+          ],
+          "QueryParameters": [],
+          "BodyModel": ""
+        },
+        "RequiredParameters": [
+          "dns_record_id",
+          "zone_id"
+        ],
+        "OptionalParameters": []
+      }
+    ],
     "Parameters": [
       {
-        "Name": "zone_id",
-        "Type": "Identifier",
-        "Mandatory": true,
+        "Name": "dns_record_id",
+        "Type": "dns-records_identifier",
         "Binding": "path",
+        "AppliesTo": [
+          "dns-records-for-a-zone-delete-dns-record"
+        ],
+        "RequiredIn": [
+          "dns-records-for-a-zone-delete-dns-record"
+        ],
         "NullPolicy": "reject-null",
         "DefaultValue": null
       },
       {
-        "Name": "include_shadow_metadata",
-        "Type": "boolean",
-        "Mandatory": false,
-        "Binding": "query",
-        "NullPolicy": "omit",
-        "DefaultValue": false
-      }
-    ],
-    "CorrectedRequestBody": false
-  },
-  {
-    "CmdletName": "Remove-CfDnsRecord",
-    "OperationId": "dns-records-for-a-zone-delete-dns-record",
-    "Method": "DELETE",
-    "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
-    "ParameterSet": null,
-    "OperationBindings": [
-      {
-        "OperationId": "dns-records-for-a-zone-delete-dns-record",
-        "Method": "DELETE",
-        "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
-        "ParameterSet": null
+        "Name": "zone_id",
+        "Type": "dns-records_identifier",
+        "Binding": "path",
+        "AppliesTo": [
+          "dns-records-for-a-zone-delete-dns-record"
+        ],
+        "RequiredIn": [
+          "dns-records-for-a-zone-delete-dns-record"
+        ],
+        "NullPolicy": "reject-null",
+        "DefaultValue": null
       }
     ],
     "OutputType": "Cloudflare.PowerShell.CfDnsRecord",
@@ -110,69 +754,150 @@
     "PagingBehavior": null,
     "SupportsShouldProcess": true,
     "ConfirmImpact": "High",
-    "Parameters": [
+    "OverrideTrace": [
       {
-        "Name": "zone_id",
-        "Type": "Identifier",
-        "Mandatory": true,
-        "Binding": "path",
-        "NullPolicy": "reject-null",
-        "DefaultValue": null
+        "ruleId": "rule-0",
+        "reason": "Schema declares a request body but official wrappers send DELETE without a body.",
+        "source": "official TypeScript/Python/Go wrapper comparison",
+        "match": "{\"operationId\":\"dns-records-for-a-zone-delete-dns-record\"}"
       },
       {
-        "Name": "dns_record_id",
-        "Type": "Identifier",
-        "Mandatory": true,
-        "Binding": "path",
-        "NullPolicy": "reject-null",
-        "DefaultValue": null
+        "RuleIndex": 0,
+        "Match": {
+          "operationId": "dns-records-for-a-zone-delete-dns-record"
+        },
+        "Reason": "Schema declares a request body but official wrappers send DELETE without a body.",
+        "Source": "official TypeScript/Python/Go wrapper comparison"
       }
-    ],
-    "CorrectedRequestBody": true
+    ]
   },
   {
     "CmdletName": "Set-CfDnsRecord",
-    "OperationId": null,
-    "Method": "MULTI",
-    "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
-    "ParameterSet": "Replace,Edit",
     "OperationBindings": [
       {
         "OperationId": "dns-records-for-a-zone-patch-dns-record",
-        "Method": "PATCH",
+        "HttpMethod": "PATCH",
         "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
-        "ParameterSet": "Edit"
+        "PathParameters": [
+          "dns_record_id",
+          "zone_id"
+        ],
+        "QueryParameters": [
+          "include_shadow_metadata"
+        ],
+        "BodyModel": "dns-records_dns-record-patch"
       },
       {
         "OperationId": "dns-records-for-a-zone-update-dns-record",
-        "Method": "PUT",
+        "HttpMethod": "PUT",
         "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
-        "ParameterSet": "Replace"
+        "PathParameters": [
+          "dns_record_id",
+          "zone_id"
+        ],
+        "QueryParameters": [
+          "include_shadow_metadata"
+        ],
+        "BodyModel": "dns-records_dns-record-post"
+      }
+    ],
+    "ParameterSets": [
+      {
+        "Name": "Edit",
+        "OperationBinding": {
+          "OperationId": "dns-records-for-a-zone-patch-dns-record",
+          "HttpMethod": "PATCH",
+          "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+          "PathParameters": [
+            "dns_record_id",
+            "zone_id"
+          ],
+          "QueryParameters": [
+            "include_shadow_metadata"
+          ],
+          "BodyModel": "dns-records_dns-record-patch"
+        },
+        "RequiredParameters": [
+          "dns_record_id",
+          "zone_id"
+        ],
+        "OptionalParameters": [
+          "include_shadow_metadata"
+        ]
+      },
+      {
+        "Name": "Replace",
+        "OperationBinding": {
+          "OperationId": "dns-records-for-a-zone-update-dns-record",
+          "HttpMethod": "PUT",
+          "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+          "PathParameters": [
+            "dns_record_id",
+            "zone_id"
+          ],
+          "QueryParameters": [
+            "include_shadow_metadata"
+          ],
+          "BodyModel": "dns-records_dns-record-post"
+        },
+        "RequiredParameters": [
+          "dns_record_id",
+          "zone_id"
+        ],
+        "OptionalParameters": [
+          "include_shadow_metadata"
+        ]
+      }
+    ],
+    "Parameters": [
+      {
+        "Name": "dns_record_id",
+        "Type": "dns-records_identifier",
+        "Binding": "path",
+        "AppliesTo": [
+          "dns-records-for-a-zone-patch-dns-record",
+          "dns-records-for-a-zone-update-dns-record"
+        ],
+        "RequiredIn": [
+          "dns-records-for-a-zone-patch-dns-record",
+          "dns-records-for-a-zone-update-dns-record"
+        ],
+        "NullPolicy": "reject-null",
+        "DefaultValue": null
+      },
+      {
+        "Name": "include_shadow_metadata",
+        "Type": "Inline_16AD61186BCE",
+        "Binding": "query",
+        "AppliesTo": [
+          "dns-records-for-a-zone-patch-dns-record",
+          "dns-records-for-a-zone-update-dns-record"
+        ],
+        "RequiredIn": [],
+        "NullPolicy": "omit",
+        "DefaultValue": false
+      },
+      {
+        "Name": "zone_id",
+        "Type": "dns-records_identifier",
+        "Binding": "path",
+        "AppliesTo": [
+          "dns-records-for-a-zone-patch-dns-record",
+          "dns-records-for-a-zone-update-dns-record"
+        ],
+        "RequiredIn": [
+          "dns-records-for-a-zone-patch-dns-record",
+          "dns-records-for-a-zone-update-dns-record"
+        ],
+        "NullPolicy": "reject-null",
+        "DefaultValue": null
       }
     ],
     "OutputType": "Cloudflare.PowerShell.CfDnsRecord",
     "PipelineMode": "single",
     "PagingBehavior": null,
     "SupportsShouldProcess": true,
-    "ConfirmImpact": "Medium",
-    "Parameters": [
-      {
-        "Name": "zone_id",
-        "Type": "Identifier",
-        "Mandatory": true,
-        "Binding": "path",
-        "NullPolicy": "reject-null",
-        "DefaultValue": null
-      },
-      {
-        "Name": "dns_record_id",
-        "Type": "Identifier",
-        "Mandatory": true,
-        "Binding": "path",
-        "NullPolicy": "reject-null",
-        "DefaultValue": null
-      }
-    ],
-    "CorrectedRequestBody": false
+    "ConfirmImpact": "High",
+    "OverrideTrace": []
   }
 ]

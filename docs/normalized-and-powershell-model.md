@@ -140,8 +140,8 @@ P1 使用三种已确认规则：scalar → `key=value`；array → `key=a&key=b
 两个文件不能混用：
 
 ```text
-overrides/api-corrections.yaml
-overrides/powershell-projection.yaml
+overrides/api-corrections.json
+overrides/powershell-projection.json
 ```
 
 API correction 修正 schema 与实际 wrapper 行为不一致的合约事实。P1 必须记录 DNS DELETE：schema 声明 request body，但官方 TypeScript/Python/Go wrapper 实际不发送 body；effective request body 为 absent。

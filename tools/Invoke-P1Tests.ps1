@@ -15,14 +15,24 @@ try {
 
     & pwsh -NoLogo -NoProfile -File .\tests\ModuleSmoke.ps1 | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'module smoke failed.' }
+    & pwsh -NoLogo -NoProfile -File .\tests\ProjectionModel.Tests.ps1 | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw 'projection model tests failed.' }
+
+    $openApiPath = Join-Path $ProjectRoot 'ref/api-schemas/openapi.json'
+    if (-not (Test-Path -LiteralPath $openApiPath)) { throw 'P1.2 requires the pinned local OpenAPI reference at ref/api-schemas/openapi.json.' }
+    dotnet run --project .\tests\Cloudflare.Normalization.Tests\Cloudflare.Normalization.Tests.csproj --configuration Release --no-build -- $openApiPath (Join-Path $ProjectRoot 'artifacts/generated-normalized/dns-records') | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw 'OpenAPI normalization/semantic diff tests failed.' }
+
+    & pwsh -NoLogo -NoProfile -File .\tools\Generate-DnsSource.ps1 -FixtureRoot (Join-Path $ProjectRoot 'artifacts/generated-normalized/dns-records') | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw 'Projection regression from normalized OpenAPI output failed.' }
 
     $pairs = @(
-        @{ Generated = 'src/Cloudflare.PowerShell/Generated/CfDnsRecordModels.cs'; Golden = 'tests/golden/CfDnsRecordModels.cs' },
-        @{ Generated = 'src/Cloudflare.PowerShell/Generated/CfDnsRecordOperations.cs'; Golden = 'tests/golden/CfDnsRecordOperations.cs' },
-        @{ Generated = 'src/Cloudflare.PowerShell/Generated/Cmdlets/Get-CfDnsRecord.cs'; Golden = 'tests/golden/Get-CfDnsRecord.cs' },
-        @{ Generated = 'src/Cloudflare.PowerShell/Generated/Cmdlets/New-CfDnsRecord.cs'; Golden = 'tests/golden/New-CfDnsRecord.cs' },
-        @{ Generated = 'src/Cloudflare.PowerShell/Generated/Cmdlets/Remove-CfDnsRecord.cs'; Golden = 'tests/golden/Remove-CfDnsRecord.cs' },
-        @{ Generated = 'src/Cloudflare.PowerShell/Generated/Cmdlets/Set-CfDnsRecord.cs'; Golden = 'tests/golden/Set-CfDnsRecord.cs' }
+        @{ Generated = 'src/Cloudflare.PowerShell/Generated/Models/CfDnsRecordModels.cs'; Golden = 'tests/golden/CfDnsRecordModels.cs' },
+        @{ Generated = 'src/Cloudflare.PowerShell/Generated/Metadata/CfDnsRecordOperationMetadata.cs'; Golden = 'tests/golden/CfDnsRecordOperations.cs' },
+        @{ Generated = 'src/Cloudflare.PowerShell/Generated/Metadata/Projection_Get_CfDnsRecord.cs'; Golden = 'tests/golden/Projection_Get_CfDnsRecord.cs' },
+        @{ Generated = 'src/Cloudflare.PowerShell/Generated/Metadata/Projection_New_CfDnsRecord.cs'; Golden = 'tests/golden/Projection_New_CfDnsRecord.cs' },
+        @{ Generated = 'src/Cloudflare.PowerShell/Generated/Metadata/Projection_Remove_CfDnsRecord.cs'; Golden = 'tests/golden/Projection_Remove_CfDnsRecord.cs' },
+        @{ Generated = 'src/Cloudflare.PowerShell/Generated/Metadata/Projection_Set_CfDnsRecord.cs'; Golden = 'tests/golden/Projection_Set_CfDnsRecord.cs' }
     )
     foreach ($pair in $pairs) {
         $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $pair.Generated).Hash

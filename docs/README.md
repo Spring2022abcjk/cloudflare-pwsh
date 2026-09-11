@@ -8,6 +8,8 @@
 - [证据索引](./evidence-index.md)：固定 commit、源码位置、取证范围和复核入口。
 - [中间模型建议](./normalized-and-powershell-model.md)：Normalized API Model 与 PowerShell Projection Model 候选。
 - [P1.1 总结](./P1.1-summary.md)：DNS vertical slice 的确认项、实现项、原型决策、未解决项和 P1.2 延后项。
+- [P1.1.5 总结](./P1.1.5-summary.md)：通用 correction/projection、强类型 presence/union 与生成边界。
+- [P1.2 总结](./P1.2-summary.md)：OpenAPI loader/ref resolver/normalizer、correction 和 DNS semantic diff。
 
 ## 证据等级
 

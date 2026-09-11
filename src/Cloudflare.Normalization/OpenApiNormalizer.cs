@@ -1,0 +1,377 @@
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json.Nodes;
+
+namespace Cloudflare.Normalization;
+
+public sealed class OpenApiNormalizer
+{
+    private readonly OpenApiDocument _document;
+    private readonly RefResolver _resolver;
+    private readonly Dictionary<string, NormalizedSchema> _schemas = new(StringComparer.Ordinal);
+
+    public OpenApiNormalizer(OpenApiDocument document)
+    {
+        _document = document;
+        _resolver = new RefResolver(document.Root);
+    }
+
+    public NormalizedDocument NormalizeOperations(ISet<string>? operationIds = null)
+    {
+        var result = new NormalizedDocument
+        {
+            SourcePath = _document.SourcePath,
+            SourceRevision = _document.SourceRevision
+        };
+        var paths = _document.Root["paths"]?.AsObject() ?? throw new InvalidDataException("OpenAPI document has no paths object.");
+        foreach (var pathEntry in paths.OrderBy(x => x.Key, StringComparer.Ordinal))
+        {
+            if (pathEntry.Value is not JsonObject pathItem) continue;
+            var inheritedParameters = ReadParameters(pathItem["parameters"], $"#/paths/{Escape(pathEntry.Key)}/parameters");
+            foreach (var methodEntry in pathItem.Where(x => IsHttpMethod(x.Key)).OrderBy(x => x.Key, StringComparer.Ordinal))
+            {
+                if (methodEntry.Value is not JsonObject operation) continue;
+                var operationId = StringValue(operation["operationId"]) ?? $"{methodEntry.Key}:{pathEntry.Key}";
+                if (operationIds is not null && !operationIds.Contains(operationId)) continue;
+                result.Operations.Add(NormalizeOperation(pathEntry.Key, methodEntry.Key, operation, inheritedParameters, operationId));
+            }
+        }
+        result.Operations = result.Operations.OrderBy(x => x.OperationId, StringComparer.Ordinal).ToList();
+        result.Schemas = new Dictionary<string, NormalizedSchema>(_schemas, StringComparer.Ordinal);
+        return result;
+    }
+
+    private NormalizedOperation NormalizeOperation(string path, string method, JsonObject operation, List<NormalizedParameter> inheritedParameters, string operationId)
+    {
+        var op = new NormalizedOperation
+        {
+            OperationId = operationId,
+            Method = method.ToUpperInvariant(),
+            PathTemplate = path,
+            ResourcePath = GetResourcePath(path),
+            OperationSemantic = InferSemantic(operationId, method),
+            SourceLocation = $"#/paths/{Escape(path)}/{method}"
+        };
+        var parameters = new Dictionary<(string Name, string Location), NormalizedParameter>();
+        foreach (var parameter in inheritedParameters) parameters[(parameter.Name, parameter.Location)] = parameter;
+        foreach (var parameter in ReadParameters(operation["parameters"], $"{op.SourceLocation}/parameters")) parameters[(parameter.Name, parameter.Location)] = parameter;
+        op.Parameters = parameters.Values.OrderBy(x => x.Location, StringComparer.Ordinal).ThenBy(x => x.Name, StringComparer.Ordinal).ToList();
+        op.ScopeBindings = op.Parameters.Where(x => x.Location == "path").Select(ToScopeBinding).Where(x => x is not null).Cast<ScopeBinding>().ToList();
+        op.RequestBody = NormalizeRequestBody(operation["requestBody"], op.SourceLocation, operationId);
+        op.Responses = NormalizeResponses(operation["responses"], op.SourceLocation, operationId);
+        op.Pagination = DetectPagination(op, operationId);
+        return op;
+    }
+
+    private List<NormalizedParameter> ReadParameters(JsonNode? node, string location)
+    {
+        var result = new List<NormalizedParameter>();
+        if (node is not JsonArray array) return result;
+        foreach (var raw in array)
+        {
+            if (raw is null) continue;
+            var parameter = raw;
+            var sourceRef = string.Empty;
+            var obj = _resolver.ResolveObject(parameter, out sourceRef);
+            var name = StringValue(obj["name"]) ?? string.Empty;
+            var inValue = StringValue(obj["in"]) ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(inValue)) continue;
+            var schemaNode = obj["schema"];
+            var schemaName = GetSchemaReferenceName(schemaNode, $"{location}/{name}/schema");
+            var schemaObject = ResolveSchemaObject(schemaNode);
+            var allowsNull = AllowsNull(schemaObject);
+            var defaultValue = schemaObject["default"]?.DeepClone();
+            result.Add(new NormalizedParameter
+            {
+                Name = name,
+                Location = inValue,
+                Required = BoolValue(obj["required"]) || inValue == "path",
+                AllowsNull = allowsNull,
+                DefaultValue = defaultValue,
+                NullPolicy = allowsNull ? "send-null" : inValue == "path" && (BoolValue(obj["required"]) || inValue == "path") ? "reject-null" : "omit",
+                Schema = schemaName,
+                Serialization = ReadSerialization(obj["style"], obj["explode"], schemaObject),
+                IsParentScopeId = name is "zone_id" or "account_id",
+                IsPrimaryResourceId = name.EndsWith("_id", StringComparison.Ordinal) && name is not "zone_id" and not "account_id",
+                SourceRef = string.IsNullOrEmpty(sourceRef) ? location : sourceRef
+            });
+        }
+        return result;
+    }
+
+    private NormalizedRequestBody? NormalizeRequestBody(JsonNode? node, string location, string operationId)
+    {
+        if (node is null) return null;
+        var sourceRef = string.Empty;
+        var body = _resolver.ResolveObject(node, out sourceRef);
+        var result = new NormalizedRequestBody
+        {
+            Required = BoolValue(body["required"]),
+            DeclaredContract = true,
+            Presence = BoolValue(body["required"]) ? "required" : "declared-but-observed-absent",
+            SourceRef = sourceRef
+        };
+        if (body["content"] is JsonObject content)
+        {
+            foreach (var entry in content.OrderBy(x => x.Key, StringComparer.Ordinal))
+            {
+                var media = entry.Value?.AsObject() ?? new JsonObject();
+                var schemaName = GetSchemaReferenceName(media["schema"], $"{location}/requestBody/content/{Escape(entry.Key)}/schema", operationId);
+                result.Representations.Add(new RequestRepresentation { ContentType = entry.Key, Schema = schemaName, SourceRef = sourceRef });
+            }
+        }
+        return result;
+    }
+
+    private List<NormalizedResponseCase> NormalizeResponses(JsonNode? node, string location, string operationId)
+    {
+        var result = new List<NormalizedResponseCase>();
+        if (node is not JsonObject responses) return result;
+        foreach (var entry in responses.OrderBy(x => x.Key, StringComparer.Ordinal))
+        {
+            var response = _resolver.ResolveObject(entry.Value, out var sourceRef);
+            var selector = new StatusSelector
+            {
+                Kind = entry.Key.Equals("default", StringComparison.OrdinalIgnoreCase) ? "Default" : entry.Key.EndsWith('X') ? "Class" : "Exact",
+                Value = entry.Key
+            };
+            var responseCase = new NormalizedResponseCase { StatusSelector = selector };
+            if (response["content"] is JsonObject content)
+            {
+                foreach (var mediaEntry in content.OrderBy(x => x.Key, StringComparer.Ordinal))
+                {
+                    var media = mediaEntry.Value?.AsObject() ?? new JsonObject();
+                    var schemaName = GetSchemaReferenceName(media["schema"], $"{location}/responses/{Escape(entry.Key)}/content/{Escape(mediaEntry.Key)}/schema", operationId);
+                    var contentType = mediaEntry.Key.ToLowerInvariant();
+                    responseCase.Representations.Add(new ResponseRepresentation
+                    {
+                        ContentType = mediaEntry.Key,
+                        Schema = schemaName,
+                        EnvelopePolicy = selector.Kind == "Class" ? "ErrorEnvelope" : "CloudflareResult",
+                        ParsingMode = contentType.Contains("json", StringComparison.Ordinal) ? "Json" : contentType.StartsWith("text/", StringComparison.Ordinal) ? "Text" : "Binary",
+                        SourceRef = sourceRef
+                    });
+                }
+            }
+            else if (entry.Key == "204")
+            {
+                responseCase.Representations.Add(new ResponseRepresentation { ContentType = "no-content", Schema = string.Empty, EnvelopePolicy = "None", ParsingMode = "NoContent", SourceRef = sourceRef });
+            }
+            result.Add(responseCase);
+        }
+        return result;
+    }
+
+    private string GetSchemaReferenceName(JsonNode? node, string location, string? operationId = null)
+    {
+        if (node is null) return string.Empty;
+        if (node is JsonObject obj && obj["$ref"] is JsonValue referenceValue)
+        {
+            var reference = referenceValue.GetValue<string>();
+            var name = ReferenceName(reference);
+            EnsureSchema(name, reference, _resolver.Resolve(reference).AsObject());
+            return name;
+        }
+        var inlineName = "Inline_" + StableToken((operationId ?? "schema") + ":" + location);
+        EnsureSchema(inlineName, null, node.AsObject());
+        return inlineName;
+    }
+
+    private void EnsureSchema(string name, string? sourceRef, JsonObject raw)
+    {
+        if (_schemas.ContainsKey(name)) return;
+        var schema = new NormalizedSchema { Name = name, SourceRef = sourceRef, Kind = DetermineKind(raw), PrimitiveType = StringValue(raw["type"]), Format = StringValue(raw["format"]) };
+        _schemas[name] = schema;
+        if (raw["required"] is JsonArray required)
+            schema.RequiredProperties = required.Select(x => x?.GetValue<string>() ?? string.Empty).Where(x => x.Length > 0).OrderBy(x => x, StringComparer.Ordinal).ToList();
+        foreach (var property in (raw["properties"]?.AsObject() ?? new JsonObject()).OrderBy(x => x.Key, StringComparer.Ordinal))
+        {
+            var propertyName = property.Key;
+            var propertySchema = property.Value;
+            var propertyRef = GetSchemaReferenceName(propertySchema, $"#/components/schemas/{Escape(name)}/properties/{Escape(propertyName)}");
+            var propertyObject = ResolveSchemaObject(propertySchema);
+            var isRequired = schema.RequiredProperties.Contains(propertyName, StringComparer.Ordinal);
+            var allowsNull = AllowsNull(propertyObject);
+            schema.Properties[propertyName] = new NormalizedProperty
+            {
+                Name = propertyName,
+                Schema = propertyRef,
+                Required = isRequired,
+                AllowsNull = allowsNull,
+                DefaultValue = propertyObject["default"]?.DeepClone(),
+                NullPolicy = allowsNull ? "send-null" : isRequired ? "reject-null" : "omit",
+                ReadOnly = BoolValue(propertyObject["readOnly"]),
+                WriteOnly = BoolValue(propertyObject["writeOnly"])
+            };
+        }
+        foreach (var key in new[] { "oneOf", "anyOf", "allOf" })
+        {
+            if (raw[key] is not JsonArray alternatives) continue;
+            var target = key switch { "oneOf" => schema.OneOf, "anyOf" => schema.AnyOf, _ => schema.AllOf };
+            foreach (var alternative in alternatives)
+            {
+                var alternativeName = GetSchemaReferenceName(alternative, $"#/components/schemas/{Escape(name)}/{key}");
+                if (!string.IsNullOrEmpty(alternativeName)) target.Add(alternativeName);
+            }
+        }
+        if (raw["enum"] is JsonArray values)
+        {
+            schema.Enum = values.Select(ScalarText).ToList();
+            if (schema.Enum.Count == 1) schema.SingleValue = values[0]?.DeepClone();
+        }
+        if (raw["const"] is not null) schema.SingleValue = raw["const"]!.DeepClone();
+        var ownSingleValue = FindSingleTypeValue(raw, new HashSet<string>(StringComparer.Ordinal));
+        if (!string.IsNullOrEmpty(ownSingleValue)) schema.SingleValue = JsonValue.Create(ownSingleValue);
+        var explicitProperty = raw["discriminator"]?["propertyName"]?.GetValue<string>();
+        var variants = FindDiscriminatorVariants(raw, name);
+        if (!string.IsNullOrWhiteSpace(explicitProperty) || variants.Count > 0)
+        {
+            schema.Discriminator = new DiscriminatorModel { Property = explicitProperty ?? "type", SingleValue = variants.Count > 0, Variants = variants };
+        }
+    }
+
+    private List<DiscriminatorVariant> FindDiscriminatorVariants(JsonObject raw, string owner)
+    {
+        var refs = new List<string>();
+        foreach (var key in new[] { "oneOf", "anyOf" })
+            if (raw[key] is JsonArray alternatives) refs.AddRange(alternatives.Select(x => x is JsonObject o && o["$ref"] is JsonValue r ? ReferenceName(r.GetValue<string>()) : string.Empty).Where(x => x.Length > 0));
+        var variants = new List<DiscriminatorVariant>();
+        foreach (var reference in refs.Distinct(StringComparer.Ordinal))
+        {
+            foreach (var value in FindTypeValues(_resolver.Resolve($"#/components/schemas/{reference}").AsObject(), new HashSet<string>(StringComparer.Ordinal)))
+                variants.Add(new DiscriminatorVariant { Schema = reference, Value = value });
+        }
+        return variants.OrderBy(x => x.Value, StringComparer.Ordinal).ThenBy(x => x.Schema, StringComparer.Ordinal).ToList();
+    }
+
+    private List<string> FindTypeValues(JsonObject raw, HashSet<string> visited)
+    {
+        if (raw["properties"]?["type"]?["enum"] is JsonArray directValues && directValues.Count == 1)
+            return [ScalarText(directValues[0])];
+        var values = new List<string>();
+        foreach (var key in new[] { "oneOf", "anyOf", "allOf" })
+            if (raw[key] is JsonArray alternatives)
+                foreach (var item in alternatives)
+                {
+                    if (item is JsonObject reference && reference["$ref"] is JsonValue referenceValue)
+                    {
+                        var referenceText = referenceValue.GetValue<string>();
+                        if (visited.Add(referenceText)) values.AddRange(FindTypeValues(_resolver.Resolve(referenceText).AsObject(), visited));
+                    }
+                    else if (item is JsonObject inline) values.AddRange(FindTypeValues(inline, visited));
+                }
+        return values;
+    }
+
+    private string FindSingleTypeValue(JsonObject raw, HashSet<string> visited)
+    {
+        if (raw["properties"]?["type"]?["enum"] is JsonArray values && values.Count == 1) return ScalarText(values[0]);
+        foreach (var key in new[] { "oneOf", "anyOf" })
+            if (raw[key] is JsonArray alternatives)
+                foreach (var item in alternatives)
+                {
+                    if (item is JsonObject reference && reference["$ref"] is JsonValue referenceValue)
+                    {
+                        var referenceText = referenceValue.GetValue<string>();
+                        if (visited.Add(referenceText))
+                        {
+                            var found = FindSingleTypeValue(_resolver.Resolve(referenceText).AsObject(), visited);
+                            if (!string.IsNullOrEmpty(found)) return found;
+                        }
+                    }
+                }
+        if (raw["allOf"] is JsonArray allOf)
+            foreach (var item in allOf)
+            {
+                if (item is JsonObject reference && reference["$ref"] is JsonValue value)
+                {
+                    var referenceText = value.GetValue<string>();
+                    if (visited.Add(referenceText))
+                    {
+                        var found = FindSingleTypeValue(_resolver.Resolve(referenceText).AsObject(), visited);
+                        if (!string.IsNullOrEmpty(found)) return found;
+                    }
+                }
+                else if (item is JsonObject inline)
+                {
+                    var found = FindSingleTypeValue(inline, visited);
+                    if (!string.IsNullOrEmpty(found)) return found;
+                }
+            }
+        return string.Empty;
+    }
+
+    private JsonObject ResolveSchemaObject(JsonNode? node)
+    {
+        if (node is JsonObject obj && obj["$ref"] is JsonValue reference) return _resolver.Resolve(reference.GetValue<string>()).AsObject();
+        return node?.AsObject() ?? new JsonObject();
+    }
+
+    private bool IsCloudflareEnvelope(string schemaName)
+    {
+        if (!_schemas.TryGetValue(schemaName, out var schema)) return schemaName.Contains("response", StringComparison.OrdinalIgnoreCase);
+        return schema.Properties.ContainsKey("success") || schema.Properties.ContainsKey("result") || schema.Properties.ContainsKey("errors") || schemaName.Contains("response", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private PaginationModel? DetectPagination(NormalizedOperation operation, string operationId)
+    {
+        if (!operation.Method.Equals("GET", StringComparison.OrdinalIgnoreCase)) return operation.Responses.Count > 0 ? new PaginationModel { Strategy = "SinglePage", StopRule = "single response", Evidence = "non-GET operation" } : null;
+        var hasPage = operation.Parameters.Any(x => x.Location == "query" && x.Name is "page" or "per_page");
+        var first = operation.Responses.SelectMany(x => x.Representations).FirstOrDefault(x => x.ContentType.Contains("json", StringComparison.OrdinalIgnoreCase));
+        var pageLike = first is not null && first.Schema.Contains("collection", StringComparison.OrdinalIgnoreCase) && hasPage;
+        if (pageLike)
+            return new PaginationModel { Strategy = "V4PagePaginationArray", RequestFields = operation.Parameters.Where(x => x.Name is "page" or "per_page").Select(x => x.Name).ToList(), ResponseFields = ["result", "result_info"], NextPageRule = "page + 1", StopRule = "empty result page", Evidence = "query page/per_page plus result collection schema" };
+        return operation.Responses.Count > 0 ? new PaginationModel { Strategy = "SinglePage", StopRule = "single response", Evidence = "no recognized page-array pattern" } : null;
+    }
+
+    private static ScopeBinding? ToScopeBinding(NormalizedParameter parameter)
+    {
+        if (parameter.Name == "zone_id") return new ScopeBinding { ParameterName = parameter.Name, ScopeType = "Zone", Role = "Parent" };
+        if (parameter.Name == "account_id") return new ScopeBinding { ParameterName = parameter.Name, ScopeType = "Account", Role = "Parent" };
+        if (parameter.Name is "namespace_name" or "instance_id") return new ScopeBinding { ParameterName = parameter.Name, ScopeType = parameter.Name.StartsWith("namespace", StringComparison.Ordinal) ? "Namespace" : "Instance", Role = "Nested" };
+        if (parameter.IsPrimaryResourceId) return new ScopeBinding { ParameterName = parameter.Name, ScopeType = ToTitle(parameter.Name[..^3]), Role = "Primary" };
+        return null;
+    }
+
+    private static OperationSemantic InferSemantic(string operationId, string method)
+    {
+        var lower = operationId.ToLowerInvariant();
+        foreach (var pair in new[] { ("list", "List"), ("details", "Get"), ("get", "Get"), ("create", "Create"), ("update", "Update"), ("overwrite", "Update"), ("patch", "Edit"), ("edit", "Edit"), ("delete", "Delete"), ("export", "Download"), ("import", "Upload") })
+            if (lower.Contains(pair.Item1, StringComparison.Ordinal)) return new OperationSemantic { Kind = pair.Item2, Source = "OperationIdHeuristic", Confidence = "High" };
+        return new OperationSemantic { Kind = method.Equals("GET", StringComparison.OrdinalIgnoreCase) ? "Get" : "Unknown", Source = "MethodHeuristic", Confidence = "Low" };
+    }
+
+    private static List<string> GetResourcePath(string path)
+    {
+        var values = path.Split('/', StringSplitOptions.RemoveEmptyEntries).Where(x => !x.StartsWith('{')).ToList();
+        var result = new List<string>();
+        foreach (var value in values)
+        {
+            if (value is "zones" or "accounts" or "users") continue;
+            var parts = value.Split('_', StringSplitOptions.RemoveEmptyEntries);
+            result.AddRange(parts.Length > 1 ? parts : [value]);
+        }
+        return result;
+    }
+
+    private static SerializationModel ReadSerialization(JsonNode? style, JsonNode? explode, JsonObject schema)
+    {
+        var type = StringValue(schema["type"]);
+        var array = type == "array" ? "repeat" : "repeat";
+        var objectNotation = type == "object" ? "dots" : "dots";
+        return new SerializationModel { Style = StringValue(style) ?? "form", Explode = explode is null || BoolValue(explode), ArrayNotation = array, ObjectNotation = objectNotation };
+    }
+
+    private static string DetermineKind(JsonObject raw)
+        => raw["oneOf"] is JsonArray || raw["anyOf"] is JsonArray ? "union" : StringValue(raw["type"]) switch { "object" => "object", "array" => "array", "string" when raw["enum"] is JsonArray => "enum", null => "reference", _ => "primitive" };
+
+    private static bool AllowsNull(JsonObject schema) => BoolValue(schema["nullable"]) || schema["type"] is JsonArray types && types.Any(x => x?.GetValue<string>() == "null");
+    private static bool IsHttpMethod(string value) => value is "get" or "put" or "post" or "delete" or "patch" or "head" or "options" or "trace";
+    private static bool BoolValue(JsonNode? node) => node is JsonValue value && value.TryGetValue<bool>(out var result) && result;
+    private static string? StringValue(JsonNode? node) => node is JsonValue value && value.TryGetValue<string>(out var result) ? result : null;
+    private static string ScalarText(JsonNode? node) => node is null ? string.Empty : node is JsonValue value && value.TryGetValue<string>(out var text) ? text : node.ToJsonString().Trim('"');
+    private static string ReferenceName(string reference) => reference[(reference.LastIndexOf('/') + 1)..];
+    private static string Escape(string value) => value.Replace("~", "~0", StringComparison.Ordinal).Replace("/", "~1", StringComparison.Ordinal);
+    private static string StableToken(string value) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value)))[..12];
+    private static string ToTitle(string value) => string.Concat(value.Split(new[] { '_', '-' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Length == 0 ? string.Empty : char.ToUpperInvariant(x[0]) + x[1..]));
+}

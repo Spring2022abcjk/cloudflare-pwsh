@@ -11,7 +11,8 @@
   "operationSemantic": { "kind": "Edit", "source": "OperationIdHeuristic", "confidence": "High" },
   "parameters": [
     { "name": "zone_id", "location": "path", "required": true, "allowsNull": false, "nullPolicy": "reject-null", "schema": "Identifier" },
-    { "name": "dns_record_id", "location": "path", "required": true, "allowsNull": false, "nullPolicy": "reject-null", "schema": "Identifier", "isPrimaryResourceId": true }
+    { "name": "dns_record_id", "location": "path", "required": true, "allowsNull": false, "nullPolicy": "reject-null", "schema": "Identifier", "isPrimaryResourceId": true },
+    { "name": "include_shadow_metadata", "location": "query", "required": false, "allowsNull": false, "defaultValue": false, "nullPolicy": "omit", "schema": "boolean" }
   ],
   "requestBody": { "required": true, "representations": [{ "contentType": "application/json", "schema": "RecordEditParams" }], "presence": "required", "semantics": "fixed SDK edit model; do not infer all fields optional from PATCH" },
   "responses": [

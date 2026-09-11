@@ -1,0 +1,178 @@
+[
+  {
+    "CmdletName": "Get-CfDnsRecord",
+    "OperationId": null,
+    "Method": "MULTI",
+    "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+    "ParameterSet": "Replace,Edit",
+    "OperationBindings": [
+      {
+        "OperationId": "dns-records-for-a-zone-dns-record-details",
+        "Method": "GET",
+        "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+        "ParameterSet": null
+      },
+      {
+        "OperationId": "dns-records-for-a-zone-list-dns-records",
+        "Method": "GET",
+        "PathTemplate": "/zones/{zone_id}/dns_records",
+        "ParameterSet": null
+      }
+    ],
+    "OutputType": "Cloudflare.PowerShell.CfDnsRecord",
+    "PipelineMode": "item",
+    "PagingBehavior": "V4PagePaginationArray",
+    "SupportsShouldProcess": false,
+    "ConfirmImpact": null,
+    "Parameters": [
+      {
+        "Name": "zone_id",
+        "Type": "Identifier",
+        "Mandatory": true,
+        "Binding": "path",
+        "NullPolicy": "reject-null",
+        "DefaultValue": null
+      },
+      {
+        "Name": "dns_record_id",
+        "Type": "Identifier",
+        "Mandatory": true,
+        "Binding": "path",
+        "NullPolicy": "reject-null",
+        "DefaultValue": null
+      },
+      {
+        "Name": "include_shadow_metadata",
+        "Type": "boolean",
+        "Mandatory": false,
+        "Binding": "query",
+        "NullPolicy": "omit",
+        "DefaultValue": false
+      }
+    ],
+    "CorrectedRequestBody": false
+  },
+  {
+    "CmdletName": "New-CfDnsRecord",
+    "OperationId": "dns-records-for-a-zone-create-dns-record",
+    "Method": "POST",
+    "PathTemplate": "/zones/{zone_id}/dns_records",
+    "ParameterSet": null,
+    "OperationBindings": [
+      {
+        "OperationId": "dns-records-for-a-zone-create-dns-record",
+        "Method": "POST",
+        "PathTemplate": "/zones/{zone_id}/dns_records",
+        "ParameterSet": null
+      }
+    ],
+    "OutputType": "Cloudflare.PowerShell.CfDnsRecord",
+    "PipelineMode": "single",
+    "PagingBehavior": null,
+    "SupportsShouldProcess": true,
+    "ConfirmImpact": "Medium",
+    "Parameters": [
+      {
+        "Name": "zone_id",
+        "Type": "Identifier",
+        "Mandatory": true,
+        "Binding": "path",
+        "NullPolicy": "reject-null",
+        "DefaultValue": null
+      },
+      {
+        "Name": "include_shadow_metadata",
+        "Type": "boolean",
+        "Mandatory": false,
+        "Binding": "query",
+        "NullPolicy": "omit",
+        "DefaultValue": false
+      }
+    ],
+    "CorrectedRequestBody": false
+  },
+  {
+    "CmdletName": "Remove-CfDnsRecord",
+    "OperationId": "dns-records-for-a-zone-delete-dns-record",
+    "Method": "DELETE",
+    "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+    "ParameterSet": null,
+    "OperationBindings": [
+      {
+        "OperationId": "dns-records-for-a-zone-delete-dns-record",
+        "Method": "DELETE",
+        "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+        "ParameterSet": null
+      }
+    ],
+    "OutputType": "Cloudflare.PowerShell.CfDnsRecord",
+    "PipelineMode": "single",
+    "PagingBehavior": null,
+    "SupportsShouldProcess": true,
+    "ConfirmImpact": "High",
+    "Parameters": [
+      {
+        "Name": "zone_id",
+        "Type": "Identifier",
+        "Mandatory": true,
+        "Binding": "path",
+        "NullPolicy": "reject-null",
+        "DefaultValue": null
+      },
+      {
+        "Name": "dns_record_id",
+        "Type": "Identifier",
+        "Mandatory": true,
+        "Binding": "path",
+        "NullPolicy": "reject-null",
+        "DefaultValue": null
+      }
+    ],
+    "CorrectedRequestBody": true
+  },
+  {
+    "CmdletName": "Set-CfDnsRecord",
+    "OperationId": null,
+    "Method": "MULTI",
+    "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+    "ParameterSet": "Replace,Edit",
+    "OperationBindings": [
+      {
+        "OperationId": "dns-records-for-a-zone-patch-dns-record",
+        "Method": "PATCH",
+        "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+        "ParameterSet": "Edit"
+      },
+      {
+        "OperationId": "dns-records-for-a-zone-update-dns-record",
+        "Method": "PUT",
+        "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+        "ParameterSet": "Replace"
+      }
+    ],
+    "OutputType": "Cloudflare.PowerShell.CfDnsRecord",
+    "PipelineMode": "single",
+    "PagingBehavior": null,
+    "SupportsShouldProcess": true,
+    "ConfirmImpact": "Medium",
+    "Parameters": [
+      {
+        "Name": "zone_id",
+        "Type": "Identifier",
+        "Mandatory": true,
+        "Binding": "path",
+        "NullPolicy": "reject-null",
+        "DefaultValue": null
+      },
+      {
+        "Name": "dns_record_id",
+        "Type": "Identifier",
+        "Mandatory": true,
+        "Binding": "path",
+        "NullPolicy": "reject-null",
+        "DefaultValue": null
+      }
+    ],
+    "CorrectedRequestBody": false
+  }
+]

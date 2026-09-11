@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "operationId": "dns-records-for-a-zone-delete-dns-record",
+  "method": "DELETE",
+  "pathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+  "resourcePath": ["dns", "records"],
+  "scopeBindings": [
+    { "parameterName": "zone_id", "scopeType": "Zone", "role": "Parent" },
+    { "parameterName": "dns_record_id", "scopeType": "DnsRecord", "role": "Primary" }
+  ],
+  "operationSemantic": { "kind": "Delete", "source": "OperationIdHeuristic", "confidence": "High" },
+  "parameters": [
+    { "name": "zone_id", "location": "path", "required": true, "allowsNull": false, "nullPolicy": "reject-null", "schema": "Identifier" },
+    { "name": "dns_record_id", "location": "path", "required": true, "allowsNull": false, "nullPolicy": "reject-null", "schema": "Identifier", "isPrimaryResourceId": true }
+  ],
+  "requestBody": { "required": false, "declaredBySchema": true, "representations": [{ "contentType": "application/json", "schema": "DeleteBody" }], "presence": "declared-but-observed-absent" },
+  "responses": [
+    { "statusSelector": { "kind": "Exact", "value": "200" }, "representations": [{ "contentType": "application/json", "schema": "DeleteResult", "envelopePolicy": "CloudflareResult", "parsingMode": "Json" }] },
+    { "statusSelector": { "kind": "Class", "value": "4XX" }, "representations": [{ "contentType": "application/json", "schema": "CloudflareErrorEnvelope", "envelopePolicy": "ErrorEnvelope", "parsingMode": "Json" }] }
+  ]
+}

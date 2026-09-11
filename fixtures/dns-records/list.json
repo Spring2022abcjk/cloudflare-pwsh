@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "operationId": "dns-records-for-a-zone-list-dns-records",
+  "method": "GET",
+  "pathTemplate": "/zones/{zone_id}/dns_records",
+  "resourcePath": ["dns", "records"],
+  "scopeBindings": [{ "parameterName": "zone_id", "scopeType": "Zone", "role": "Parent" }],
+  "operationSemantic": { "kind": "List", "source": "OperationIdHeuristic", "confidence": "High" },
+  "parameters": [
+    { "name": "zone_id", "location": "path", "required": true, "allowsNull": false, "nullPolicy": "reject-null", "schema": "Identifier" },
+    { "name": "include_shadow_metadata", "location": "query", "required": false, "allowsNull": false, "defaultValue": false, "nullPolicy": "omit", "schema": "boolean" },
+    { "name": "name", "location": "query", "required": false, "allowsNull": true, "nullPolicy": "omit", "schema": "string" },
+    { "name": "type", "location": "query", "required": false, "allowsNull": true, "nullPolicy": "omit", "schema": "DnsRecordType" },
+    { "name": "match", "location": "query", "required": false, "allowsNull": true, "nullPolicy": "omit", "schema": "MatchFilter", "serialization": { "style": "deepObject", "explode": true, "arrayNotation": "repeat", "objectNotation": "dots" } },
+    { "name": "tag", "location": "query", "required": false, "allowsNull": true, "nullPolicy": "omit", "schema": "array<string>", "serialization": { "style": "form", "explode": true, "arrayNotation": "repeat", "objectNotation": "dots" } },
+    { "name": "per_page", "location": "query", "required": false, "allowsNull": false, "defaultValue": 20, "nullPolicy": "omit", "schema": "integer" }
+  ],
+  "pagination": { "strategy": "V4PagePaginationArray", "requestFields": ["page", "per_page"], "responseFields": ["result", "result_info"], "nextPageRule": "page + 1", "stopRule": "empty result page" },
+  "responses": [
+    { "statusSelector": { "kind": "Exact", "value": "200" }, "representations": [{ "contentType": "application/json", "schema": "V4PagePaginationArray<RecordResponse>", "envelopePolicy": "CloudflareResult", "parsingMode": "Json" }] },
+    { "statusSelector": { "kind": "Class", "value": "4XX" }, "representations": [{ "contentType": "application/json", "schema": "CloudflareErrorEnvelope", "envelopePolicy": "ErrorEnvelope", "parsingMode": "Json" }] }
+  ]
+}

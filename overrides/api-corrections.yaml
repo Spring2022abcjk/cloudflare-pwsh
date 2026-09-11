@@ -1,0 +1,8 @@
+version: 1
+operations:
+  dns-records-for-a-zone-delete-dns-record:
+    requestBody:
+      declaredContract: true
+      observedCorrection: absent
+      evidence: official TypeScript/Python/Go wrappers issue DELETE without a body
+      reason: schema declares a request body but effective wrapper behavior does not send one

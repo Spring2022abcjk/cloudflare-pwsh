@@ -1,0 +1,13 @@
+{
+  "schemas": [
+    { "name": "RecordResponse", "kind": "union", "discriminator": { "property": "type", "singleValue": true }, "variants": ["ARecord", "MXRecord", "CAARecord", "HTTPSRecord", "SVCBRecord"] },
+    { "name": "RecordCreateParams", "kind": "union", "discriminator": { "property": "type", "singleValue": true }, "variants": ["ARecordCreate", "MXRecordCreate", "CAARecordCreate", "HTTPSRecordCreate", "SVCBRecordCreate"] },
+    { "name": "RecordUpdateParams", "kind": "union", "discriminator": { "property": "type", "singleValue": true }, "requiredProperties": ["name", "ttl", "type"], "variants": ["ARecordCreate", "MXRecordCreate", "CAARecordCreate", "HTTPSRecordCreate", "SVCBRecordCreate"] },
+    { "name": "RecordEditParams", "kind": "union", "discriminator": { "property": "type", "singleValue": true }, "variants": ["ARecordEdit", "MXRecordEdit", "CAARecordEdit", "HTTPSRecordEdit", "SVCBRecordEdit"] },
+    { "name": "ARecord", "kind": "object", "singleValue": "A", "properties": ["name", "ttl", "type", "content", "proxied", "private_routing"] },
+    { "name": "MXRecord", "kind": "object", "singleValue": "MX", "properties": ["name", "ttl", "type", "content", "priority", "proxied"] },
+    { "name": "CAARecord", "kind": "object", "singleValue": "CAA", "properties": ["name", "ttl", "type", "data", "proxied"] },
+    { "name": "HTTPSRecord", "kind": "object", "singleValue": "HTTPS", "properties": ["name", "ttl", "type", "data", "proxied"] },
+    { "name": "SVCBRecord", "kind": "object", "singleValue": "SVCB", "properties": ["name", "ttl", "type", "data", "proxied"] }
+  ]
+}

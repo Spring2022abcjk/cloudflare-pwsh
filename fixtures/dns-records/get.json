@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "operationId": "dns-records-for-a-zone-dns-record-details",
+  "method": "GET",
+  "pathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+  "resourcePath": ["dns", "records"],
+  "scopeBindings": [
+    { "parameterName": "zone_id", "scopeType": "Zone", "role": "Parent" },
+    { "parameterName": "dns_record_id", "scopeType": "DnsRecord", "role": "Primary" }
+  ],
+  "operationSemantic": { "kind": "Get", "source": "OperationIdHeuristic", "confidence": "High" },
+  "parameters": [
+    { "name": "zone_id", "location": "path", "required": true, "allowsNull": false, "nullPolicy": "reject-null", "schema": "Identifier" },
+    { "name": "dns_record_id", "location": "path", "required": true, "allowsNull": false, "nullPolicy": "reject-null", "schema": "Identifier", "isPrimaryResourceId": true },
+    { "name": "include_shadow_metadata", "location": "query", "required": false, "allowsNull": false, "defaultValue": false, "nullPolicy": "omit", "schema": "boolean" }
+  ],
+  "responses": [
+    { "statusSelector": { "kind": "Exact", "value": "200" }, "representations": [{ "contentType": "application/json", "schema": "RecordResponse", "envelopePolicy": "CloudflareResult", "parsingMode": "Json" }] },
+    { "statusSelector": { "kind": "Class", "value": "4XX" }, "representations": [{ "contentType": "application/json", "schema": "CloudflareErrorEnvelope", "envelopePolicy": "ErrorEnvelope", "parsingMode": "Json" }] }
+  ]
+}

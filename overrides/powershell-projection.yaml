@@ -1,0 +1,37 @@
+version: 1
+operations:
+  dns-records-for-a-zone-list-dns-records:
+    verb: Get
+    noun: CfDnsRecord
+    outputPolicy: item
+    paging: V4PagePaginationArray
+    supportsShouldProcess: false
+  dns-records-for-a-zone-create-dns-record:
+    verb: New
+    noun: CfDnsRecord
+    supportsShouldProcess: true
+    confirmImpact: Medium
+  dns-records-for-a-zone-dns-record-details:
+    verb: Get
+    noun: CfDnsRecord
+    supportsShouldProcess: false
+  dns-records-for-a-zone-update-dns-record:
+    verb: Set
+    noun: CfDnsRecord
+    parameterSet: Replace
+    supportsShouldProcess: true
+    confirmImpact: High
+  dns-records-for-a-zone-patch-dns-record:
+    verb: Set
+    noun: CfDnsRecord
+    parameterSet: Edit
+    supportsShouldProcess: true
+    confirmImpact: Medium
+  dns-records-for-a-zone-delete-dns-record:
+    verb: Remove
+    noun: CfDnsRecord
+    supportsShouldProcess: true
+    confirmImpact: High
+defaults:
+  typedUnionPolicy: TypedInput
+  primitiveNaming: SemanticVerb

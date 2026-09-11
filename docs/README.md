@@ -7,6 +7,7 @@
 - [研究总报告](./cloudflare-sdk-research.md)：按任务说明组织的体系化结论。
 - [证据索引](./evidence-index.md)：固定 commit、源码位置、取证范围和复核入口。
 - [中间模型建议](./normalized-and-powershell-model.md)：Normalized API Model 与 PowerShell Projection Model 候选。
+- [P1.1 总结](./P1.1-summary.md)：DNS vertical slice 的确认项、实现项、原型决策、未解决项和 P1.2 延后项。
 
 ## 证据等级
 
@@ -25,4 +26,3 @@
 | Cloudflare Go SDK | `ref/cloudflare-go` | `a45114730bf2f913c5adff8f3ed7bf7534feffb9` | 验证性对照 |
 
 TypeScript commit 是任务说明指定的固定基线。Python、Go 和 schema commit 已在本地记录，用于可复核的对照；它们不是 TypeScript commit 的同一发布日期快照，跨版本差异需要继续标记。
-

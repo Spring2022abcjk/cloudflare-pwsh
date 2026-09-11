@@ -14,3 +14,9 @@
 # Test output
 TestResults/
 artifacts/
+!artifacts/
+!artifacts/projection/
+!artifacts/projection/CmdletModel.json
+
+# Local module build copy (recreated by the test runner)
+module/**/*.dll

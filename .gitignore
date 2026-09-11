@@ -1,0 +1,16 @@
+# Research snapshots and upstream SDK checkouts are local evidence only.
+/ref/*
+!/ref/.gitkeep
+
+# .NET build output
+**/bin/
+**/obj/
+
+# PowerShell/editor noise
+*.user
+*.suo
+.vs/
+
+# Test output
+TestResults/
+artifacts/

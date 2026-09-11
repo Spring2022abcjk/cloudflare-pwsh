@@ -1,13 +1,14 @@
 {
-  "operationId": "ai-search-namespace-instance-list-jobs",
+  "operationId": "ai-search-namespace-instance-get-item-content",
   "method": "GET",
-  "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs",
+  "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/items/{item_id}/download",
   "resourcePath": [
     "ai",
     "search",
     "namespaces",
     "instances",
-    "jobs"
+    "items",
+    "download"
   ],
   "scopeBindings": [
     {
@@ -21,13 +22,18 @@
       "role": "Nested"
     },
     {
+      "parameterName": "item_id",
+      "scopeType": "Item",
+      "role": "Nested"
+    },
+    {
       "parameterName": "name",
       "scopeType": "Namespace",
       "role": "Nested"
     }
   ],
   "operationSemantic": {
-    "kind": "List",
+    "kind": "Get",
     "source": "OperationIdHeuristic",
     "confidence": "High"
   },
@@ -38,7 +44,7 @@
       "required": true,
       "allowsNull": false,
       "nullPolicy": "reject-null",
-      "schema": "Inline_04556A5F93F6",
+      "schema": "Inline_E62BED3EAF32",
       "serialization": {
         "style": "form",
         "explode": true,
@@ -48,7 +54,7 @@
       },
       "isParentScopeId": true,
       "isPrimaryResourceId": false,
-      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
+      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1items~1{item_id}~1download/get/parameters"
     },
     {
       "name": "id",
@@ -56,7 +62,7 @@
       "required": true,
       "allowsNull": false,
       "nullPolicy": "reject-null",
-      "schema": "Inline_9475D72D6E3E",
+      "schema": "Inline_D11B0460FA6B",
       "serialization": {
         "style": "form",
         "explode": true,
@@ -66,7 +72,25 @@
       },
       "isParentScopeId": false,
       "isPrimaryResourceId": false,
-      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
+      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1items~1{item_id}~1download/get/parameters"
+    },
+    {
+      "name": "item_id",
+      "location": "path",
+      "required": true,
+      "allowsNull": false,
+      "nullPolicy": "reject-null",
+      "schema": "Inline_459F0F37F7EC",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1items~1{item_id}~1download/get/parameters"
     },
     {
       "name": "name",
@@ -74,7 +98,7 @@
       "required": true,
       "allowsNull": false,
       "nullPolicy": "reject-null",
-      "schema": "Inline_3D0614C9C7C7",
+      "schema": "Inline_1E49D1722004",
       "serialization": {
         "style": "form",
         "explode": true,
@@ -84,45 +108,7 @@
       },
       "isParentScopeId": false,
       "isPrimaryResourceId": false,
-      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
-    },
-    {
-      "name": "page",
-      "location": "query",
-      "required": false,
-      "allowsNull": false,
-      "defaultValue": 1,
-      "nullPolicy": "omit",
-      "schema": "Inline_1B184BFF6F50",
-      "serialization": {
-        "style": "form",
-        "explode": true,
-        "allowReserved": false,
-        "arrayNotation": "repeat",
-        "objectNotation": "dots"
-      },
-      "isParentScopeId": false,
-      "isPrimaryResourceId": false,
-      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
-    },
-    {
-      "name": "per_page",
-      "location": "query",
-      "required": false,
-      "allowsNull": false,
-      "defaultValue": 20,
-      "nullPolicy": "omit",
-      "schema": "Inline_F6777B697645",
-      "serialization": {
-        "style": "form",
-        "explode": true,
-        "allowReserved": false,
-        "arrayNotation": "repeat",
-        "objectNotation": "dots"
-      },
-      "isParentScopeId": false,
-      "isPrimaryResourceId": false,
-      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
+      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1items~1{item_id}~1download/get/parameters"
     }
   ],
   "responses": [
@@ -133,10 +119,10 @@
       },
       "representations": [
         {
-          "contentType": "application/json",
-          "schema": "Inline_AAEBCC321428",
-          "envelopePolicy": "CloudflareResult",
-          "parsingMode": "Json",
+          "contentType": "application/octet-stream",
+          "schema": "Inline_5C553A245982",
+          "envelopePolicy": "Raw",
+          "parsingMode": "Binary",
           "sourceRef": ""
         }
       ]
@@ -149,7 +135,22 @@
       "representations": [
         {
           "contentType": "application/json",
-          "schema": "Inline_5F4B11642A30",
+          "schema": "Inline_9B9F0CAE8299",
+          "envelopePolicy": "ErrorEnvelope",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    },
+    {
+      "statusSelector": {
+        "kind": "Exact",
+        "value": "403"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "Inline_C0CFB9DA454D",
           "envelopePolicy": "ErrorEnvelope",
           "parsingMode": "Json",
           "sourceRef": ""
@@ -164,7 +165,7 @@
       "representations": [
         {
           "contentType": "application/json",
-          "schema": "Inline_1F6434EB9D97",
+          "schema": "Inline_46A82AF20A81",
           "envelopePolicy": "ErrorEnvelope",
           "parsingMode": "Json",
           "sourceRef": ""
@@ -179,7 +180,7 @@
       "representations": [
         {
           "contentType": "application/json",
-          "schema": "Inline_68DC4C47E38C",
+          "schema": "Inline_99E2D9B460D4",
           "envelopePolicy": "ErrorEnvelope",
           "parsingMode": "Json",
           "sourceRef": ""
@@ -188,19 +189,13 @@
     }
   ],
   "pagination": {
-    "strategy": "V4PagePaginationArray",
-    "requestFields": [
-      "page",
-      "per_page"
-    ],
-    "responseFields": [
-      "result",
-      "result_info"
-    ],
-    "nextPageRule": "page \u002B 1",
-    "stopRule": "empty result page",
-    "evidence": "query page/per_page plus result collection schema"
+    "strategy": "SinglePage",
+    "requestFields": [],
+    "responseFields": [],
+    "nextPageRule": "",
+    "stopRule": "single response",
+    "evidence": "no recognized page-array pattern"
   },
-  "sourceLocation": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get",
+  "sourceLocation": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1items~1{item_id}~1download/get",
   "correctionTrace": []
 }

@@ -126,7 +126,7 @@
         {
           "contentType": "application/json",
           "schema": "Inline_4EDD7BBDF67B",
-          "envelopePolicy": "CloudflareResult",
+          "envelopePolicy": "ErrorEnvelope",
           "parsingMode": "Json",
           "sourceRef": ""
         }
@@ -141,7 +141,7 @@
         {
           "contentType": "application/json",
           "schema": "Inline_E6B5FE552F30",
-          "envelopePolicy": "CloudflareResult",
+          "envelopePolicy": "ErrorEnvelope",
           "parsingMode": "Json",
           "sourceRef": ""
         }
@@ -156,7 +156,7 @@
         {
           "contentType": "application/json",
           "schema": "Inline_E5CE7A16C8B5",
-          "envelopePolicy": "CloudflareResult",
+          "envelopePolicy": "ErrorEnvelope",
           "parsingMode": "Json",
           "sourceRef": ""
         }
@@ -171,7 +171,7 @@
         {
           "contentType": "application/json",
           "schema": "Inline_AA9350409AD5",
-          "envelopePolicy": "CloudflareResult",
+          "envelopePolicy": "ErrorEnvelope",
           "parsingMode": "Json",
           "sourceRef": ""
         }

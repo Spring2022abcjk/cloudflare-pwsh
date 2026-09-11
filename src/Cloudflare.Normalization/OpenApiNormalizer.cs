@@ -143,11 +143,12 @@ public sealed class OpenApiNormalizer
                     var media = mediaEntry.Value?.AsObject() ?? new JsonObject();
                     var schemaName = GetSchemaReferenceName(media["schema"], $"{location}/responses/{Escape(entry.Key)}/content/{Escape(mediaEntry.Key)}/schema", operationId);
                     var contentType = mediaEntry.Key.ToLowerInvariant();
+                    var isErrorStatus = selector.Kind == "Class" || (selector.Kind == "Exact" && int.TryParse(entry.Key, out var exactStatus) && exactStatus >= 400);
                     responseCase.Representations.Add(new ResponseRepresentation
                     {
                         ContentType = mediaEntry.Key,
                         Schema = schemaName,
-                        EnvelopePolicy = selector.Kind == "Class" ? "ErrorEnvelope" : "CloudflareResult",
+                        EnvelopePolicy = isErrorStatus ? (contentType.Contains("json", StringComparison.Ordinal) ? "ErrorEnvelope" : "Raw") : contentType.Contains("json", StringComparison.Ordinal) ? "CloudflareResult" : "Raw",
                         ParsingMode = contentType.Contains("json", StringComparison.Ordinal) ? "Json" : contentType.StartsWith("text/", StringComparison.Ordinal) ? "Text" : "Binary",
                         SourceRef = sourceRef
                     });
@@ -416,7 +417,7 @@ public sealed class OpenApiNormalizer
     private static OperationSemantic InferSemantic(string operationId, string method, string path)
     {
         var lower = operationId.ToLowerInvariant();
-        if (method.Equals("GET", StringComparison.OrdinalIgnoreCase) && !path.TrimEnd('/').EndsWith('}') && lower.Contains("get", StringComparison.Ordinal))
+        if (method.Equals("GET", StringComparison.OrdinalIgnoreCase) && !path.TrimEnd('/').EndsWith('}') && lower.EndsWith("-get", StringComparison.Ordinal))
             return new OperationSemantic { Kind = "List", Source = "CollectionPathHeuristic", Confidence = "Medium" };
         foreach (var pair in new[] { ("list", "List"), ("details", "Get"), ("get", "Get"), ("create", "Create"), ("update", "Update"), ("overwrite", "Update"), ("patch", "Edit"), ("edit", "Edit"), ("delete", "Delete"), ("export", "Download"), ("import", "Upload") })
             if (lower.Contains(pair.Item1, StringComparison.Ordinal)) return new OperationSemantic { Kind = pair.Item2, Source = "OperationIdHeuristic", Confidence = "High" };

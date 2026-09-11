@@ -79,6 +79,17 @@ PUT and PATCH DNS operations can share the public `Set-CfDnsRecord` projection w
 
 P2.1 is a model stress test, not an endpoint-count exercise. Zones, D1, and deep AI Search fixtures are selected to test ordinary CRUD, account scope, and nested bindings. A new behavior is classified before implementation as general normalized-model capability, API correction, or PowerShell projection policy. Resource-specific conditionals in the emitter are not an accepted extension mechanism.
 
+## P2.2 Transport Facts
+
+P2.2 confirms that the normalized model can represent the four special transport cases found in the pinned OpenAPI source without adding model fields:
+
+- DNS export uses a successful `text/plain` response and normalizes to `Raw`.
+- DNS import and AI Search item upload use `multipart/form-data`; both preserve the required file part, while only the AI Search file is explicitly declared as binary in the source schema.
+- AI Search item download uses a successful `application/octet-stream` response and normalizes to `Raw`.
+- JSON success responses use `CloudflareResult`; exact JSON 4xx/5xx responses use `ErrorEnvelope`.
+
+The normalizer records these facts in request/response representations, content types, envelope policies, and parsing modes. The current PowerShell runtime remains JSON/envelope-only; multipart serialization, raw-body handling, and production streaming are intentionally deferred to the runtime phase.
+
 ## Deferred Boundaries
 
 Production retry/idempotency policy, legacy authentication, multipart and binary runtime handling, streaming, complete pagination strategies, full generated help, module publishing, real-account integration, and the final handwritten-vs-generated-cmdlet decision remain unresolved. HTTP 2xx with `success=false` also remains intentionally unresolved.

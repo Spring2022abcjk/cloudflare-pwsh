@@ -14,6 +14,7 @@
 - [路线图](./roadmap.md)：P1 完成项与 P2.1–P4 路线。
 - [开发原则](./development-principles.md)：后续 agent 必须遵守的长期规则。
 - [P2.1 总结](./P2.1-summary.md)：Zones、D1、AI Search 跨资源归一化、投影快照和回归结果。
+- [P2.2 总结](./P2.2-summary.md)：multipart、text、binary transport 的归一化结论和 runtime 边界。
 
 ## 证据等级
 

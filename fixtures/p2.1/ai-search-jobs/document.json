@@ -154,7 +154,7 @@
             {
               "contentType": "application/json",
               "schema": "Inline_DBE13E4F175E",
-              "envelopePolicy": "CloudflareResult",
+              "envelopePolicy": "ErrorEnvelope",
               "parsingMode": "Json",
               "sourceRef": ""
             }
@@ -169,7 +169,7 @@
             {
               "contentType": "application/json",
               "schema": "Inline_255326FB1490",
-              "envelopePolicy": "CloudflareResult",
+              "envelopePolicy": "ErrorEnvelope",
               "parsingMode": "Json",
               "sourceRef": ""
             }
@@ -184,7 +184,7 @@
             {
               "contentType": "application/json",
               "schema": "Inline_92B12E00406B",
-              "envelopePolicy": "CloudflareResult",
+              "envelopePolicy": "ErrorEnvelope",
               "parsingMode": "Json",
               "sourceRef": ""
             }
@@ -330,7 +330,7 @@
             {
               "contentType": "application/json",
               "schema": "Inline_4EDD7BBDF67B",
-              "envelopePolicy": "CloudflareResult",
+              "envelopePolicy": "ErrorEnvelope",
               "parsingMode": "Json",
               "sourceRef": ""
             }
@@ -345,7 +345,7 @@
             {
               "contentType": "application/json",
               "schema": "Inline_E6B5FE552F30",
-              "envelopePolicy": "CloudflareResult",
+              "envelopePolicy": "ErrorEnvelope",
               "parsingMode": "Json",
               "sourceRef": ""
             }
@@ -360,7 +360,7 @@
             {
               "contentType": "application/json",
               "schema": "Inline_E5CE7A16C8B5",
-              "envelopePolicy": "CloudflareResult",
+              "envelopePolicy": "ErrorEnvelope",
               "parsingMode": "Json",
               "sourceRef": ""
             }
@@ -375,7 +375,7 @@
             {
               "contentType": "application/json",
               "schema": "Inline_AA9350409AD5",
-              "envelopePolicy": "CloudflareResult",
+              "envelopePolicy": "ErrorEnvelope",
               "parsingMode": "Json",
               "sourceRef": ""
             }
@@ -530,7 +530,7 @@
             {
               "contentType": "application/json",
               "schema": "Inline_1B8E58D4DFDC",
-              "envelopePolicy": "CloudflareResult",
+              "envelopePolicy": "ErrorEnvelope",
               "parsingMode": "Json",
               "sourceRef": ""
             }
@@ -545,7 +545,7 @@
             {
               "contentType": "application/json",
               "schema": "Inline_EB5925B487DF",
-              "envelopePolicy": "CloudflareResult",
+              "envelopePolicy": "ErrorEnvelope",
               "parsingMode": "Json",
               "sourceRef": ""
             }
@@ -715,7 +715,7 @@
             {
               "contentType": "application/json",
               "schema": "Inline_5F4B11642A30",
-              "envelopePolicy": "CloudflareResult",
+              "envelopePolicy": "ErrorEnvelope",
               "parsingMode": "Json",
               "sourceRef": ""
             }
@@ -730,7 +730,7 @@
             {
               "contentType": "application/json",
               "schema": "Inline_1F6434EB9D97",
-              "envelopePolicy": "CloudflareResult",
+              "envelopePolicy": "ErrorEnvelope",
               "parsingMode": "Json",
               "sourceRef": ""
             }
@@ -745,7 +745,7 @@
             {
               "contentType": "application/json",
               "schema": "Inline_68DC4C47E38C",
-              "envelopePolicy": "CloudflareResult",
+              "envelopePolicy": "ErrorEnvelope",
               "parsingMode": "Json",
               "sourceRef": ""
             }

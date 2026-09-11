@@ -9,7 +9,7 @@ Completed:
 - DNS CRUD vertical slice with typed union inputs, presence semantics, runtime, mock HTTP, module smoke, and golden tests.
 - General correction/projection pipeline, deterministic symbol naming, multi-operation projection, `Optional<T>`, and representative typed DNS variants.
 - OpenAPI loader, local `$ref` resolver, parameter/request/response normalization, composition preservation, discriminator detection, resource/scope inference, pagination recognition, API corrections, and semantic structural comparison.
-- Existing verification reports six normalized DNS operations and 387 schemas, with the DNS semantic diff passing.
+- The historical P1.2 verification reported six normalized DNS operations and 387 schemas; the current rerun reports 399 schemas after preserving indexed inline composition branches.
 
 See [architecture](./architecture.md) for the durable boundaries and [development principles](./development-principles.md) for the rules carried forward from P1.
 
@@ -30,7 +30,9 @@ P2.1 is complete only when all three resources pass the intended pipeline, no en
 
 ### P2.2 Special transport
 
-Normalize at least multipart and text/binary operations, including DNS export/import or D1 export/import and AI Search download. First prove that request/response representations, content types, envelope policy, and parsing mode can express the operations; production streaming performance is deferred.
+Status: completed in this workspace; see [P2.2 summary](./P2.2-summary.md).
+
+Normalized DNS export/import and AI Search upload/download. Confirmed that request/response representations, content types, envelope policy, and parsing mode express the selected contracts; production streaming and multipart runtime behavior remain deferred.
 
 ### P2.3 PowerShell projection and binary-cmdlet experiment
 

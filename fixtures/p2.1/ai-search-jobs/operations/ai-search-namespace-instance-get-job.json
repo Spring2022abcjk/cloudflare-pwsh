@@ -135,7 +135,7 @@
         {
           "contentType": "application/json",
           "schema": "Inline_1B8E58D4DFDC",
-          "envelopePolicy": "CloudflareResult",
+          "envelopePolicy": "ErrorEnvelope",
           "parsingMode": "Json",
           "sourceRef": ""
         }
@@ -150,7 +150,7 @@
         {
           "contentType": "application/json",
           "schema": "Inline_EB5925B487DF",
-          "envelopePolicy": "CloudflareResult",
+          "envelopePolicy": "ErrorEnvelope",
           "parsingMode": "Json",
           "sourceRef": ""
         }

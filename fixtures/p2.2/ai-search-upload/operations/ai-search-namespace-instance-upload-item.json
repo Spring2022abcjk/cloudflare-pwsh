@@ -1,13 +1,13 @@
 {
-  "operationId": "ai-search-namespace-instance-list-jobs",
-  "method": "GET",
-  "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs",
+  "operationId": "ai-search-namespace-instance-upload-item",
+  "method": "POST",
+  "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/items",
   "resourcePath": [
     "ai",
     "search",
     "namespaces",
     "instances",
-    "jobs"
+    "items"
   ],
   "scopeBindings": [
     {
@@ -27,9 +27,9 @@
     }
   ],
   "operationSemantic": {
-    "kind": "List",
-    "source": "OperationIdHeuristic",
-    "confidence": "High"
+    "kind": "Create",
+    "source": "MethodHeuristic",
+    "confidence": "Low"
   },
   "parameters": [
     {
@@ -38,7 +38,7 @@
       "required": true,
       "allowsNull": false,
       "nullPolicy": "reject-null",
-      "schema": "Inline_04556A5F93F6",
+      "schema": "Inline_EB6677F0A68D",
       "serialization": {
         "style": "form",
         "explode": true,
@@ -48,7 +48,7 @@
       },
       "isParentScopeId": true,
       "isPrimaryResourceId": false,
-      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
+      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1items/post/parameters"
     },
     {
       "name": "id",
@@ -56,7 +56,7 @@
       "required": true,
       "allowsNull": false,
       "nullPolicy": "reject-null",
-      "schema": "Inline_9475D72D6E3E",
+      "schema": "Inline_03C88FAEEE05",
       "serialization": {
         "style": "form",
         "explode": true,
@@ -66,7 +66,7 @@
       },
       "isParentScopeId": false,
       "isPrimaryResourceId": false,
-      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
+      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1items/post/parameters"
     },
     {
       "name": "name",
@@ -74,7 +74,7 @@
       "required": true,
       "allowsNull": false,
       "nullPolicy": "reject-null",
-      "schema": "Inline_3D0614C9C7C7",
+      "schema": "Inline_895C16A9AF6F",
       "serialization": {
         "style": "form",
         "explode": true,
@@ -84,47 +84,23 @@
       },
       "isParentScopeId": false,
       "isPrimaryResourceId": false,
-      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
-    },
-    {
-      "name": "page",
-      "location": "query",
-      "required": false,
-      "allowsNull": false,
-      "defaultValue": 1,
-      "nullPolicy": "omit",
-      "schema": "Inline_1B184BFF6F50",
-      "serialization": {
-        "style": "form",
-        "explode": true,
-        "allowReserved": false,
-        "arrayNotation": "repeat",
-        "objectNotation": "dots"
-      },
-      "isParentScopeId": false,
-      "isPrimaryResourceId": false,
-      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
-    },
-    {
-      "name": "per_page",
-      "location": "query",
-      "required": false,
-      "allowsNull": false,
-      "defaultValue": 20,
-      "nullPolicy": "omit",
-      "schema": "Inline_F6777B697645",
-      "serialization": {
-        "style": "form",
-        "explode": true,
-        "allowReserved": false,
-        "arrayNotation": "repeat",
-        "objectNotation": "dots"
-      },
-      "isParentScopeId": false,
-      "isPrimaryResourceId": false,
-      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
+      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1items/post/parameters"
     }
   ],
+  "requestBody": {
+    "required": false,
+    "declaredContract": true,
+    "presence": "declared-but-observed-absent",
+    "semantics": "",
+    "sourceRef": "",
+    "representations": [
+      {
+        "contentType": "multipart/form-data",
+        "schema": "Inline_A6EA419604B8",
+        "sourceRef": ""
+      }
+    ]
+  },
   "responses": [
     {
       "statusSelector": {
@@ -134,7 +110,7 @@
       "representations": [
         {
           "contentType": "application/json",
-          "schema": "Inline_AAEBCC321428",
+          "schema": "Inline_986C1C8CE968",
           "envelopePolicy": "CloudflareResult",
           "parsingMode": "Json",
           "sourceRef": ""
@@ -149,7 +125,7 @@
       "representations": [
         {
           "contentType": "application/json",
-          "schema": "Inline_5F4B11642A30",
+          "schema": "Inline_0489B2902B2C",
           "envelopePolicy": "ErrorEnvelope",
           "parsingMode": "Json",
           "sourceRef": ""
@@ -164,7 +140,7 @@
       "representations": [
         {
           "contentType": "application/json",
-          "schema": "Inline_1F6434EB9D97",
+          "schema": "Inline_1A0D402E0A96",
           "envelopePolicy": "ErrorEnvelope",
           "parsingMode": "Json",
           "sourceRef": ""
@@ -174,12 +150,42 @@
     {
       "statusSelector": {
         "kind": "Exact",
-        "value": "503"
+        "value": "409"
       },
       "representations": [
         {
           "contentType": "application/json",
-          "schema": "Inline_68DC4C47E38C",
+          "schema": "Inline_0F2B6910C58B",
+          "envelopePolicy": "ErrorEnvelope",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    },
+    {
+      "statusSelector": {
+        "kind": "Exact",
+        "value": "413"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "Inline_D71BD5990471",
+          "envelopePolicy": "ErrorEnvelope",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    },
+    {
+      "statusSelector": {
+        "kind": "Exact",
+        "value": "429"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "Inline_204BDCC6C420",
           "envelopePolicy": "ErrorEnvelope",
           "parsingMode": "Json",
           "sourceRef": ""
@@ -188,19 +194,13 @@
     }
   ],
   "pagination": {
-    "strategy": "V4PagePaginationArray",
-    "requestFields": [
-      "page",
-      "per_page"
-    ],
-    "responseFields": [
-      "result",
-      "result_info"
-    ],
-    "nextPageRule": "page \u002B 1",
-    "stopRule": "empty result page",
-    "evidence": "query page/per_page plus result collection schema"
+    "strategy": "SinglePage",
+    "requestFields": [],
+    "responseFields": [],
+    "nextPageRule": "",
+    "stopRule": "single response",
+    "evidence": "non-GET operation"
   },
-  "sourceLocation": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get",
+  "sourceLocation": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1items/post",
   "correctionTrace": []
 }

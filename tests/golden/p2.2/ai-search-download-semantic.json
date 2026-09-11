@@ -1,0 +1,498 @@
+{
+  "version": 1,
+  "sourcePath": "openapi.json",
+  "sourceRevision": "4.0.0",
+  "operations": [
+    {
+      "operationId": "ai-search-namespace-instance-get-item-content",
+      "method": "GET",
+      "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/items/{item_id}/download",
+      "resourcePath": [
+        "ai",
+        "search",
+        "namespaces",
+        "instances",
+        "items",
+        "download"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "item_id",
+          "scopeType": "Item",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ],
+      "operationSemantic": {
+        "kind": "Get",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "parameters": [
+        {
+          "name": "account_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_E62BED3EAF32",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": true,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1items~1{item_id}~1download/get/parameters"
+        },
+        {
+          "name": "id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_D11B0460FA6B",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1items~1{item_id}~1download/get/parameters"
+        },
+        {
+          "name": "item_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_459F0F37F7EC",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1items~1{item_id}~1download/get/parameters"
+        },
+        {
+          "name": "name",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_1E49D1722004",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1items~1{item_id}~1download/get/parameters"
+        }
+      ],
+      "responses": [
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "200"
+          },
+          "representations": [
+            {
+              "contentType": "application/octet-stream",
+              "schema": "Inline_5C553A245982",
+              "envelopePolicy": "Raw",
+              "parsingMode": "Binary",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "400"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_9B9F0CAE8299",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "403"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_C0CFB9DA454D",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "404"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_46A82AF20A81",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "503"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_99E2D9B460D4",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "requestFields": [],
+        "responseFields": [],
+        "nextPageRule": "",
+        "stopRule": "single response",
+        "evidence": "no recognized page-array pattern"
+      },
+      "sourceLocation": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1items~1{item_id}~1download/get",
+      "correctionTrace": []
+    }
+  ],
+  "schemas": {
+    "Inline_1E49D1722004": {
+      "name": "Inline_1E49D1722004",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_459F0F37F7EC": {
+      "name": "Inline_459F0F37F7EC",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_46A82AF20A81": {
+      "name": "Inline_46A82AF20A81",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_3018623F8202",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_740129F0D390",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_5C553A245982": {
+      "name": "Inline_5C553A245982",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "format": "binary",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_99E2D9B460D4": {
+      "name": "Inline_99E2D9B460D4",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_3C6C3A772D7F",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_F4E995DC0A8C",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_9B9F0CAE8299": {
+      "name": "Inline_9B9F0CAE8299",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_2BB4D55EFD38",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_25FADB73FB39",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_C0CFB9DA454D": {
+      "name": "Inline_C0CFB9DA454D",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_C9F4AA9292E0",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_63F077622BE1",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_D11B0460FA6B": {
+      "name": "Inline_D11B0460FA6B",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_E62BED3EAF32": {
+      "name": "Inline_E62BED3EAF32",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_3018623F8202": {
+      "name": "Inline_3018623F8202",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_740129F0D390": {
+      "name": "Inline_740129F0D390",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_3C6C3A772D7F": {
+      "name": "Inline_3C6C3A772D7F",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_F4E995DC0A8C": {
+      "name": "Inline_F4E995DC0A8C",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_25FADB73FB39": {
+      "name": "Inline_25FADB73FB39",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_2BB4D55EFD38": {
+      "name": "Inline_2BB4D55EFD38",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_63F077622BE1": {
+      "name": "Inline_63F077622BE1",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_C9F4AA9292E0": {
+      "name": "Inline_C9F4AA9292E0",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    }
+  }
+}

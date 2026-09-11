@@ -6,7 +6,21 @@
     "dns-records-for-a-zone-dns-record-details": { "verb": "Get", "noun": "CfDnsRecord", "supportsShouldProcess": false },
     "dns-records-for-a-zone-update-dns-record": { "verb": "Set", "noun": "CfDnsRecord", "parameterSet": "Replace", "supportsShouldProcess": true, "confirmImpact": "High" },
     "dns-records-for-a-zone-patch-dns-record": { "verb": "Set", "noun": "CfDnsRecord", "parameterSet": "Edit", "supportsShouldProcess": true, "confirmImpact": "Medium" },
-    "dns-records-for-a-zone-delete-dns-record": { "verb": "Remove", "noun": "CfDnsRecord", "supportsShouldProcess": true, "confirmImpact": "High" }
+    "dns-records-for-a-zone-delete-dns-record": { "verb": "Remove", "noun": "CfDnsRecord", "supportsShouldProcess": true, "confirmImpact": "High" },
+    "zones-get": { "verb": "Get", "noun": "CfZone", "parameterSet": "List", "outputPolicy": "item", "paging": "shared-runtime" },
+    "zones-post": { "verb": "New", "noun": "CfZone", "parameterSet": "Create", "supportsShouldProcess": true, "confirmImpact": "Medium" },
+    "zones-0-get": { "verb": "Get", "noun": "CfZone", "parameterSet": "Get" },
+    "zones-0-patch": { "verb": "Set", "noun": "CfZone", "parameterSet": "Edit", "supportsShouldProcess": true, "confirmImpact": "High" },
+    "zones-0-delete": { "verb": "Remove", "noun": "CfZone", "parameterSet": "Delete", "supportsShouldProcess": true, "confirmImpact": "High" },
+    "d1-list-databases": { "verb": "Get", "noun": "CfD1Database", "parameterSet": "List", "outputPolicy": "item", "paging": "shared-runtime" },
+    "d1-create-database": { "verb": "New", "noun": "CfD1Database", "parameterSet": "Create", "supportsShouldProcess": true, "confirmImpact": "Medium" },
+    "d1-get-database": { "verb": "Get", "noun": "CfD1Database", "parameterSet": "Get" },
+    "d1-update-database": { "verb": "Set", "noun": "CfD1Database", "parameterSet": "Update", "supportsShouldProcess": true, "confirmImpact": "High" },
+    "d1-delete-database": { "verb": "Remove", "noun": "CfD1Database", "parameterSet": "Delete", "supportsShouldProcess": true, "confirmImpact": "High" },
+    "ai-search-namespace-instance-list-jobs": { "verb": "Get", "noun": "CfAiSearchJob", "parameterSet": "List", "outputPolicy": "item", "paging": "shared-runtime" },
+    "ai-search-namespace-instance-create-job": { "verb": "New", "noun": "CfAiSearchJob", "parameterSet": "Create", "supportsShouldProcess": true, "confirmImpact": "Medium" },
+    "ai-search-namespace-instance-get-job": { "verb": "Get", "noun": "CfAiSearchJob", "parameterSet": "Get" },
+    "ai-search-namespace-instance-change-job-status": { "verb": "Set", "noun": "CfAiSearchJob", "parameterSet": "Status", "supportsShouldProcess": true, "confirmImpact": "Medium" }
   },
   "defaults": { "typedUnionPolicy": "TypedInput", "primitiveNaming": "SemanticVerb" }
 }

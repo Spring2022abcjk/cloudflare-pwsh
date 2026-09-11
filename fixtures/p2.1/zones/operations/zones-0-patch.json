@@ -1,0 +1,96 @@
+{
+  "operationId": "zones-0-patch",
+  "method": "PATCH",
+  "pathTemplate": "/zones/{zone_id}",
+  "resourcePath": [
+    "zones"
+  ],
+  "scopeBindings": [
+    {
+      "parameterName": "zone_id",
+      "scopeType": "Zone",
+      "role": "Primary"
+    }
+  ],
+  "operationSemantic": {
+    "kind": "Edit",
+    "source": "OperationIdHeuristic",
+    "confidence": "High"
+  },
+  "parameters": [
+    {
+      "name": "zone_id",
+      "location": "path",
+      "required": true,
+      "allowsNull": false,
+      "nullPolicy": "reject-null",
+      "schema": "zones_identifier",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": true,
+      "sourceRef": "#/paths/~1zones~1{zone_id}/patch/parameters"
+    }
+  ],
+  "requestBody": {
+    "required": true,
+    "declaredContract": true,
+    "presence": "required",
+    "semantics": "",
+    "sourceRef": "",
+    "representations": [
+      {
+        "contentType": "application/json",
+        "schema": "Inline_FCE374232F7C",
+        "sourceRef": ""
+      }
+    ]
+  },
+  "responses": [
+    {
+      "statusSelector": {
+        "kind": "Exact",
+        "value": "200"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "Inline_E23BE20A0270",
+          "envelopePolicy": "CloudflareResult",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    },
+    {
+      "statusSelector": {
+        "kind": "Class",
+        "value": "4XX"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "zones_api-response-common-failure",
+          "envelopePolicy": "ErrorEnvelope",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    }
+  ],
+  "pagination": {
+    "strategy": "SinglePage",
+    "requestFields": [],
+    "responseFields": [],
+    "nextPageRule": "",
+    "stopRule": "single response",
+    "evidence": "non-GET operation"
+  },
+  "sourceLocation": "#/paths/~1zones~1{zone_id}/patch",
+  "correctionTrace": []
+}

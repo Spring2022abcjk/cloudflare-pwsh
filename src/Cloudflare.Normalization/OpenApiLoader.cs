@@ -29,6 +29,7 @@ public sealed class RefResolver
     {
         if (!reference.StartsWith("#/", StringComparison.Ordinal))
             throw new InvalidDataException($"Only local OpenAPI refs are supported: {reference}");
+        reference = reference.TrimEnd('/');
         activeReferences ??= new HashSet<string>(StringComparer.Ordinal);
         if (!activeReferences.Add(reference)) throw new InvalidDataException($"Circular OpenAPI reference: {reference}");
         try
@@ -46,11 +47,12 @@ public sealed class RefResolver
 
     public JsonNode ResolveFully(string reference)
     {
+        reference = reference.TrimEnd('/');
         var seen = new HashSet<string>(StringComparer.Ordinal) { reference };
         var current = Resolve(reference);
         while (current is JsonObject obj && obj["$ref"] is JsonValue next)
         {
-            var nextReference = next.GetValue<string>();
+            var nextReference = next.GetValue<string>().TrimEnd('/');
             if (!seen.Add(nextReference)) throw new InvalidDataException($"Circular OpenAPI reference: {nextReference}");
             current = Resolve(nextReference);
         }

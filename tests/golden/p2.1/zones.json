@@ -1,0 +1,498 @@
+{
+  "resource": "zones",
+  "operations": [
+    {
+      "operationId": "zones-0-delete",
+      "cmdletName": "Remove-CfZone",
+      "parameterSet": "Delete",
+      "semantic": {
+        "kind": "Delete",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "DELETE",
+      "pathTemplate": "/zones/{zone_id}",
+      "resourcePath": [
+        "zones"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "zone_id",
+          "scopeType": "Zone",
+          "role": "Primary"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "zone_id",
+          "apiName": "zone_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "zones_identifier",
+          "defaultValue": null
+        }
+      ],
+      "requestRepresentations": {
+        "contentType": "application/json",
+        "schema": ""
+      },
+      "responseCases": [
+        {
+          "status": "200",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "zones_api-response-single-id",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "4XX",
+          "kind": "Class",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "zones_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json"
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "outputPolicy": null,
+        "behavior": null
+      },
+      "supportsShouldProcess": true,
+      "confirmImpact": "High"
+    },
+    {
+      "operationId": "zones-0-get",
+      "cmdletName": "Get-CfZone",
+      "parameterSet": "Get",
+      "semantic": {
+        "kind": "Get",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "GET",
+      "pathTemplate": "/zones/{zone_id}",
+      "resourcePath": [
+        "zones"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "zone_id",
+          "scopeType": "Zone",
+          "role": "Primary"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "zone_id",
+          "apiName": "zone_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "zones_identifier",
+          "defaultValue": null
+        }
+      ],
+      "requestRepresentations": null,
+      "responseCases": [
+        {
+          "status": "200",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_AC68902D46C3",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "4XX",
+          "kind": "Class",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "zones_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json"
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "outputPolicy": null,
+        "behavior": null
+      },
+      "supportsShouldProcess": false,
+      "confirmImpact": "None"
+    },
+    {
+      "operationId": "zones-0-patch",
+      "cmdletName": "Set-CfZone",
+      "parameterSet": "Edit",
+      "semantic": {
+        "kind": "Edit",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "PATCH",
+      "pathTemplate": "/zones/{zone_id}",
+      "resourcePath": [
+        "zones"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "zone_id",
+          "scopeType": "Zone",
+          "role": "Primary"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "zone_id",
+          "apiName": "zone_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "zones_identifier",
+          "defaultValue": null
+        }
+      ],
+      "requestRepresentations": {
+        "contentType": "application/json",
+        "schema": "Inline_FCE374232F7C"
+      },
+      "responseCases": [
+        {
+          "status": "200",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_E23BE20A0270",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "4XX",
+          "kind": "Class",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "zones_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json"
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "outputPolicy": null,
+        "behavior": null
+      },
+      "supportsShouldProcess": true,
+      "confirmImpact": "High"
+    },
+    {
+      "operationId": "zones-get",
+      "cmdletName": "Get-CfZone",
+      "parameterSet": "List",
+      "semantic": {
+        "kind": "List",
+        "source": "CollectionPathHeuristic",
+        "confidence": "Medium"
+      },
+      "method": "GET",
+      "pathTemplate": "/zones",
+      "resourcePath": [
+        "zones"
+      ],
+      "scopeBindings": [],
+      "parameters": [
+        {
+          "name": "account.id",
+          "apiName": "account.id",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_36C27E9E49EA",
+          "defaultValue": null
+        },
+        {
+          "name": "account.name",
+          "apiName": "account.name",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_84FE1C0976C9",
+          "defaultValue": null
+        },
+        {
+          "name": "direction",
+          "apiName": "direction",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_56DFA6C7B77F",
+          "defaultValue": null
+        },
+        {
+          "name": "match",
+          "apiName": "match",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_44E3385AD166",
+          "defaultValue": "all"
+        },
+        {
+          "name": "name",
+          "apiName": "name",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_5B6D82A8D465",
+          "defaultValue": null
+        },
+        {
+          "name": "order",
+          "apiName": "order",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_0868189FEBC3",
+          "defaultValue": null
+        },
+        {
+          "name": "page",
+          "apiName": "page",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_CC0F83557A18",
+          "defaultValue": 1
+        },
+        {
+          "name": "per_page",
+          "apiName": "per_page",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_67272404974D",
+          "defaultValue": 20
+        },
+        {
+          "name": "status",
+          "apiName": "status",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_9CE0D56B9663",
+          "defaultValue": null
+        },
+        {
+          "name": "type",
+          "apiName": "type",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_5B66DEAEA70A",
+          "defaultValue": null
+        }
+      ],
+      "requestRepresentations": null,
+      "responseCases": [
+        {
+          "status": "200",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_4087DD44DB4F",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "4XX",
+          "kind": "Class",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "zones_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json"
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "V4PagePaginationArray",
+        "outputPolicy": "item",
+        "behavior": "shared-runtime"
+      },
+      "supportsShouldProcess": false,
+      "confirmImpact": "None"
+    },
+    {
+      "operationId": "zones-post",
+      "cmdletName": "New-CfZone",
+      "parameterSet": "Create",
+      "semantic": {
+        "kind": "Create",
+        "source": "MethodHeuristic",
+        "confidence": "Low"
+      },
+      "method": "POST",
+      "pathTemplate": "/zones",
+      "resourcePath": [
+        "zones"
+      ],
+      "scopeBindings": [],
+      "parameters": [],
+      "requestRepresentations": {
+        "contentType": "application/json",
+        "schema": "Inline_20EE54BCDFC0"
+      },
+      "responseCases": [
+        {
+          "status": "200",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_6D8B0FAB8B9D",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "4XX",
+          "kind": "Class",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "zones_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json"
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "outputPolicy": null,
+        "behavior": null
+      },
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium"
+    }
+  ],
+  "cmdlets": [
+    {
+      "cmdletName": "Get-CfZone",
+      "operationIds": [
+        "zones-0-get",
+        "zones-get"
+      ],
+      "parameterSets": [
+        {
+          "name": "Get",
+          "required": [
+            "zone_id"
+          ],
+          "operationId": "zones-0-get"
+        },
+        {
+          "name": "List",
+          "required": [],
+          "operationId": "zones-get"
+        }
+      ],
+      "scopeBindings": [
+        "zone_id:Zone:Primary"
+      ],
+      "outputPolicies": [
+        "item"
+      ],
+      "supportsShouldProcess": false,
+      "confirmImpact": "None"
+    },
+    {
+      "cmdletName": "New-CfZone",
+      "operationIds": [
+        "zones-post"
+      ],
+      "parameterSets": [
+        {
+          "name": "Create",
+          "required": [],
+          "operationId": "zones-post"
+        }
+      ],
+      "scopeBindings": [],
+      "outputPolicies": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium"
+    },
+    {
+      "cmdletName": "Remove-CfZone",
+      "operationIds": [
+        "zones-0-delete"
+      ],
+      "parameterSets": [
+        {
+          "name": "Delete",
+          "required": [
+            "zone_id"
+          ],
+          "operationId": "zones-0-delete"
+        }
+      ],
+      "scopeBindings": [
+        "zone_id:Zone:Primary"
+      ],
+      "outputPolicies": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "High"
+    },
+    {
+      "cmdletName": "Set-CfZone",
+      "operationIds": [
+        "zones-0-patch"
+      ],
+      "parameterSets": [
+        {
+          "name": "Edit",
+          "required": [
+            "zone_id"
+          ],
+          "operationId": "zones-0-patch"
+        }
+      ],
+      "scopeBindings": [
+        "zone_id:Zone:Primary"
+      ],
+      "outputPolicies": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "High"
+    }
+  ]
+}

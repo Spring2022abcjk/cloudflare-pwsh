@@ -1,0 +1,71 @@
+{
+  "operationId": "zones-post",
+  "method": "POST",
+  "pathTemplate": "/zones",
+  "resourcePath": [
+    "zones"
+  ],
+  "scopeBindings": [],
+  "operationSemantic": {
+    "kind": "Create",
+    "source": "MethodHeuristic",
+    "confidence": "Low"
+  },
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "declaredContract": true,
+    "presence": "required",
+    "semantics": "",
+    "sourceRef": "",
+    "representations": [
+      {
+        "contentType": "application/json",
+        "schema": "Inline_20EE54BCDFC0",
+        "sourceRef": ""
+      }
+    ]
+  },
+  "responses": [
+    {
+      "statusSelector": {
+        "kind": "Exact",
+        "value": "200"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "Inline_6D8B0FAB8B9D",
+          "envelopePolicy": "CloudflareResult",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    },
+    {
+      "statusSelector": {
+        "kind": "Class",
+        "value": "4XX"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "zones_api-response-common-failure",
+          "envelopePolicy": "ErrorEnvelope",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    }
+  ],
+  "pagination": {
+    "strategy": "SinglePage",
+    "requestFields": [],
+    "responseFields": [],
+    "nextPageRule": "",
+    "stopRule": "single response",
+    "evidence": "non-GET operation"
+  },
+  "sourceLocation": "#/paths/~1zones/post",
+  "correctionTrace": []
+}

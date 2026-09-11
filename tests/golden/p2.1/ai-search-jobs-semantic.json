@@ -1,0 +1,2484 @@
+{
+  "version": 1,
+  "sourcePath": "openapi.json",
+  "sourceRevision": "4.0.0",
+  "operations": [
+    {
+      "operationId": "ai-search-namespace-instance-change-job-status",
+      "method": "PATCH",
+      "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs/{job_id}",
+      "resourcePath": [
+        "ai",
+        "search",
+        "namespaces",
+        "instances",
+        "jobs"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "job_id",
+          "scopeType": "Job",
+          "role": "Primary"
+        },
+        {
+          "parameterName": "name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ],
+      "operationSemantic": {
+        "kind": "Edit",
+        "source": "MethodHeuristic",
+        "confidence": "Low"
+      },
+      "parameters": [
+        {
+          "name": "account_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_73CEC8ED1B4E",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": true,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/patch/parameters"
+        },
+        {
+          "name": "id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_BC959110C285",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/patch/parameters"
+        },
+        {
+          "name": "job_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_FF0130BD2C52",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": true,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/patch/parameters"
+        },
+        {
+          "name": "name",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_615F4B79E384",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/patch/parameters"
+        }
+      ],
+      "requestBody": {
+        "required": false,
+        "declaredContract": true,
+        "presence": "declared-but-observed-absent",
+        "semantics": "",
+        "sourceRef": "",
+        "representations": [
+          {
+            "contentType": "application/json",
+            "schema": "Inline_79D139C33F60",
+            "sourceRef": ""
+          }
+        ]
+      },
+      "responses": [
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "200"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_3E666280BC5D",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "400"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_DBE13E4F175E",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "404"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_255326FB1490",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "503"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_92B12E00406B",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "requestFields": [],
+        "responseFields": [],
+        "nextPageRule": "",
+        "stopRule": "single response",
+        "evidence": "non-GET operation"
+      },
+      "sourceLocation": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/patch",
+      "correctionTrace": []
+    },
+    {
+      "operationId": "ai-search-namespace-instance-create-job",
+      "method": "POST",
+      "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs",
+      "resourcePath": [
+        "ai",
+        "search",
+        "namespaces",
+        "instances",
+        "jobs"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ],
+      "operationSemantic": {
+        "kind": "Create",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "parameters": [
+        {
+          "name": "account_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_6086A83F3192",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": true,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/post/parameters"
+        },
+        {
+          "name": "id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_E5C4DCA15999",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/post/parameters"
+        },
+        {
+          "name": "name",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_AB2FFD32155F",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/post/parameters"
+        }
+      ],
+      "requestBody": {
+        "required": false,
+        "declaredContract": true,
+        "presence": "declared-but-observed-absent",
+        "semantics": "",
+        "sourceRef": "",
+        "representations": [
+          {
+            "contentType": "application/json",
+            "schema": "Inline_175943F28B06",
+            "sourceRef": ""
+          }
+        ]
+      },
+      "responses": [
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "200"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_B05B366604FB",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "400"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_4EDD7BBDF67B",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "404"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_E6B5FE552F30",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "429"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_E5CE7A16C8B5",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "503"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_AA9350409AD5",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "requestFields": [],
+        "responseFields": [],
+        "nextPageRule": "",
+        "stopRule": "single response",
+        "evidence": "non-GET operation"
+      },
+      "sourceLocation": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/post",
+      "correctionTrace": []
+    },
+    {
+      "operationId": "ai-search-namespace-instance-get-job",
+      "method": "GET",
+      "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs/{job_id}",
+      "resourcePath": [
+        "ai",
+        "search",
+        "namespaces",
+        "instances",
+        "jobs"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "job_id",
+          "scopeType": "Job",
+          "role": "Primary"
+        },
+        {
+          "parameterName": "name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ],
+      "operationSemantic": {
+        "kind": "Get",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "parameters": [
+        {
+          "name": "account_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_253450BD4A96",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": true,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/get/parameters"
+        },
+        {
+          "name": "id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_E0EECAC8107F",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/get/parameters"
+        },
+        {
+          "name": "job_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_6A11612B64A3",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": true,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/get/parameters"
+        },
+        {
+          "name": "name",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_4459FE061000",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/get/parameters"
+        }
+      ],
+      "responses": [
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "200"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_C0482441B18D",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "404"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_1B8E58D4DFDC",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "503"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_EB5925B487DF",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "requestFields": [],
+        "responseFields": [],
+        "nextPageRule": "",
+        "stopRule": "single response",
+        "evidence": "no recognized page-array pattern"
+      },
+      "sourceLocation": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/get",
+      "correctionTrace": []
+    },
+    {
+      "operationId": "ai-search-namespace-instance-list-jobs",
+      "method": "GET",
+      "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs",
+      "resourcePath": [
+        "ai",
+        "search",
+        "namespaces",
+        "instances",
+        "jobs"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ],
+      "operationSemantic": {
+        "kind": "List",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "parameters": [
+        {
+          "name": "account_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_04556A5F93F6",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": true,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
+        },
+        {
+          "name": "id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_9475D72D6E3E",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
+        },
+        {
+          "name": "name",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_3D0614C9C7C7",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
+        },
+        {
+          "name": "page",
+          "location": "query",
+          "required": false,
+          "allowsNull": false,
+          "defaultValue": 1,
+          "nullPolicy": "omit",
+          "schema": "Inline_1B184BFF6F50",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
+        },
+        {
+          "name": "per_page",
+          "location": "query",
+          "required": false,
+          "allowsNull": false,
+          "defaultValue": 20,
+          "nullPolicy": "omit",
+          "schema": "Inline_F6777B697645",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get/parameters"
+        }
+      ],
+      "responses": [
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "200"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_AAEBCC321428",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "400"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_5F4B11642A30",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "404"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_1F6434EB9D97",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "503"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_68DC4C47E38C",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "V4PagePaginationArray",
+        "requestFields": [
+          "page",
+          "per_page"
+        ],
+        "responseFields": [
+          "result",
+          "result_info"
+        ],
+        "nextPageRule": "page \u002B 1",
+        "stopRule": "empty result page",
+        "evidence": "query page/per_page plus result collection schema"
+      },
+      "sourceLocation": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs/get",
+      "correctionTrace": []
+    }
+  ],
+  "schemas": {
+    "Inline_04556A5F93F6": {
+      "name": "Inline_04556A5F93F6",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_175943F28B06": {
+      "name": "Inline_175943F28B06",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {
+        "description": {
+          "name": "description",
+          "schema": "Inline_AB490106D844",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_1B184BFF6F50": {
+      "name": "Inline_1B184BFF6F50",
+      "kind": "primitive",
+      "primitiveType": "integer",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_1B8E58D4DFDC": {
+      "name": "Inline_1B8E58D4DFDC",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_2C43AA89F00B",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_C36609FF9C85",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_1F6434EB9D97": {
+      "name": "Inline_1F6434EB9D97",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_65F18791DD73",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_DB01FA356BA5",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_253450BD4A96": {
+      "name": "Inline_253450BD4A96",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_255326FB1490": {
+      "name": "Inline_255326FB1490",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_68406430AAE3",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_3BF5251D0B59",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_3D0614C9C7C7": {
+      "name": "Inline_3D0614C9C7C7",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_3E666280BC5D": {
+      "name": "Inline_3E666280BC5D",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "result",
+        "success"
+      ],
+      "properties": {
+        "result": {
+          "name": "result",
+          "schema": "Inline_29325D9196DE",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_35E8AFBB97BF",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_4459FE061000": {
+      "name": "Inline_4459FE061000",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_4EDD7BBDF67B": {
+      "name": "Inline_4EDD7BBDF67B",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_E5EDEA0601B0",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_DFFE18974F1A",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_5F4B11642A30": {
+      "name": "Inline_5F4B11642A30",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_57D23D8A0B38",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_53899D75C8AF",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_6086A83F3192": {
+      "name": "Inline_6086A83F3192",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_615F4B79E384": {
+      "name": "Inline_615F4B79E384",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_68DC4C47E38C": {
+      "name": "Inline_68DC4C47E38C",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_0F4B4FF4C258",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_D183735284EA",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_6A11612B64A3": {
+      "name": "Inline_6A11612B64A3",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_73CEC8ED1B4E": {
+      "name": "Inline_73CEC8ED1B4E",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_79D139C33F60": {
+      "name": "Inline_79D139C33F60",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "name": "action",
+          "schema": "Inline_93968478681F",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_92B12E00406B": {
+      "name": "Inline_92B12E00406B",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_2A148F2C2A07",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_B5DDFF709F3A",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_9475D72D6E3E": {
+      "name": "Inline_9475D72D6E3E",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_AA9350409AD5": {
+      "name": "Inline_AA9350409AD5",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_D3212BE40153",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_5311C04AE949",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_AAEBCC321428": {
+      "name": "Inline_AAEBCC321428",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "result",
+        "result_info",
+        "success"
+      ],
+      "properties": {
+        "result": {
+          "name": "result",
+          "schema": "Inline_B30D167E078D",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "result_info": {
+          "name": "result_info",
+          "schema": "Inline_466375E6FEE9",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_479BA1E871A0",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_AB2FFD32155F": {
+      "name": "Inline_AB2FFD32155F",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_B05B366604FB": {
+      "name": "Inline_B05B366604FB",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "result",
+        "success"
+      ],
+      "properties": {
+        "result": {
+          "name": "result",
+          "schema": "Inline_E609FDDC1ADA",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_145CAFDE868C",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_BC959110C285": {
+      "name": "Inline_BC959110C285",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_C0482441B18D": {
+      "name": "Inline_C0482441B18D",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "result",
+        "success"
+      ],
+      "properties": {
+        "result": {
+          "name": "result",
+          "schema": "Inline_E25CB86B2E68",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_E102DAF2E88F",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_DBE13E4F175E": {
+      "name": "Inline_DBE13E4F175E",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_B467D41731DF",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_FF15E40A2513",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_E0EECAC8107F": {
+      "name": "Inline_E0EECAC8107F",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_E5C4DCA15999": {
+      "name": "Inline_E5C4DCA15999",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_E5CE7A16C8B5": {
+      "name": "Inline_E5CE7A16C8B5",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_FCD13A9CA6C8",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_70B20F88B7E9",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_E6B5FE552F30": {
+      "name": "Inline_E6B5FE552F30",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_66358BAD8303",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_04EC0091CAB3",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_EB5925B487DF": {
+      "name": "Inline_EB5925B487DF",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_086804B6123E",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_D00CFD9BAE50",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_F6777B697645": {
+      "name": "Inline_F6777B697645",
+      "kind": "primitive",
+      "primitiveType": "integer",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_FF0130BD2C52": {
+      "name": "Inline_FF0130BD2C52",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_AB490106D844": {
+      "name": "Inline_AB490106D844",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_2C43AA89F00B": {
+      "name": "Inline_2C43AA89F00B",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_C36609FF9C85": {
+      "name": "Inline_C36609FF9C85",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_65F18791DD73": {
+      "name": "Inline_65F18791DD73",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_DB01FA356BA5": {
+      "name": "Inline_DB01FA356BA5",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_3BF5251D0B59": {
+      "name": "Inline_3BF5251D0B59",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_68406430AAE3": {
+      "name": "Inline_68406430AAE3",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_29325D9196DE": {
+      "name": "Inline_29325D9196DE",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "id",
+        "source"
+      ],
+      "properties": {
+        "description": {
+          "name": "description",
+          "schema": "Inline_1DBAA27358C2",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "end_reason": {
+          "name": "end_reason",
+          "schema": "Inline_4BD5014D121C",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "ended_at": {
+          "name": "ended_at",
+          "schema": "Inline_485CEBAE805E",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "id": {
+          "name": "id",
+          "schema": "Inline_1828240777EA",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "schema": "Inline_7F49DE13282F",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "source": {
+          "name": "source",
+          "schema": "Inline_BF81ADE89D3C",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "started_at": {
+          "name": "started_at",
+          "schema": "Inline_5FF1DCDF4DFD",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_35E8AFBB97BF": {
+      "name": "Inline_35E8AFBB97BF",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_DFFE18974F1A": {
+      "name": "Inline_DFFE18974F1A",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_E5EDEA0601B0": {
+      "name": "Inline_E5EDEA0601B0",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_53899D75C8AF": {
+      "name": "Inline_53899D75C8AF",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_57D23D8A0B38": {
+      "name": "Inline_57D23D8A0B38",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_0F4B4FF4C258": {
+      "name": "Inline_0F4B4FF4C258",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_D183735284EA": {
+      "name": "Inline_D183735284EA",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_93968478681F": {
+      "name": "Inline_93968478681F",
+      "kind": "enum",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": "cancel",
+      "enum": [
+        "cancel"
+      ]
+    },
+    "Inline_2A148F2C2A07": {
+      "name": "Inline_2A148F2C2A07",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_B5DDFF709F3A": {
+      "name": "Inline_B5DDFF709F3A",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_5311C04AE949": {
+      "name": "Inline_5311C04AE949",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_D3212BE40153": {
+      "name": "Inline_D3212BE40153",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_466375E6FEE9": {
+      "name": "Inline_466375E6FEE9",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "count",
+        "page",
+        "per_page",
+        "total_count"
+      ],
+      "properties": {
+        "count": {
+          "name": "count",
+          "schema": "Inline_3408918262C6",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "page": {
+          "name": "page",
+          "schema": "Inline_FE5F7083CB64",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "per_page": {
+          "name": "per_page",
+          "schema": "Inline_3F561899DB3F",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "total_count": {
+          "name": "total_count",
+          "schema": "Inline_4236C009B9A5",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_479BA1E871A0": {
+      "name": "Inline_479BA1E871A0",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_B30D167E078D": {
+      "name": "Inline_B30D167E078D",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_145CAFDE868C": {
+      "name": "Inline_145CAFDE868C",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_E609FDDC1ADA": {
+      "name": "Inline_E609FDDC1ADA",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "id",
+        "source"
+      ],
+      "properties": {
+        "description": {
+          "name": "description",
+          "schema": "Inline_1A3EBBCA4DC7",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "end_reason": {
+          "name": "end_reason",
+          "schema": "Inline_5DEB01CCBC37",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "ended_at": {
+          "name": "ended_at",
+          "schema": "Inline_1A3D7B6C6B22",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "id": {
+          "name": "id",
+          "schema": "Inline_C6FE2C40C16C",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "schema": "Inline_93401D413B85",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "source": {
+          "name": "source",
+          "schema": "Inline_EFDBACAE86CC",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "started_at": {
+          "name": "started_at",
+          "schema": "Inline_1A0A752D0404",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_E102DAF2E88F": {
+      "name": "Inline_E102DAF2E88F",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_E25CB86B2E68": {
+      "name": "Inline_E25CB86B2E68",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "id",
+        "source"
+      ],
+      "properties": {
+        "description": {
+          "name": "description",
+          "schema": "Inline_16EF57EA2711",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "end_reason": {
+          "name": "end_reason",
+          "schema": "Inline_A3D6E7CF7AE5",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "ended_at": {
+          "name": "ended_at",
+          "schema": "Inline_5277DB3AB3EA",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "id": {
+          "name": "id",
+          "schema": "Inline_0BCE1256AB7F",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "schema": "Inline_061FCEAC800F",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "source": {
+          "name": "source",
+          "schema": "Inline_EBA10F71799E",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "started_at": {
+          "name": "started_at",
+          "schema": "Inline_C90AE91308BE",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_B467D41731DF": {
+      "name": "Inline_B467D41731DF",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_FF15E40A2513": {
+      "name": "Inline_FF15E40A2513",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_70B20F88B7E9": {
+      "name": "Inline_70B20F88B7E9",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_FCD13A9CA6C8": {
+      "name": "Inline_FCD13A9CA6C8",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_04EC0091CAB3": {
+      "name": "Inline_04EC0091CAB3",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_66358BAD8303": {
+      "name": "Inline_66358BAD8303",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_086804B6123E": {
+      "name": "Inline_086804B6123E",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_D00CFD9BAE50": {
+      "name": "Inline_D00CFD9BAE50",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_1828240777EA": {
+      "name": "Inline_1828240777EA",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_1DBAA27358C2": {
+      "name": "Inline_1DBAA27358C2",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_485CEBAE805E": {
+      "name": "Inline_485CEBAE805E",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_4BD5014D121C": {
+      "name": "Inline_4BD5014D121C",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_5FF1DCDF4DFD": {
+      "name": "Inline_5FF1DCDF4DFD",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_7F49DE13282F": {
+      "name": "Inline_7F49DE13282F",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_BF81ADE89D3C": {
+      "name": "Inline_BF81ADE89D3C",
+      "kind": "enum",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": [
+        "user",
+        "schedule"
+      ]
+    },
+    "Inline_3408918262C6": {
+      "name": "Inline_3408918262C6",
+      "kind": "primitive",
+      "primitiveType": "integer",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_3F561899DB3F": {
+      "name": "Inline_3F561899DB3F",
+      "kind": "primitive",
+      "primitiveType": "integer",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_4236C009B9A5": {
+      "name": "Inline_4236C009B9A5",
+      "kind": "primitive",
+      "primitiveType": "integer",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_FE5F7083CB64": {
+      "name": "Inline_FE5F7083CB64",
+      "kind": "primitive",
+      "primitiveType": "integer",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_1A0A752D0404": {
+      "name": "Inline_1A0A752D0404",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_1A3D7B6C6B22": {
+      "name": "Inline_1A3D7B6C6B22",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_1A3EBBCA4DC7": {
+      "name": "Inline_1A3EBBCA4DC7",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_5DEB01CCBC37": {
+      "name": "Inline_5DEB01CCBC37",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_93401D413B85": {
+      "name": "Inline_93401D413B85",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_C6FE2C40C16C": {
+      "name": "Inline_C6FE2C40C16C",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_EFDBACAE86CC": {
+      "name": "Inline_EFDBACAE86CC",
+      "kind": "enum",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": [
+        "user",
+        "schedule"
+      ]
+    },
+    "Inline_061FCEAC800F": {
+      "name": "Inline_061FCEAC800F",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_0BCE1256AB7F": {
+      "name": "Inline_0BCE1256AB7F",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_16EF57EA2711": {
+      "name": "Inline_16EF57EA2711",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_5277DB3AB3EA": {
+      "name": "Inline_5277DB3AB3EA",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_A3D6E7CF7AE5": {
+      "name": "Inline_A3D6E7CF7AE5",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_C90AE91308BE": {
+      "name": "Inline_C90AE91308BE",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_EBA10F71799E": {
+      "name": "Inline_EBA10F71799E",
+      "kind": "enum",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": [
+        "user",
+        "schedule"
+      ]
+    }
+  }
+}

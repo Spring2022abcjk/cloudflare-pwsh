@@ -20,6 +20,7 @@ artifacts/
 !artifacts/generated-normalized/
 !artifacts/generated-normalized/dns-records/
 !artifacts/generated-normalized/dns-records/*.json
+/artifacts/p2.1/
 
 # Local module build copy (recreated by the test runner)
 module/**/*.dll

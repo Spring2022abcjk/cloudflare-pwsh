@@ -1,0 +1,199 @@
+{
+  "operationId": "ai-search-namespace-instance-change-job-status",
+  "method": "PATCH",
+  "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs/{job_id}",
+  "resourcePath": [
+    "ai",
+    "search",
+    "namespaces",
+    "instances",
+    "jobs"
+  ],
+  "scopeBindings": [
+    {
+      "parameterName": "account_id",
+      "scopeType": "Account",
+      "role": "Parent"
+    },
+    {
+      "parameterName": "id",
+      "scopeType": "Instance",
+      "role": "Nested"
+    },
+    {
+      "parameterName": "job_id",
+      "scopeType": "Job",
+      "role": "Primary"
+    },
+    {
+      "parameterName": "name",
+      "scopeType": "Namespace",
+      "role": "Nested"
+    }
+  ],
+  "operationSemantic": {
+    "kind": "Edit",
+    "source": "MethodHeuristic",
+    "confidence": "Low"
+  },
+  "parameters": [
+    {
+      "name": "account_id",
+      "location": "path",
+      "required": true,
+      "allowsNull": false,
+      "nullPolicy": "reject-null",
+      "schema": "Inline_73CEC8ED1B4E",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": true,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/patch/parameters"
+    },
+    {
+      "name": "id",
+      "location": "path",
+      "required": true,
+      "allowsNull": false,
+      "nullPolicy": "reject-null",
+      "schema": "Inline_BC959110C285",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/patch/parameters"
+    },
+    {
+      "name": "job_id",
+      "location": "path",
+      "required": true,
+      "allowsNull": false,
+      "nullPolicy": "reject-null",
+      "schema": "Inline_FF0130BD2C52",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": true,
+      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/patch/parameters"
+    },
+    {
+      "name": "name",
+      "location": "path",
+      "required": true,
+      "allowsNull": false,
+      "nullPolicy": "reject-null",
+      "schema": "Inline_615F4B79E384",
+      "serialization": {
+        "style": "form",
+        "explode": true,
+        "allowReserved": false,
+        "arrayNotation": "repeat",
+        "objectNotation": "dots"
+      },
+      "isParentScopeId": false,
+      "isPrimaryResourceId": false,
+      "sourceRef": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/patch/parameters"
+    }
+  ],
+  "requestBody": {
+    "required": false,
+    "declaredContract": true,
+    "presence": "declared-but-observed-absent",
+    "semantics": "",
+    "sourceRef": "",
+    "representations": [
+      {
+        "contentType": "application/json",
+        "schema": "Inline_79D139C33F60",
+        "sourceRef": ""
+      }
+    ]
+  },
+  "responses": [
+    {
+      "statusSelector": {
+        "kind": "Exact",
+        "value": "200"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "Inline_3E666280BC5D",
+          "envelopePolicy": "CloudflareResult",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    },
+    {
+      "statusSelector": {
+        "kind": "Exact",
+        "value": "400"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "Inline_DBE13E4F175E",
+          "envelopePolicy": "CloudflareResult",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    },
+    {
+      "statusSelector": {
+        "kind": "Exact",
+        "value": "404"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "Inline_255326FB1490",
+          "envelopePolicy": "CloudflareResult",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    },
+    {
+      "statusSelector": {
+        "kind": "Exact",
+        "value": "503"
+      },
+      "representations": [
+        {
+          "contentType": "application/json",
+          "schema": "Inline_92B12E00406B",
+          "envelopePolicy": "CloudflareResult",
+          "parsingMode": "Json",
+          "sourceRef": ""
+        }
+      ]
+    }
+  ],
+  "pagination": {
+    "strategy": "SinglePage",
+    "requestFields": [],
+    "responseFields": [],
+    "nextPageRule": "",
+    "stopRule": "single response",
+    "evidence": "non-GET operation"
+  },
+  "sourceLocation": "#/paths/~1accounts~1{account_id}~1ai-search~1namespaces~1{name}~1instances~1{id}~1jobs~1{job_id}/patch",
+  "correctionTrace": []
+}

@@ -10,6 +10,10 @@
 - [P1.1 总结](./P1.1-summary.md)：DNS vertical slice 的确认项、实现项、原型决策、未解决项和 P1.2 延后项。
 - [P1.1.5 总结](./P1.1.5-summary.md)：通用 correction/projection、强类型 presence/union 与生成边界。
 - [P1.2 总结](./P1.2-summary.md)：OpenAPI loader/ref resolver/normalizer、correction 和 DNS semantic diff。
+- [架构](./architecture.md)：长期 pipeline、层边界、已确认架构事实和 deferred boundary。
+- [路线图](./roadmap.md)：P1 完成项与 P2.1–P4 路线。
+- [开发原则](./development-principles.md)：后续 agent 必须遵守的长期规则。
+- [P2.1 总结](./P2.1-summary.md)：Zones、D1、AI Search 跨资源归一化、投影快照和回归结果。
 
 ## 证据等级
 

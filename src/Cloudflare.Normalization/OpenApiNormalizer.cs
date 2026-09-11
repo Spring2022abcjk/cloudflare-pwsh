@@ -49,14 +49,14 @@ public sealed class OpenApiNormalizer
             Method = method.ToUpperInvariant(),
             PathTemplate = path,
             ResourcePath = GetResourcePath(path),
-            OperationSemantic = InferSemantic(operationId, method),
+            OperationSemantic = InferSemantic(operationId, method, path),
             SourceLocation = $"#/paths/{Escape(path)}/{method}"
         };
         var parameters = new Dictionary<(string Name, string Location), NormalizedParameter>();
         foreach (var parameter in inheritedParameters) parameters[(parameter.Name, parameter.Location)] = parameter;
         foreach (var parameter in ReadParameters(operation["parameters"], $"{op.SourceLocation}/parameters")) parameters[(parameter.Name, parameter.Location)] = parameter;
         op.Parameters = parameters.Values.OrderBy(x => x.Location, StringComparer.Ordinal).ThenBy(x => x.Name, StringComparer.Ordinal).ToList();
-        op.ScopeBindings = op.Parameters.Where(x => x.Location == "path").Select(ToScopeBinding).Where(x => x is not null).Cast<ScopeBinding>().ToList();
+        op.ScopeBindings = InferScopeBindings(path, op.Parameters);
         op.RequestBody = NormalizeRequestBody(operation["requestBody"], op.SourceLocation, operationId);
         op.Responses = NormalizeResponses(operation["responses"], op.SourceLocation, operationId);
         op.Pagination = DetectPagination(op, operationId);
@@ -208,9 +208,10 @@ public sealed class OpenApiNormalizer
         {
             if (raw[key] is not JsonArray alternatives) continue;
             var target = key switch { "oneOf" => schema.OneOf, "anyOf" => schema.AnyOf, _ => schema.AllOf };
-            foreach (var alternative in alternatives)
+            for (var alternativeIndex = 0; alternativeIndex < alternatives.Count; alternativeIndex++)
             {
-                var alternativeName = GetSchemaReferenceName(alternative, $"#/components/schemas/{Escape(name)}/{key}");
+                var alternative = alternatives[alternativeIndex];
+                var alternativeName = GetSchemaReferenceName(alternative, $"#/components/schemas/{Escape(name)}/{key}/{alternativeIndex}");
                 if (!string.IsNullOrEmpty(alternativeName)) target.Add(alternativeName);
             }
         }
@@ -316,41 +317,125 @@ public sealed class OpenApiNormalizer
     private PaginationModel? DetectPagination(NormalizedOperation operation, string operationId)
     {
         if (!operation.Method.Equals("GET", StringComparison.OrdinalIgnoreCase)) return operation.Responses.Count > 0 ? new PaginationModel { Strategy = "SinglePage", StopRule = "single response", Evidence = "non-GET operation" } : null;
-        var hasPage = operation.Parameters.Any(x => x.Location == "query" && x.Name is "page" or "per_page");
+        var hasPage = operation.Parameters.Any(x => x.Location == "query" && x.Name == "page")
+            && operation.Parameters.Any(x => x.Location == "query" && x.Name == "per_page");
         var first = operation.Responses.SelectMany(x => x.Representations).FirstOrDefault(x => x.ContentType.Contains("json", StringComparison.OrdinalIgnoreCase));
-        var pageLike = first is not null && first.Schema.Contains("collection", StringComparison.OrdinalIgnoreCase) && hasPage;
+        var pageLike = first is not null && hasPage && (first.Schema.Contains("collection", StringComparison.OrdinalIgnoreCase) || IsPageArraySchema(first.Schema));
         if (pageLike)
             return new PaginationModel { Strategy = "V4PagePaginationArray", RequestFields = operation.Parameters.Where(x => x.Name is "page" or "per_page").Select(x => x.Name).ToList(), ResponseFields = ["result", "result_info"], NextPageRule = "page + 1", StopRule = "empty result page", Evidence = "query page/per_page plus result collection schema" };
         return operation.Responses.Count > 0 ? new PaginationModel { Strategy = "SinglePage", StopRule = "single response", Evidence = "no recognized page-array pattern" } : null;
     }
 
-    private static ScopeBinding? ToScopeBinding(NormalizedParameter parameter)
+    private bool IsPageArraySchema(string schemaName)
     {
-        if (parameter.Name == "zone_id") return new ScopeBinding { ParameterName = parameter.Name, ScopeType = "Zone", Role = "Parent" };
-        if (parameter.Name == "account_id") return new ScopeBinding { ParameterName = parameter.Name, ScopeType = "Account", Role = "Parent" };
-        if (parameter.Name is "namespace_name" or "instance_id") return new ScopeBinding { ParameterName = parameter.Name, ScopeType = parameter.Name.StartsWith("namespace", StringComparison.Ordinal) ? "Namespace" : "Instance", Role = "Nested" };
-        if (parameter.IsPrimaryResourceId) return new ScopeBinding { ParameterName = parameter.Name, ScopeType = ToTitle(parameter.Name[..^3]), Role = "Primary" };
-        return null;
+        if (string.IsNullOrEmpty(schemaName)) return false;
+        return HasSchemaProperty(schemaName, "result_info", new HashSet<string>(StringComparer.Ordinal))
+            && TryGetSchemaProperty(schemaName, "result", out var resultProperty, new HashSet<string>(StringComparer.Ordinal))
+            && _schemas.TryGetValue(resultProperty.Schema, out var resultSchema)
+            && resultSchema.Kind == "array";
     }
 
-    private static OperationSemantic InferSemantic(string operationId, string method)
+    private bool HasSchemaProperty(string schemaName, string propertyName, HashSet<string> visited)
+    {
+        if (!visited.Add(schemaName) || !_schemas.TryGetValue(schemaName, out var schema)) return false;
+        if (schema.Properties.ContainsKey(propertyName)) return true;
+        return schema.AllOf.Any(x => HasSchemaProperty(x, propertyName, visited));
+    }
+
+    private bool TryGetSchemaProperty(string schemaName, string propertyName, out NormalizedProperty property, HashSet<string> visited)
+    {
+        property = new NormalizedProperty();
+        if (!visited.Add(schemaName) || !_schemas.TryGetValue(schemaName, out var schema)) return false;
+        if (schema.Properties.TryGetValue(propertyName, out property!)) return true;
+        foreach (var child in schema.AllOf)
+            if (TryGetSchemaProperty(child, propertyName, out property, visited)) return true;
+        return false;
+    }
+
+    private static List<ScopeBinding> InferScopeBindings(string path, IReadOnlyList<NormalizedParameter> parameters)
+    {
+        var pathNames = PathParameterNames(path);
+        var nonGlobal = pathNames.Where(x => !IsGlobalScopeParameter(x)).ToList();
+        var primaryName = path.TrimEnd('/').EndsWith('}') ? nonGlobal.LastOrDefault() : null;
+        var bindings = new List<ScopeBinding>();
+        foreach (var parameter in parameters.Where(x => x.Location == "path"))
+        {
+            if (!pathNames.Contains(parameter.Name, StringComparer.Ordinal)) continue;
+            var scopeType = InferScopeType(path, parameter.Name);
+            var role = parameter.Name.Equals("account_id", StringComparison.OrdinalIgnoreCase) ? "Parent"
+                : parameter.Name is "zone_id" or "zone_identifier" && IsTopLevelResourceIdentifier(path, parameter.Name) ? "Primary"
+                : parameter.Name is "zone_id" or "zone_identifier" ? "Parent"
+                : parameter.Name.Equals(primaryName, StringComparison.Ordinal) ? "Primary"
+                : "Nested";
+            parameter.IsParentScopeId = role == "Parent";
+            parameter.IsPrimaryResourceId = role == "Primary";
+            bindings.Add(new ScopeBinding { ParameterName = parameter.Name, ScopeType = scopeType, Role = role });
+        }
+        return bindings;
+    }
+
+    private static List<string> PathParameterNames(string path)
+        => path.Split('/', StringSplitOptions.RemoveEmptyEntries)
+            .Where(x => x.StartsWith('{') && x.EndsWith('}'))
+            .Select(x => x[1..^1])
+            .ToList();
+
+    private static bool IsGlobalScopeParameter(string name)
+        => name is "zone_id" or "zone_identifier" or "account_id" or "user_id";
+
+    private static bool IsTopLevelResourceIdentifier(string path, string parameterName)
+    {
+        var segments = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        for (var index = 1; index < segments.Length; index++)
+        {
+            if (segments[index] != "{" + parameterName + "}") continue;
+            var parent = segments[index - 1];
+            var hasLiteralAfter = segments.Skip(index + 1).Any(x => !x.StartsWith('{'));
+            return parent is "zones" or "accounts" or "users" && !hasLiteralAfter;
+        }
+        return false;
+    }
+
+    private static string InferScopeType(string path, string parameterName)
+    {
+        if (parameterName is "zone_id" or "zone_identifier") return "Zone";
+        if (parameterName == "account_id") return "Account";
+        var segments = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        var marker = "{" + parameterName + "}";
+        var index = Array.IndexOf(segments, marker);
+        if (index > 0) return ToTitle(Singularize(segments[index - 1]));
+        if (parameterName.EndsWith("_id", StringComparison.Ordinal)) return ToTitle(parameterName[..^3]);
+        return ToTitle(parameterName);
+    }
+
+    private static string Singularize(string value)
+        => value.EndsWith("ies", StringComparison.Ordinal) ? value[..^3] + "y"
+        : value.EndsWith('s') && !value.EndsWith("ss", StringComparison.Ordinal) ? value[..^1]
+        : value;
+
+    private static OperationSemantic InferSemantic(string operationId, string method, string path)
     {
         var lower = operationId.ToLowerInvariant();
+        if (method.Equals("GET", StringComparison.OrdinalIgnoreCase) && !path.TrimEnd('/').EndsWith('}') && lower.Contains("get", StringComparison.Ordinal))
+            return new OperationSemantic { Kind = "List", Source = "CollectionPathHeuristic", Confidence = "Medium" };
         foreach (var pair in new[] { ("list", "List"), ("details", "Get"), ("get", "Get"), ("create", "Create"), ("update", "Update"), ("overwrite", "Update"), ("patch", "Edit"), ("edit", "Edit"), ("delete", "Delete"), ("export", "Download"), ("import", "Upload") })
             if (lower.Contains(pair.Item1, StringComparison.Ordinal)) return new OperationSemantic { Kind = pair.Item2, Source = "OperationIdHeuristic", Confidence = "High" };
-        return new OperationSemantic { Kind = method.Equals("GET", StringComparison.OrdinalIgnoreCase) ? "Get" : "Unknown", Source = "MethodHeuristic", Confidence = "Low" };
+        var methodKind = method.ToUpperInvariant() switch { "GET" => "Get", "POST" => "Create", "PUT" => "Update", "PATCH" => "Edit", "DELETE" => "Delete", _ => "Unknown" };
+        return new OperationSemantic { Kind = methodKind, Source = "MethodHeuristic", Confidence = "Low" };
     }
 
     private static List<string> GetResourcePath(string path)
     {
         var values = path.Split('/', StringSplitOptions.RemoveEmptyEntries).Where(x => !x.StartsWith('{')).ToList();
         var result = new List<string>();
-        foreach (var value in values)
+        for (var index = 0; index < values.Count; index++)
         {
+            var value = values[index];
             if (value is "zones" or "accounts" or "users") continue;
-            var parts = value.Split('_', StringSplitOptions.RemoveEmptyEntries);
+            var parts = value.Split(new[] { '_', '-' }, StringSplitOptions.RemoveEmptyEntries);
             result.AddRange(parts.Length > 1 ? parts : [value]);
         }
+        if (result.Count == 0 && values.Count > 0) result.AddRange(values[0].Split(new[] { '_', '-' }, StringSplitOptions.RemoveEmptyEntries));
         return result;
     }
 

@@ -1,0 +1,642 @@
+{
+  "resource": "ai-search-jobs",
+  "operations": [
+    {
+      "operationId": "ai-search-namespace-instance-change-job-status",
+      "cmdletName": "Set-CfAiSearchJob",
+      "parameterSet": "Status",
+      "semantic": {
+        "kind": "Edit",
+        "source": "MethodHeuristic",
+        "confidence": "Low"
+      },
+      "method": "PATCH",
+      "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs/{job_id}",
+      "resourcePath": [
+        "ai",
+        "search",
+        "namespaces",
+        "instances",
+        "jobs"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "job_id",
+          "scopeType": "Job",
+          "role": "Primary"
+        },
+        {
+          "parameterName": "name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "account_id",
+          "apiName": "account_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_73CEC8ED1B4E",
+          "defaultValue": null
+        },
+        {
+          "name": "id",
+          "apiName": "id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_BC959110C285",
+          "defaultValue": null
+        },
+        {
+          "name": "job_id",
+          "apiName": "job_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_FF0130BD2C52",
+          "defaultValue": null
+        },
+        {
+          "name": "name",
+          "apiName": "name",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_615F4B79E384",
+          "defaultValue": null
+        }
+      ],
+      "requestRepresentations": {
+        "contentType": "application/json",
+        "schema": "Inline_79D139C33F60"
+      },
+      "responseCases": [
+        {
+          "status": "200",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_3E666280BC5D",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "400",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_DBE13E4F175E",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "404",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_255326FB1490",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "503",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_92B12E00406B",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "outputPolicy": null,
+        "behavior": null
+      },
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium"
+    },
+    {
+      "operationId": "ai-search-namespace-instance-create-job",
+      "cmdletName": "New-CfAiSearchJob",
+      "parameterSet": "Create",
+      "semantic": {
+        "kind": "Create",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "POST",
+      "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs",
+      "resourcePath": [
+        "ai",
+        "search",
+        "namespaces",
+        "instances",
+        "jobs"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "account_id",
+          "apiName": "account_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_6086A83F3192",
+          "defaultValue": null
+        },
+        {
+          "name": "id",
+          "apiName": "id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_E5C4DCA15999",
+          "defaultValue": null
+        },
+        {
+          "name": "name",
+          "apiName": "name",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_AB2FFD32155F",
+          "defaultValue": null
+        }
+      ],
+      "requestRepresentations": {
+        "contentType": "application/json",
+        "schema": "Inline_175943F28B06"
+      },
+      "responseCases": [
+        {
+          "status": "200",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_B05B366604FB",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "400",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_4EDD7BBDF67B",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "404",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_E6B5FE552F30",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "429",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_E5CE7A16C8B5",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "503",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_AA9350409AD5",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "outputPolicy": null,
+        "behavior": null
+      },
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium"
+    },
+    {
+      "operationId": "ai-search-namespace-instance-get-job",
+      "cmdletName": "Get-CfAiSearchJob",
+      "parameterSet": "Get",
+      "semantic": {
+        "kind": "Get",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "GET",
+      "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs/{job_id}",
+      "resourcePath": [
+        "ai",
+        "search",
+        "namespaces",
+        "instances",
+        "jobs"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "job_id",
+          "scopeType": "Job",
+          "role": "Primary"
+        },
+        {
+          "parameterName": "name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "account_id",
+          "apiName": "account_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_253450BD4A96",
+          "defaultValue": null
+        },
+        {
+          "name": "id",
+          "apiName": "id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_E0EECAC8107F",
+          "defaultValue": null
+        },
+        {
+          "name": "job_id",
+          "apiName": "job_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_6A11612B64A3",
+          "defaultValue": null
+        },
+        {
+          "name": "name",
+          "apiName": "name",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_4459FE061000",
+          "defaultValue": null
+        }
+      ],
+      "requestRepresentations": null,
+      "responseCases": [
+        {
+          "status": "200",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_C0482441B18D",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "404",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_1B8E58D4DFDC",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "503",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_EB5925B487DF",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "outputPolicy": null,
+        "behavior": null
+      },
+      "supportsShouldProcess": false,
+      "confirmImpact": "None"
+    },
+    {
+      "operationId": "ai-search-namespace-instance-list-jobs",
+      "cmdletName": "Get-CfAiSearchJob",
+      "parameterSet": "List",
+      "semantic": {
+        "kind": "List",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "GET",
+      "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs",
+      "resourcePath": [
+        "ai",
+        "search",
+        "namespaces",
+        "instances",
+        "jobs"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "account_id",
+          "apiName": "account_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_04556A5F93F6",
+          "defaultValue": null
+        },
+        {
+          "name": "id",
+          "apiName": "id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_9475D72D6E3E",
+          "defaultValue": null
+        },
+        {
+          "name": "name",
+          "apiName": "name",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_3D0614C9C7C7",
+          "defaultValue": null
+        },
+        {
+          "name": "page",
+          "apiName": "page",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_1B184BFF6F50",
+          "defaultValue": 1
+        },
+        {
+          "name": "per_page",
+          "apiName": "per_page",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_F6777B697645",
+          "defaultValue": 20
+        }
+      ],
+      "requestRepresentations": null,
+      "responseCases": [
+        {
+          "status": "200",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_AAEBCC321428",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "400",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_5F4B11642A30",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "404",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_1F6434EB9D97",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "503",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_68DC4C47E38C",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "V4PagePaginationArray",
+        "outputPolicy": "item",
+        "behavior": "shared-runtime"
+      },
+      "supportsShouldProcess": false,
+      "confirmImpact": "None"
+    }
+  ],
+  "cmdlets": [
+    {
+      "cmdletName": "Get-CfAiSearchJob",
+      "operationIds": [
+        "ai-search-namespace-instance-get-job",
+        "ai-search-namespace-instance-list-jobs"
+      ],
+      "parameterSets": [
+        {
+          "name": "Get",
+          "required": [
+            "account_id",
+            "id",
+            "job_id",
+            "name"
+          ],
+          "operationId": "ai-search-namespace-instance-get-job"
+        },
+        {
+          "name": "List",
+          "required": [
+            "account_id",
+            "id",
+            "name"
+          ],
+          "operationId": "ai-search-namespace-instance-list-jobs"
+        }
+      ],
+      "scopeBindings": [
+        "account_id:Account:Parent",
+        "id:Instance:Nested",
+        "job_id:Job:Primary",
+        "name:Namespace:Nested"
+      ],
+      "outputPolicies": [
+        "item"
+      ],
+      "supportsShouldProcess": false,
+      "confirmImpact": "None"
+    },
+    {
+      "cmdletName": "New-CfAiSearchJob",
+      "operationIds": [
+        "ai-search-namespace-instance-create-job"
+      ],
+      "parameterSets": [
+        {
+          "name": "Create",
+          "required": [
+            "account_id",
+            "id",
+            "name"
+          ],
+          "operationId": "ai-search-namespace-instance-create-job"
+        }
+      ],
+      "scopeBindings": [
+        "account_id:Account:Parent",
+        "id:Instance:Nested",
+        "name:Namespace:Nested"
+      ],
+      "outputPolicies": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium"
+    },
+    {
+      "cmdletName": "Set-CfAiSearchJob",
+      "operationIds": [
+        "ai-search-namespace-instance-change-job-status"
+      ],
+      "parameterSets": [
+        {
+          "name": "Status",
+          "required": [
+            "account_id",
+            "id",
+            "job_id",
+            "name"
+          ],
+          "operationId": "ai-search-namespace-instance-change-job-status"
+        }
+      ],
+      "scopeBindings": [
+        "account_id:Account:Parent",
+        "id:Instance:Nested",
+        "job_id:Job:Primary",
+        "name:Namespace:Nested"
+      ],
+      "outputPolicies": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium"
+    }
+  ]
+}

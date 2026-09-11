@@ -2780,7 +2780,7 @@
       "anyOf": [],
       "allOf": [
         "api-shield_identifier",
-        "Inline_4AC6EA8123CE"
+        "Inline_70ED033A6848"
       ],
       "enum": []
     },
@@ -2796,8 +2796,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_4AC6EA8123CE": {
-      "name": "Inline_4AC6EA8123CE",
+    "Inline_70ED033A6848": {
+      "name": "Inline_70ED033A6848",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -2827,13 +2827,13 @@
       "oneOf": [],
       "anyOf": [],
       "allOf": [
-        "Inline_EC856A0D6569",
+        "Inline_7296D183E718",
         "api-shield_uuid"
       ],
       "enum": []
     },
-    "Inline_EC856A0D6569": {
-      "name": "Inline_EC856A0D6569",
+    "Inline_7296D183E718": {
+      "name": "Inline_7296D183E718",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -3378,7 +3378,7 @@
       "anyOf": [],
       "allOf": [
         "dns-records_api-response-collection",
-        "Inline_144C4183629B"
+        "Inline_3886AD07A8B8"
       ],
       "enum": []
     },
@@ -3393,7 +3393,7 @@
       "anyOf": [],
       "allOf": [
         "dns-records_api-response-common",
-        "Inline_F7BC349A3305"
+        "Inline_ED6359BC178F"
       ],
       "enum": []
     },
@@ -3467,15 +3467,15 @@
         "true"
       ]
     },
-    "Inline_F7BC349A3305": {
-      "name": "Inline_F7BC349A3305",
+    "Inline_ED6359BC178F": {
+      "name": "Inline_ED6359BC178F",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "result_info": {
           "name": "result_info",
-          "schema": "Inline_7AA16E7F232B",
+          "schema": "Inline_1BB83BF8AB14",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -3488,15 +3488,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_7AA16E7F232B": {
-      "name": "Inline_7AA16E7F232B",
+    "Inline_1BB83BF8AB14": {
+      "name": "Inline_1BB83BF8AB14",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "count": {
           "name": "count",
-          "schema": "Inline_B9C06B3BBBBD",
+          "schema": "Inline_A607E67D45A9",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -3505,7 +3505,7 @@
         },
         "page": {
           "name": "page",
-          "schema": "Inline_2425E82A4CCB",
+          "schema": "Inline_2DEEB6FC26AA",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -3514,7 +3514,7 @@
         },
         "per_page": {
           "name": "per_page",
-          "schema": "Inline_C3DAA5A86C4F",
+          "schema": "Inline_86D926552844",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -3523,7 +3523,7 @@
         },
         "total_count": {
           "name": "total_count",
-          "schema": "Inline_1402D23F7799",
+          "schema": "Inline_8AB7A8F61696",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -3532,7 +3532,7 @@
         },
         "total_pages": {
           "name": "total_pages",
-          "schema": "Inline_B65C06C0B2A9",
+          "schema": "Inline_B7667E0A8A20",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -3545,8 +3545,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_B9C06B3BBBBD": {
-      "name": "Inline_B9C06B3BBBBD",
+    "Inline_A607E67D45A9": {
+      "name": "Inline_A607E67D45A9",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -3556,8 +3556,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_2425E82A4CCB": {
-      "name": "Inline_2425E82A4CCB",
+    "Inline_2DEEB6FC26AA": {
+      "name": "Inline_2DEEB6FC26AA",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -3567,8 +3567,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_C3DAA5A86C4F": {
-      "name": "Inline_C3DAA5A86C4F",
+    "Inline_86D926552844": {
+      "name": "Inline_86D926552844",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -3578,8 +3578,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_1402D23F7799": {
-      "name": "Inline_1402D23F7799",
+    "Inline_8AB7A8F61696": {
+      "name": "Inline_8AB7A8F61696",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -3589,8 +3589,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_B65C06C0B2A9": {
-      "name": "Inline_B65C06C0B2A9",
+    "Inline_B7667E0A8A20": {
+      "name": "Inline_B7667E0A8A20",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -3600,15 +3600,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_144C4183629B": {
-      "name": "Inline_144C4183629B",
+    "Inline_3886AD07A8B8": {
+      "name": "Inline_3886AD07A8B8",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "result": {
           "name": "result",
-          "schema": "Inline_8569FD312A5D",
+          "schema": "Inline_2A4D3556D820",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -3621,8 +3621,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_8569FD312A5D": {
-      "name": "Inline_8569FD312A5D",
+    "Inline_2A4D3556D820": {
+      "name": "Inline_2A4D3556D820",
       "kind": "array",
       "primitiveType": "array",
       "requiredProperties": [],
@@ -3939,7 +3939,7 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_DD75595E0712"
+        "Inline_897E8B45E798"
       ],
       "singleValue": "A",
       "enum": []
@@ -4114,14 +4114,14 @@
       "properties": {},
       "oneOf": [],
       "anyOf": [
-        "Inline_BD4918085E03",
-        "Inline_BD4918085E03"
+        "Inline_EA83AE587645",
+        "Inline_611922D9A148"
       ],
       "allOf": [],
       "enum": []
     },
-    "Inline_BD4918085E03": {
-      "name": "Inline_BD4918085E03",
+    "Inline_EA83AE587645": {
+      "name": "Inline_EA83AE587645",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -4131,15 +4131,29 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_DD75595E0712": {
-      "name": "Inline_DD75595E0712",
+    "Inline_611922D9A148": {
+      "name": "Inline_611922D9A148",
+      "kind": "primitive",
+      "primitiveType": "number",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": 1,
+      "enum": [
+        "1"
+      ]
+    },
+    "Inline_897E8B45E798": {
+      "name": "Inline_897E8B45E798",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_47CF0112741E",
+          "schema": "Inline_9BC7D8E30D72",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4148,7 +4162,7 @@
         },
         "private_routing": {
           "name": "private_routing",
-          "schema": "Inline_9AF7D19D0F7F",
+          "schema": "Inline_51B112FDC01C",
           "required": false,
           "allowsNull": false,
           "defaultValue": false,
@@ -4158,7 +4172,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_CD14D7838E7C",
+          "schema": "Inline_BF54924CFBC7",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4172,8 +4186,8 @@
       "singleValue": "A",
       "enum": []
     },
-    "Inline_47CF0112741E": {
-      "name": "Inline_47CF0112741E",
+    "Inline_9BC7D8E30D72": {
+      "name": "Inline_9BC7D8E30D72",
       "kind": "primitive",
       "primitiveType": "string",
       "format": "ipv4",
@@ -4184,8 +4198,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_9AF7D19D0F7F": {
-      "name": "Inline_9AF7D19D0F7F",
+    "Inline_51B112FDC01C": {
+      "name": "Inline_51B112FDC01C",
       "kind": "primitive",
       "primitiveType": "boolean",
       "requiredProperties": [],
@@ -4195,8 +4209,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_CD14D7838E7C": {
-      "name": "Inline_CD14D7838E7C",
+    "Inline_BF54924CFBC7": {
+      "name": "Inline_BF54924CFBC7",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -4220,20 +4234,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_8520967248C3"
+        "Inline_6E67608C8595"
       ],
       "singleValue": "AAAA",
       "enum": []
     },
-    "Inline_8520967248C3": {
-      "name": "Inline_8520967248C3",
+    "Inline_6E67608C8595": {
+      "name": "Inline_6E67608C8595",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_5B17912E8865",
+          "schema": "Inline_116CFA5DD8E1",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4242,7 +4256,7 @@
         },
         "private_routing": {
           "name": "private_routing",
-          "schema": "Inline_CF1C6FA7A940",
+          "schema": "Inline_7C5D4DBEF1D5",
           "required": false,
           "allowsNull": false,
           "defaultValue": false,
@@ -4252,7 +4266,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_A57F084DCE48",
+          "schema": "Inline_C5610C9CA850",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4266,8 +4280,8 @@
       "singleValue": "AAAA",
       "enum": []
     },
-    "Inline_5B17912E8865": {
-      "name": "Inline_5B17912E8865",
+    "Inline_116CFA5DD8E1": {
+      "name": "Inline_116CFA5DD8E1",
       "kind": "primitive",
       "primitiveType": "string",
       "format": "ipv6",
@@ -4278,8 +4292,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_CF1C6FA7A940": {
-      "name": "Inline_CF1C6FA7A940",
+    "Inline_7C5D4DBEF1D5": {
+      "name": "Inline_7C5D4DBEF1D5",
       "kind": "primitive",
       "primitiveType": "boolean",
       "requiredProperties": [],
@@ -4289,8 +4303,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_A57F084DCE48": {
-      "name": "Inline_A57F084DCE48",
+    "Inline_C5610C9CA850": {
+      "name": "Inline_C5610C9CA850",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -4314,20 +4328,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_D6FF1AD6D9E8"
+        "Inline_C4654F86D85B"
       ],
       "singleValue": "CNAME",
       "enum": []
     },
-    "Inline_D6FF1AD6D9E8": {
-      "name": "Inline_D6FF1AD6D9E8",
+    "Inline_C4654F86D85B": {
+      "name": "Inline_C4654F86D85B",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_8443ABEC6A69",
+          "schema": "Inline_BA28C479DDC7",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4336,7 +4350,7 @@
         },
         "settings": {
           "name": "settings",
-          "schema": "Inline_D668526DD3BF",
+          "schema": "Inline_50B6ED62223F",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4345,7 +4359,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_F11AC5F85326",
+          "schema": "Inline_880F12DC087D",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4359,8 +4373,8 @@
       "singleValue": "CNAME",
       "enum": []
     },
-    "Inline_8443ABEC6A69": {
-      "name": "Inline_8443ABEC6A69",
+    "Inline_BA28C479DDC7": {
+      "name": "Inline_BA28C479DDC7",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -4370,15 +4384,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_D668526DD3BF": {
-      "name": "Inline_D668526DD3BF",
+    "Inline_50B6ED62223F": {
+      "name": "Inline_50B6ED62223F",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "flatten_cname": {
           "name": "flatten_cname",
-          "schema": "Inline_782475B46BD3",
+          "schema": "Inline_CDBAD01B22B7",
           "required": false,
           "allowsNull": false,
           "defaultValue": false,
@@ -4392,8 +4406,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_782475B46BD3": {
-      "name": "Inline_782475B46BD3",
+    "Inline_CDBAD01B22B7": {
+      "name": "Inline_CDBAD01B22B7",
       "kind": "primitive",
       "primitiveType": "boolean",
       "requiredProperties": [],
@@ -4403,8 +4417,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_F11AC5F85326": {
-      "name": "Inline_F11AC5F85326",
+    "Inline_880F12DC087D": {
+      "name": "Inline_880F12DC087D",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -4428,20 +4442,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_AA33B0CE30BC"
+        "Inline_DA346A3F0D26"
       ],
       "singleValue": "MX",
       "enum": []
     },
-    "Inline_AA33B0CE30BC": {
-      "name": "Inline_AA33B0CE30BC",
+    "Inline_DA346A3F0D26": {
+      "name": "Inline_DA346A3F0D26",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_A3FDF16F1940",
+          "schema": "Inline_8B666F585593",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4459,7 +4473,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_B00838A8D50B",
+          "schema": "Inline_28524D46187C",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4473,8 +4487,8 @@
       "singleValue": "MX",
       "enum": []
     },
-    "Inline_A3FDF16F1940": {
-      "name": "Inline_A3FDF16F1940",
+    "Inline_8B666F585593": {
+      "name": "Inline_8B666F585593",
       "kind": "primitive",
       "primitiveType": "string",
       "format": "hostname",
@@ -4497,8 +4511,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_B00838A8D50B": {
-      "name": "Inline_B00838A8D50B",
+    "Inline_28524D46187C": {
+      "name": "Inline_28524D46187C",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -4522,20 +4536,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_3960A627BBB7"
+        "Inline_57EE5628FC54"
       ],
       "singleValue": "NS",
       "enum": []
     },
-    "Inline_3960A627BBB7": {
-      "name": "Inline_3960A627BBB7",
+    "Inline_57EE5628FC54": {
+      "name": "Inline_57EE5628FC54",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_211411C3E1DF",
+          "schema": "Inline_E8E0B454251B",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4544,7 +4558,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_349431C02BFB",
+          "schema": "Inline_4FB31B76BF72",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4558,8 +4572,8 @@
       "singleValue": "NS",
       "enum": []
     },
-    "Inline_211411C3E1DF": {
-      "name": "Inline_211411C3E1DF",
+    "Inline_E8E0B454251B": {
+      "name": "Inline_E8E0B454251B",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -4569,8 +4583,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_349431C02BFB": {
-      "name": "Inline_349431C02BFB",
+    "Inline_4FB31B76BF72": {
+      "name": "Inline_4FB31B76BF72",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -4594,20 +4608,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_89FF77149435"
+        "Inline_55090D5C9475"
       ],
       "singleValue": "OPENPGPKEY",
       "enum": []
     },
-    "Inline_89FF77149435": {
-      "name": "Inline_89FF77149435",
+    "Inline_55090D5C9475": {
+      "name": "Inline_55090D5C9475",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_06C42E95B321",
+          "schema": "Inline_8D5F7DB46841",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4616,7 +4630,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_C419EF4E65DB",
+          "schema": "Inline_DECC997CDA03",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4630,8 +4644,8 @@
       "singleValue": "OPENPGPKEY",
       "enum": []
     },
-    "Inline_06C42E95B321": {
-      "name": "Inline_06C42E95B321",
+    "Inline_8D5F7DB46841": {
+      "name": "Inline_8D5F7DB46841",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -4641,8 +4655,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_C419EF4E65DB": {
-      "name": "Inline_C419EF4E65DB",
+    "Inline_DECC997CDA03": {
+      "name": "Inline_DECC997CDA03",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -4666,20 +4680,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_02CD70D22772"
+        "Inline_06CC666F3C09"
       ],
       "singleValue": "PTR",
       "enum": []
     },
-    "Inline_02CD70D22772": {
-      "name": "Inline_02CD70D22772",
+    "Inline_06CC666F3C09": {
+      "name": "Inline_06CC666F3C09",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_1EC3CF4BAA91",
+          "schema": "Inline_6180A7A2EE7A",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4688,7 +4702,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_19906840C6F5",
+          "schema": "Inline_38FD2052B67E",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4702,8 +4716,8 @@
       "singleValue": "PTR",
       "enum": []
     },
-    "Inline_1EC3CF4BAA91": {
-      "name": "Inline_1EC3CF4BAA91",
+    "Inline_6180A7A2EE7A": {
+      "name": "Inline_6180A7A2EE7A",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -4713,8 +4727,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_19906840C6F5": {
-      "name": "Inline_19906840C6F5",
+    "Inline_38FD2052B67E": {
+      "name": "Inline_38FD2052B67E",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -4738,20 +4752,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_3F82458B27FC"
+        "Inline_5992639FA23F"
       ],
       "singleValue": "TXT",
       "enum": []
     },
-    "Inline_3F82458B27FC": {
-      "name": "Inline_3F82458B27FC",
+    "Inline_5992639FA23F": {
+      "name": "Inline_5992639FA23F",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_B6A799FFFD33",
+          "schema": "Inline_819EF67F1809",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4760,7 +4774,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_01537360936D",
+          "schema": "Inline_04CF40881443",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4774,8 +4788,8 @@
       "singleValue": "TXT",
       "enum": []
     },
-    "Inline_B6A799FFFD33": {
-      "name": "Inline_B6A799FFFD33",
+    "Inline_819EF67F1809": {
+      "name": "Inline_819EF67F1809",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -4785,8 +4799,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_01537360936D": {
-      "name": "Inline_01537360936D",
+    "Inline_04CF40881443": {
+      "name": "Inline_04CF40881443",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -4895,20 +4909,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_8001511EE8C0"
+        "Inline_22EF5E549777"
       ],
       "singleValue": "CAA",
       "enum": []
     },
-    "Inline_8001511EE8C0": {
-      "name": "Inline_8001511EE8C0",
+    "Inline_22EF5E549777": {
+      "name": "Inline_22EF5E549777",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_DD248076D25F",
+          "schema": "Inline_503EA385119D",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4917,7 +4931,7 @@
         },
         "data": {
           "name": "data",
-          "schema": "Inline_7BEB81B2D53B",
+          "schema": "Inline_A99064DFFA96",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4926,7 +4940,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_D72B198BE2EE",
+          "schema": "Inline_63CF29D70849",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4940,8 +4954,8 @@
       "singleValue": "CAA",
       "enum": []
     },
-    "Inline_DD248076D25F": {
-      "name": "Inline_DD248076D25F",
+    "Inline_503EA385119D": {
+      "name": "Inline_503EA385119D",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -4951,15 +4965,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_7BEB81B2D53B": {
-      "name": "Inline_7BEB81B2D53B",
+    "Inline_A99064DFFA96": {
+      "name": "Inline_A99064DFFA96",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "flags": {
           "name": "flags",
-          "schema": "Inline_A6B6B5C044A5",
+          "schema": "Inline_0D0282B58A16",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4968,7 +4982,7 @@
         },
         "tag": {
           "name": "tag",
-          "schema": "Inline_2C518044DE1A",
+          "schema": "Inline_7512BBBF6A9C",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4977,7 +4991,7 @@
         },
         "value": {
           "name": "value",
-          "schema": "Inline_6AF7374EDF2E",
+          "schema": "Inline_406212DAD011",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -4990,8 +5004,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_A6B6B5C044A5": {
-      "name": "Inline_A6B6B5C044A5",
+    "Inline_0D0282B58A16": {
+      "name": "Inline_0D0282B58A16",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5001,8 +5015,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_2C518044DE1A": {
-      "name": "Inline_2C518044DE1A",
+    "Inline_7512BBBF6A9C": {
+      "name": "Inline_7512BBBF6A9C",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5012,8 +5026,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_6AF7374EDF2E": {
-      "name": "Inline_6AF7374EDF2E",
+    "Inline_406212DAD011": {
+      "name": "Inline_406212DAD011",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5023,8 +5037,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_D72B198BE2EE": {
-      "name": "Inline_D72B198BE2EE",
+    "Inline_63CF29D70849": {
+      "name": "Inline_63CF29D70849",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5048,20 +5062,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_04E6C27B79EC"
+        "Inline_61E7D24A12CE"
       ],
       "singleValue": "CERT",
       "enum": []
     },
-    "Inline_04E6C27B79EC": {
-      "name": "Inline_04E6C27B79EC",
+    "Inline_61E7D24A12CE": {
+      "name": "Inline_61E7D24A12CE",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_73A29DF216FE",
+          "schema": "Inline_8F3FB10349A7",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5070,7 +5084,7 @@
         },
         "data": {
           "name": "data",
-          "schema": "Inline_C86D3B8EE3F7",
+          "schema": "Inline_22F67A468AB4",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5079,7 +5093,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_792237CDF6F9",
+          "schema": "Inline_FB60A82925E6",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5093,8 +5107,8 @@
       "singleValue": "CERT",
       "enum": []
     },
-    "Inline_73A29DF216FE": {
-      "name": "Inline_73A29DF216FE",
+    "Inline_8F3FB10349A7": {
+      "name": "Inline_8F3FB10349A7",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5104,15 +5118,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_C86D3B8EE3F7": {
-      "name": "Inline_C86D3B8EE3F7",
+    "Inline_22F67A468AB4": {
+      "name": "Inline_22F67A468AB4",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "algorithm": {
           "name": "algorithm",
-          "schema": "Inline_B55752FD534E",
+          "schema": "Inline_33E729413402",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5121,7 +5135,7 @@
         },
         "certificate": {
           "name": "certificate",
-          "schema": "Inline_6C45518698F2",
+          "schema": "Inline_9239998AA138",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5130,7 +5144,7 @@
         },
         "key_tag": {
           "name": "key_tag",
-          "schema": "Inline_9108E422C4EF",
+          "schema": "Inline_6D4C391F7029",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5139,7 +5153,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_52F0115BCD10",
+          "schema": "Inline_577C29637252",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5152,8 +5166,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_B55752FD534E": {
-      "name": "Inline_B55752FD534E",
+    "Inline_33E729413402": {
+      "name": "Inline_33E729413402",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5163,8 +5177,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_6C45518698F2": {
-      "name": "Inline_6C45518698F2",
+    "Inline_9239998AA138": {
+      "name": "Inline_9239998AA138",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5174,8 +5188,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_9108E422C4EF": {
-      "name": "Inline_9108E422C4EF",
+    "Inline_6D4C391F7029": {
+      "name": "Inline_6D4C391F7029",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5185,8 +5199,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_52F0115BCD10": {
-      "name": "Inline_52F0115BCD10",
+    "Inline_577C29637252": {
+      "name": "Inline_577C29637252",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5196,8 +5210,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_792237CDF6F9": {
-      "name": "Inline_792237CDF6F9",
+    "Inline_FB60A82925E6": {
+      "name": "Inline_FB60A82925E6",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5221,20 +5235,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_9D4E8CE041A6"
+        "Inline_09BF75679E62"
       ],
       "singleValue": "DNSKEY",
       "enum": []
     },
-    "Inline_9D4E8CE041A6": {
-      "name": "Inline_9D4E8CE041A6",
+    "Inline_09BF75679E62": {
+      "name": "Inline_09BF75679E62",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_3BBCBD4164CF",
+          "schema": "Inline_6A36F10F1258",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5243,7 +5257,7 @@
         },
         "data": {
           "name": "data",
-          "schema": "Inline_7025B8F9D6B5",
+          "schema": "Inline_55A4AC17026A",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5252,7 +5266,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_229A7C5E42F5",
+          "schema": "Inline_BD0BA6AF04D5",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5266,8 +5280,8 @@
       "singleValue": "DNSKEY",
       "enum": []
     },
-    "Inline_3BBCBD4164CF": {
-      "name": "Inline_3BBCBD4164CF",
+    "Inline_6A36F10F1258": {
+      "name": "Inline_6A36F10F1258",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5277,15 +5291,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_7025B8F9D6B5": {
-      "name": "Inline_7025B8F9D6B5",
+    "Inline_55A4AC17026A": {
+      "name": "Inline_55A4AC17026A",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "algorithm": {
           "name": "algorithm",
-          "schema": "Inline_3334B2A65CAD",
+          "schema": "Inline_1702C8670A8E",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5294,7 +5308,7 @@
         },
         "flags": {
           "name": "flags",
-          "schema": "Inline_693EF8CBC4C6",
+          "schema": "Inline_ACB1AABF3C71",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5303,7 +5317,7 @@
         },
         "protocol": {
           "name": "protocol",
-          "schema": "Inline_19606F111C49",
+          "schema": "Inline_A038B556ED24",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5312,7 +5326,7 @@
         },
         "public_key": {
           "name": "public_key",
-          "schema": "Inline_1689C774130C",
+          "schema": "Inline_37AB4F8825EB",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5325,8 +5339,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_3334B2A65CAD": {
-      "name": "Inline_3334B2A65CAD",
+    "Inline_1702C8670A8E": {
+      "name": "Inline_1702C8670A8E",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5336,8 +5350,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_693EF8CBC4C6": {
-      "name": "Inline_693EF8CBC4C6",
+    "Inline_ACB1AABF3C71": {
+      "name": "Inline_ACB1AABF3C71",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5347,8 +5361,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_19606F111C49": {
-      "name": "Inline_19606F111C49",
+    "Inline_A038B556ED24": {
+      "name": "Inline_A038B556ED24",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5358,8 +5372,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_1689C774130C": {
-      "name": "Inline_1689C774130C",
+    "Inline_37AB4F8825EB": {
+      "name": "Inline_37AB4F8825EB",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5369,8 +5383,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_229A7C5E42F5": {
-      "name": "Inline_229A7C5E42F5",
+    "Inline_BD0BA6AF04D5": {
+      "name": "Inline_BD0BA6AF04D5",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5394,20 +5408,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_8C9837D80BAC"
+        "Inline_D87641673CBA"
       ],
       "singleValue": "DS",
       "enum": []
     },
-    "Inline_8C9837D80BAC": {
-      "name": "Inline_8C9837D80BAC",
+    "Inline_D87641673CBA": {
+      "name": "Inline_D87641673CBA",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_54A7D51E352A",
+          "schema": "Inline_84E1A80A3CD3",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5416,7 +5430,7 @@
         },
         "data": {
           "name": "data",
-          "schema": "Inline_908C16C1D0A9",
+          "schema": "Inline_DB4FDE31B265",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5425,7 +5439,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_E4F7432BB988",
+          "schema": "Inline_02A330A53F6F",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5439,8 +5453,8 @@
       "singleValue": "DS",
       "enum": []
     },
-    "Inline_54A7D51E352A": {
-      "name": "Inline_54A7D51E352A",
+    "Inline_84E1A80A3CD3": {
+      "name": "Inline_84E1A80A3CD3",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5450,15 +5464,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_908C16C1D0A9": {
-      "name": "Inline_908C16C1D0A9",
+    "Inline_DB4FDE31B265": {
+      "name": "Inline_DB4FDE31B265",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "algorithm": {
           "name": "algorithm",
-          "schema": "Inline_71CB4317F856",
+          "schema": "Inline_3D9F4E6397F3",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5467,7 +5481,7 @@
         },
         "digest": {
           "name": "digest",
-          "schema": "Inline_3F859C9F1D65",
+          "schema": "Inline_B2E3DA8E1296",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5476,7 +5490,7 @@
         },
         "digest_type": {
           "name": "digest_type",
-          "schema": "Inline_592CB9F5C060",
+          "schema": "Inline_5E82ABB72410",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5485,7 +5499,7 @@
         },
         "key_tag": {
           "name": "key_tag",
-          "schema": "Inline_B8B482E20B7E",
+          "schema": "Inline_A92843DA5986",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5498,8 +5512,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_71CB4317F856": {
-      "name": "Inline_71CB4317F856",
+    "Inline_3D9F4E6397F3": {
+      "name": "Inline_3D9F4E6397F3",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5509,8 +5523,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_3F859C9F1D65": {
-      "name": "Inline_3F859C9F1D65",
+    "Inline_B2E3DA8E1296": {
+      "name": "Inline_B2E3DA8E1296",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5520,8 +5534,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_592CB9F5C060": {
-      "name": "Inline_592CB9F5C060",
+    "Inline_5E82ABB72410": {
+      "name": "Inline_5E82ABB72410",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5531,8 +5545,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_B8B482E20B7E": {
-      "name": "Inline_B8B482E20B7E",
+    "Inline_A92843DA5986": {
+      "name": "Inline_A92843DA5986",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5542,8 +5556,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_E4F7432BB988": {
-      "name": "Inline_E4F7432BB988",
+    "Inline_02A330A53F6F": {
+      "name": "Inline_02A330A53F6F",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5567,20 +5581,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_3EBA3AA258BD"
+        "Inline_3F5232B14792"
       ],
       "singleValue": "HTTPS",
       "enum": []
     },
-    "Inline_3EBA3AA258BD": {
-      "name": "Inline_3EBA3AA258BD",
+    "Inline_3F5232B14792": {
+      "name": "Inline_3F5232B14792",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_2B8CAA87C711",
+          "schema": "Inline_C0F605AC08E8",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5589,7 +5603,7 @@
         },
         "data": {
           "name": "data",
-          "schema": "Inline_011BB7210387",
+          "schema": "Inline_C5BF91DD62B1",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5598,7 +5612,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_A03DB3A6BBB6",
+          "schema": "Inline_6778BB4A2862",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5612,8 +5626,8 @@
       "singleValue": "HTTPS",
       "enum": []
     },
-    "Inline_2B8CAA87C711": {
-      "name": "Inline_2B8CAA87C711",
+    "Inline_C0F605AC08E8": {
+      "name": "Inline_C0F605AC08E8",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5623,15 +5637,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_011BB7210387": {
-      "name": "Inline_011BB7210387",
+    "Inline_C5BF91DD62B1": {
+      "name": "Inline_C5BF91DD62B1",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "priority": {
           "name": "priority",
-          "schema": "Inline_9D3830008B64",
+          "schema": "Inline_471CB3929B88",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5640,7 +5654,7 @@
         },
         "target": {
           "name": "target",
-          "schema": "Inline_C97A422A830E",
+          "schema": "Inline_D9465639C6F6",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5649,7 +5663,7 @@
         },
         "value": {
           "name": "value",
-          "schema": "Inline_4EE45583750C",
+          "schema": "Inline_059B66A7BEAC",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5662,8 +5676,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_9D3830008B64": {
-      "name": "Inline_9D3830008B64",
+    "Inline_471CB3929B88": {
+      "name": "Inline_471CB3929B88",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5673,8 +5687,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_C97A422A830E": {
-      "name": "Inline_C97A422A830E",
+    "Inline_D9465639C6F6": {
+      "name": "Inline_D9465639C6F6",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5684,8 +5698,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_4EE45583750C": {
-      "name": "Inline_4EE45583750C",
+    "Inline_059B66A7BEAC": {
+      "name": "Inline_059B66A7BEAC",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5695,8 +5709,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_A03DB3A6BBB6": {
-      "name": "Inline_A03DB3A6BBB6",
+    "Inline_6778BB4A2862": {
+      "name": "Inline_6778BB4A2862",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5720,20 +5734,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_1E993916EEBB"
+        "Inline_4F0E092F1F01"
       ],
       "singleValue": "LOC",
       "enum": []
     },
-    "Inline_1E993916EEBB": {
-      "name": "Inline_1E993916EEBB",
+    "Inline_4F0E092F1F01": {
+      "name": "Inline_4F0E092F1F01",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_53B63BC29833",
+          "schema": "Inline_5F7EADB5B4E7",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5742,7 +5756,7 @@
         },
         "data": {
           "name": "data",
-          "schema": "Inline_43524C3D557D",
+          "schema": "Inline_C86498B30BBB",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5751,7 +5765,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_6B53748B0C3C",
+          "schema": "Inline_7141B8FE670F",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5765,8 +5779,8 @@
       "singleValue": "LOC",
       "enum": []
     },
-    "Inline_53B63BC29833": {
-      "name": "Inline_53B63BC29833",
+    "Inline_5F7EADB5B4E7": {
+      "name": "Inline_5F7EADB5B4E7",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5776,15 +5790,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_43524C3D557D": {
-      "name": "Inline_43524C3D557D",
+    "Inline_C86498B30BBB": {
+      "name": "Inline_C86498B30BBB",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "altitude": {
           "name": "altitude",
-          "schema": "Inline_02D7AADD5CEA",
+          "schema": "Inline_FB3DE47E9132",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5793,7 +5807,7 @@
         },
         "lat_degrees": {
           "name": "lat_degrees",
-          "schema": "Inline_EE4EF72F9939",
+          "schema": "Inline_3C8EBA7829C9",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5802,7 +5816,7 @@
         },
         "lat_direction": {
           "name": "lat_direction",
-          "schema": "Inline_B5931AA00D6B",
+          "schema": "Inline_67C4E7D21D21",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5811,7 +5825,7 @@
         },
         "lat_minutes": {
           "name": "lat_minutes",
-          "schema": "Inline_404E40B76403",
+          "schema": "Inline_9C06784DBFD3",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5820,7 +5834,7 @@
         },
         "lat_seconds": {
           "name": "lat_seconds",
-          "schema": "Inline_EC5396F79613",
+          "schema": "Inline_5C286B17D0EF",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5829,7 +5843,7 @@
         },
         "long_degrees": {
           "name": "long_degrees",
-          "schema": "Inline_8F0558EBB28D",
+          "schema": "Inline_7E2604EAFD98",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5838,7 +5852,7 @@
         },
         "long_direction": {
           "name": "long_direction",
-          "schema": "Inline_301901408707",
+          "schema": "Inline_470E9C9CA6AD",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5847,7 +5861,7 @@
         },
         "long_minutes": {
           "name": "long_minutes",
-          "schema": "Inline_AEEBFD8A5AB1",
+          "schema": "Inline_DBF241C52D9A",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5856,7 +5870,7 @@
         },
         "long_seconds": {
           "name": "long_seconds",
-          "schema": "Inline_D491364868E3",
+          "schema": "Inline_9E14AFC5F3ED",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5865,7 +5879,7 @@
         },
         "precision_horz": {
           "name": "precision_horz",
-          "schema": "Inline_4A203B679940",
+          "schema": "Inline_2B8DEE61653C",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5874,7 +5888,7 @@
         },
         "precision_vert": {
           "name": "precision_vert",
-          "schema": "Inline_022E5A6A1BCA",
+          "schema": "Inline_202D8A66F388",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5883,7 +5897,7 @@
         },
         "size": {
           "name": "size",
-          "schema": "Inline_BDE00EB4299D",
+          "schema": "Inline_2ED0B364D6CD",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -5896,8 +5910,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_02D7AADD5CEA": {
-      "name": "Inline_02D7AADD5CEA",
+    "Inline_FB3DE47E9132": {
+      "name": "Inline_FB3DE47E9132",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5907,8 +5921,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_EE4EF72F9939": {
-      "name": "Inline_EE4EF72F9939",
+    "Inline_3C8EBA7829C9": {
+      "name": "Inline_3C8EBA7829C9",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5918,8 +5932,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_B5931AA00D6B": {
-      "name": "Inline_B5931AA00D6B",
+    "Inline_67C4E7D21D21": {
+      "name": "Inline_67C4E7D21D21",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5932,8 +5946,8 @@
         "S"
       ]
     },
-    "Inline_404E40B76403": {
-      "name": "Inline_404E40B76403",
+    "Inline_9C06784DBFD3": {
+      "name": "Inline_9C06784DBFD3",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5943,8 +5957,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_EC5396F79613": {
-      "name": "Inline_EC5396F79613",
+    "Inline_5C286B17D0EF": {
+      "name": "Inline_5C286B17D0EF",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5954,8 +5968,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_8F0558EBB28D": {
-      "name": "Inline_8F0558EBB28D",
+    "Inline_7E2604EAFD98": {
+      "name": "Inline_7E2604EAFD98",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5965,8 +5979,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_301901408707": {
-      "name": "Inline_301901408707",
+    "Inline_470E9C9CA6AD": {
+      "name": "Inline_470E9C9CA6AD",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -5979,8 +5993,8 @@
         "W"
       ]
     },
-    "Inline_AEEBFD8A5AB1": {
-      "name": "Inline_AEEBFD8A5AB1",
+    "Inline_DBF241C52D9A": {
+      "name": "Inline_DBF241C52D9A",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -5990,8 +6004,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_D491364868E3": {
-      "name": "Inline_D491364868E3",
+    "Inline_9E14AFC5F3ED": {
+      "name": "Inline_9E14AFC5F3ED",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -6001,8 +6015,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_4A203B679940": {
-      "name": "Inline_4A203B679940",
+    "Inline_2B8DEE61653C": {
+      "name": "Inline_2B8DEE61653C",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -6012,8 +6026,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_022E5A6A1BCA": {
-      "name": "Inline_022E5A6A1BCA",
+    "Inline_202D8A66F388": {
+      "name": "Inline_202D8A66F388",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -6023,8 +6037,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_BDE00EB4299D": {
-      "name": "Inline_BDE00EB4299D",
+    "Inline_2ED0B364D6CD": {
+      "name": "Inline_2ED0B364D6CD",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -6034,8 +6048,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_6B53748B0C3C": {
-      "name": "Inline_6B53748B0C3C",
+    "Inline_7141B8FE670F": {
+      "name": "Inline_7141B8FE670F",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6059,20 +6073,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_29C82C127FDB"
+        "Inline_A5D06A596058"
       ],
       "singleValue": "NAPTR",
       "enum": []
     },
-    "Inline_29C82C127FDB": {
-      "name": "Inline_29C82C127FDB",
+    "Inline_A5D06A596058": {
+      "name": "Inline_A5D06A596058",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_C6A589FC2C7A",
+          "schema": "Inline_D40EEFAEB723",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6081,7 +6095,7 @@
         },
         "data": {
           "name": "data",
-          "schema": "Inline_2BBF272F8880",
+          "schema": "Inline_AC991E742CE6",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6090,7 +6104,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_5840E2BFEB6A",
+          "schema": "Inline_7A43A68EE3DA",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6104,8 +6118,8 @@
       "singleValue": "NAPTR",
       "enum": []
     },
-    "Inline_C6A589FC2C7A": {
-      "name": "Inline_C6A589FC2C7A",
+    "Inline_D40EEFAEB723": {
+      "name": "Inline_D40EEFAEB723",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6115,15 +6129,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_2BBF272F8880": {
-      "name": "Inline_2BBF272F8880",
+    "Inline_AC991E742CE6": {
+      "name": "Inline_AC991E742CE6",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "flags": {
           "name": "flags",
-          "schema": "Inline_1EA79C39F6DB",
+          "schema": "Inline_BC8076F34B9C",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6132,7 +6146,7 @@
         },
         "order": {
           "name": "order",
-          "schema": "Inline_E4DD932968BB",
+          "schema": "Inline_6B4EA5230152",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6141,7 +6155,7 @@
         },
         "preference": {
           "name": "preference",
-          "schema": "Inline_EF846B0D99EB",
+          "schema": "Inline_E11CDD6CE79F",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6150,7 +6164,7 @@
         },
         "regex": {
           "name": "regex",
-          "schema": "Inline_B4566B55F994",
+          "schema": "Inline_1AC5F0896577",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6159,7 +6173,7 @@
         },
         "replacement": {
           "name": "replacement",
-          "schema": "Inline_CDC9E0738AB8",
+          "schema": "Inline_C036E9623497",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6168,7 +6182,7 @@
         },
         "service": {
           "name": "service",
-          "schema": "Inline_5376B5F649CD",
+          "schema": "Inline_5BCD42983A83",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6181,8 +6195,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_1EA79C39F6DB": {
-      "name": "Inline_1EA79C39F6DB",
+    "Inline_BC8076F34B9C": {
+      "name": "Inline_BC8076F34B9C",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6192,8 +6206,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_E4DD932968BB": {
-      "name": "Inline_E4DD932968BB",
+    "Inline_6B4EA5230152": {
+      "name": "Inline_6B4EA5230152",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -6203,8 +6217,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_EF846B0D99EB": {
-      "name": "Inline_EF846B0D99EB",
+    "Inline_E11CDD6CE79F": {
+      "name": "Inline_E11CDD6CE79F",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -6214,8 +6228,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_B4566B55F994": {
-      "name": "Inline_B4566B55F994",
+    "Inline_1AC5F0896577": {
+      "name": "Inline_1AC5F0896577",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6225,8 +6239,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_CDC9E0738AB8": {
-      "name": "Inline_CDC9E0738AB8",
+    "Inline_C036E9623497": {
+      "name": "Inline_C036E9623497",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6236,8 +6250,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_5376B5F649CD": {
-      "name": "Inline_5376B5F649CD",
+    "Inline_5BCD42983A83": {
+      "name": "Inline_5BCD42983A83",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6247,8 +6261,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_5840E2BFEB6A": {
-      "name": "Inline_5840E2BFEB6A",
+    "Inline_7A43A68EE3DA": {
+      "name": "Inline_7A43A68EE3DA",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6272,20 +6286,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_A8447543788B"
+        "Inline_95D86364FF9E"
       ],
       "singleValue": "SMIMEA",
       "enum": []
     },
-    "Inline_A8447543788B": {
-      "name": "Inline_A8447543788B",
+    "Inline_95D86364FF9E": {
+      "name": "Inline_95D86364FF9E",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_1F409CEE6928",
+          "schema": "Inline_59F82F639F67",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6294,7 +6308,7 @@
         },
         "data": {
           "name": "data",
-          "schema": "Inline_7E9231F63E7C",
+          "schema": "Inline_A47119B6209F",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6303,7 +6317,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_29FD43CC96B0",
+          "schema": "Inline_62DA928DBBA9",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6317,8 +6331,8 @@
       "singleValue": "SMIMEA",
       "enum": []
     },
-    "Inline_1F409CEE6928": {
-      "name": "Inline_1F409CEE6928",
+    "Inline_59F82F639F67": {
+      "name": "Inline_59F82F639F67",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6328,15 +6342,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_7E9231F63E7C": {
-      "name": "Inline_7E9231F63E7C",
+    "Inline_A47119B6209F": {
+      "name": "Inline_A47119B6209F",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "certificate": {
           "name": "certificate",
-          "schema": "Inline_5B13F140CE41",
+          "schema": "Inline_15E0FE7A1039",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6345,7 +6359,7 @@
         },
         "matching_type": {
           "name": "matching_type",
-          "schema": "Inline_1308B0BF5C08",
+          "schema": "Inline_8243BC7D16ED",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6354,7 +6368,7 @@
         },
         "selector": {
           "name": "selector",
-          "schema": "Inline_4489B0A73A95",
+          "schema": "Inline_BB802399C5AA",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6363,7 +6377,7 @@
         },
         "usage": {
           "name": "usage",
-          "schema": "Inline_144825AC2819",
+          "schema": "Inline_AFD4C282118D",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6376,8 +6390,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_5B13F140CE41": {
-      "name": "Inline_5B13F140CE41",
+    "Inline_15E0FE7A1039": {
+      "name": "Inline_15E0FE7A1039",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6387,8 +6401,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_1308B0BF5C08": {
-      "name": "Inline_1308B0BF5C08",
+    "Inline_8243BC7D16ED": {
+      "name": "Inline_8243BC7D16ED",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -6398,8 +6412,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_4489B0A73A95": {
-      "name": "Inline_4489B0A73A95",
+    "Inline_BB802399C5AA": {
+      "name": "Inline_BB802399C5AA",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -6409,8 +6423,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_144825AC2819": {
-      "name": "Inline_144825AC2819",
+    "Inline_AFD4C282118D": {
+      "name": "Inline_AFD4C282118D",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -6420,8 +6434,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_29FD43CC96B0": {
-      "name": "Inline_29FD43CC96B0",
+    "Inline_62DA928DBBA9": {
+      "name": "Inline_62DA928DBBA9",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6445,20 +6459,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_6E80F24B2733"
+        "Inline_556BB5CD2728"
       ],
       "singleValue": "SRV",
       "enum": []
     },
-    "Inline_6E80F24B2733": {
-      "name": "Inline_6E80F24B2733",
+    "Inline_556BB5CD2728": {
+      "name": "Inline_556BB5CD2728",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_EC885A514D9A",
+          "schema": "Inline_256A81E9F9CF",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6467,7 +6481,7 @@
         },
         "data": {
           "name": "data",
-          "schema": "Inline_0270D7E843FA",
+          "schema": "Inline_BB5505A3C76C",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6476,7 +6490,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_DA99DF1A270F",
+          "schema": "Inline_521891B54456",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6490,8 +6504,8 @@
       "singleValue": "SRV",
       "enum": []
     },
-    "Inline_EC885A514D9A": {
-      "name": "Inline_EC885A514D9A",
+    "Inline_256A81E9F9CF": {
+      "name": "Inline_256A81E9F9CF",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6501,15 +6515,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_0270D7E843FA": {
-      "name": "Inline_0270D7E843FA",
+    "Inline_BB5505A3C76C": {
+      "name": "Inline_BB5505A3C76C",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "port": {
           "name": "port",
-          "schema": "Inline_09761E3271C3",
+          "schema": "Inline_AC543778C11C",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6527,7 +6541,7 @@
         },
         "target": {
           "name": "target",
-          "schema": "Inline_35EF91AC59AC",
+          "schema": "Inline_689107AFB5BB",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6536,7 +6550,7 @@
         },
         "weight": {
           "name": "weight",
-          "schema": "Inline_59D6DFCBDAE9",
+          "schema": "Inline_C1FF0E24428B",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6549,8 +6563,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_09761E3271C3": {
-      "name": "Inline_09761E3271C3",
+    "Inline_AC543778C11C": {
+      "name": "Inline_AC543778C11C",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -6560,8 +6574,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_35EF91AC59AC": {
-      "name": "Inline_35EF91AC59AC",
+    "Inline_689107AFB5BB": {
+      "name": "Inline_689107AFB5BB",
       "kind": "primitive",
       "primitiveType": "string",
       "format": "hostname",
@@ -6572,8 +6586,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_59D6DFCBDAE9": {
-      "name": "Inline_59D6DFCBDAE9",
+    "Inline_C1FF0E24428B": {
+      "name": "Inline_C1FF0E24428B",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -6583,8 +6597,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_DA99DF1A270F": {
-      "name": "Inline_DA99DF1A270F",
+    "Inline_521891B54456": {
+      "name": "Inline_521891B54456",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6608,20 +6622,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_19CE8B57EE19"
+        "Inline_C21AF6AF214B"
       ],
       "singleValue": "SSHFP",
       "enum": []
     },
-    "Inline_19CE8B57EE19": {
-      "name": "Inline_19CE8B57EE19",
+    "Inline_C21AF6AF214B": {
+      "name": "Inline_C21AF6AF214B",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_B0D5ED5EC5A9",
+          "schema": "Inline_9F1AFFEDC1D5",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6630,7 +6644,7 @@
         },
         "data": {
           "name": "data",
-          "schema": "Inline_CAA899D7BD43",
+          "schema": "Inline_72543ED9E519",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6639,7 +6653,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_3A63B472E96A",
+          "schema": "Inline_D784FDF2FF92",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6653,8 +6667,8 @@
       "singleValue": "SSHFP",
       "enum": []
     },
-    "Inline_B0D5ED5EC5A9": {
-      "name": "Inline_B0D5ED5EC5A9",
+    "Inline_9F1AFFEDC1D5": {
+      "name": "Inline_9F1AFFEDC1D5",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6664,15 +6678,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_CAA899D7BD43": {
-      "name": "Inline_CAA899D7BD43",
+    "Inline_72543ED9E519": {
+      "name": "Inline_72543ED9E519",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "algorithm": {
           "name": "algorithm",
-          "schema": "Inline_A459A3FFAC4A",
+          "schema": "Inline_1D23172F48B6",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6681,7 +6695,7 @@
         },
         "fingerprint": {
           "name": "fingerprint",
-          "schema": "Inline_A675E42E73C7",
+          "schema": "Inline_BBB386B9B9D1",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6690,7 +6704,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_69E540C0874B",
+          "schema": "Inline_6E7D93149891",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6703,8 +6717,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_A459A3FFAC4A": {
-      "name": "Inline_A459A3FFAC4A",
+    "Inline_1D23172F48B6": {
+      "name": "Inline_1D23172F48B6",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -6714,8 +6728,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_A675E42E73C7": {
-      "name": "Inline_A675E42E73C7",
+    "Inline_BBB386B9B9D1": {
+      "name": "Inline_BBB386B9B9D1",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6725,8 +6739,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_69E540C0874B": {
-      "name": "Inline_69E540C0874B",
+    "Inline_6E7D93149891": {
+      "name": "Inline_6E7D93149891",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -6736,8 +6750,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_3A63B472E96A": {
-      "name": "Inline_3A63B472E96A",
+    "Inline_D784FDF2FF92": {
+      "name": "Inline_D784FDF2FF92",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6761,20 +6775,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_547383726A02"
+        "Inline_54F95F09501A"
       ],
       "singleValue": "SVCB",
       "enum": []
     },
-    "Inline_547383726A02": {
-      "name": "Inline_547383726A02",
+    "Inline_54F95F09501A": {
+      "name": "Inline_54F95F09501A",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_F5A560A8F59C",
+          "schema": "Inline_AAF1424F2B5A",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6783,7 +6797,7 @@
         },
         "data": {
           "name": "data",
-          "schema": "Inline_E31A56927089",
+          "schema": "Inline_D834D4B3AC8F",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6792,7 +6806,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_F3E3783BCF52",
+          "schema": "Inline_E518B0385C80",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6806,8 +6820,8 @@
       "singleValue": "SVCB",
       "enum": []
     },
-    "Inline_F5A560A8F59C": {
-      "name": "Inline_F5A560A8F59C",
+    "Inline_AAF1424F2B5A": {
+      "name": "Inline_AAF1424F2B5A",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6817,15 +6831,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_E31A56927089": {
-      "name": "Inline_E31A56927089",
+    "Inline_D834D4B3AC8F": {
+      "name": "Inline_D834D4B3AC8F",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "priority": {
           "name": "priority",
-          "schema": "Inline_19A9EAEB4620",
+          "schema": "Inline_8F291CDEE113",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6834,7 +6848,7 @@
         },
         "target": {
           "name": "target",
-          "schema": "Inline_CECBF2F5EF3D",
+          "schema": "Inline_1BEEB05AEC78",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6843,7 +6857,7 @@
         },
         "value": {
           "name": "value",
-          "schema": "Inline_42AB9F17AA94",
+          "schema": "Inline_1CDEE99A7230",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6856,8 +6870,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_19A9EAEB4620": {
-      "name": "Inline_19A9EAEB4620",
+    "Inline_8F291CDEE113": {
+      "name": "Inline_8F291CDEE113",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -6867,8 +6881,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_CECBF2F5EF3D": {
-      "name": "Inline_CECBF2F5EF3D",
+    "Inline_1BEEB05AEC78": {
+      "name": "Inline_1BEEB05AEC78",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6878,8 +6892,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_42AB9F17AA94": {
-      "name": "Inline_42AB9F17AA94",
+    "Inline_1CDEE99A7230": {
+      "name": "Inline_1CDEE99A7230",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6889,8 +6903,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_F3E3783BCF52": {
-      "name": "Inline_F3E3783BCF52",
+    "Inline_E518B0385C80": {
+      "name": "Inline_E518B0385C80",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6914,20 +6928,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_8132CD507C1E"
+        "Inline_F667DA68E281"
       ],
       "singleValue": "TLSA",
       "enum": []
     },
-    "Inline_8132CD507C1E": {
-      "name": "Inline_8132CD507C1E",
+    "Inline_F667DA68E281": {
+      "name": "Inline_F667DA68E281",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_B50F2BF855FA",
+          "schema": "Inline_D7886A5E07D4",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6936,7 +6950,7 @@
         },
         "data": {
           "name": "data",
-          "schema": "Inline_F4F8C6A5A47C",
+          "schema": "Inline_CEEAA455F6DC",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6945,7 +6959,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_B68CC5F4C5F9",
+          "schema": "Inline_755B6544F80D",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6959,8 +6973,8 @@
       "singleValue": "TLSA",
       "enum": []
     },
-    "Inline_B50F2BF855FA": {
-      "name": "Inline_B50F2BF855FA",
+    "Inline_D7886A5E07D4": {
+      "name": "Inline_D7886A5E07D4",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -6970,15 +6984,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_F4F8C6A5A47C": {
-      "name": "Inline_F4F8C6A5A47C",
+    "Inline_CEEAA455F6DC": {
+      "name": "Inline_CEEAA455F6DC",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "certificate": {
           "name": "certificate",
-          "schema": "Inline_8D0114B9B879",
+          "schema": "Inline_15817CA76F66",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6987,7 +7001,7 @@
         },
         "matching_type": {
           "name": "matching_type",
-          "schema": "Inline_B6C6BF34847E",
+          "schema": "Inline_ADCD0386E289",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -6996,7 +7010,7 @@
         },
         "selector": {
           "name": "selector",
-          "schema": "Inline_E719E3AA64DC",
+          "schema": "Inline_18F0BBC1BC30",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -7005,7 +7019,7 @@
         },
         "usage": {
           "name": "usage",
-          "schema": "Inline_72A53231CB85",
+          "schema": "Inline_B148177DA726",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -7018,8 +7032,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_8D0114B9B879": {
-      "name": "Inline_8D0114B9B879",
+    "Inline_15817CA76F66": {
+      "name": "Inline_15817CA76F66",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -7029,8 +7043,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_B6C6BF34847E": {
-      "name": "Inline_B6C6BF34847E",
+    "Inline_ADCD0386E289": {
+      "name": "Inline_ADCD0386E289",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -7040,8 +7054,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_E719E3AA64DC": {
-      "name": "Inline_E719E3AA64DC",
+    "Inline_18F0BBC1BC30": {
+      "name": "Inline_18F0BBC1BC30",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -7051,8 +7065,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_72A53231CB85": {
-      "name": "Inline_72A53231CB85",
+    "Inline_B148177DA726": {
+      "name": "Inline_B148177DA726",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -7062,8 +7076,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_B68CC5F4C5F9": {
-      "name": "Inline_B68CC5F4C5F9",
+    "Inline_755B6544F80D": {
+      "name": "Inline_755B6544F80D",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -7087,20 +7101,20 @@
       "anyOf": [],
       "allOf": [
         "dns-records_dns-record-shared-fields",
-        "Inline_3C3776669C78"
+        "Inline_7283B31B8D99"
       ],
       "singleValue": "URI",
       "enum": []
     },
-    "Inline_3C3776669C78": {
-      "name": "Inline_3C3776669C78",
+    "Inline_7283B31B8D99": {
+      "name": "Inline_7283B31B8D99",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "content": {
           "name": "content",
-          "schema": "Inline_ABC7B174F78A",
+          "schema": "Inline_9CA83FD16BD6",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -7109,7 +7123,7 @@
         },
         "data": {
           "name": "data",
-          "schema": "Inline_F979A5C19A75",
+          "schema": "Inline_0F73D87FE23D",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -7127,7 +7141,7 @@
         },
         "type": {
           "name": "type",
-          "schema": "Inline_BDFFD70CD7F7",
+          "schema": "Inline_32B6C1409A3E",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -7141,8 +7155,8 @@
       "singleValue": "URI",
       "enum": []
     },
-    "Inline_ABC7B174F78A": {
-      "name": "Inline_ABC7B174F78A",
+    "Inline_9CA83FD16BD6": {
+      "name": "Inline_9CA83FD16BD6",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -7152,15 +7166,15 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_F979A5C19A75": {
-      "name": "Inline_F979A5C19A75",
+    "Inline_0F73D87FE23D": {
+      "name": "Inline_0F73D87FE23D",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "target": {
           "name": "target",
-          "schema": "Inline_F0A699FC9EFD",
+          "schema": "Inline_06B5FD67A2C7",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -7169,7 +7183,7 @@
         },
         "weight": {
           "name": "weight",
-          "schema": "Inline_49DE3D5B72D9",
+          "schema": "Inline_9BD1B4C974CD",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -7182,8 +7196,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_F0A699FC9EFD": {
-      "name": "Inline_F0A699FC9EFD",
+    "Inline_06B5FD67A2C7": {
+      "name": "Inline_06B5FD67A2C7",
       "kind": "primitive",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -7193,8 +7207,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_49DE3D5B72D9": {
-      "name": "Inline_49DE3D5B72D9",
+    "Inline_9BD1B4C974CD": {
+      "name": "Inline_9BD1B4C974CD",
       "kind": "primitive",
       "primitiveType": "number",
       "requiredProperties": [],
@@ -7204,8 +7218,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_BDFFD70CD7F7": {
-      "name": "Inline_BDFFD70CD7F7",
+    "Inline_32B6C1409A3E": {
+      "name": "Inline_32B6C1409A3E",
       "kind": "enum",
       "primitiveType": "string",
       "requiredProperties": [],
@@ -7229,7 +7243,7 @@
       "anyOf": [],
       "allOf": [
         "dns-records_api-response-single",
-        "Inline_4497FFA4CE99"
+        "Inline_187252429995"
       ],
       "enum": []
     },
@@ -7247,8 +7261,8 @@
       ],
       "enum": []
     },
-    "Inline_4497FFA4CE99": {
-      "name": "Inline_4497FFA4CE99",
+    "Inline_187252429995": {
+      "name": "Inline_187252429995",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
@@ -7288,14 +7302,14 @@
       "oneOf": [],
       "anyOf": [],
       "allOf": [
-        "Inline_35D1445EB02A",
-        "Inline_35D1445EB02A"
+        "Inline_C4DD3791DFA0",
+        "Inline_9619E2136A91"
       ],
       "singleValue": "A",
       "enum": []
     },
-    "Inline_35D1445EB02A": {
-      "name": "Inline_35D1445EB02A",
+    "Inline_C4DD3791DFA0": {
+      "name": "Inline_C4DD3791DFA0",
       "kind": "union",
       "primitiveType": "object",
       "requiredProperties": [],
@@ -7399,6 +7413,238 @@
       "singleValue": "A",
       "enum": []
     },
+    "Inline_9619E2136A91": {
+      "name": "Inline_9619E2136A91",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "created_on",
+        "id",
+        "meta",
+        "modified_on",
+        "proxiable"
+      ],
+      "properties": {
+        "comment_modified_on": {
+          "name": "comment_modified_on",
+          "schema": "Inline_FF1C30E15F2B",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": true,
+          "writeOnly": false
+        },
+        "created_on": {
+          "name": "created_on",
+          "schema": "Inline_8BA484C90CA9",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": true,
+          "writeOnly": false
+        },
+        "id": {
+          "name": "id",
+          "schema": "dns-records_identifier",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "meta": {
+          "name": "meta",
+          "schema": "Inline_70D20097E983",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": true,
+          "writeOnly": false
+        },
+        "modified_on": {
+          "name": "modified_on",
+          "schema": "Inline_E260A65D027C",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": true,
+          "writeOnly": false
+        },
+        "proxiable": {
+          "name": "proxiable",
+          "schema": "Inline_161A89EA44AC",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": true,
+          "writeOnly": false
+        },
+        "tags_modified_on": {
+          "name": "tags_modified_on",
+          "schema": "Inline_91E7484C272D",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": true,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_FF1C30E15F2B": {
+      "name": "Inline_FF1C30E15F2B",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "format": "date-time",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_8BA484C90CA9": {
+      "name": "Inline_8BA484C90CA9",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "format": "date-time",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_70D20097E983": {
+      "name": "Inline_70D20097E983",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {
+        "dead_glue": {
+          "name": "dead_glue",
+          "schema": "Inline_F83DD28101F8",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": true,
+          "writeOnly": false
+        },
+        "is_glue": {
+          "name": "is_glue",
+          "schema": "Inline_84DA7A92959F",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": true,
+          "writeOnly": false
+        },
+        "shadowed_by": {
+          "name": "shadowed_by",
+          "schema": "Inline_A9F3B5AF2558",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": true,
+          "writeOnly": false
+        },
+        "shadowed_records_count": {
+          "name": "shadowed_records_count",
+          "schema": "Inline_14AD47ABA4B0",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": true,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_F83DD28101F8": {
+      "name": "Inline_F83DD28101F8",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_84DA7A92959F": {
+      "name": "Inline_84DA7A92959F",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_A9F3B5AF2558": {
+      "name": "Inline_A9F3B5AF2558",
+      "kind": "array",
+      "primitiveType": "array",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_14AD47ABA4B0": {
+      "name": "Inline_14AD47ABA4B0",
+      "kind": "primitive",
+      "primitiveType": "integer",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_E260A65D027C": {
+      "name": "Inline_E260A65D027C",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "format": "date-time",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_161A89EA44AC": {
+      "name": "Inline_161A89EA44AC",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_91E7484C272D": {
+      "name": "Inline_91E7484C272D",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "format": "date-time",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
     "Inline_5C80E191E438": {
       "name": "Inline_5C80E191E438",
       "kind": "object",
@@ -7464,20 +7710,20 @@
       "oneOf": [],
       "anyOf": [],
       "allOf": [
-        "Inline_136B0D1B4A9B",
+        "Inline_0C21D5C3DA8A",
         "dns-records_api-response-common-failure"
       ],
       "enum": []
     },
-    "Inline_136B0D1B4A9B": {
-      "name": "Inline_136B0D1B4A9B",
+    "Inline_0C21D5C3DA8A": {
+      "name": "Inline_0C21D5C3DA8A",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {
         "result": {
           "name": "result",
-          "schema": "Inline_DC37159C1BA0",
+          "schema": "Inline_CFEBB852DAC0",
           "required": false,
           "allowsNull": false,
           "nullPolicy": "omit",
@@ -7490,8 +7736,8 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_DC37159C1BA0": {
-      "name": "Inline_DC37159C1BA0",
+    "Inline_CFEBB852DAC0": {
+      "name": "Inline_CFEBB852DAC0",
       "kind": "object",
       "primitiveType": "object",
       "requiredProperties": [],
@@ -7757,12 +8003,12 @@
       "anyOf": [],
       "allOf": [
         "api-shield_uuid-2",
-        "Inline_8BC7C81BFBEE"
+        "Inline_21C318B31EDC"
       ],
       "enum": []
     },
-    "Inline_8BC7C81BFBEE": {
-      "name": "Inline_8BC7C81BFBEE",
+    "Inline_21C318B31EDC": {
+      "name": "Inline_21C318B31EDC",
       "kind": "primitive",
       "primitiveType": "string",
       "format": "uuid",
@@ -7783,12 +8029,12 @@
       "anyOf": [],
       "allOf": [
         "api-shield_uuid-2",
-        "Inline_5FE5D1C05065"
+        "Inline_EC207DD56188"
       ],
       "enum": []
     },
-    "Inline_5FE5D1C05065": {
-      "name": "Inline_5FE5D1C05065",
+    "Inline_EC207DD56188": {
+      "name": "Inline_EC207DD56188",
       "kind": "primitive",
       "primitiveType": "string",
       "format": "uuid",

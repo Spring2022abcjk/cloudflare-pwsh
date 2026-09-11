@@ -1,0 +1,531 @@
+{
+  "resource": "d1-database",
+  "operations": [
+    {
+      "operationId": "d1-create-database",
+      "cmdletName": "New-CfD1Database",
+      "parameterSet": "Create",
+      "semantic": {
+        "kind": "Create",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "POST",
+      "pathTemplate": "/accounts/{account_id}/d1/database",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "account_id",
+          "apiName": "account_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "d1_account-identifier",
+          "defaultValue": null
+        }
+      ],
+      "requestRepresentations": {
+        "contentType": "application/json",
+        "schema": "Inline_FA2961F0C454"
+      },
+      "responseCases": [
+        {
+          "status": "200",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_08BCB21BDC7A",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "4XX",
+          "kind": "Class",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "d1_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json"
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "outputPolicy": null,
+        "behavior": null
+      },
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium"
+    },
+    {
+      "operationId": "d1-delete-database",
+      "cmdletName": "Remove-CfD1Database",
+      "parameterSet": "Delete",
+      "semantic": {
+        "kind": "Delete",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "DELETE",
+      "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "database_id",
+          "scopeType": "Database",
+          "role": "Primary"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "account_id",
+          "apiName": "account_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "d1_account-identifier",
+          "defaultValue": null
+        },
+        {
+          "name": "database_id",
+          "apiName": "database_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "d1_database-identifier",
+          "defaultValue": null
+        }
+      ],
+      "requestRepresentations": null,
+      "responseCases": [
+        {
+          "status": "200",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_D01FDAEFD04F",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "4XX",
+          "kind": "Class",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "d1_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json"
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "outputPolicy": null,
+        "behavior": null
+      },
+      "supportsShouldProcess": true,
+      "confirmImpact": "High"
+    },
+    {
+      "operationId": "d1-get-database",
+      "cmdletName": "Get-CfD1Database",
+      "parameterSet": "Get",
+      "semantic": {
+        "kind": "Get",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "GET",
+      "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "database_id",
+          "scopeType": "Database",
+          "role": "Primary"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "account_id",
+          "apiName": "account_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "d1_account-identifier",
+          "defaultValue": null
+        },
+        {
+          "name": "database_id",
+          "apiName": "database_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_5941C2184D56",
+          "defaultValue": null
+        },
+        {
+          "name": "fields",
+          "apiName": "fields",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_FE0C0CEC520A",
+          "defaultValue": null
+        }
+      ],
+      "requestRepresentations": null,
+      "responseCases": [
+        {
+          "status": "200",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_7E7E87A55734",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "4XX",
+          "kind": "Class",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "d1_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json"
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "outputPolicy": null,
+        "behavior": null
+      },
+      "supportsShouldProcess": false,
+      "confirmImpact": "None"
+    },
+    {
+      "operationId": "d1-list-databases",
+      "cmdletName": "Get-CfD1Database",
+      "parameterSet": "List",
+      "semantic": {
+        "kind": "List",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "GET",
+      "pathTemplate": "/accounts/{account_id}/d1/database",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "account_id",
+          "apiName": "account_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "d1_account-identifier",
+          "defaultValue": null
+        },
+        {
+          "name": "name",
+          "apiName": "name",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_D5340E30A42B",
+          "defaultValue": null
+        },
+        {
+          "name": "page",
+          "apiName": "page",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_940AEA19FFA7",
+          "defaultValue": 1
+        },
+        {
+          "name": "per_page",
+          "apiName": "per_page",
+          "binding": "query",
+          "required": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_7E9029090147",
+          "defaultValue": 1000
+        }
+      ],
+      "requestRepresentations": null,
+      "responseCases": [
+        {
+          "status": "200",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_259DE4FC3C69",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "4XX",
+          "kind": "Class",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "d1_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json"
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "outputPolicy": "item",
+        "behavior": "shared-runtime"
+      },
+      "supportsShouldProcess": false,
+      "confirmImpact": "None"
+    },
+    {
+      "operationId": "d1-update-database",
+      "cmdletName": "Set-CfD1Database",
+      "parameterSet": "Update",
+      "semantic": {
+        "kind": "Update",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "PUT",
+      "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "database_id",
+          "scopeType": "Database",
+          "role": "Primary"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "account_id",
+          "apiName": "account_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "d1_account-identifier",
+          "defaultValue": null
+        },
+        {
+          "name": "database_id",
+          "apiName": "database_id",
+          "binding": "path",
+          "required": true,
+          "nullPolicy": "reject-null",
+          "schema": "d1_database-identifier",
+          "defaultValue": null
+        }
+      ],
+      "requestRepresentations": {
+        "contentType": "application/json",
+        "schema": "d1_database-update-request-body"
+      },
+      "responseCases": [
+        {
+          "status": "200",
+          "kind": "Exact",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_6186C6A5D76F",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json"
+            }
+          ]
+        },
+        {
+          "status": "4XX",
+          "kind": "Class",
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "d1_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json"
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "outputPolicy": null,
+        "behavior": null
+      },
+      "supportsShouldProcess": true,
+      "confirmImpact": "High"
+    }
+  ],
+  "cmdlets": [
+    {
+      "cmdletName": "Get-CfD1Database",
+      "operationIds": [
+        "d1-get-database",
+        "d1-list-databases"
+      ],
+      "parameterSets": [
+        {
+          "name": "Get",
+          "required": [
+            "account_id",
+            "database_id"
+          ],
+          "operationId": "d1-get-database"
+        },
+        {
+          "name": "List",
+          "required": [
+            "account_id"
+          ],
+          "operationId": "d1-list-databases"
+        }
+      ],
+      "scopeBindings": [
+        "account_id:Account:Parent",
+        "database_id:Database:Primary"
+      ],
+      "outputPolicies": [
+        "item"
+      ],
+      "supportsShouldProcess": false,
+      "confirmImpact": "None"
+    },
+    {
+      "cmdletName": "New-CfD1Database",
+      "operationIds": [
+        "d1-create-database"
+      ],
+      "parameterSets": [
+        {
+          "name": "Create",
+          "required": [
+            "account_id"
+          ],
+          "operationId": "d1-create-database"
+        }
+      ],
+      "scopeBindings": [
+        "account_id:Account:Parent"
+      ],
+      "outputPolicies": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium"
+    },
+    {
+      "cmdletName": "Remove-CfD1Database",
+      "operationIds": [
+        "d1-delete-database"
+      ],
+      "parameterSets": [
+        {
+          "name": "Delete",
+          "required": [
+            "account_id",
+            "database_id"
+          ],
+          "operationId": "d1-delete-database"
+        }
+      ],
+      "scopeBindings": [
+        "account_id:Account:Parent",
+        "database_id:Database:Primary"
+      ],
+      "outputPolicies": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "High"
+    },
+    {
+      "cmdletName": "Set-CfD1Database",
+      "operationIds": [
+        "d1-update-database"
+      ],
+      "parameterSets": [
+        {
+          "name": "Update",
+          "required": [
+            "account_id",
+            "database_id"
+          ],
+          "operationId": "d1-update-database"
+        }
+      ],
+      "scopeBindings": [
+        "account_id:Account:Parent",
+        "database_id:Database:Primary"
+      ],
+      "outputPolicies": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "High"
+    }
+  ]
+}

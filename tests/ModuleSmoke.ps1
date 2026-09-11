@@ -4,7 +4,11 @@ param([string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot))
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $modulePath = Join-Path $ProjectRoot 'module/Cloudflare.PowerShell'
-$dllPath = Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/bin/Release/net8.0/Cloudflare.PowerShell.dll'
+$projectFile = Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Cloudflare.PowerShell.csproj'
+$projectXml = [xml](Get-Content -Raw -LiteralPath $projectFile)
+$targetFramework = [string]$projectXml.Project.PropertyGroup.TargetFramework
+if ([string]::IsNullOrWhiteSpace($targetFramework)) { throw 'Could not determine the Cloudflare.PowerShell target framework.' }
+$dllPath = Join-Path $ProjectRoot "src/Cloudflare.PowerShell/bin/Release/$targetFramework/Cloudflare.PowerShell.dll"
 Copy-Item -LiteralPath $dllPath -Destination $modulePath -Force
 
 Add-Type -TypeDefinition @'

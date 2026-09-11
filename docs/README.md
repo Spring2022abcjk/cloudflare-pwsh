@@ -16,6 +16,8 @@
 - [P2.1 总结](./P2.1-summary.md)：Zones、D1、AI Search 跨资源归一化、投影快照和回归结果。
 - [P2.2 总结](./P2.2-summary.md)：multipart、text、binary transport 的归一化结论和 runtime 边界。
 - [P2.3 总结](./P2.3-summary.md)：PowerShell projection 扩展、`Get-CfZone` 二进制 cmdlet 隔离实验和迁移边界。
+- [P2.4 总结](./P2.4-summary.md)：规范化模型兼容性引擎、投影差异、真实 schema revision 报告和 net10 基线。
+- [ADR 0001](./adr/0001-net10-powershell76-baseline.md)：PowerShell 7.6/.NET 10 统一基线决策。
 
 ## 证据等级
 

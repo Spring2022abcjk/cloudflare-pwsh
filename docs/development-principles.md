@@ -20,3 +20,6 @@
 18. Update project documentation at the end of every phase, not only the chat summary.
 19. Prefer pinned schemas, local fixtures, mock HTTP, and deterministic snapshots; real-account tests are separate evidence.
 20. Keep host, package, runtime, device, and manual evidence distinct in reports.
+21. The supported repository baseline is PowerShell 7.6+ and .NET 10; do not add compatibility shims for older hosts without explicit evidence.
+22. Schema evolution is evaluated from normalized semantic models and projection artifacts; raw text or generated source diffs alone cannot close a compatibility decision.
+23. Compatibility reports must preserve separate API, SDK, and PowerShell impacts and retain deterministic evidence paths and values.

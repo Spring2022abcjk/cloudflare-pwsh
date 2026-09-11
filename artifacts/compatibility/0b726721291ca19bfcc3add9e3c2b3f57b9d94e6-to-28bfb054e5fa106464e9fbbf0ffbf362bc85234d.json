@@ -1,0 +1,53 @@
+{
+  "stage": "P2.4",
+  "oldSourceRevision": "0b726721291ca19bfcc3add9e3c2b3f57b9d94e6",
+  "newSourceRevision": "28bfb054e5fa106464e9fbbf0ffbf362bc85234d",
+  "changes": [
+    {
+      "kind": "EnumValueAdded",
+      "resourcePath": "",
+      "schemaName": "abuse-reports_MitigatedEntityType",
+      "path": "abuse-reports_MitigatedEntityType[Request].enum",
+      "oldValue": "missing",
+      "newValue": "custom_expression",
+      "evidence": "enum value added",
+      "apiImpact": "NonBreaking",
+      "sdkImpact": "PotentiallyBreaking",
+      "powerShellImpact": "PotentiallyBreaking"
+    },
+    {
+      "kind": "ParameterTypeChanged",
+      "resourcePath": "abuse/reports/mitigations",
+      "operationId": "ListMitigations",
+      "path": "ListMitigations.parameters[entity_type].schema",
+      "oldValue": "abuse-reports_MitigatedEntityType:enum:string::enum=account;url_pattern;zone:oneOf=:anyOf=",
+      "newValue": "abuse-reports_MitigatedEntityType:enum:string::enum=account;custom_expression;url_pattern;zone:oneOf=:anyOf=",
+      "evidence": "normalized parameter schema signature",
+      "apiImpact": "Breaking",
+      "sdkImpact": "Breaking",
+      "powerShellImpact": "Breaking"
+    }
+  ],
+  "severitySummary": {
+    "Api:None": 0,
+    "Api:NonBreaking": 1,
+    "Api:Behavioral": 0,
+    "Api:PotentiallyBreaking": 0,
+    "Api:Breaking": 1,
+    "Api:Unknown": 0,
+    "Sdk:None": 0,
+    "Sdk:NonBreaking": 0,
+    "Sdk:Behavioral": 0,
+    "Sdk:PotentiallyBreaking": 1,
+    "Sdk:Breaking": 1,
+    "Sdk:Unknown": 0,
+    "PowerShell:None": 0,
+    "PowerShell:NonBreaking": 0,
+    "PowerShell:Behavioral": 0,
+    "PowerShell:PotentiallyBreaking": 1,
+    "PowerShell:Breaking": 1,
+    "PowerShell:Unknown": 0,
+    "Changes": 2
+  },
+  "fullyCompatible": false
+}

@@ -42,7 +42,9 @@ The experiment compares metadata, parameter sets, pipeline, help loading, host-l
 
 ### P2.4 Schema evolution and compatibility
 
-Compare old/new normalized revisions semantically. Classify endpoint/path, requiredness, enum, property type, response, pagination, scope, and semantic changes as API-breaking, SDK/model-breaking, PowerShell-breaking, or non-breaking. Source text diff is not sufficient.
+Status: completed in this workspace; see [P2.4 summary](./P2.4-summary.md). The net10/PowerShell 7.6 baseline migration is recorded in [ADR 0001](./adr/0001-net10-powershell76-baseline.md).
+
+The engine compares old/new normalized revisions semantically and classifies endpoint/path, requiredness, enum, property type, response, pagination, scope, semantic, and PowerShell projection changes as API, SDK/model, PowerShell, or non-breaking impacts. Source text diff is not sufficient.
 
 ## Later
 

@@ -6,6 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../src/Cloudflare.Normalization/Cloudflare.Normalization.csproj" />
+    <ProjectReference Include="..\..\src\Cloudflare.Normalization\Cloudflare.Normalization.csproj" />
   </ItemGroup>
 </Project>

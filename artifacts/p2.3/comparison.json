@@ -1,0 +1,39 @@
+{
+  "generated": {
+    "command": "Get-CfZone",
+    "parameterSets": [
+      "List",
+      "Get"
+    ],
+    "outputTypes": [
+      "Cloudflare.PowerShell.CfZone"
+    ],
+    "zoneIdValueFromPipelineByPropertyName": true,
+    "helpAvailable": true,
+    "loading": true,
+    "metadataProbeMilliseconds": 13.26,
+    "nonBlankSourceLines": 43,
+    "runtimeDispatch": false
+  },
+  "handwritten": {
+    "command": "Get-CfDnsRecord",
+    "parameterSets": [
+      "List",
+      "Get"
+    ],
+    "outputTypes": [
+      null
+    ],
+    "zoneIdValueFromPipelineByPropertyName": false,
+    "helpAvailable": true,
+    "loading": true,
+    "metadataProbeMilliseconds": 9.78,
+    "nonBlankSourceLines": 44,
+    "runtimeDispatch": true
+  },
+  "testability": {
+    "generatedMetadataLoading": true,
+    "handwrittenMockRuntime": true,
+    "generatedMockRuntime": false
+  }
+}

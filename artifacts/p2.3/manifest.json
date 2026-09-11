@@ -1,0 +1,14 @@
+{
+  "stage": "P2.3",
+  "projectionPolicy": {
+    "typedUnionPolicy": "TypedInput",
+    "primitiveNaming": "SemanticVerb",
+    "parameterNamePolicy": "PascalCase",
+    "pipelinePolicy": "ScopeByPropertyName",
+    "outputTypePolicy": "ExplicitOverrideOrUnresolved",
+    "helpPolicy": "DeterministicSummary"
+  },
+  "generatedExperiment": "src/Cloudflare.PowerShell/Generated/Experiments/P23_GetCfZoneCommand.cs",
+  "generatedCmdlet": "Get-CfZone",
+  "dispatch": "deferred"
+}

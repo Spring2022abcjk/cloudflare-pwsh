@@ -36,7 +36,9 @@ Normalized DNS export/import and AI Search upload/download. Confirmed that reque
 
 ### P2.3 PowerShell projection and binary-cmdlet experiment
 
-Generalize consistent verb/noun, scope parameter, pipeline, typed output, confirmation, and help metadata after P2.1 and P2.2 stabilize. Separately compare one generated `Get-CfZone` `PSCmdlet` with the handwritten wrapper across metadata, parameter sets, pipeline, help, loading, performance, source size, complexity, and testability.
+Status: completed in this workspace; see [P2.3 summary](./P2.3-summary.md). The projection surface is generalized in a separate P2.3 overlay, and the generated `Get-CfZone` experiment is isolated from the public handwritten module. Runtime dispatch and migration remain deferred.
+
+The experiment compares metadata, parameter sets, pipeline, help loading, host-local lookup timing, source size, runtime coverage, and testability. It does not treat a metadata-only command body as production runtime evidence.
 
 ### P2.4 Schema evolution and compatibility
 

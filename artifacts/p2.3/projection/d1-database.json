@@ -1,0 +1,990 @@
+{
+  "resource": "d1-database",
+  "operations": [
+    {
+      "operationId": "d1-create-database",
+      "cmdletName": "New-CfD1Database",
+      "parameterSet": "Create",
+      "semantic": {
+        "kind": "Create",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "POST",
+      "pathTemplate": "/accounts/{account_id}/d1/database",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "parameterSet": "Create",
+          "apiName": "account_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "d1_account-identifier",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "account_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium",
+      "help": {
+        "synopsis": "New-CfD1Database create operation.",
+        "description": "Generated help for the normalized Create operation 'd1-create-database'.",
+        "source": "DeterministicDefault"
+      }
+    },
+    {
+      "operationId": "d1-delete-database",
+      "cmdletName": "Remove-CfD1Database",
+      "parameterSet": "Delete",
+      "semantic": {
+        "kind": "Delete",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "DELETE",
+      "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "database_id",
+          "projectedName": "DatabaseId",
+          "scopeType": "Database",
+          "role": "Primary"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "parameterSet": "Delete",
+          "apiName": "account_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "d1_account-identifier",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "account_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "DatabaseId",
+          "parameterSet": "Delete",
+          "apiName": "database_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "d1_database-identifier",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "database_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'database_id'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": true,
+      "confirmImpact": "High",
+      "help": {
+        "synopsis": "Remove-CfD1Database delete operation.",
+        "description": "Generated help for the normalized Delete operation 'd1-delete-database'.",
+        "source": "DeterministicDefault"
+      }
+    },
+    {
+      "operationId": "d1-get-database",
+      "cmdletName": "Get-CfD1Database",
+      "parameterSet": "Get",
+      "semantic": {
+        "kind": "Get",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "GET",
+      "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "database_id",
+          "projectedName": "DatabaseId",
+          "scopeType": "Database",
+          "role": "Primary"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "parameterSet": "Get",
+          "apiName": "account_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "d1_account-identifier",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "account_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "DatabaseId",
+          "parameterSet": "Get",
+          "apiName": "database_id",
+          "binding": "path",
+          "type": "object",
+          "schema": "Inline_5941C2184D56",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "database_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'database_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Fields",
+          "parameterSet": "Get",
+          "apiName": "fields",
+          "binding": "query",
+          "type": "string[]",
+          "schema": "Inline_FE0C0CEC520A",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "query",
+            "name": "fields"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'fields'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": false,
+      "confirmImpact": "None",
+      "help": {
+        "synopsis": "Get-CfD1Database get operation.",
+        "description": "Generated help for the normalized Get operation 'd1-get-database'.",
+        "source": "DeterministicDefault"
+      }
+    },
+    {
+      "operationId": "d1-list-databases",
+      "cmdletName": "Get-CfD1Database",
+      "parameterSet": "List",
+      "semantic": {
+        "kind": "List",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "GET",
+      "pathTemplate": "/accounts/{account_id}/d1/database",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "parameterSet": "List",
+          "apiName": "account_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "d1_account-identifier",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "account_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Name",
+          "parameterSet": "List",
+          "apiName": "name",
+          "binding": "query",
+          "type": "string",
+          "schema": "Inline_D5340E30A42B",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "query",
+            "name": "name"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'name'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Page",
+          "parameterSet": "List",
+          "apiName": "page",
+          "binding": "query",
+          "type": "decimal",
+          "schema": "Inline_940AEA19FFA7",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 1,
+          "apiBinding": {
+            "location": "query",
+            "name": "page"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'page'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "PerPage",
+          "parameterSet": "List",
+          "apiName": "per_page",
+          "binding": "query",
+          "type": "decimal",
+          "schema": "Inline_7E9029090147",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 1000,
+          "apiBinding": {
+            "location": "query",
+            "name": "per_page"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'per_page'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "item",
+      "pagingBehavior": "shared-runtime",
+      "supportsShouldProcess": false,
+      "confirmImpact": "None",
+      "help": {
+        "synopsis": "Get-CfD1Database list operation.",
+        "description": "Generated help for the normalized List operation 'd1-list-databases'.",
+        "source": "DeterministicDefault"
+      }
+    },
+    {
+      "operationId": "d1-update-database",
+      "cmdletName": "Set-CfD1Database",
+      "parameterSet": "Update",
+      "semantic": {
+        "kind": "Update",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "PUT",
+      "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "database_id",
+          "projectedName": "DatabaseId",
+          "scopeType": "Database",
+          "role": "Primary"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "parameterSet": "Update",
+          "apiName": "account_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "d1_account-identifier",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "account_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "DatabaseId",
+          "parameterSet": "Update",
+          "apiName": "database_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "d1_database-identifier",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "database_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'database_id'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": true,
+      "confirmImpact": "High",
+      "help": {
+        "synopsis": "Set-CfD1Database update operation.",
+        "description": "Generated help for the normalized Update operation 'd1-update-database'.",
+        "source": "DeterministicDefault"
+      }
+    }
+  ],
+  "cmdlets": [
+    {
+      "cmdletName": "Get-CfD1Database",
+      "operationIds": [
+        "d1-get-database",
+        "d1-list-databases"
+      ],
+      "parameterSets": [
+        {
+          "name": "Get",
+          "operationId": "d1-get-database",
+          "operationBinding": {
+            "method": "GET",
+            "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+            "pathParameters": [
+              "AccountId",
+              "DatabaseId"
+            ],
+            "queryParameters": [
+              "Fields"
+            ]
+          },
+          "requiredParameters": [
+            "AccountId",
+            "DatabaseId"
+          ],
+          "optionalParameters": [
+            "Fields"
+          ]
+        },
+        {
+          "name": "List",
+          "operationId": "d1-list-databases",
+          "operationBinding": {
+            "method": "GET",
+            "pathTemplate": "/accounts/{account_id}/d1/database",
+            "pathParameters": [
+              "AccountId"
+            ],
+            "queryParameters": [
+              "Name",
+              "Page",
+              "PerPage"
+            ]
+          },
+          "requiredParameters": [
+            "AccountId"
+          ],
+          "optionalParameters": [
+            "Name",
+            "Page",
+            "PerPage"
+          ]
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Get",
+            "List"
+          ],
+          "requiredIn": [
+            "Get",
+            "List"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "account_id"
+            },
+            {
+              "location": "path",
+              "name": "account_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "DatabaseId",
+          "type": "object",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Get"
+          ],
+          "requiredIn": [
+            "Get"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "database_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'database_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Fields",
+          "type": "string[]",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "Get"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "fields"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'fields'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "name"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'name'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Page",
+          "type": "decimal",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 1,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "page"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'page'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "PerPage",
+          "type": "decimal",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 1000,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "per_page"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'per_page'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "item",
+      "pagingBehavior": [
+        "shared-runtime"
+      ],
+      "supportsShouldProcess": false,
+      "confirmImpact": "None",
+      "help": {
+        "synopsis": "Get-CfD1Database get operation.",
+        "description": "Generated help for the normalized Get operation 'd1-get-database'.",
+        "source": "DeterministicDefault"
+      },
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "database_id",
+          "projectedName": "DatabaseId",
+          "scopeType": "Database",
+          "role": "Primary"
+        },
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        }
+      ]
+    },
+    {
+      "cmdletName": "New-CfD1Database",
+      "operationIds": [
+        "d1-create-database"
+      ],
+      "parameterSets": [
+        {
+          "name": "Create",
+          "operationId": "d1-create-database",
+          "operationBinding": {
+            "method": "POST",
+            "pathTemplate": "/accounts/{account_id}/d1/database",
+            "pathParameters": [
+              "AccountId"
+            ],
+            "queryParameters": []
+          },
+          "requiredParameters": [
+            "AccountId"
+          ],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Create"
+          ],
+          "requiredIn": [
+            "Create"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "account_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "single",
+      "pagingBehavior": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium",
+      "help": {
+        "synopsis": "New-CfD1Database create operation.",
+        "description": "Generated help for the normalized Create operation 'd1-create-database'.",
+        "source": "DeterministicDefault"
+      },
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        }
+      ]
+    },
+    {
+      "cmdletName": "Remove-CfD1Database",
+      "operationIds": [
+        "d1-delete-database"
+      ],
+      "parameterSets": [
+        {
+          "name": "Delete",
+          "operationId": "d1-delete-database",
+          "operationBinding": {
+            "method": "DELETE",
+            "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+            "pathParameters": [
+              "AccountId",
+              "DatabaseId"
+            ],
+            "queryParameters": []
+          },
+          "requiredParameters": [
+            "AccountId",
+            "DatabaseId"
+          ],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Delete"
+          ],
+          "requiredIn": [
+            "Delete"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "account_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "DatabaseId",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Delete"
+          ],
+          "requiredIn": [
+            "Delete"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "database_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'database_id'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "single",
+      "pagingBehavior": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "High",
+      "help": {
+        "synopsis": "Remove-CfD1Database delete operation.",
+        "description": "Generated help for the normalized Delete operation 'd1-delete-database'.",
+        "source": "DeterministicDefault"
+      },
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "database_id",
+          "projectedName": "DatabaseId",
+          "scopeType": "Database",
+          "role": "Primary"
+        }
+      ]
+    },
+    {
+      "cmdletName": "Set-CfD1Database",
+      "operationIds": [
+        "d1-update-database"
+      ],
+      "parameterSets": [
+        {
+          "name": "Update",
+          "operationId": "d1-update-database",
+          "operationBinding": {
+            "method": "PUT",
+            "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+            "pathParameters": [
+              "AccountId",
+              "DatabaseId"
+            ],
+            "queryParameters": []
+          },
+          "requiredParameters": [
+            "AccountId",
+            "DatabaseId"
+          ],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Update"
+          ],
+          "requiredIn": [
+            "Update"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "account_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "DatabaseId",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Update"
+          ],
+          "requiredIn": [
+            "Update"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "database_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'database_id'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "single",
+      "pagingBehavior": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "High",
+      "help": {
+        "synopsis": "Set-CfD1Database update operation.",
+        "description": "Generated help for the normalized Update operation 'd1-update-database'.",
+        "source": "DeterministicDefault"
+      },
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "database_id",
+          "projectedName": "DatabaseId",
+          "scopeType": "Database",
+          "role": "Primary"
+        }
+      ]
+    }
+  ]
+}

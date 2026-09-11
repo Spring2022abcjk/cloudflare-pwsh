@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "operations": {
+    "zones-get": { "outputType": "Cloudflare.PowerShell.CfZone", "help": { "synopsis": "Gets Cloudflare zones.", "description": "Gets zones visible to the authenticated account and writes one typed zone per pipeline object." }, "parameterRenames": { "account.id": "AccountId", "account.name": "AccountName", "per_page": "PerPage" } },
+    "zones-post": { "outputType": "Cloudflare.PowerShell.CfZone", "help": { "synopsis": "Creates a Cloudflare zone.", "description": "Creates a zone using the normalized request model." } },
+    "zones-0-get": { "outputType": "Cloudflare.PowerShell.CfZone", "help": { "synopsis": "Gets a Cloudflare zone.", "description": "Gets one zone by its zone identifier." } },
+    "zones-0-patch": { "outputType": "Cloudflare.PowerShell.CfZone", "help": { "synopsis": "Updates a Cloudflare zone.", "description": "Updates mutable zone properties using the normalized edit request model." } },
+    "zones-0-delete": { "outputType": "Cloudflare.PowerShell.CfZone", "help": { "synopsis": "Removes a Cloudflare zone.", "description": "Removes one zone by its zone identifier." } }
+  },
+  "defaults": { "parameterNamePolicy": "PascalCase", "pipelinePolicy": "ScopeByPropertyName", "outputTypePolicy": "ExplicitOverrideOrUnresolved", "helpPolicy": "DeterministicSummary" }
+}

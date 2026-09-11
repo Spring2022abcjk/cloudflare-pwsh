@@ -15,6 +15,7 @@
 - [开发原则](./development-principles.md)：后续 agent 必须遵守的长期规则。
 - [P2.1 总结](./P2.1-summary.md)：Zones、D1、AI Search 跨资源归一化、投影快照和回归结果。
 - [P2.2 总结](./P2.2-summary.md)：multipart、text、binary transport 的归一化结论和 runtime 边界。
+- [P2.3 总结](./P2.3-summary.md)：PowerShell projection 扩展、`Get-CfZone` 二进制 cmdlet 隔离实验和迁移边界。
 
 ## 证据等级
 

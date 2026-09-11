@@ -90,6 +90,12 @@ P2.2 confirms that the normalized model can represent the four special transport
 
 The normalizer records these facts in request/response representations, content types, envelope policies, and parsing modes. The current PowerShell runtime remains JSON/envelope-only; multipart serialization, raw-body handling, and production streaming are intentionally deferred to the runtime phase.
 
+## P2.3 PowerShell Projection Facts
+
+P2.3 adds a separate projection overlay for PowerShell-only policy. The overlay can select deterministic PowerShell parameter names, pipeline binding, output type, output policy, confirmation, and help metadata without changing the normalized API fixtures or the P2.1 compatibility projection.
+
+The generated `Get-CfZone` `PSCmdlet` is an isolated net10 experiment because the current host's `System.Management.Automation` assembly is net10 while the production module is net8. It proves command metadata loading, not HTTP dispatch. The handwritten module remains the runtime reference until generated dispatch has equivalent mock coverage.
+
 ## Deferred Boundaries
 
 Production retry/idempotency policy, legacy authentication, multipart and binary runtime handling, streaming, complete pagination strategies, full generated help, module publishing, real-account integration, and the final handwritten-vs-generated-cmdlet decision remain unresolved. HTTP 2xx with `success=false` also remains intentionally unresolved.

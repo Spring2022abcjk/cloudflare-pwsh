@@ -6,4 +6,7 @@
     <RootNamespace>Cloudflare.PowerShell</RootNamespace>
     <AssemblyName>Cloudflare.PowerShell</AssemblyName>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Generated/Experiments/**/*.cs" />
+  </ItemGroup>
 </Project>

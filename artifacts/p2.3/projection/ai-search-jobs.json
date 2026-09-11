@@ -1,0 +1,1170 @@
+{
+  "resource": "ai-search-jobs",
+  "operations": [
+    {
+      "operationId": "ai-search-namespace-instance-change-job-status",
+      "cmdletName": "Set-CfAiSearchJob",
+      "parameterSet": "Status",
+      "semantic": {
+        "kind": "Edit",
+        "source": "MethodHeuristic",
+        "confidence": "Low"
+      },
+      "method": "PATCH",
+      "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs/{job_id}",
+      "resourcePath": [
+        "ai",
+        "search",
+        "namespaces",
+        "instances",
+        "jobs"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "projectedName": "Id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "job_id",
+          "projectedName": "JobId",
+          "scopeType": "Job",
+          "role": "Primary"
+        },
+        {
+          "parameterName": "name",
+          "projectedName": "Name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "parameterSet": "Status",
+          "apiName": "account_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "Inline_73CEC8ED1B4E",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "account_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Id",
+          "parameterSet": "Status",
+          "apiName": "id",
+          "binding": "path",
+          "type": "string",
+          "schema": "Inline_BC959110C285",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "JobId",
+          "parameterSet": "Status",
+          "apiName": "job_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "Inline_FF0130BD2C52",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "job_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'job_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Name",
+          "parameterSet": "Status",
+          "apiName": "name",
+          "binding": "path",
+          "type": "string",
+          "schema": "Inline_615F4B79E384",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "name"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'name'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium",
+      "help": {
+        "synopsis": "Set-CfAiSearchJob edit operation.",
+        "description": "Generated help for the normalized Edit operation 'ai-search-namespace-instance-change-job-status'.",
+        "source": "DeterministicDefault"
+      }
+    },
+    {
+      "operationId": "ai-search-namespace-instance-create-job",
+      "cmdletName": "New-CfAiSearchJob",
+      "parameterSet": "Create",
+      "semantic": {
+        "kind": "Create",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "POST",
+      "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs",
+      "resourcePath": [
+        "ai",
+        "search",
+        "namespaces",
+        "instances",
+        "jobs"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "projectedName": "Id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "name",
+          "projectedName": "Name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "parameterSet": "Create",
+          "apiName": "account_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "Inline_6086A83F3192",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "account_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Id",
+          "parameterSet": "Create",
+          "apiName": "id",
+          "binding": "path",
+          "type": "string",
+          "schema": "Inline_E5C4DCA15999",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Name",
+          "parameterSet": "Create",
+          "apiName": "name",
+          "binding": "path",
+          "type": "string",
+          "schema": "Inline_AB2FFD32155F",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "name"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'name'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium",
+      "help": {
+        "synopsis": "New-CfAiSearchJob create operation.",
+        "description": "Generated help for the normalized Create operation 'ai-search-namespace-instance-create-job'.",
+        "source": "DeterministicDefault"
+      }
+    },
+    {
+      "operationId": "ai-search-namespace-instance-get-job",
+      "cmdletName": "Get-CfAiSearchJob",
+      "parameterSet": "Get",
+      "semantic": {
+        "kind": "Get",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "GET",
+      "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs/{job_id}",
+      "resourcePath": [
+        "ai",
+        "search",
+        "namespaces",
+        "instances",
+        "jobs"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "projectedName": "Id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "job_id",
+          "projectedName": "JobId",
+          "scopeType": "Job",
+          "role": "Primary"
+        },
+        {
+          "parameterName": "name",
+          "projectedName": "Name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "parameterSet": "Get",
+          "apiName": "account_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "Inline_253450BD4A96",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "account_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Id",
+          "parameterSet": "Get",
+          "apiName": "id",
+          "binding": "path",
+          "type": "string",
+          "schema": "Inline_E0EECAC8107F",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "JobId",
+          "parameterSet": "Get",
+          "apiName": "job_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "Inline_6A11612B64A3",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "job_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'job_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Name",
+          "parameterSet": "Get",
+          "apiName": "name",
+          "binding": "path",
+          "type": "string",
+          "schema": "Inline_4459FE061000",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "name"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'name'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": false,
+      "confirmImpact": "None",
+      "help": {
+        "synopsis": "Get-CfAiSearchJob get operation.",
+        "description": "Generated help for the normalized Get operation 'ai-search-namespace-instance-get-job'.",
+        "source": "DeterministicDefault"
+      }
+    },
+    {
+      "operationId": "ai-search-namespace-instance-list-jobs",
+      "cmdletName": "Get-CfAiSearchJob",
+      "parameterSet": "List",
+      "semantic": {
+        "kind": "List",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "GET",
+      "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs",
+      "resourcePath": [
+        "ai",
+        "search",
+        "namespaces",
+        "instances",
+        "jobs"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "projectedName": "Id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "name",
+          "projectedName": "Name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "parameterSet": "List",
+          "apiName": "account_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "Inline_04556A5F93F6",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "account_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Id",
+          "parameterSet": "List",
+          "apiName": "id",
+          "binding": "path",
+          "type": "string",
+          "schema": "Inline_9475D72D6E3E",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Name",
+          "parameterSet": "List",
+          "apiName": "name",
+          "binding": "path",
+          "type": "string",
+          "schema": "Inline_3D0614C9C7C7",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "name"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'name'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Page",
+          "parameterSet": "List",
+          "apiName": "page",
+          "binding": "query",
+          "type": "int",
+          "schema": "Inline_1B184BFF6F50",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 1,
+          "apiBinding": {
+            "location": "query",
+            "name": "page"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'page'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "PerPage",
+          "parameterSet": "List",
+          "apiName": "per_page",
+          "binding": "query",
+          "type": "int",
+          "schema": "Inline_F6777B697645",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 20,
+          "apiBinding": {
+            "location": "query",
+            "name": "per_page"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'per_page'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "item",
+      "pagingBehavior": "shared-runtime",
+      "supportsShouldProcess": false,
+      "confirmImpact": "None",
+      "help": {
+        "synopsis": "Get-CfAiSearchJob list operation.",
+        "description": "Generated help for the normalized List operation 'ai-search-namespace-instance-list-jobs'.",
+        "source": "DeterministicDefault"
+      }
+    }
+  ],
+  "cmdlets": [
+    {
+      "cmdletName": "Get-CfAiSearchJob",
+      "operationIds": [
+        "ai-search-namespace-instance-get-job",
+        "ai-search-namespace-instance-list-jobs"
+      ],
+      "parameterSets": [
+        {
+          "name": "Get",
+          "operationId": "ai-search-namespace-instance-get-job",
+          "operationBinding": {
+            "method": "GET",
+            "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs/{job_id}",
+            "pathParameters": [
+              "AccountId",
+              "Id",
+              "JobId",
+              "Name"
+            ],
+            "queryParameters": []
+          },
+          "requiredParameters": [
+            "AccountId",
+            "Id",
+            "JobId",
+            "Name"
+          ],
+          "optionalParameters": []
+        },
+        {
+          "name": "List",
+          "operationId": "ai-search-namespace-instance-list-jobs",
+          "operationBinding": {
+            "method": "GET",
+            "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs",
+            "pathParameters": [
+              "AccountId",
+              "Id",
+              "Name"
+            ],
+            "queryParameters": [
+              "Page",
+              "PerPage"
+            ]
+          },
+          "requiredParameters": [
+            "AccountId",
+            "Id",
+            "Name"
+          ],
+          "optionalParameters": [
+            "Page",
+            "PerPage"
+          ]
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Get",
+            "List"
+          ],
+          "requiredIn": [
+            "Get",
+            "List"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "account_id"
+            },
+            {
+              "location": "path",
+              "name": "account_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Get",
+            "List"
+          ],
+          "requiredIn": [
+            "Get",
+            "List"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "id"
+            },
+            {
+              "location": "path",
+              "name": "id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "JobId",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Get"
+          ],
+          "requiredIn": [
+            "Get"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "job_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'job_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Get",
+            "List"
+          ],
+          "requiredIn": [
+            "Get",
+            "List"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "name"
+            },
+            {
+              "location": "path",
+              "name": "name"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'name'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Page",
+          "type": "int",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 1,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "page"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'page'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "PerPage",
+          "type": "int",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 20,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "per_page"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'per_page'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "item",
+      "pagingBehavior": [
+        "shared-runtime"
+      ],
+      "supportsShouldProcess": false,
+      "confirmImpact": "None",
+      "help": {
+        "synopsis": "Get-CfAiSearchJob get operation.",
+        "description": "Generated help for the normalized Get operation 'ai-search-namespace-instance-get-job'.",
+        "source": "DeterministicDefault"
+      },
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "projectedName": "Id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "job_id",
+          "projectedName": "JobId",
+          "scopeType": "Job",
+          "role": "Primary"
+        },
+        {
+          "parameterName": "name",
+          "projectedName": "Name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "projectedName": "Id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "name",
+          "projectedName": "Name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ]
+    },
+    {
+      "cmdletName": "New-CfAiSearchJob",
+      "operationIds": [
+        "ai-search-namespace-instance-create-job"
+      ],
+      "parameterSets": [
+        {
+          "name": "Create",
+          "operationId": "ai-search-namespace-instance-create-job",
+          "operationBinding": {
+            "method": "POST",
+            "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs",
+            "pathParameters": [
+              "AccountId",
+              "Id",
+              "Name"
+            ],
+            "queryParameters": []
+          },
+          "requiredParameters": [
+            "AccountId",
+            "Id",
+            "Name"
+          ],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Create"
+          ],
+          "requiredIn": [
+            "Create"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "account_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Create"
+          ],
+          "requiredIn": [
+            "Create"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Create"
+          ],
+          "requiredIn": [
+            "Create"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "name"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'name'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "single",
+      "pagingBehavior": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium",
+      "help": {
+        "synopsis": "New-CfAiSearchJob create operation.",
+        "description": "Generated help for the normalized Create operation 'ai-search-namespace-instance-create-job'.",
+        "source": "DeterministicDefault"
+      },
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "projectedName": "Id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "name",
+          "projectedName": "Name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ]
+    },
+    {
+      "cmdletName": "Set-CfAiSearchJob",
+      "operationIds": [
+        "ai-search-namespace-instance-change-job-status"
+      ],
+      "parameterSets": [
+        {
+          "name": "Status",
+          "operationId": "ai-search-namespace-instance-change-job-status",
+          "operationBinding": {
+            "method": "PATCH",
+            "pathTemplate": "/accounts/{account_id}/ai-search/namespaces/{name}/instances/{id}/jobs/{job_id}",
+            "pathParameters": [
+              "AccountId",
+              "Id",
+              "JobId",
+              "Name"
+            ],
+            "queryParameters": []
+          },
+          "requiredParameters": [
+            "AccountId",
+            "Id",
+            "JobId",
+            "Name"
+          ],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Status"
+          ],
+          "requiredIn": [
+            "Status"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "account_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Id",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Status"
+          ],
+          "requiredIn": [
+            "Status"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "JobId",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Status"
+          ],
+          "requiredIn": [
+            "Status"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "job_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'job_id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Status"
+          ],
+          "requiredIn": [
+            "Status"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "name"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'name'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "System.Management.Automation.PSObject",
+      "outputPolicy": "single",
+      "pagingBehavior": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium",
+      "help": {
+        "synopsis": "Set-CfAiSearchJob edit operation.",
+        "description": "Generated help for the normalized Edit operation 'ai-search-namespace-instance-change-job-status'.",
+        "source": "DeterministicDefault"
+      },
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "projectedName": "AccountId",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "id",
+          "projectedName": "Id",
+          "scopeType": "Instance",
+          "role": "Nested"
+        },
+        {
+          "parameterName": "job_id",
+          "projectedName": "JobId",
+          "scopeType": "Job",
+          "role": "Primary"
+        },
+        {
+          "parameterName": "name",
+          "projectedName": "Name",
+          "scopeType": "Namespace",
+          "role": "Nested"
+        }
+      ]
+    }
+  ]
+}

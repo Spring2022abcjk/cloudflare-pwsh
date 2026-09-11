@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Cloudflare.P23.GeneratedCmdlet</AssemblyName>
+    <RootNamespace>Cloudflare.PowerShell</RootNamespace>
+    <PowerShellHome Condition="'$(PowerShellHome)' == ''">$(ProgramFiles)\PowerShell\7</PowerShellHome>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../../src/Cloudflare.PowerShell/Generated/Experiments/P23_GetCfZoneCommand.cs" Link="P23_GetCfZoneCommand.cs" />
+    <Reference Include="System.Management.Automation">
+      <HintPath>$(PowerShellHome)\System.Management.Automation.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

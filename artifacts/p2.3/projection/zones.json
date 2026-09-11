@@ -1,0 +1,972 @@
+{
+  "resource": "zones",
+  "operations": [
+    {
+      "operationId": "zones-0-delete",
+      "cmdletName": "Remove-CfZone",
+      "parameterSet": "Delete",
+      "semantic": {
+        "kind": "Delete",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "DELETE",
+      "pathTemplate": "/zones/{zone_id}",
+      "resourcePath": [
+        "zones"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "zone_id",
+          "projectedName": "ZoneId",
+          "scopeType": "Zone",
+          "role": "Primary"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "ZoneId",
+          "parameterSet": "Delete",
+          "apiName": "zone_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "zones_identifier",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "zone_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfZone",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": true,
+      "confirmImpact": "High",
+      "help": {
+        "synopsis": "Removes a Cloudflare zone.",
+        "description": "Removes one zone by its zone identifier.",
+        "source": "Override"
+      }
+    },
+    {
+      "operationId": "zones-0-get",
+      "cmdletName": "Get-CfZone",
+      "parameterSet": "Get",
+      "semantic": {
+        "kind": "Get",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "GET",
+      "pathTemplate": "/zones/{zone_id}",
+      "resourcePath": [
+        "zones"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "zone_id",
+          "projectedName": "ZoneId",
+          "scopeType": "Zone",
+          "role": "Primary"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "ZoneId",
+          "parameterSet": "Get",
+          "apiName": "zone_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "zones_identifier",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "zone_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfZone",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": false,
+      "confirmImpact": "None",
+      "help": {
+        "synopsis": "Gets a Cloudflare zone.",
+        "description": "Gets one zone by its zone identifier.",
+        "source": "Override"
+      }
+    },
+    {
+      "operationId": "zones-0-patch",
+      "cmdletName": "Set-CfZone",
+      "parameterSet": "Edit",
+      "semantic": {
+        "kind": "Edit",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "method": "PATCH",
+      "pathTemplate": "/zones/{zone_id}",
+      "resourcePath": [
+        "zones"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "zone_id",
+          "projectedName": "ZoneId",
+          "scopeType": "Zone",
+          "role": "Primary"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "ZoneId",
+          "parameterSet": "Edit",
+          "apiName": "zone_id",
+          "binding": "path",
+          "type": "string",
+          "schema": "zones_identifier",
+          "mandatory": true,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "path",
+            "name": "zone_id"
+          },
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfZone",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": true,
+      "confirmImpact": "High",
+      "help": {
+        "synopsis": "Updates a Cloudflare zone.",
+        "description": "Updates mutable zone properties using the normalized edit request model.",
+        "source": "Override"
+      }
+    },
+    {
+      "operationId": "zones-get",
+      "cmdletName": "Get-CfZone",
+      "parameterSet": "List",
+      "semantic": {
+        "kind": "List",
+        "source": "CollectionPathHeuristic",
+        "confidence": "Medium"
+      },
+      "method": "GET",
+      "pathTemplate": "/zones",
+      "resourcePath": [
+        "zones"
+      ],
+      "scopeBindings": [],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "parameterSet": "List",
+          "apiName": "account.id",
+          "binding": "query",
+          "type": "string",
+          "schema": "Inline_36C27E9E49EA",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "query",
+            "name": "account.id"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'account.id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "AccountName",
+          "parameterSet": "List",
+          "apiName": "account.name",
+          "binding": "query",
+          "type": "string",
+          "schema": "Inline_84FE1C0976C9",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "query",
+            "name": "account.name"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'account.name'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Direction",
+          "parameterSet": "List",
+          "apiName": "direction",
+          "binding": "query",
+          "type": "string",
+          "schema": "Inline_56DFA6C7B77F",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "query",
+            "name": "direction"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'direction'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Match",
+          "parameterSet": "List",
+          "apiName": "match",
+          "binding": "query",
+          "type": "string",
+          "schema": "Inline_44E3385AD166",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": "all",
+          "apiBinding": {
+            "location": "query",
+            "name": "match"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'match'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Name",
+          "parameterSet": "List",
+          "apiName": "name",
+          "binding": "query",
+          "type": "string",
+          "schema": "Inline_5B6D82A8D465",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "query",
+            "name": "name"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'name'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Order",
+          "parameterSet": "List",
+          "apiName": "order",
+          "binding": "query",
+          "type": "string",
+          "schema": "Inline_0868189FEBC3",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "query",
+            "name": "order"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'order'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Page",
+          "parameterSet": "List",
+          "apiName": "page",
+          "binding": "query",
+          "type": "decimal",
+          "schema": "Inline_CC0F83557A18",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 1,
+          "apiBinding": {
+            "location": "query",
+            "name": "page"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'page'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "PerPage",
+          "parameterSet": "List",
+          "apiName": "per_page",
+          "binding": "query",
+          "type": "decimal",
+          "schema": "Inline_67272404974D",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 20,
+          "apiBinding": {
+            "location": "query",
+            "name": "per_page"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'per_page'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Status",
+          "parameterSet": "List",
+          "apiName": "status",
+          "binding": "query",
+          "type": "string",
+          "schema": "Inline_9CE0D56B9663",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "query",
+            "name": "status"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'status'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Type",
+          "parameterSet": "List",
+          "apiName": "type",
+          "binding": "query",
+          "type": "string[]",
+          "schema": "Inline_5B66DEAEA70A",
+          "mandatory": false,
+          "position": null,
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBinding": {
+            "location": "query",
+            "name": "type"
+          },
+          "help": {
+            "description": "Binds to API query parameter 'type'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfZone",
+      "outputPolicy": "item",
+      "pagingBehavior": "shared-runtime",
+      "supportsShouldProcess": false,
+      "confirmImpact": "None",
+      "help": {
+        "synopsis": "Gets Cloudflare zones.",
+        "description": "Gets zones visible to the authenticated account and writes one typed zone per pipeline object.",
+        "source": "Override"
+      }
+    },
+    {
+      "operationId": "zones-post",
+      "cmdletName": "New-CfZone",
+      "parameterSet": "Create",
+      "semantic": {
+        "kind": "Create",
+        "source": "MethodHeuristic",
+        "confidence": "Low"
+      },
+      "method": "POST",
+      "pathTemplate": "/zones",
+      "resourcePath": [
+        "zones"
+      ],
+      "scopeBindings": [],
+      "parameters": [],
+      "outputType": "Cloudflare.PowerShell.CfZone",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium",
+      "help": {
+        "synopsis": "Creates a Cloudflare zone.",
+        "description": "Creates a zone using the normalized request model.",
+        "source": "Override"
+      }
+    }
+  ],
+  "cmdlets": [
+    {
+      "cmdletName": "Get-CfZone",
+      "operationIds": [
+        "zones-0-get",
+        "zones-get"
+      ],
+      "parameterSets": [
+        {
+          "name": "Get",
+          "operationId": "zones-0-get",
+          "operationBinding": {
+            "method": "GET",
+            "pathTemplate": "/zones/{zone_id}",
+            "pathParameters": [
+              "ZoneId"
+            ],
+            "queryParameters": []
+          },
+          "requiredParameters": [
+            "ZoneId"
+          ],
+          "optionalParameters": []
+        },
+        {
+          "name": "List",
+          "operationId": "zones-get",
+          "operationBinding": {
+            "method": "GET",
+            "pathTemplate": "/zones",
+            "pathParameters": [],
+            "queryParameters": [
+              "AccountId",
+              "AccountName",
+              "Direction",
+              "Match",
+              "Name",
+              "Order",
+              "Page",
+              "PerPage",
+              "Status",
+              "Type"
+            ]
+          },
+          "requiredParameters": [],
+          "optionalParameters": [
+            "AccountId",
+            "AccountName",
+            "Direction",
+            "Match",
+            "Name",
+            "Order",
+            "Page",
+            "PerPage",
+            "Status",
+            "Type"
+          ]
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "type": "string",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "account.id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'account.id'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "AccountName",
+          "type": "string",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "account.name"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'account.name'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Direction",
+          "type": "string",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "direction"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'direction'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Match",
+          "type": "string",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": "all",
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "match"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'match'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "name"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'name'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Order",
+          "type": "string",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "order"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'order'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Page",
+          "type": "decimal",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 1,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "page"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'page'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "PerPage",
+          "type": "decimal",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 20,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "per_page"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'per_page'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Status",
+          "type": "string",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "status"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'status'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "Type",
+          "type": "string[]",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "query",
+              "name": "type"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'type'.",
+            "source": "DeterministicDefault"
+          }
+        },
+        {
+          "name": "ZoneId",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Get"
+          ],
+          "requiredIn": [
+            "Get"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "zone_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfZone",
+      "outputPolicy": "item",
+      "pagingBehavior": [
+        "shared-runtime"
+      ],
+      "supportsShouldProcess": false,
+      "confirmImpact": "None",
+      "help": {
+        "synopsis": "Gets a Cloudflare zone.",
+        "description": "Gets one zone by its zone identifier.",
+        "source": "Override"
+      },
+      "scopeBindings": [
+        {
+          "parameterName": "zone_id",
+          "projectedName": "ZoneId",
+          "scopeType": "Zone",
+          "role": "Primary"
+        }
+      ]
+    },
+    {
+      "cmdletName": "New-CfZone",
+      "operationIds": [
+        "zones-post"
+      ],
+      "parameterSets": [
+        {
+          "name": "Create",
+          "operationId": "zones-post",
+          "operationBinding": {
+            "method": "POST",
+            "pathTemplate": "/zones",
+            "pathParameters": [],
+            "queryParameters": []
+          },
+          "requiredParameters": [],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [],
+      "outputType": "Cloudflare.PowerShell.CfZone",
+      "outputPolicy": "single",
+      "pagingBehavior": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium",
+      "help": {
+        "synopsis": "Creates a Cloudflare zone.",
+        "description": "Creates a zone using the normalized request model.",
+        "source": "Override"
+      },
+      "scopeBindings": []
+    },
+    {
+      "cmdletName": "Remove-CfZone",
+      "operationIds": [
+        "zones-0-delete"
+      ],
+      "parameterSets": [
+        {
+          "name": "Delete",
+          "operationId": "zones-0-delete",
+          "operationBinding": {
+            "method": "DELETE",
+            "pathTemplate": "/zones/{zone_id}",
+            "pathParameters": [
+              "ZoneId"
+            ],
+            "queryParameters": []
+          },
+          "requiredParameters": [
+            "ZoneId"
+          ],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "ZoneId",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Delete"
+          ],
+          "requiredIn": [
+            "Delete"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "zone_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfZone",
+      "outputPolicy": "single",
+      "pagingBehavior": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "High",
+      "help": {
+        "synopsis": "Removes a Cloudflare zone.",
+        "description": "Removes one zone by its zone identifier.",
+        "source": "Override"
+      },
+      "scopeBindings": [
+        {
+          "parameterName": "zone_id",
+          "projectedName": "ZoneId",
+          "scopeType": "Zone",
+          "role": "Primary"
+        }
+      ]
+    },
+    {
+      "cmdletName": "Set-CfZone",
+      "operationIds": [
+        "zones-0-patch"
+      ],
+      "parameterSets": [
+        {
+          "name": "Edit",
+          "operationId": "zones-0-patch",
+          "operationBinding": {
+            "method": "PATCH",
+            "pathTemplate": "/zones/{zone_id}",
+            "pathParameters": [
+              "ZoneId"
+            ],
+            "queryParameters": []
+          },
+          "requiredParameters": [
+            "ZoneId"
+          ],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "ZoneId",
+          "type": "string",
+          "binding": "path",
+          "position": null,
+          "appliesTo": [
+            "Edit"
+          ],
+          "requiredIn": [
+            "Edit"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "apiBindings": [
+            {
+              "location": "path",
+              "name": "zone_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          }
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfZone",
+      "outputPolicy": "single",
+      "pagingBehavior": [],
+      "supportsShouldProcess": true,
+      "confirmImpact": "High",
+      "help": {
+        "synopsis": "Updates a Cloudflare zone.",
+        "description": "Updates mutable zone properties using the normalized edit request model.",
+        "source": "Override"
+      },
+      "scopeBindings": [
+        {
+          "parameterName": "zone_id",
+          "projectedName": "ZoneId",
+          "scopeType": "Zone",
+          "role": "Primary"
+        }
+      ]
+    }
+  ]
+}

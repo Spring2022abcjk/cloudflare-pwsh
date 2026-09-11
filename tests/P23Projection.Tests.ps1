@@ -96,7 +96,7 @@ try {
     if ($comparison.generated.runtimeDispatch) { throw 'Generated experiment must remain dispatch-deferred.' }
     if (-not $comparison.handwritten.runtimeDispatch) { throw 'Handwritten baseline classification is wrong.' }
     New-Item -ItemType Directory -Force -Path (Split-Path -Parent $reportPath) | Out-Null
-    $reportJson = ($comparison | ConvertTo-Json -Depth 30).Replace("`r`n", "`n").Replace("`r", "`n")
+    $reportJson = ($comparison | ConvertTo-Json -Depth 30).Replace("`r`n", "`n").Replace("`r", "`n").Replace("`n", "`r`n")
     [IO.File]::WriteAllText($reportPath, $reportJson, [Text.UTF8Encoding]::new($false))
     Write-Output 'PASS P2.3 projection metadata and generated cmdlet loading'
     Write-Output "P2.3 comparison report: $reportPath"

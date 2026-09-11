@@ -143,10 +143,10 @@ function ConvertTo-ProjectedOperation {
     }
 }
 
-function Write-Utf8Lf {
+function Write-Utf8CrLf {
     param([string]$Path, [string]$Content)
     New-Item -ItemType Directory -Force -Path (Split-Path -Parent $Path) | Out-Null
-    $normalized = $Content.Replace("`r`n", "`n").Replace("`r", "`n")
+    $normalized = $Content.Replace("`r`n", "`n").Replace("`r", "`n").Replace("`n", "`r`n")
     [System.IO.File]::WriteAllText($Path, $normalized, [System.Text.UTF8Encoding]::new($false))
 }
 
@@ -197,7 +197,7 @@ function Write-GetCfZoneExperiment {
     $lines.Add('{')
     foreach ($property in @('Id', 'Name', 'Status', 'Type')) { $lines.Add("    public string? $property { get; init; }") }
     $lines.Add('}')
-    Write-Utf8Lf $Path ($lines -join "`n")
+    Write-Utf8CrLf $Path ($lines -join "`n")
 }
 
 $baseProjectionDocument = Get-Content -Raw -LiteralPath $BaseProjectionPath | ConvertFrom-Json
@@ -265,7 +265,7 @@ foreach ($fixture in Get-ChildItem -LiteralPath $FixtureRoot -Directory | Sort-O
         }
     })
     $result = [ordered]@{ resource = $fixture.Name; operations = $operations; cmdlets = $cmdlets }
-    Write-Utf8Lf (Join-Path $ArtifactRoot "$($fixture.Name).json") ($result | ConvertTo-Json -Depth 100)
+    Write-Utf8CrLf (Join-Path $ArtifactRoot "$($fixture.Name).json") ($result | ConvertTo-Json -Depth 100)
     foreach ($cmdlet in $cmdlets) { $allCmdlets.Add([pscustomobject]@{ resource = $fixture.Name; model = $cmdlet }) }
     Write-Output "Projected P2.3 $($fixture.Name): operations=$($operations.Count), cmdlets=$($cmdlets.Count)"
 }
@@ -281,4 +281,4 @@ Write-GetCfZoneExperiment $zone[0].model $zonesDocument $ExperimentSource
     generatedExperiment = 'src/Cloudflare.PowerShell/Generated/Experiments/P23_GetCfZoneCommand.cs'
     generatedCmdlet = $zone[0].model.cmdletName
     dispatch = 'deferred'
-} | ConvertTo-Json -Depth 30 | ForEach-Object { Write-Utf8Lf (Join-Path (Split-Path -Parent $ArtifactRoot) 'manifest.json') $_ }
+} | ConvertTo-Json -Depth 30 | ForEach-Object { Write-Utf8CrLf (Join-Path (Split-Path -Parent $ArtifactRoot) 'manifest.json') $_ }

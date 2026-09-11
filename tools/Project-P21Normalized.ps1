@@ -98,10 +98,10 @@ function ConvertTo-Projection {
     }
 }
 
-function Write-Utf8Lf {
+function Write-Utf8CrLf {
     param([string]$Path, [string]$Content)
     New-Item -ItemType Directory -Force -Path (Split-Path -Parent $Path) | Out-Null
-    $normalized = $Content.Replace("`r`n", "`n").Replace("`r", "`n")
+    $normalized = $Content.Replace("`r`n", "`n").Replace("`r", "`n").Replace("`n", "`r`n")
     [System.IO.File]::WriteAllText($Path, $normalized, [System.Text.UTF8Encoding]::new($false))
 }
 
@@ -124,7 +124,7 @@ foreach ($fixture in Get-ChildItem -LiteralPath $FixtureRoot -Directory | Sort-O
         }
     })
     $result = [pscustomobject]@{ resource = $fixture.Name; operations = $operations; cmdlets = $cmdlets }
-    Write-Utf8Lf (Join-Path $ArtifactRoot "$($fixture.Name).json") ($result | ConvertTo-Json -Depth 100)
+    Write-Utf8CrLf (Join-Path $ArtifactRoot "$($fixture.Name).json") ($result | ConvertTo-Json -Depth 100)
 
     $className = "P21_$(ConvertTo-Identifier $fixture.Name)Projection"
     $operationIds = @($operations | ForEach-Object operationId) -join ';'
@@ -143,6 +143,6 @@ public static class $className
     public const string ScopeBindings = "$scopeBindings";
 }
 "@
-    Write-Utf8Lf (Join-Path $MetadataRoot "$className.cs") $metadata
+    Write-Utf8CrLf (Join-Path $MetadataRoot "$className.cs") $metadata
     Write-Output "Projected $($fixture.Name): operations=$($operations.Count), cmdlets=$($cmdlets.Count)"
 }

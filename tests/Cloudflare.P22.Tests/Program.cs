@@ -134,7 +134,7 @@ static void WriteJson<T>(string path, T value)
 {
     Directory.CreateDirectory(Path.GetDirectoryName(path)!);
     var json = JsonSerializer.Serialize(value, NormalizedJson.Options).Replace("\r\n", "\n", StringComparison.Ordinal);
-    File.WriteAllText(path, json, new UTF8Encoding(false));
+    File.WriteAllText(path, json.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n"), new UTF8Encoding(false));
 }
 
 static void CompareJson<T>(string path, T value, string name)

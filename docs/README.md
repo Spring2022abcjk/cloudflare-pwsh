@@ -17,6 +17,8 @@
 - [P2.2 总结](./P2.2-summary.md)：multipart、text、binary transport 的归一化结论和 runtime 边界。
 - [P2.3 总结](./P2.3-summary.md)：PowerShell projection 扩展、`Get-CfZone` 二进制 cmdlet 隔离实验和迁移边界。
 - [P2.4 总结](./P2.4-summary.md)：规范化模型兼容性引擎、投影差异、真实 schema revision 报告和 net10 基线。
+- [P3 计划](./P3-plan.md)：runtime-first 的 productionization 计划、P3.1 分片和验收门。
+- [P3.1 进度](./P3.1-progress.md)：当前 runtime 已实现、已验证、仍延期和下一步。
 - [ADR 0001](./adr/0001-net10-powershell76-baseline.md)：PowerShell 7.6/.NET 10 统一基线决策。
 
 ## 证据等级

@@ -100,6 +100,34 @@ The generated `Get-CfZone` `PSCmdlet` was initially isolated as a net10 experime
 
 Compatibility comparison consumes two normalized documents and derives two deterministic PowerShell CmdletModels through `ProjectionModelBuilder`. `CompatibilityEngine` and `ProjectionCompatibility` emit typed `ApiChange` records with independent API, SDK, and PowerShell impact dimensions. `CompatibilityReportFormatter` emits deterministic JSON and Markdown artifacts for both API and projection reports. Raw OpenAPI revision text is used only as input to normalization; the comparison itself operates on normalized semantics. Synthetic mutation tests establish the change taxonomy before the pinned real revision comparison is run.
 
+## P3 Runtime Direction
+
+P3 introduces a shared runtime between operation metadata and HTTP transport:
+
+```text
+OperationMetadata + BoundParameters + CancellationToken
+        ↓
+Generic Dispatcher
+        ↓
+Authentication / path / query / body binding
+        ↓
+Replayability-aware retry policy
+        ↓
+Transport
+        ↓
+Response representation → parser → envelope/error policy
+        ↓
+Pagination when declared by metadata
+        ↓
+Typed result / raw text / binary stream
+```
+
+The dispatcher consumes normalized/generated metadata and bound values; it does not parse OpenAPI. Request and response representations select serializers and parsers. JSON Cloudflare results, raw text, binary, multipart, and no-content responses are runtime cases, not endpoint-specific generator branches.
+
+Transport owns the HTTP request/response and content disposal boundaries. A streaming response must remain usable for its documented lifetime, while a buffered parser owns the resulting memory. Cancellation is passed from the public invocation through dispatch, retry delays, transport, parsing, and page iteration.
+
+Retry is separate from idempotency. A request may be retryable only when its body is replayable and the retry policy permits the status/exception; a mutation is not automatically retry-safe. Authentication is supplied through an `AuthenticationContext`, and secrets never enter generated metadata.
+
 ## Deferred Boundaries
 
 Production retry/idempotency policy, legacy authentication, multipart and binary runtime handling, streaming, complete pagination strategies, full generated help, module publishing, real-account integration, and the final handwritten-vs-generated-cmdlet decision remain unresolved. HTTP 2xx with `success=false` also remains intentionally unresolved.

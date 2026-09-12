@@ -1,5 +1,7 @@
 # Roadmap
 
+This roadmap records the staged path from a validated normalization prototype to a usable, maintainable, and publishable PowerShell SDK. Completion claims are based on repository evidence; deferred items remain explicitly unresolved.
+
 ## Completed
 
 ### P1 — DNS vertical slice and OpenAPI normalization
@@ -48,12 +50,42 @@ The engine compares old/new normalized revisions semantically and classifies end
 
 ## Later
 
-### P3
+## P3 — Productionization
 
-Broader Cloudflare API generation and runtime hardening.
+Status: active. The goal is to move from architecture validation to a runnable, extensible, and controllably releasable generated SDK. P3.1 is the current priority; broad public cmdlet expansion waits for the shared runtime to stabilize.
 
-### P4
+### P3.1 — Production Runtime
 
-Production quality: help, packaging, publishing, CI, schema-update workflow, and release compatibility reporting.
+Implement and validate a transport-independent runtime abstraction covering request/response representations, serializers, parsers, content lifetimes, generic operation dispatch from generated metadata, raw text, binary, multipart, streaming, shared pagination, replayability-aware retry, separately modeled idempotency, authentication context, cancellation, and stable error mapping.
 
-No P3/P4 dates or coverage counts are fixed in this roadmap.
+The first delivery slices are runtime abstraction, generic dispatch, raw text, binary, and multipart. Pagination, retry, authentication, and error consolidation follow as independently tested slices. HTTP `2xx` with `success=false` remains unresolved until official or live evidence supports a decision.
+
+### P3.2 — Generated Public Surface
+
+After runtime stabilization, evaluate broader PowerShell projection, generated `PSCmdlet` dispatch, help generation, argument completion, pipeline behavior, `ShouldProcess`, and output typing. The handwritten module remains the authoritative runtime reference until generated dispatch has equivalent mock coverage.
+
+### P3.3 — API Coverage Expansion
+
+Expand coverage through the normalized pipeline rather than hand-adding endpoint-specific cmdlets. Produce coverage, unsupported-operation, unknown-normalization, and projection-conflict reports.
+
+### P3.4 — Packaging, CI, and Update Workflow
+
+Add module packaging, CI, schema-update detection, compatibility gates, deterministic generated diffs, release artifacts, versioning, and publishing workflow. P2.4 deterministic compatibility JSON/Markdown is the input to the schema-update gate.
+
+### P3.5 — Real Integration Validation
+
+Only after mock contract coverage is sufficient, validate authentication, CRUD, pagination, retry/rate limits, multipart, binary, streaming, and error behavior against a constrained real Cloudflare account. Real-account tests supplement, and do not replace, mock tests.
+
+## P4 — Production Quality
+
+Complete help and examples, module manifest and semantic versioning, release notes and publishing, support matrix, performance review, telemetry policy (if any), security review, secret handling, and user documentation.
+
+## P5 — Long-term Maintenance
+
+Automate schema updates, compatibility reports, regeneration CI, breaking-change gates, API drift monitoring, override-debt tracking, deprecated-operation handling, and release automation.
+
+## Deferred items
+
+The following are not complete merely because P2 is complete: HTTP `2xx` with `success=false` semantics, production retry/idempotency policy details, legacy authentication, multipart runtime, binary/streaming runtime, complete pagination strategies, generated help, public generated `PSCmdlet` migration, real-account behavior, publishing, and release/security policy.
+
+The formal support baseline remains PowerShell 7.6+ and .NET 10 on the Windows-first host. See [ADR 0001](./adr/0001-net10-powershell76-baseline.md).

@@ -13,7 +13,14 @@ var tests = new (string Name, Action Run)[]
     ("put and patch bindings", TestPutPatch),
     ("omitted versus explicit null", TestPresence),
     ("presence-aware optional and typed union", TestOptionalAndUnion),
-    ("stable error contract", TestErrors)
+    ("stable error contract", TestErrors),
+    ("generic JSON dispatcher", TestGenericJsonDispatcher),
+    ("raw text dispatcher", TestRawTextDispatcher),
+    ("binary dispatcher and stream ownership", TestBinaryDispatcher),
+    ("multipart dispatcher", TestMultipartDispatcher),
+    ("pagination strategies", TestPaginationStrategies),
+    ("retry policy and headers", TestRetryPolicy),
+    ("non-replayable request is not retried", TestNonReplayableRequest)
 };
 
 var failures = new List<string>();
@@ -176,6 +183,339 @@ static void TestErrors()
     catch (CloudflareApiException ex) { Equal(0, (int)ex.StatusCode); True(ex.InnerException is HttpRequestException); }
 }
 
+static void TestGenericJsonDispatcher()
+{
+    var handler = new SequenceHandler(Json(HttpStatusCode.OK, "{\"success\":true,\"result\":{\"id\":\"r1\",\"type\":\"A\",\"name\":\"example.com\"}}"));
+    using var http = new HttpClient(handler);
+    using var transport = new HttpClientTransport(http);
+    var dispatcher = new CloudflareRuntimeDispatcher(
+        new Uri("https://mock.test/client/v4/"),
+        transport,
+        new ApiTokenAuthenticationContext("token"));
+    var metadata = new RuntimeOperationMetadata
+    {
+        OperationId = "dns-record-get",
+        Method = HttpMethod.Get,
+        PathTemplate = "zones/{zoneId}/dns_records/{recordId}",
+        Parameters =
+        [
+            new RuntimeParameterMetadata { Name = "zoneId", Location = "path", Required = true },
+            new RuntimeParameterMetadata { Name = "recordId", Location = "path", Required = true },
+            new RuntimeParameterMetadata { Name = "include", Location = "query" }
+        ],
+        ResponseRepresentations =
+        [
+            new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" }
+        ]
+    };
+    var record = dispatcher.ExecuteAsync<CfDnsRecord>(metadata, new BoundParameters(new Dictionary<string, object?>
+    {
+        ["zoneId"] = "zone id",
+        ["recordId"] = "record",
+        ["include"] = "comments"
+    })).GetAwaiter().GetResult();
+    Equal("r1", record!.Id);
+    Equal("/client/v4/zones/zone%20id/dns_records/record?include=comments", handler.Requests[0].RequestUri!.PathAndQuery);
+    Equal("Bearer", handler.Requests[0].Headers.Authorization!.Scheme);
+}
+
+static void TestRawTextDispatcher()
+{
+    var handler = new SequenceHandler(new HttpResponseMessage(HttpStatusCode.OK)
+    {
+        Content = new StringContent("$ORIGIN example.com.", Encoding.UTF8, "text/plain")
+    });
+    using var http = new HttpClient(handler);
+    using var transport = new HttpClientTransport(http);
+    var dispatcher = new CloudflareRuntimeDispatcher(new Uri("https://mock.test/"), transport);
+    var metadata = new RuntimeOperationMetadata
+    {
+        OperationId = "dns-export",
+        Method = HttpMethod.Get,
+        PathTemplate = "zones/{zoneId}/dns_records/export",
+        Parameters = [new RuntimeParameterMetadata { Name = "zoneId", Location = "path", Required = true }],
+        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "text/plain", ParsingMode = "RawText" }]
+    };
+    var text = dispatcher.ExecuteAsync<string>(metadata, new BoundParameters(new Dictionary<string, object?> { ["zoneId"] = "zone" })).GetAwaiter().GetResult();
+    Equal("$ORIGIN example.com.", text);
+}
+
+static void TestBinaryDispatcher()
+{
+    var handler = new SequenceHandler(new HttpResponseMessage(HttpStatusCode.OK)
+    {
+        Content = new ByteArrayContent([0, 1, 2, 255])
+    });
+    handler.Responses[0].Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+    using var http = new HttpClient(handler);
+    using var transport = new HttpClientTransport(http);
+    var dispatcher = new CloudflareRuntimeDispatcher(new Uri("https://mock.test/"), transport);
+    var metadata = new RuntimeOperationMetadata
+    {
+        OperationId = "download",
+        Method = HttpMethod.Get,
+        PathTemplate = "download",
+        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/octet-stream", ParsingMode = "Binary" }]
+    };
+    using var stream = dispatcher.ExecuteAsync<Stream>(metadata, new BoundParameters(new Dictionary<string, object?>())).GetAwaiter().GetResult()!;
+    var bytes = new byte[4];
+    Equal(4, stream.Read(bytes, 0, bytes.Length));
+    Equal("0,1,2,255", string.Join(',', bytes));
+}
+
+static void TestMultipartDispatcher()
+{
+    var handler = new SequenceHandler(new HttpResponseMessage(HttpStatusCode.NoContent));
+    using var http = new HttpClient(handler);
+    using var transport = new HttpClientTransport(http);
+    var dispatcher = new CloudflareRuntimeDispatcher(new Uri("https://mock.test/"), transport);
+    var metadata = new RuntimeOperationMetadata
+    {
+        OperationId = "upload",
+        Method = HttpMethod.Post,
+        PathTemplate = "accounts/{accountId}/upload",
+        Parameters = [new RuntimeParameterMetadata { Name = "accountId", Location = "path", Required = true }],
+        RequestRepresentations =
+        [
+            new RuntimeRequestRepresentation
+            {
+                ContentType = "multipart/form-data",
+                Parts =
+                [
+                    new RuntimeMultipartPart { ParameterName = "name", PartName = "name", ContentType = "text/plain", Format = "string", Required = true },
+                    new RuntimeMultipartPart { ParameterName = "file", PartName = "file", ContentType = "application/octet-stream", Format = "binary", Required = true }
+                ]
+            }
+        ],
+        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 204, ParsingMode = "NoContent" }]
+    };
+    dispatcher.ExecuteAsync<JsonNode?>(metadata, new BoundParameters(new Dictionary<string, object?>
+    {
+        ["accountId"] = "account",
+        ["name"] = "fixture.bin",
+        ["file"] = new byte[] { 1, 2, 3 }
+    })).GetAwaiter().GetResult();
+    True(handler.Requests[0].ContentType!.StartsWith("multipart/form-data; boundary=", StringComparison.OrdinalIgnoreCase));
+    var multipartBody = handler.Requests[0].Body!;
+    True(multipartBody.Contains("name=name", StringComparison.Ordinal));
+    True(multipartBody.Contains("name=file", StringComparison.Ordinal));
+    True(multipartBody.Contains("application/octet-stream", StringComparison.Ordinal));
+    True(handler.Requests[0].RawBody!.AsSpan().IndexOf(new byte[] { 1, 2, 3 }) >= 0);
+}
+
+static void TestPaginationStrategies()
+{
+    var executor = new CloudflarePaginationExecutor();
+    var pages = new List<int>();
+    var arrayItems = Collect(executor.ExecuteAsync(
+        (parameters, _) =>
+        {
+            var page = Convert.ToInt32(parameters["page"]);
+            pages.Add(page);
+            return Task.FromResult(new RuntimePage<int> { Items = page switch { 1 => [1, 2], 2 => [3], _ => [] } });
+        },
+        new Dictionary<string, object?>(),
+        new RuntimePaginationMetadata { Strategy = "V4PagePaginationArray", RequestFields = ["page"] }));
+    Equal("1,2,3", string.Join(',', arrayItems));
+    Equal("1,2,3", string.Join(',', pages));
+
+    var boundedCalls = 0;
+    var boundedItems = Collect(executor.ExecuteAsync(
+        (_, _) =>
+        {
+            boundedCalls++;
+            return Task.FromResult(new RuntimePage<int> { Items = [boundedCalls], CurrentPage = boundedCalls, TotalPages = 2 });
+        },
+        new Dictionary<string, object?>(),
+        new RuntimePaginationMetadata { Strategy = "V4PagePagination", RequestFields = ["page"] }));
+    Equal("1,2", string.Join(',', boundedItems));
+    Equal(2, boundedCalls);
+
+    foreach (var strategy in new[] { "CursorPagination", "CursorPaginationAfter", "CursorLimitPagination" })
+    {
+        var cursors = new List<string>();
+        var cursorItems = Collect(executor.ExecuteAsync(
+            (parameters, _) =>
+            {
+                var field = strategy == "CursorPaginationAfter" ? "after" : "cursor";
+                var cursor = parameters.TryGetValue(field, out var value) ? value?.ToString() : null;
+                cursors.Add(cursor ?? "initial");
+                return Task.FromResult(cursor switch
+                {
+                    null => new RuntimePage<int> { Items = [1], NextCursor = "c1" },
+                    "c1" => new RuntimePage<int> { Items = [2], NextCursor = "c2" },
+                    _ => new RuntimePage<int> { Items = [3] }
+                });
+            },
+            new Dictionary<string, object?>(),
+            new RuntimePaginationMetadata { Strategy = strategy, RequestFields = [strategy == "CursorPaginationAfter" ? "after" : "cursor"] }));
+        Equal("1,2,3", string.Join(',', cursorItems));
+        Equal("initial,c1,c2", string.Join(',', cursors));
+    }
+
+    var singleCalls = 0;
+    var singleItems = Collect(executor.ExecuteAsync<int>(
+        (_, _) => { singleCalls++; return Task.FromResult(new RuntimePage<int> { Items = [42] }); },
+        new Dictionary<string, object?>(),
+        new RuntimePaginationMetadata { Strategy = "SinglePage" }));
+    Equal("42", string.Join(',', singleItems));
+    Equal(1, singleCalls);
+
+    var repeated = executor.ExecuteAsync(
+        (_, _) => Task.FromResult(new RuntimePage<int> { Items = [1], NextCursor = "same" }),
+        new Dictionary<string, object?>(),
+        new RuntimePaginationMetadata { Strategy = "CursorPagination", RequestFields = ["cursor"] });
+    try { _ = Collect(repeated); throw new InvalidOperationException("expected repeated cursor error"); }
+    catch (InvalidOperationException ex) { True(ex.Message.Contains("repeated", StringComparison.OrdinalIgnoreCase)); }
+
+    var cancellation = new CancellationTokenSource();
+    cancellation.Cancel();
+    var canceled = executor.ExecuteAsync(
+        (_, _) => Task.FromResult(new RuntimePage<int> { Items = [1] }),
+        new Dictionary<string, object?>(),
+        new RuntimePaginationMetadata { Strategy = "V4PagePaginationArray", RequestFields = ["page"] },
+        cancellation.Token);
+    try { _ = Collect(canceled); throw new InvalidOperationException("expected cancellation"); }
+    catch (OperationCanceledException) { }
+
+    var laterPageFailure = executor.ExecuteAsync(
+        (parameters, _) =>
+        {
+            if (Convert.ToInt32(parameters["page"]) == 2) throw new InvalidOperationException("later page failed");
+            return Task.FromResult(new RuntimePage<int> { Items = [1] });
+        },
+        new Dictionary<string, object?>(),
+        new RuntimePaginationMetadata { Strategy = "V4PagePaginationArray", RequestFields = ["page"] });
+    try { _ = Collect(laterPageFailure); throw new InvalidOperationException("expected later-page error"); }
+    catch (InvalidOperationException ex) { True(ex.Message.Contains("later page", StringComparison.Ordinal)); }
+}
+
+static void TestRetryPolicy()
+{
+    var policy = new ExponentialBackoffRetryPolicy(new RetryPolicyOptions
+    {
+        MaxRetries = 2,
+        BaseDelay = TimeSpan.Zero,
+        MaxDelay = TimeSpan.FromSeconds(10),
+        JitterRatio = 0,
+        JitterSample = () => 0
+    });
+    var handler = new SequenceHandler(
+        Json(HttpStatusCode.InternalServerError, "{\"success\":false,\"errors\":[{\"code\":1,\"message\":\"retry\"}]}"),
+        Json((HttpStatusCode)429, "{\"success\":false,\"errors\":[{\"code\":2,\"message\":\"retry\"}]}"),
+        Json(HttpStatusCode.OK, "{\"success\":true,\"result\":{\"id\":\"done\"}}"));
+    using var http = new HttpClient(handler);
+    using var transport = new HttpClientTransport(http);
+    var dispatcher = new CloudflareRuntimeDispatcher(new Uri("https://mock.test/"), transport, retryPolicy: policy);
+    var metadata = new RuntimeOperationMetadata
+    {
+        OperationId = "retryable-get",
+        Method = HttpMethod.Get,
+        PathTemplate = "records/1",
+        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" }]
+    };
+    var record = dispatcher.ExecuteAsync<CfDnsRecord>(metadata, new BoundParameters(new Dictionary<string, object?>())).GetAwaiter().GetResult();
+    Equal("done", record!.Id);
+    Equal(3, handler.Requests.Count);
+
+    var mutationHandler = new SequenceHandler(Json(HttpStatusCode.InternalServerError, "{\"success\":false,\"errors\":[{\"code\":1,\"message\":\"not safe\"}]}"));
+    using var mutationHttp = new HttpClient(mutationHandler);
+    using var mutationTransport = new HttpClientTransport(mutationHttp);
+    var mutationDispatcher = new CloudflareRuntimeDispatcher(new Uri("https://mock.test/"), mutationTransport, retryPolicy: policy);
+    var mutationMetadata = new RuntimeOperationMetadata
+    {
+        OperationId = "mutation",
+        Method = HttpMethod.Post,
+        PathTemplate = "records",
+        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", ParsingMode = "Json" }]
+    };
+    try { mutationDispatcher.ExecuteAsync<JsonNode>(mutationMetadata, new BoundParameters(new Dictionary<string, object?>())).GetAwaiter().GetResult(); throw new InvalidOperationException("expected mutation error"); }
+    catch (CloudflareApiException) { Equal(1, mutationHandler.Requests.Count); }
+
+    var idempotentHandler = new SequenceHandler(
+        Json(HttpStatusCode.InternalServerError, "{\"success\":false,\"errors\":[{\"code\":1,\"message\":\"retry\"}]}"),
+        Json(HttpStatusCode.OK, "{\"id\":\"done\"}"));
+    using var idempotentHttp = new HttpClient(idempotentHandler);
+    using var idempotentTransport = new HttpClientTransport(idempotentHttp);
+    var idempotentDispatcher = new CloudflareRuntimeDispatcher(new Uri("https://mock.test/"), idempotentTransport, retryPolicy: policy);
+    var idempotentMetadata = new RuntimeOperationMetadata
+    {
+        OperationId = "idempotent-mutation",
+        Method = HttpMethod.Post,
+        PathTemplate = "records",
+        Idempotency = new RuntimeIdempotencyMetadata { Supported = true, KeyParameterName = "idempotencyKey", RetrySafeWhenKeyPresent = true },
+        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", ParsingMode = "Json" }]
+    };
+    var idempotentResult = idempotentDispatcher.ExecuteAsync<JsonNode>(idempotentMetadata, new BoundParameters(new Dictionary<string, object?> { ["idempotencyKey"] = "key-1" })).GetAwaiter().GetResult();
+    Equal("done", idempotentResult!["id"]!.GetValue<string>());
+    Equal(2, idempotentHandler.Requests.Count);
+    Equal("key-1", idempotentHandler.Requests[0].Headers.GetValues("Idempotency-Key").Single());
+
+    var responseMessage = new HttpResponseMessage(HttpStatusCode.TooManyRequests);
+    responseMessage.Headers.TryAddWithoutValidation("retry-after-ms", "17");
+    var retryAfterMsResponse = new CloudflareResponse(responseMessage);
+    Equal(17d, policy.GetDelay(retryAfterMsResponse, 0).TotalMilliseconds);
+    retryAfterMsResponse.DisposeAsync().AsTask().GetAwaiter().GetResult();
+
+    foreach (var status in new[] { 408, 409, 429, 500, 503 })
+    {
+        var retryResponse = new CloudflareResponse(new HttpResponseMessage((HttpStatusCode)status));
+        True(policy.ShouldRetry(new CloudflareRequest(HttpMethod.Get, new Uri("https://mock.test/")), retryResponse, null, 0));
+        retryResponse.DisposeAsync().AsTask().GetAwaiter().GetResult();
+    }
+    var overrideFalseMessage = new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
+    overrideFalseMessage.Headers.TryAddWithoutValidation("x-should-retry", "false");
+    var overrideFalseResponse = new CloudflareResponse(overrideFalseMessage);
+    True(!policy.ShouldRetry(new CloudflareRequest(HttpMethod.Get, new Uri("https://mock.test/")), overrideFalseResponse, null, 0));
+    overrideFalseResponse.DisposeAsync().AsTask().GetAwaiter().GetResult();
+    var overrideTrueMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+    overrideTrueMessage.Headers.TryAddWithoutValidation("x-should-retry", "true");
+    var overrideTrueResponse = new CloudflareResponse(overrideTrueMessage);
+    True(policy.ShouldRetry(new CloudflareRequest(HttpMethod.Get, new Uri("https://mock.test/")), overrideTrueResponse, null, 0));
+    overrideTrueResponse.DisposeAsync().AsTask().GetAwaiter().GetResult();
+    var retryAfterSecondsMessage = new HttpResponseMessage(HttpStatusCode.TooManyRequests);
+    retryAfterSecondsMessage.Headers.TryAddWithoutValidation("Retry-After", "2");
+    var retryAfterSecondsResponse = new CloudflareResponse(retryAfterSecondsMessage);
+    Equal(2000d, policy.GetDelay(retryAfterSecondsResponse, 0).TotalMilliseconds);
+    retryAfterSecondsResponse.DisposeAsync().AsTask().GetAwaiter().GetResult();
+}
+
+static void TestNonReplayableRequest()
+{
+    var handler = new SequenceHandler(Json(HttpStatusCode.InternalServerError, "{\"success\":false,\"errors\":[{\"code\":1,\"message\":\"no retry\"}]}"));
+    using var http = new HttpClient(handler);
+    using var transport = new HttpClientTransport(http);
+    var policy = new ExponentialBackoffRetryPolicy(new RetryPolicyOptions { BaseDelay = TimeSpan.Zero, MaxDelay = TimeSpan.Zero, JitterRatio = 0 });
+    var dispatcher = new CloudflareRuntimeDispatcher(new Uri("https://mock.test/"), transport, retryPolicy: policy);
+    var metadata = new RuntimeOperationMetadata
+    {
+        OperationId = "upload",
+        Method = HttpMethod.Post,
+        PathTemplate = "upload",
+        RequestRepresentations = [new RuntimeRequestRepresentation { ContentType = "multipart/form-data", Parts = [new RuntimeMultipartPart { ParameterName = "file", PartName = "file", ContentType = "application/octet-stream", Format = "binary", Required = true }] }],
+        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", ParsingMode = "Json" }]
+    };
+    try
+    {
+        dispatcher.ExecuteAsync<JsonNode>(metadata, new BoundParameters(new Dictionary<string, object?> { ["file"] = new NonSeekableStream([1, 2, 3]) })).GetAwaiter().GetResult();
+        throw new InvalidOperationException("expected HTTP error");
+    }
+    catch (CloudflareApiException ex)
+    {
+        Equal(1, handler.Requests.Count);
+        Equal(0, ex.RetryCount);
+    }
+}
+
+static List<T> Collect<T>(IAsyncEnumerable<T> source)
+{
+    var values = new List<T>();
+    var enumerator = source.GetAsyncEnumerator();
+    try { while (enumerator.MoveNextAsync().GetAwaiter().GetResult()) values.Add(enumerator.Current); }
+    finally { enumerator.DisposeAsync().GetAwaiter().GetResult(); }
+    return values;
+}
+
 static HttpResponseMessage Json(HttpStatusCode status, string body)
 {
     return new HttpResponseMessage(status) { Content = new StringContent(body, Encoding.UTF8, "application/json") };
@@ -194,17 +534,29 @@ static void True(bool value)
 sealed class SequenceHandler : HttpMessageHandler
 {
     private readonly Queue<object> _responses;
+    public List<HttpResponseMessage> Responses { get; } = [];
     public List<CapturedRequest> Requests { get; } = [];
-    public SequenceHandler(params object[] responses) => _responses = new Queue<object>(responses);
+    public SequenceHandler(params object[] responses)
+    {
+        _responses = new Queue<object>(responses);
+        Responses.AddRange(responses.OfType<HttpResponseMessage>());
+    }
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var body = request.Content is null ? null : await request.Content.ReadAsStringAsync(cancellationToken);
-        Requests.Add(new CapturedRequest(request.Method, request.RequestUri, request.Headers, body));
+        var rawBody = request.Content is null ? null : await request.Content.ReadAsByteArrayAsync(cancellationToken);
+        var body = rawBody is null ? null : Encoding.UTF8.GetString(rawBody);
+        Requests.Add(new CapturedRequest(request.Method, request.RequestUri, request.Headers, body, request.Content?.Headers.ContentType?.ToString(), rawBody));
         var next = _responses.Dequeue();
         if (next is Exception exception) throw exception;
         return (HttpResponseMessage)next;
     }
 }
 
-sealed record CapturedRequest(HttpMethod Method, Uri? RequestUri, HttpRequestHeaders Headers, string? Body);
+sealed record CapturedRequest(HttpMethod Method, Uri? RequestUri, HttpRequestHeaders Headers, string? Body, string? ContentType, byte[]? RawBody);
+
+sealed class NonSeekableStream : MemoryStream
+{
+    public NonSeekableStream(byte[] buffer) : base(buffer, writable: false) { }
+    public override bool CanSeek => false;
+}

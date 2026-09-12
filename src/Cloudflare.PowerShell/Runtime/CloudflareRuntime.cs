@@ -23,16 +23,16 @@ public sealed class CloudflareApiException : Exception
         IReadOnlyList<CloudflareError> errors,
         string rawBody,
         CloudflareResponseMetadata metadata,
-        Exception? innerException = null)
+        Exception? innerException = null,
+        int retryCount = 0)
         : base(BuildMessage(statusCode, errors), innerException)
     {
         StatusCode = statusCode;
         Errors = errors;
         RawBody = rawBody;
         Metadata = metadata;
-        RequestId = metadata.Headers.TryGetValue("CF-Ray", out var values)
-            ? values.FirstOrDefault()
-            : null;
+        RequestId = FindRequestId(metadata.Headers);
+        RetryCount = retryCount;
         FullyQualifiedErrorId = $"Cloudflare.Api.{(int)statusCode}";
     }
 
@@ -41,12 +41,20 @@ public sealed class CloudflareApiException : Exception
     public string RawBody { get; }
     public CloudflareResponseMetadata Metadata { get; }
     public string? RequestId { get; }
+    public int RetryCount { get; }
     public string FullyQualifiedErrorId { get; }
 
     private static string BuildMessage(HttpStatusCode statusCode, IReadOnlyList<CloudflareError> errors)
     {
         var detail = errors.Count == 0 ? "Cloudflare request failed." : string.Join("; ", errors.Select(e => $"[{e.Code}] {e.Message}"));
         return $"Cloudflare API returned {(int)statusCode} ({statusCode}): {detail}";
+    }
+
+    private static string? FindRequestId(IReadOnlyDictionary<string, IEnumerable<string>> headers)
+    {
+        foreach (var name in new[] { "CF-Ray", "X-Request-ID", "Request-ID" })
+            if (headers.TryGetValue(name, out var values)) return values.FirstOrDefault();
+        return null;
     }
 }
 
@@ -110,6 +118,7 @@ public sealed class CloudflareClient : IDisposable
     private readonly HttpClient _httpClient;
     private readonly bool _ownsClient;
     private readonly JsonSerializerOptions _jsonOptions;
+    private readonly CloudflareRuntimeDispatcher _dispatcher;
 
     public CloudflareClient(CloudflareClientOptions options, HttpClient? httpClient = null)
     {
@@ -119,6 +128,10 @@ public sealed class CloudflareClient : IDisposable
         _httpClient.BaseAddress = options.BaseUri;
         if (!string.IsNullOrWhiteSpace(options.BearerToken))
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.BearerToken);
+        _dispatcher = new CloudflareRuntimeDispatcher(
+            options.BaseUri,
+            new HttpClientTransport(_httpClient),
+            string.IsNullOrWhiteSpace(options.BearerToken) ? null : new ApiTokenAuthenticationContext(options.BearerToken));
     }
 
     public async IAsyncEnumerable<CfDnsRecord> ListDnsRecordsAsync(
@@ -157,7 +170,27 @@ public sealed class CloudflareClient : IDisposable
         => SendAsync<CfDnsRecord>(HttpMethod.Patch, BuildRecordPath(zoneId, recordId), body, cancellationToken);
 
     public async Task DeleteDnsRecordAsync(string zoneId, string recordId, CancellationToken cancellationToken = default)
-        => await SendAsync<JsonNode>(HttpMethod.Delete, BuildRecordPath(zoneId, recordId), null, cancellationToken).ConfigureAwait(false);
+        => await _dispatcher.ExecuteAsync<JsonNode>(
+            DeleteDnsRecordMetadata,
+            new BoundParameters(new Dictionary<string, object?> { ["zoneId"] = zoneId, ["recordId"] = recordId }),
+            cancellationToken).ConfigureAwait(false);
+
+    private static RuntimeOperationMetadata DeleteDnsRecordMetadata { get; } = new()
+    {
+        OperationId = "dns-records-for-a-zone-delete-dns-record",
+        Method = HttpMethod.Delete,
+        PathTemplate = "zones/{zoneId}/dns_records/{recordId}",
+        Parameters =
+        [
+            new RuntimeParameterMetadata { Name = "zoneId", Location = "path", Required = true },
+            new RuntimeParameterMetadata { Name = "recordId", Location = "path", Required = true }
+        ],
+        ResponseRepresentations =
+        [
+            new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" },
+            new RuntimeResponseRepresentation { StatusCode = 204, ParsingMode = "NoContent" }
+        ]
+    };
 
     private static string BuildRecordPath(string zoneId, string recordId)
         => $"zones/{Uri.EscapeDataString(zoneId)}/dns_records/{Uri.EscapeDataString(recordId)}";

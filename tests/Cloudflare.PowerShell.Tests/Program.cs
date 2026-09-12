@@ -14,6 +14,7 @@ var tests = new (string Name, Action Run)[]
     ("omitted versus explicit null", TestPresence),
     ("presence-aware optional and typed union", TestOptionalAndUnion),
     ("stable error contract", TestErrors),
+    ("generated metadata adapter contract", TestGeneratedMetadataAdapter),
     ("generic JSON dispatcher", TestGenericJsonDispatcher),
     ("raw text dispatcher", TestRawTextDispatcher),
     ("binary dispatcher and stream ownership", TestBinaryDispatcher),
@@ -390,6 +391,85 @@ static void TestPaginationStrategies()
         new RuntimePaginationMetadata { Strategy = "V4PagePaginationArray", RequestFields = ["page"] });
     try { _ = Collect(laterPageFailure); throw new InvalidOperationException("expected later-page error"); }
     catch (InvalidOperationException ex) { True(ex.Message.Contains("later page", StringComparison.Ordinal)); }
+}
+
+static void TestGeneratedMetadataAdapter()
+{
+    Equal(6, CfDnsRecordRuntimeMetadata.Operations.Count);
+    var generatedGet = CfDnsRecordRuntimeMetadata.Get(
+        CfDnsRecordOperationMetadata.Operation_dns_records_Get_dns_records_for_a_zone_dns_record_details);
+    var generatedRuntime = GeneratedOperationMetadataAdapter.ToRuntime(generatedGet);
+    Equal(HttpMethod.Get, generatedRuntime.Method);
+    Equal("/zones/{zone_id}/dns_records/{dns_record_id}", generatedRuntime.PathTemplate);
+    Equal("path", generatedRuntime.Parameters[0].Location);
+    Equal("query", generatedRuntime.Parameters[2].Location);
+
+    var handler = new SequenceHandler(Json(HttpStatusCode.OK, "{\"success\":true,\"result\":{\"id\":\"generated\"}}"));
+    using var http = new HttpClient(handler);
+    using var transport = new HttpClientTransport(http);
+    var dispatcher = new CloudflareRuntimeDispatcher(
+        new Uri("https://mock.test/client/v4/"), transport, new ApiTokenAuthenticationContext("token"));
+    var record = dispatcher.ExecuteAsync<CfDnsRecord>(generatedRuntime, new BoundParameters(new Dictionary<string, object?>
+    {
+        ["zone_id"] = "zone",
+        ["dns_record_id"] = "record",
+        ["include_shadow_metadata"] = true
+    })).GetAwaiter().GetResult();
+    Equal("generated", record!.Id);
+    Equal("/client/v4/zones/zone/dns_records/record?include_shadow_metadata=True", handler.Requests[0].RequestUri!.PathAndQuery);
+    Equal("Bearer", handler.Requests[0].Headers.Authorization!.Scheme);
+
+    var generatedList = CfDnsRecordRuntimeMetadata.Get(
+        CfDnsRecordOperationMetadata.Operation_dns_records_List_dns_records_for_a_zone_list_dns_records);
+    var pagination = GeneratedOperationMetadataAdapter.ToRuntimePagination(generatedList)!;
+    Equal("V4PagePaginationArray", pagination.Strategy);
+    Equal("result", pagination.ResultPath);
+    Equal("result_info.total_pages", pagination.TotalPagesPath);
+
+    var multipartHandler = new SequenceHandler(new HttpResponseMessage(HttpStatusCode.NoContent));
+    using var multipartHttp = new HttpClient(multipartHandler);
+    using var multipartTransport = new HttpClientTransport(multipartHttp);
+    var generatedMultipart = new GeneratedOperationMetadata
+    {
+        OperationId = "generated-upload",
+        Method = "POST",
+        PathTemplate = "/accounts/{account_id}/uploads",
+        Parameters =
+        [
+            new GeneratedParameterMetadata { Name = "account_id", Location = "path", Required = true },
+            new GeneratedParameterMetadata { Name = "X-Upload-Mode", Location = "header" },
+            new GeneratedParameterMetadata { Name = "kind", Location = "query" }
+        ],
+        RequestRepresentations =
+        [
+            new GeneratedRequestRepresentationMetadata
+            {
+                ContentType = "multipart/form-data",
+                Parts =
+                [
+                    new GeneratedMultipartPartMetadata { ParameterName = "name", PartName = "name", ContentType = "text/plain", Format = "string", Required = true },
+                    new GeneratedMultipartPartMetadata { ParameterName = "file", PartName = "file", ContentType = "application/octet-stream", Format = "binary", Required = true }
+                ]
+            }
+        ],
+        ResponseRepresentations = [new GeneratedResponseRepresentationMetadata { StatusCode = 204, ParsingMode = "NoContent" }]
+    };
+    var multipartRuntime = GeneratedOperationMetadataAdapter.ToRuntime(generatedMultipart);
+    var multipartDispatcher = new CloudflareRuntimeDispatcher(new Uri("https://mock.test/"), multipartTransport);
+    multipartDispatcher.ExecuteAsync<JsonNode?>(multipartRuntime, new BoundParameters(new Dictionary<string, object?>
+    {
+        ["account_id"] = "account",
+        ["X-Upload-Mode"] = "safe",
+        ["kind"] = "dns",
+        ["name"] = "fixture.bin",
+        ["file"] = new byte[] { 1, 2, 3 }
+    })).GetAwaiter().GetResult();
+    Equal("/accounts/account/uploads?kind=dns", multipartHandler.Requests[0].RequestUri!.PathAndQuery);
+    Equal("safe", multipartHandler.Requests[0].Headers.GetValues("X-Upload-Mode").Single());
+    True(multipartHandler.Requests[0].ContentType!.StartsWith("multipart/form-data; boundary=", StringComparison.OrdinalIgnoreCase));
+    True(multipartHandler.Requests[0].Body!.Contains("name=name", StringComparison.Ordinal));
+    True(multipartHandler.Requests[0].Body!.Contains("name=file", StringComparison.Ordinal));
+    True(multipartHandler.Requests[0].RawBody!.AsSpan().IndexOf(new byte[] { 1, 2, 3 }) >= 0);
 }
 
 static void TestNormalizedPaginationResponseAdapter()

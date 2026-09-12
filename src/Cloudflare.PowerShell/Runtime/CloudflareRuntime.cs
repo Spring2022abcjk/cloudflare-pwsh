@@ -127,162 +127,68 @@ public sealed class CloudflareClient : IDisposable
         IReadOnlyDictionary<string, object?>? query = null,
         CancellationToken cancellationToken = default)
     {
-        var values = new Dictionary<string, object?>(StringComparer.Ordinal) { ["zoneId"] = zoneId };
+        var values = new Dictionary<string, object?>(StringComparer.Ordinal) { ["zone_id"] = zoneId };
         if (query is not null)
             foreach (var item in query) values[item.Key] = item.Value;
 
+        var operation = GeneratedOperationMetadataAdapter.ToRuntime(CfDnsRecordRuntimeMetadata.Get(
+            CfDnsRecordOperationMetadata.Operation_dns_records_List_dns_records_for_a_zone_list_dns_records));
+        var pagination = GeneratedOperationMetadataAdapter.ToRuntimePagination(CfDnsRecordRuntimeMetadata.Get(
+            CfDnsRecordOperationMetadata.Operation_dns_records_List_dns_records_for_a_zone_list_dns_records))
+            ?? throw new InvalidOperationException("Generated list operation is missing pagination metadata.");
         return new CloudflareTaskBackedAsyncEnumerable<CfDnsRecord>(_dispatcher.ExecutePagedAsync<CfDnsRecord>(
-            ListDnsRecordsMetadata,
-            new BoundParameters(values),
-            ListDnsRecordsPagination,
-            cancellationToken));
+            operation, new BoundParameters(values), pagination, cancellationToken));
     }
 
     public async Task<CfDnsRecord> GetDnsRecordAsync(string zoneId, string recordId, IReadOnlyDictionary<string, object?>? query = null, CancellationToken cancellationToken = default)
     {
-        var values = new Dictionary<string, object?>(StringComparer.Ordinal) { ["zoneId"] = zoneId, ["recordId"] = recordId };
+        var values = new Dictionary<string, object?>(StringComparer.Ordinal) { ["zone_id"] = zoneId, ["dns_record_id"] = recordId };
         if (query is not null)
             foreach (var item in query) values[item.Key] = item.Value;
-        return (await _dispatcher.ExecuteAsync<CfDnsRecord>(GetDnsRecordMetadata, new BoundParameters(values), cancellationToken).ConfigureAwait(false))!;
+        var operation = GeneratedOperationMetadataAdapter.ToRuntime(CfDnsRecordRuntimeMetadata.Get(
+            CfDnsRecordOperationMetadata.Operation_dns_records_Get_dns_records_for_a_zone_dns_record_details));
+        return (await _dispatcher.ExecuteAsync<CfDnsRecord>(operation, new BoundParameters(values), cancellationToken).ConfigureAwait(false))!;
     }
 
     public async Task<CfDnsRecord> CreateDnsRecordAsync(string zoneId, JsonNode body, IReadOnlyDictionary<string, object?>? query = null, CancellationToken cancellationToken = default)
     {
-        var values = new Dictionary<string, object?>(StringComparer.Ordinal) { ["zoneId"] = zoneId, ["body"] = body };
+        var values = new Dictionary<string, object?>(StringComparer.Ordinal) { ["zone_id"] = zoneId, ["body"] = body };
         if (query is not null)
             foreach (var item in query) values[item.Key] = item.Value;
-        return (await _dispatcher.ExecuteAsync<CfDnsRecord>(CreateDnsRecordMetadata, new BoundParameters(values), cancellationToken).ConfigureAwait(false))!;
+        var operation = GeneratedOperationMetadataAdapter.ToRuntime(CfDnsRecordRuntimeMetadata.Get(
+            CfDnsRecordOperationMetadata.Operation_dns_records_Create_dns_records_for_a_zone_create_dns_record));
+        return (await _dispatcher.ExecuteAsync<CfDnsRecord>(operation, new BoundParameters(values), cancellationToken).ConfigureAwait(false))!;
     }
 
     public async Task<CfDnsRecord> UpdateDnsRecordAsync(string zoneId, string recordId, JsonNode body, CancellationToken cancellationToken = default)
     {
+        var operation = GeneratedOperationMetadataAdapter.ToRuntime(CfDnsRecordRuntimeMetadata.Get(
+            CfDnsRecordOperationMetadata.Operation_dns_records_Update_dns_records_for_a_zone_update_dns_record));
         return (await _dispatcher.ExecuteAsync<CfDnsRecord>(
-            UpdateDnsRecordMetadata,
-            new BoundParameters(new Dictionary<string, object?> { ["zoneId"] = zoneId, ["recordId"] = recordId, ["body"] = body }),
+            operation,
+            new BoundParameters(new Dictionary<string, object?> { ["zone_id"] = zoneId, ["dns_record_id"] = recordId, ["body"] = body }),
             cancellationToken).ConfigureAwait(false))!;
     }
 
     public async Task<CfDnsRecord> EditDnsRecordAsync(string zoneId, string recordId, JsonNode body, CancellationToken cancellationToken = default)
     {
+        var operation = GeneratedOperationMetadataAdapter.ToRuntime(CfDnsRecordRuntimeMetadata.Get(
+            CfDnsRecordOperationMetadata.Operation_dns_records_Edit_dns_records_for_a_zone_patch_dns_record));
         return (await _dispatcher.ExecuteAsync<CfDnsRecord>(
-            EditDnsRecordMetadata,
-            new BoundParameters(new Dictionary<string, object?> { ["zoneId"] = zoneId, ["recordId"] = recordId, ["body"] = body }),
+            operation,
+            new BoundParameters(new Dictionary<string, object?> { ["zone_id"] = zoneId, ["dns_record_id"] = recordId, ["body"] = body }),
             cancellationToken).ConfigureAwait(false))!;
     }
 
     public async Task DeleteDnsRecordAsync(string zoneId, string recordId, CancellationToken cancellationToken = default)
-        => await _dispatcher.ExecuteAsync<JsonNode>(
-            DeleteDnsRecordMetadata,
-            new BoundParameters(new Dictionary<string, object?> { ["zoneId"] = zoneId, ["recordId"] = recordId }),
+    {
+        var operation = GeneratedOperationMetadataAdapter.ToRuntime(CfDnsRecordRuntimeMetadata.Get(
+            CfDnsRecordOperationMetadata.Operation_dns_records_Delete_dns_records_for_a_zone_delete_dns_record));
+        await _dispatcher.ExecuteAsync<JsonNode>(
+            operation,
+            new BoundParameters(new Dictionary<string, object?> { ["zone_id"] = zoneId, ["dns_record_id"] = recordId }),
             cancellationToken).ConfigureAwait(false);
-
-    private static RuntimeOperationMetadata DeleteDnsRecordMetadata { get; } = new()
-    {
-        OperationId = "dns-records-for-a-zone-delete-dns-record",
-        Method = HttpMethod.Delete,
-        PathTemplate = "zones/{zoneId}/dns_records/{recordId}",
-        Parameters =
-        [
-            new RuntimeParameterMetadata { Name = "zoneId", Location = "path", Required = true },
-            new RuntimeParameterMetadata { Name = "recordId", Location = "path", Required = true }
-        ],
-        ResponseRepresentations =
-        [
-            new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" },
-            new RuntimeResponseRepresentation { StatusCode = 204, ParsingMode = "NoContent" }
-        ]
-    };
-
-    private static RuntimeOperationMetadata ListDnsRecordsMetadata { get; } = new()
-    {
-        OperationId = "dns-records-for-a-zone-list-dns-records",
-        Method = HttpMethod.Get,
-        PathTemplate = "zones/{zoneId}/dns_records",
-        Parameters =
-        [
-            new RuntimeParameterMetadata { Name = "zoneId", Location = "path", Required = true },
-            new RuntimeParameterMetadata { Name = "name", Location = "query" },
-            new RuntimeParameterMetadata { Name = "type", Location = "query" },
-            new RuntimeParameterMetadata { Name = "match", Location = "query" },
-            new RuntimeParameterMetadata { Name = "tag", Location = "query" },
-            new RuntimeParameterMetadata { Name = "page", Location = "query" },
-            new RuntimeParameterMetadata { Name = "per_page", Location = "query" },
-            new RuntimeParameterMetadata { Name = "include_shadow_metadata", Location = "query" }
-        ],
-        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", ParsingMode = "Json" }]
-    };
-
-    private static RuntimePaginationMetadata ListDnsRecordsPagination { get; } = new()
-    {
-        Strategy = "V4PagePaginationArray",
-        RequestFields = ["page", "per_page"],
-        ResponseFields = ["result", "result_info"],
-        ResultPath = "result",
-        PageInfoPath = "result_info",
-        CurrentPagePath = "result_info.page",
-        TotalPagesPath = "result_info.total_pages",
-        NextPageRule = "page + 1",
-        StopRule = "empty result page"
-    };
-
-    private static RuntimeOperationMetadata GetDnsRecordMetadata { get; } = new()
-    {
-        OperationId = "dns-records-for-a-zone-dns-record-details",
-        Method = HttpMethod.Get,
-        PathTemplate = "zones/{zoneId}/dns_records/{recordId}",
-        Parameters =
-        [
-            new RuntimeParameterMetadata { Name = "zoneId", Location = "path", Required = true },
-            new RuntimeParameterMetadata { Name = "recordId", Location = "path", Required = true },
-            new RuntimeParameterMetadata { Name = "include_shadow_metadata", Location = "query" }
-        ],
-        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" }]
-    };
-
-    private static RuntimeOperationMetadata CreateDnsRecordMetadata { get; } = new()
-    {
-        OperationId = "dns-records-for-a-zone-create-dns-record",
-        Method = HttpMethod.Post,
-        PathTemplate = "zones/{zoneId}/dns_records",
-        Parameters =
-        [
-            new RuntimeParameterMetadata { Name = "zoneId", Location = "path", Required = true },
-            new RuntimeParameterMetadata { Name = "include_shadow_metadata", Location = "query" }
-        ],
-        RequestRepresentations = [new RuntimeRequestRepresentation { ContentType = "application/json", BodyParameterName = "body" }],
-        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" }]
-    };
-
-    private static RuntimeOperationMetadata UpdateDnsRecordMetadata { get; } = new()
-    {
-        OperationId = "dns-records-for-a-zone-update-dns-record",
-        Method = HttpMethod.Put,
-        PathTemplate = "zones/{zoneId}/dns_records/{recordId}",
-        Parameters =
-        [
-            new RuntimeParameterMetadata { Name = "zoneId", Location = "path", Required = true },
-            new RuntimeParameterMetadata { Name = "recordId", Location = "path", Required = true }
-        ],
-        RequestRepresentations = [new RuntimeRequestRepresentation { ContentType = "application/json", BodyParameterName = "body" }],
-        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" }]
-    };
-
-    private static RuntimeOperationMetadata EditDnsRecordMetadata { get; } = new()
-    {
-        OperationId = "dns-records-for-a-zone-patch-dns-record",
-        Method = HttpMethod.Patch,
-        PathTemplate = "zones/{zoneId}/dns_records/{recordId}",
-        Parameters =
-        [
-            new RuntimeParameterMetadata { Name = "zoneId", Location = "path", Required = true },
-            new RuntimeParameterMetadata { Name = "recordId", Location = "path", Required = true }
-        ],
-        RequestRepresentations = [new RuntimeRequestRepresentation { ContentType = "application/json", BodyParameterName = "body" }],
-        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" }]
-    };
-
-    private static string BuildRecordPath(string zoneId, string recordId)
-        => $"zones/{Uri.EscapeDataString(zoneId)}/dns_records/{Uri.EscapeDataString(recordId)}";
+    }
 
     public void Dispose()
     {

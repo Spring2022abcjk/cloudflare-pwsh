@@ -124,10 +124,22 @@ Typed result / raw text / binary stream
 
 The dispatcher consumes normalized/generated metadata and bound values; it does not parse OpenAPI. Request and response representations select serializers and parsers. JSON Cloudflare results, raw text, binary, multipart, and no-content responses are runtime cases, not endpoint-specific generator branches.
 
+The generator emits declarative `GeneratedOperationMetadata` records from the
+normalized operation projection. `GeneratedOperationMetadataAdapter` maps those
+records into runtime contracts for method/path, path/query/header bindings,
+request/response representations, multipart parts, and pagination fields. The
+handwritten DNS client only selects generated operation IDs; it does not repeat
+transport metadata or introduce an endpoint-specific dispatcher branch.
+
 Transport owns the HTTP request/response and serialized `HttpContent` disposal boundaries. Caller-owned multipart input streams remain open and are not retryable unless a fresh-stream factory is supplied. A streaming response must remain usable for its documented lifetime, while a buffered parser owns the resulting memory. Cancellation is passed from the public invocation through dispatch, retry delays, transport, parsing, and page iteration.
 
 Retry is separate from idempotency. A request may be retryable only when its body is replayable and the retry policy permits the status/exception; a mutation is not automatically retry-safe. Authentication is supplied through an `AuthenticationContext`, and secrets never enter generated metadata.
 
 ## Deferred Boundaries
 
-Production retry/idempotency policy, legacy authentication, multipart and binary runtime handling, streaming, complete pagination strategies, full generated help, module publishing, real-account integration, and the final handwritten-vs-generated-cmdlet decision remain unresolved. HTTP 2xx with `success=false` also remains intentionally unresolved.
+Mutation idempotency policy, legacy authentication, full PowerShell binary UX,
+full generated public cmdlets, module publishing, real-account integration, and
+the final handwritten-vs-generated-cmdlet decision remain unresolved. The P3.1
+runtime has deterministic mock coverage for multipart, binary streams, and all
+six recognized pagination strategies; HTTP 2xx with `success=false` remains
+intentionally unresolved.

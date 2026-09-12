@@ -12,6 +12,7 @@ public readonly struct Optional<T>
     public bool IsSpecified { get; }
     public T? Value => _value;
     public static Optional<T> Omitted => new(false, default);
+    public static Optional<T> ExplicitNull => new(true, default);
     public static Optional<T> From(T? value) => new(true, value);
 }
 
@@ -24,7 +25,7 @@ public abstract class CfDnsRecordInput
     protected JsonObject BaseJson()
     {
         var json = new JsonObject();
-        if (Name.IsSpecified) json["name"] = Name.Value;
+        if (Name.IsSpecified) json["name"] = Name.Value is null ? JsonNode.Parse("null") : Name.Value;
         if (Ttl.IsSpecified) json["ttl"] = Ttl.Value;
         if (Proxied.IsSpecified) json["proxied"] = Proxied.Value;
         json["type"] = Type;
@@ -37,7 +38,7 @@ public sealed class CfARecordInput : CfDnsRecordInput
 {
     public Optional<string?> Content { get; set; }
     public override string Type => "A";
-    public override JsonObject ToJson() { var json = BaseJson(); if (Content.IsSpecified) json["content"] = Content.Value; return json; }
+    public override JsonObject ToJson() { var json = BaseJson(); if (Content.IsSpecified) json["content"] = Content.Value is null ? JsonNode.Parse("null") : Content.Value; return json; }
 }
 
 public sealed class CfMxRecordInput : CfDnsRecordInput
@@ -45,7 +46,7 @@ public sealed class CfMxRecordInput : CfDnsRecordInput
     public Optional<string?> Content { get; set; }
     public Optional<int> Priority { get; set; }
     public override string Type => "MX";
-    public override JsonObject ToJson() { var json = BaseJson(); if (Content.IsSpecified) json["content"] = Content.Value; if (Priority.IsSpecified) json["priority"] = Priority.Value; return json; }
+    public override JsonObject ToJson() { var json = BaseJson(); if (Content.IsSpecified) json["content"] = Content.Value is null ? JsonNode.Parse("null") : Content.Value; if (Priority.IsSpecified) json["priority"] = Priority.Value; return json; }
 }
 
 public abstract class CfDataRecordInput : CfDnsRecordInput

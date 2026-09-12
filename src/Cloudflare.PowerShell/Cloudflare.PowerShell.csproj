@@ -5,8 +5,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Cloudflare.PowerShell</RootNamespace>
     <AssemblyName>Cloudflare.PowerShell</AssemblyName>
+    <PowerShellHome Condition="'$(PowerShellHome)' == ''">$(ProgramFiles)\PowerShell\7</PowerShellHome>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Generated/Experiments/**/*.cs" />
+    <Reference Include="System.Management.Automation">
+      <HintPath>$(PowerShellHome)\System.Management.Automation.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
 </Project>

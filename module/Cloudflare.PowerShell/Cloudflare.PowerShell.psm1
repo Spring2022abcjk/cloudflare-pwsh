@@ -1,5 +1,10 @@
 Set-StrictMode -Version Latest
 
+$generatedAssemblyPath = Join-Path $PSScriptRoot 'Cloudflare.PowerShell.dll'
+if (Test-Path -LiteralPath $generatedAssemblyPath) {
+    Import-Module -Name $generatedAssemblyPath -Force
+}
+
 function New-CfClient {
     param([string]$BaseUrl, [string]$Token, [System.Net.Http.HttpMessageHandler]$Handler)
     $options = [Cloudflare.PowerShell.CloudflareClientOptions]@{
@@ -151,3 +156,8 @@ function Set-CfDnsRecord {
         $PSCmdlet.ThrowTerminatingError($record)
     } finally { $client.Dispose() }
 }
+
+# P3.2 generated commands are exported alongside the handwritten baseline while
+# parity is being established. Tests select the generated command explicitly by
+# command type so function precedence cannot hide generated dispatch.
+Export-ModuleMember -Function @('Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord') -Cmdlet @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord')

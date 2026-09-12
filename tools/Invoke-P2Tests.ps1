@@ -3,13 +3,14 @@ param([string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot))
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+$powershellHome = Split-Path -Parent (Get-Command pwsh).Source
 Push-Location $ProjectRoot
 try {
     $solution = Join-Path $ProjectRoot 'Cloudflare.P1.sln'
     dotnet restore $solution | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'dotnet restore failed.' }
 
-    dotnet build $solution --configuration Release --no-restore | Out-Host
+    dotnet build $solution --configuration Release --no-restore "-p:PowerShellHome=$powershellHome" | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'dotnet build failed.' }
 
     dotnet run --project .\tests\Cloudflare.P2.Tests\Cloudflare.P2.Tests.csproj --configuration Release --no-build -- (Join-Path $ProjectRoot 'ref/api-schemas/openapi.json') | Out-Host

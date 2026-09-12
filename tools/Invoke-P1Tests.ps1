@@ -3,12 +3,13 @@ param([string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot))
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+$powershellHome = Split-Path -Parent (Get-Command pwsh).Source
 Push-Location $ProjectRoot
 try {
     & pwsh -NoLogo -NoProfile -File .\tools\Generate-DnsSource.ps1 | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'Generator failed.' }
 
-    dotnet build .\Cloudflare.P1.sln --configuration Release --no-restore | Out-Host
+    dotnet build .\Cloudflare.P1.sln --configuration Release --no-restore "-p:PowerShellHome=$powershellHome" | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'dotnet build failed.' }
     dotnet run --project .\tests\Cloudflare.PowerShell.Tests\Cloudflare.PowerShell.Tests.csproj --configuration Release --no-build | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'runtime contract tests failed.' }
@@ -35,8 +36,8 @@ try {
         @{ Generated = 'src/Cloudflare.PowerShell/Generated/Metadata/Projection_Set_CfDnsRecord.cs'; Golden = 'tests/golden/Projection_Set_CfDnsRecord.cs' }
     )
     foreach ($pair in $pairs) {
-        $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $pair.Generated).Hash
-        $expected = (Get-FileHash -Algorithm SHA256 -LiteralPath $pair.Golden).Hash
+        $actual = ((Get-Content -Raw -LiteralPath $pair.Generated) -replace "`r`n", "`n").Replace("`r", "")
+        $expected = ((Get-Content -Raw -LiteralPath $pair.Golden) -replace "`r`n", "`n").Replace("`r", "")
         if ($actual -ne $expected) { throw "Golden mismatch: $($pair.Generated)" }
     }
     Write-Output 'PASS golden snapshots'

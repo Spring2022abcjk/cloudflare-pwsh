@@ -1,0 +1,149 @@
+{
+  "version": 1,
+  "stage": "P3.2",
+  "source": "corrected projection model and generated runtime metadata",
+  "cmdlets": [
+    {
+      "cmdletName": "Get-CfZone",
+      "className": "GetCfZoneCommand",
+      "outputType": "Cloudflare.PowerShell.CfZone",
+      "parameterSets": [
+        "Get",
+        "List"
+      ],
+      "parameterNames": [
+        "ZoneId",
+        "AccountId",
+        "AccountName",
+        "Direction",
+        "Match",
+        "Name",
+        "Order",
+        "Page",
+        "PerPage",
+        "Status",
+        "Type"
+      ],
+      "operationIds": [
+        "zones-0-get",
+        "zones-get"
+      ],
+      "supportsShouldProcess": false,
+      "confirmImpact": "None",
+      "help": {
+        "synopsis": "Gets a Cloudflare zone.",
+        "description": "Gets zones visible to the authenticated account and writes one typed zone per pipeline object.",
+        "source": "Override"
+      }
+    },
+    {
+      "cmdletName": "Get-CfDnsRecord",
+      "className": "GetCfDnsRecordCommand",
+      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+      "parameterSets": [
+        "Get",
+        "List"
+      ],
+      "parameterNames": [
+        "ZoneId",
+        "DnsRecordId",
+        "IncludeShadowMetadata",
+        "Comment",
+        "CommentAbsent",
+        "CommentContains",
+        "CommentEndswith",
+        "CommentExact",
+        "CommentPresent",
+        "CommentStartswith",
+        "Content",
+        "ContentContains",
+        "ContentEndswith",
+        "ContentExact",
+        "ContentStartswith",
+        "Direction",
+        "Match",
+        "Name",
+        "NameContains",
+        "NameEndswith",
+        "NameExact",
+        "NameStartswith",
+        "Order",
+        "Page",
+        "PerPage",
+        "Proxied",
+        "Search",
+        "ShadowedByName",
+        "ShadowingName",
+        "Tag",
+        "TagContains",
+        "TagEndswith",
+        "TagExact",
+        "TagMatch",
+        "TagPresent",
+        "TagStartswith",
+        "Type"
+      ],
+      "operationIds": [
+        "dns-records-for-a-zone-dns-record-details",
+        "dns-records-for-a-zone-list-dns-records"
+      ],
+      "supportsShouldProcess": false,
+      "confirmImpact": "None",
+      "help": {
+        "synopsis": "Gets Cloudflare DNS records.",
+        "description": "Gets one or more typed DNS records through the shared runtime.",
+        "source": "DeterministicDefault"
+      }
+    },
+    {
+      "cmdletName": "New-CfDnsRecord",
+      "className": "NewCfDnsRecordCommand",
+      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+      "parameterSets": [
+        "Create"
+      ],
+      "parameterNames": [
+        "ZoneId",
+        "Record",
+        "IncludeShadowMetadata"
+      ],
+      "operationIds": [
+        "dns-records-for-a-zone-create-dns-record"
+      ],
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium",
+      "help": {
+        "synopsis": "Creates a Cloudflare DNS record.",
+        "description": "Creates a typed DNS record using the generated request model.",
+        "source": "DeterministicDefault"
+      }
+    },
+    {
+      "cmdletName": "Remove-CfDnsRecord",
+      "className": "RemoveCfDnsRecordCommand",
+      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+      "parameterSets": [
+        "Delete"
+      ],
+      "parameterNames": [
+        "ZoneId",
+        "DnsRecordId"
+      ],
+      "operationIds": [
+        "dns-records-for-a-zone-delete-dns-record"
+      ],
+      "supportsShouldProcess": true,
+      "confirmImpact": "High",
+      "help": {
+        "synopsis": "Removes a Cloudflare DNS record.",
+        "description": "Removes one DNS record by zone and record identifier.",
+        "source": "DeterministicDefault"
+      }
+    }
+  ],
+  "commonInfrastructureParameters": [
+    "BaseUrl",
+    "Token",
+    "Handler"
+  ]
+}

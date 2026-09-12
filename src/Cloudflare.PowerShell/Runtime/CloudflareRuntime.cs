@@ -111,6 +111,8 @@ public sealed class CloudflareClient : IDisposable
     private readonly bool _ownsClient;
     private readonly CloudflareRuntimeDispatcher _dispatcher;
 
+    internal CloudflareRuntimeDispatcher Dispatcher => _dispatcher;
+
     public CloudflareClient(CloudflareClientOptions options, HttpClient? httpClient = null)
     {
         _httpClient = httpClient ?? new HttpClient(options.Handler ?? new HttpClientHandler());

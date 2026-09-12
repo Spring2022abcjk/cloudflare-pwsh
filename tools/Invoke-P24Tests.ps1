@@ -7,6 +7,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+$powershellHome = Split-Path -Parent (Get-Command pwsh).Source
 Push-Location $ProjectRoot
 $temporaryRoot = Join-Path ([IO.Path]::GetTempPath()) ('cloudflare-p24-' + [guid]::NewGuid().ToString('N'))
 try {
@@ -23,11 +24,11 @@ try {
 
     dotnet restore .\Cloudflare.P1.sln | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'dotnet restore failed.' }
-    dotnet clean .\Cloudflare.P1.sln --configuration Release | Out-Host
+    dotnet clean .\Cloudflare.P1.sln --configuration Release "-p:PowerShellHome=$powershellHome" | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'dotnet clean failed.' }
     dotnet restore .\Cloudflare.P1.sln | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'dotnet restore after clean failed.' }
-    dotnet build .\Cloudflare.P1.sln --configuration Release --no-restore | Out-Host
+    dotnet build .\Cloudflare.P1.sln --configuration Release --no-restore "-p:PowerShellHome=$powershellHome" | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'dotnet build failed.' }
 
     dotnet run --project .\tests\Cloudflare.P24.Tests\Cloudflare.P24.Tests.csproj --configuration Release --no-build | Out-Host

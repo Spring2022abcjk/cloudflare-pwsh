@@ -1,7 +1,5 @@
 using System.Net;
-using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -109,65 +107,68 @@ public sealed class CloudflareClientOptions
 
 public sealed class CloudflareClient : IDisposable
 {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
-    {
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        PropertyNameCaseInsensitive = true
-    };
-
     private readonly HttpClient _httpClient;
     private readonly bool _ownsClient;
-    private readonly JsonSerializerOptions _jsonOptions;
     private readonly CloudflareRuntimeDispatcher _dispatcher;
 
     public CloudflareClient(CloudflareClientOptions options, HttpClient? httpClient = null)
     {
-        _jsonOptions = JsonOptions;
         _httpClient = httpClient ?? new HttpClient(options.Handler ?? new HttpClientHandler());
         _ownsClient = httpClient is null;
         _httpClient.BaseAddress = options.BaseUri;
-        if (!string.IsNullOrWhiteSpace(options.BearerToken))
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.BearerToken);
         _dispatcher = new CloudflareRuntimeDispatcher(
             options.BaseUri,
             new HttpClientTransport(_httpClient),
             string.IsNullOrWhiteSpace(options.BearerToken) ? null : new ApiTokenAuthenticationContext(options.BearerToken));
     }
 
-    public async IAsyncEnumerable<CfDnsRecord> ListDnsRecordsAsync(
+    public IAsyncEnumerable<CfDnsRecord> ListDnsRecordsAsync(
         string zoneId,
         IReadOnlyDictionary<string, object?>? query = null,
-        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default)
     {
-        var page = 1;
-        while (true)
-        {
-            var values = new Dictionary<string, object?>(StringComparer.Ordinal);
-            if (query is not null)
-                foreach (var item in query) values[item.Key] = item.Value;
-            values["page"] = page;
+        var values = new Dictionary<string, object?>(StringComparer.Ordinal) { ["zoneId"] = zoneId };
+        if (query is not null)
+            foreach (var item in query) values[item.Key] = item.Value;
 
-            var suffix = QuerySerializer.Serialize(values);
-            var path = $"zones/{Uri.EscapeDataString(zoneId)}/dns_records{suffix}";
-            var result = await SendAsync<List<CfDnsRecord>>(HttpMethod.Get, path, null, cancellationToken).ConfigureAwait(false);
-            var records = result ?? [];
-            foreach (var record in records) yield return record;
-            if (records.Count == 0) yield break;
-            page++;
-        }
+        return new CloudflareTaskBackedAsyncEnumerable<CfDnsRecord>(_dispatcher.ExecutePagedAsync<CfDnsRecord>(
+            ListDnsRecordsMetadata,
+            new BoundParameters(values),
+            ListDnsRecordsPagination,
+            cancellationToken));
     }
 
-    public Task<CfDnsRecord> GetDnsRecordAsync(string zoneId, string recordId, IReadOnlyDictionary<string, object?>? query = null, CancellationToken cancellationToken = default)
-        => SendAsync<CfDnsRecord>(HttpMethod.Get, BuildRecordPath(zoneId, recordId) + QuerySerializer.Serialize(query), null, cancellationToken);
+    public async Task<CfDnsRecord> GetDnsRecordAsync(string zoneId, string recordId, IReadOnlyDictionary<string, object?>? query = null, CancellationToken cancellationToken = default)
+    {
+        var values = new Dictionary<string, object?>(StringComparer.Ordinal) { ["zoneId"] = zoneId, ["recordId"] = recordId };
+        if (query is not null)
+            foreach (var item in query) values[item.Key] = item.Value;
+        return (await _dispatcher.ExecuteAsync<CfDnsRecord>(GetDnsRecordMetadata, new BoundParameters(values), cancellationToken).ConfigureAwait(false))!;
+    }
 
-    public Task<CfDnsRecord> CreateDnsRecordAsync(string zoneId, JsonNode body, IReadOnlyDictionary<string, object?>? query = null, CancellationToken cancellationToken = default)
-        => SendAsync<CfDnsRecord>(HttpMethod.Post, $"zones/{Uri.EscapeDataString(zoneId)}/dns_records" + QuerySerializer.Serialize(query), body, cancellationToken);
+    public async Task<CfDnsRecord> CreateDnsRecordAsync(string zoneId, JsonNode body, IReadOnlyDictionary<string, object?>? query = null, CancellationToken cancellationToken = default)
+    {
+        var values = new Dictionary<string, object?>(StringComparer.Ordinal) { ["zoneId"] = zoneId, ["body"] = body };
+        if (query is not null)
+            foreach (var item in query) values[item.Key] = item.Value;
+        return (await _dispatcher.ExecuteAsync<CfDnsRecord>(CreateDnsRecordMetadata, new BoundParameters(values), cancellationToken).ConfigureAwait(false))!;
+    }
 
-    public Task<CfDnsRecord> UpdateDnsRecordAsync(string zoneId, string recordId, JsonNode body, CancellationToken cancellationToken = default)
-        => SendAsync<CfDnsRecord>(HttpMethod.Put, BuildRecordPath(zoneId, recordId), body, cancellationToken);
+    public async Task<CfDnsRecord> UpdateDnsRecordAsync(string zoneId, string recordId, JsonNode body, CancellationToken cancellationToken = default)
+    {
+        return (await _dispatcher.ExecuteAsync<CfDnsRecord>(
+            UpdateDnsRecordMetadata,
+            new BoundParameters(new Dictionary<string, object?> { ["zoneId"] = zoneId, ["recordId"] = recordId, ["body"] = body }),
+            cancellationToken).ConfigureAwait(false))!;
+    }
 
-    public Task<CfDnsRecord> EditDnsRecordAsync(string zoneId, string recordId, JsonNode body, CancellationToken cancellationToken = default)
-        => SendAsync<CfDnsRecord>(HttpMethod.Patch, BuildRecordPath(zoneId, recordId), body, cancellationToken);
+    public async Task<CfDnsRecord> EditDnsRecordAsync(string zoneId, string recordId, JsonNode body, CancellationToken cancellationToken = default)
+    {
+        return (await _dispatcher.ExecuteAsync<CfDnsRecord>(
+            EditDnsRecordMetadata,
+            new BoundParameters(new Dictionary<string, object?> { ["zoneId"] = zoneId, ["recordId"] = recordId, ["body"] = body }),
+            cancellationToken).ConfigureAwait(false))!;
+    }
 
     public async Task DeleteDnsRecordAsync(string zoneId, string recordId, CancellationToken cancellationToken = default)
         => await _dispatcher.ExecuteAsync<JsonNode>(
@@ -192,64 +193,96 @@ public sealed class CloudflareClient : IDisposable
         ]
     };
 
+    private static RuntimeOperationMetadata ListDnsRecordsMetadata { get; } = new()
+    {
+        OperationId = "dns-records-for-a-zone-list-dns-records",
+        Method = HttpMethod.Get,
+        PathTemplate = "zones/{zoneId}/dns_records",
+        Parameters =
+        [
+            new RuntimeParameterMetadata { Name = "zoneId", Location = "path", Required = true },
+            new RuntimeParameterMetadata { Name = "name", Location = "query" },
+            new RuntimeParameterMetadata { Name = "type", Location = "query" },
+            new RuntimeParameterMetadata { Name = "match", Location = "query" },
+            new RuntimeParameterMetadata { Name = "tag", Location = "query" },
+            new RuntimeParameterMetadata { Name = "page", Location = "query" },
+            new RuntimeParameterMetadata { Name = "per_page", Location = "query" },
+            new RuntimeParameterMetadata { Name = "include_shadow_metadata", Location = "query" }
+        ],
+        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", ParsingMode = "Json" }]
+    };
+
+    private static RuntimePaginationMetadata ListDnsRecordsPagination { get; } = new()
+    {
+        Strategy = "V4PagePaginationArray",
+        RequestFields = ["page", "per_page"],
+        ResponseFields = ["result", "result_info"],
+        ResultPath = "result",
+        PageInfoPath = "result_info",
+        CurrentPagePath = "result_info.page",
+        TotalPagesPath = "result_info.total_pages",
+        NextPageRule = "page + 1",
+        StopRule = "empty result page"
+    };
+
+    private static RuntimeOperationMetadata GetDnsRecordMetadata { get; } = new()
+    {
+        OperationId = "dns-records-for-a-zone-dns-record-details",
+        Method = HttpMethod.Get,
+        PathTemplate = "zones/{zoneId}/dns_records/{recordId}",
+        Parameters =
+        [
+            new RuntimeParameterMetadata { Name = "zoneId", Location = "path", Required = true },
+            new RuntimeParameterMetadata { Name = "recordId", Location = "path", Required = true },
+            new RuntimeParameterMetadata { Name = "include_shadow_metadata", Location = "query" }
+        ],
+        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" }]
+    };
+
+    private static RuntimeOperationMetadata CreateDnsRecordMetadata { get; } = new()
+    {
+        OperationId = "dns-records-for-a-zone-create-dns-record",
+        Method = HttpMethod.Post,
+        PathTemplate = "zones/{zoneId}/dns_records",
+        Parameters =
+        [
+            new RuntimeParameterMetadata { Name = "zoneId", Location = "path", Required = true },
+            new RuntimeParameterMetadata { Name = "include_shadow_metadata", Location = "query" }
+        ],
+        RequestRepresentations = [new RuntimeRequestRepresentation { ContentType = "application/json", BodyParameterName = "body" }],
+        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" }]
+    };
+
+    private static RuntimeOperationMetadata UpdateDnsRecordMetadata { get; } = new()
+    {
+        OperationId = "dns-records-for-a-zone-update-dns-record",
+        Method = HttpMethod.Put,
+        PathTemplate = "zones/{zoneId}/dns_records/{recordId}",
+        Parameters =
+        [
+            new RuntimeParameterMetadata { Name = "zoneId", Location = "path", Required = true },
+            new RuntimeParameterMetadata { Name = "recordId", Location = "path", Required = true }
+        ],
+        RequestRepresentations = [new RuntimeRequestRepresentation { ContentType = "application/json", BodyParameterName = "body" }],
+        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" }]
+    };
+
+    private static RuntimeOperationMetadata EditDnsRecordMetadata { get; } = new()
+    {
+        OperationId = "dns-records-for-a-zone-patch-dns-record",
+        Method = HttpMethod.Patch,
+        PathTemplate = "zones/{zoneId}/dns_records/{recordId}",
+        Parameters =
+        [
+            new RuntimeParameterMetadata { Name = "zoneId", Location = "path", Required = true },
+            new RuntimeParameterMetadata { Name = "recordId", Location = "path", Required = true }
+        ],
+        RequestRepresentations = [new RuntimeRequestRepresentation { ContentType = "application/json", BodyParameterName = "body" }],
+        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" }]
+    };
+
     private static string BuildRecordPath(string zoneId, string recordId)
         => $"zones/{Uri.EscapeDataString(zoneId)}/dns_records/{Uri.EscapeDataString(recordId)}";
-
-    private async Task<T> SendAsync<T>(HttpMethod method, string relativePath, JsonNode? body, CancellationToken cancellationToken)
-    {
-        using var request = new HttpRequestMessage(method, relativePath);
-        if (body is not null)
-            request.Content = new StringContent(body.ToJsonString(_jsonOptions), Encoding.UTF8, "application/json");
-
-        HttpResponseMessage response;
-        string rawBody;
-        try
-        {
-            response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-            rawBody = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-        }
-        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
-        {
-            var metadata = new CloudflareResponseMetadata(0, method.Method, new Uri(_httpClient.BaseAddress!, relativePath), new Dictionary<string, IEnumerable<string>>());
-            throw new CloudflareApiException(0, [], string.Empty, metadata, ex);
-        }
-
-        var metadataHeaders = response.Headers.Concat(response.Content.Headers)
-            .GroupBy(h => h.Key, StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(g => g.Key, g => g.SelectMany(h => h.Value), StringComparer.OrdinalIgnoreCase);
-        var metadataResponse = new CloudflareResponseMetadata(response.StatusCode, method.Method, response.RequestMessage?.RequestUri ?? new Uri(_httpClient.BaseAddress!, relativePath), metadataHeaders);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            var errors = TryReadErrors(rawBody);
-            throw new CloudflareApiException(response.StatusCode, errors, rawBody, metadataResponse);
-        }
-
-        if (response.StatusCode == HttpStatusCode.NoContent || string.IsNullOrWhiteSpace(rawBody))
-            return default!;
-
-        try
-        {
-            var envelope = JsonSerializer.Deserialize<CloudflareEnvelope<T>>(rawBody, _jsonOptions);
-            if (envelope is not null && envelope.Result is not null)
-                return (T)(object)envelope.Result;
-            return JsonSerializer.Deserialize<T>(rawBody, _jsonOptions)!;
-        }
-        catch (JsonException ex)
-        {
-            throw new CloudflareApiException(response.StatusCode, [], rawBody, metadataResponse, ex);
-        }
-    }
-
-    private static IReadOnlyList<CloudflareError> TryReadErrors(string body)
-    {
-        try
-        {
-            var envelope = JsonSerializer.Deserialize<CloudflareEnvelope<JsonElement>>(body, JsonOptions);
-            return envelope?.Errors ?? [];
-        }
-        catch (JsonException) { return []; }
-    }
 
     public void Dispose()
     {

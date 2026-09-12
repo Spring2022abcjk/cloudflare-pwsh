@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Cloudflare.PowerShell;
 
@@ -243,13 +244,44 @@ public sealed class MultipartRequestSerializer : ICloudflareRequestSerializer
     private static HttpContent CreateStreamContent(Stream stream)
     {
         if (stream.CanSeek) stream.Position = 0;
-        return new StreamContent(stream);
+        return new StreamContent(new NonDisposingStream(stream));
     }
 
     private static bool IsReplayable(object? value)
+        => value is null or byte[] or string or not Stream;
+
+    private sealed class NonDisposingStream : Stream
     {
-        if (value is null or byte[] or string) return true;
-        return value is not Stream stream || stream.CanSeek;
+        private readonly Stream _inner;
+
+        public NonDisposingStream(Stream inner) => _inner = inner;
+
+        public override bool CanRead => _inner.CanRead;
+        public override bool CanSeek => _inner.CanSeek;
+        public override bool CanWrite => _inner.CanWrite;
+        public override long Length => _inner.Length;
+        public override long Position { get => _inner.Position; set => _inner.Position = value; }
+        public override void Flush() => _inner.Flush();
+        public override Task FlushAsync(CancellationToken cancellationToken) => _inner.FlushAsync(cancellationToken);
+        public override int Read(byte[] buffer, int offset, int count) => _inner.Read(buffer, offset, count);
+        public override int Read(Span<byte> buffer) => _inner.Read(buffer);
+        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) => _inner.ReadAsync(buffer, offset, count, cancellationToken);
+        public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) => _inner.ReadAsync(buffer, cancellationToken);
+        public override long Seek(long offset, SeekOrigin origin) => _inner.Seek(offset, origin);
+        public override void SetLength(long value) => _inner.SetLength(value);
+        public override void Write(byte[] buffer, int offset, int count) => _inner.Write(buffer, offset, count);
+        public override void Write(ReadOnlySpan<byte> buffer) => _inner.Write(buffer);
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) => _inner.WriteAsync(buffer, offset, count, cancellationToken);
+        public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default) => _inner.WriteAsync(buffer, cancellationToken);
+
+        protected override void Dispose(bool disposing)
+        {
+            // The caller owns the supplied stream; disposing request content must
+            // not close it.
+            base.Dispose(disposing);
+        }
+
+        public override ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 }
 
@@ -373,9 +405,38 @@ public sealed class CloudflareRuntimeDispatcher
         return _pagination.ExecuteAsync(FetchPage, parameters.Values, pagination, cancellationToken);
     }
 
-    public async Task<T?> ExecuteAsync<T>(RuntimeOperationMetadata metadata, BoundParameters parameters, CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<TItem> ExecutePagedAsync<TItem>(
+        RuntimeOperationMetadata metadata,
+        BoundParameters parameters,
+        RuntimePaginationMetadata pagination,
+        CancellationToken cancellationToken = default)
     {
-        var request = BuildRequest(metadata, parameters);
+        async Task<RuntimePage<TItem>> FetchPage(IReadOnlyDictionary<string, object?> pageParameters, CancellationToken token)
+        {
+            var response = await ExecuteRawJsonAsync(metadata, new BoundParameters(pageParameters), token).ConfigureAwait(false);
+            return CloudflarePaginationResponseAdapter.FromJson<TItem>(response, pagination);
+        }
+
+        return _pagination.ExecuteAsync(FetchPage, parameters.Values, pagination, cancellationToken);
+    }
+
+    public Task<T?> ExecuteAsync<T>(RuntimeOperationMetadata metadata, BoundParameters parameters, CancellationToken cancellationToken = default)
+        => ExecuteAsyncCore<T>(metadata, parameters, cancellationToken, preserveJsonEnvelope: false);
+
+    private Task<JsonNode?> ExecuteRawJsonAsync(RuntimeOperationMetadata metadata, BoundParameters parameters, CancellationToken cancellationToken)
+        => ExecuteAsyncCore<JsonNode>(metadata, parameters, cancellationToken, preserveJsonEnvelope: true);
+
+    private async Task<T?> ExecuteAsyncCore<T>(RuntimeOperationMetadata metadata, BoundParameters parameters, CancellationToken cancellationToken, bool preserveJsonEnvelope)
+    {
+        CloudflareRequest request;
+        try
+        {
+            request = BuildRequest(metadata, parameters);
+        }
+        catch (Exception ex) when (ex is ArgumentException or FormatException or InvalidOperationException or NotSupportedException or JsonException)
+        {
+            throw CreateConstructionException(metadata, ex);
+        }
         var retryCount = 0;
         while (true)
         {
@@ -393,11 +454,11 @@ public sealed class CloudflareRuntimeDispatcher
                     continue;
                 }
 
-                var result = await ParseResponseAsync<T>(request, response, metadata, retryCount, cancellationToken).ConfigureAwait(false);
+                var result = await ParseResponseAsync<T>(request, response, metadata, retryCount, cancellationToken, preserveJsonEnvelope).ConfigureAwait(false);
                 if (result is CloudflareResponseStream) response = null;
                 return result;
             }
-            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+            catch (Exception ex) when (ex is HttpRequestException or IOException or TaskCanceledException)
             {
                 if (cancellationToken.IsCancellationRequested) throw;
                 if (_retryPolicy.ShouldRetry(request, response, ex, retryCount) && request.IsReplayable)
@@ -413,16 +474,28 @@ public sealed class CloudflareRuntimeDispatcher
                 var requestMetadata = new CloudflareResponseMetadata((HttpStatusCode)0, request.Method.Method, request.RequestUri, new Dictionary<string, IEnumerable<string>>());
                 throw new CloudflareApiException((HttpStatusCode)0, [], string.Empty, requestMetadata, ex, retryCount);
             }
-            catch (Exception ex) when (ex is InvalidOperationException or NotSupportedException)
+            catch (Exception ex) when (ex is ArgumentException or FormatException or InvalidOperationException or NotSupportedException or JsonException or IOException)
             {
-                var requestMetadata = new CloudflareResponseMetadata((HttpStatusCode)0, request.Method.Method, request.RequestUri, new Dictionary<string, IEnumerable<string>>());
-                throw new CloudflareApiException((HttpStatusCode)0, [], string.Empty, requestMetadata, ex, retryCount);
+                throw CreateConstructionException(request, ex, retryCount);
             }
             finally
             {
                 if (response is not null) await response.DisposeAsync().ConfigureAwait(false);
             }
         }
+    }
+
+    private CloudflareApiException CreateConstructionException(RuntimeOperationMetadata metadata, Exception exception)
+    {
+        var uri = new Uri(_baseUri, metadata.PathTemplate.TrimStart('/'));
+        var requestMetadata = new CloudflareResponseMetadata((HttpStatusCode)0, metadata.Method.Method, uri, new Dictionary<string, IEnumerable<string>>());
+        return new CloudflareApiException((HttpStatusCode)0, [], string.Empty, requestMetadata, exception);
+    }
+
+    private static CloudflareApiException CreateConstructionException(CloudflareRequest request, Exception exception, int retryCount)
+    {
+        var requestMetadata = new CloudflareResponseMetadata((HttpStatusCode)0, request.Method.Method, request.RequestUri, new Dictionary<string, IEnumerable<string>>());
+        return new CloudflareApiException((HttpStatusCode)0, [], string.Empty, requestMetadata, exception, retryCount);
     }
 
     private CloudflareRequest BuildRequest(RuntimeOperationMetadata metadata, BoundParameters parameters)
@@ -475,24 +548,41 @@ public sealed class CloudflareRuntimeDispatcher
         => _serializers.FirstOrDefault(serializer => serializer.CanSerialize(contentType))
            ?? throw new NotSupportedException($"No request serializer is registered for '{contentType}'.");
 
-    private async Task<T?> ParseResponseAsync<T>(CloudflareRequest request, CloudflareResponse response, RuntimeOperationMetadata metadata, int retryCount, CancellationToken cancellationToken)
+    private async Task<T?> ParseResponseAsync<T>(CloudflareRequest request, CloudflareResponse response, RuntimeOperationMetadata metadata, int retryCount, CancellationToken cancellationToken, bool preserveJsonEnvelope)
     {
         var representation = SelectResponseRepresentation(response, metadata.ResponseRepresentations);
-        if (!response.IsSuccessStatusCode)
-        {
-            var rawError = await response.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-            throw new CloudflareApiException(response.StatusCode, TryReadErrors(rawError), rawError, response.Metadata(request.RequestUri), retryCount: retryCount);
-        }
-
         try
         {
+            if (!response.IsSuccessStatusCode)
+            {
+                var rawError = await response.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                throw new CloudflareApiException(response.StatusCode, TryReadErrors(rawError), rawError, response.Metadata(request.RequestUri), retryCount: retryCount);
+            }
+
+            if (preserveJsonEnvelope && representation.ParsingMode.Equals("Json", StringComparison.OrdinalIgnoreCase))
+            {
+                representation = new RuntimeResponseRepresentation
+                {
+                    StatusCode = representation.StatusCode,
+                    ContentType = representation.ContentType,
+                    EnvelopePolicy = "Raw",
+                    ParsingMode = representation.ParsingMode
+                };
+            }
+
             var parser = _parsers.FirstOrDefault(x => x.CanParse(representation))
                 ?? throw new NotSupportedException($"No response parser is registered for '{representation.ParsingMode}'.");
             return (T?)await parser.ParseAsync(typeof(T), request, response, representation, cancellationToken).ConfigureAwait(false);
         }
-        catch (JsonException ex)
+        catch (CloudflareApiException)
         {
-            var rawBody = await response.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            throw;
+        }
+        catch (Exception ex) when (ex is JsonException or IOException or InvalidOperationException or NotSupportedException)
+        {
+            string rawBody;
+            try { rawBody = await response.ReadAsStringAsync(cancellationToken).ConfigureAwait(false); }
+            catch { rawBody = string.Empty; }
             throw new CloudflareApiException(response.StatusCode, [], rawBody, response.Metadata(request.RequestUri), ex, retryCount);
         }
     }

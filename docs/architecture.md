@@ -124,7 +124,7 @@ Typed result / raw text / binary stream
 
 The dispatcher consumes normalized/generated metadata and bound values; it does not parse OpenAPI. Request and response representations select serializers and parsers. JSON Cloudflare results, raw text, binary, multipart, and no-content responses are runtime cases, not endpoint-specific generator branches.
 
-Transport owns the HTTP request/response and content disposal boundaries. A streaming response must remain usable for its documented lifetime, while a buffered parser owns the resulting memory. Cancellation is passed from the public invocation through dispatch, retry delays, transport, parsing, and page iteration.
+Transport owns the HTTP request/response and serialized `HttpContent` disposal boundaries. Caller-owned multipart input streams remain open and are not retryable unless a fresh-stream factory is supplied. A streaming response must remain usable for its documented lifetime, while a buffered parser owns the resulting memory. Cancellation is passed from the public invocation through dispatch, retry delays, transport, parsing, and page iteration.
 
 Retry is separate from idempotency. A request may be retryable only when its body is replayable and the retry policy permits the status/exception; a mutation is not automatically retry-safe. Authentication is supplied through an `AuthenticationContext`, and secrets never enter generated metadata.
 

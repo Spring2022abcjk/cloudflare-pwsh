@@ -18,9 +18,11 @@ var tests = new (string Name, Action Run)[]
     ("raw text dispatcher", TestRawTextDispatcher),
     ("binary dispatcher and stream ownership", TestBinaryDispatcher),
     ("multipart dispatcher", TestMultipartDispatcher),
+    ("normalized pagination envelope and cursor paths", TestNormalizedPaginationResponseAdapter),
     ("pagination strategies", TestPaginationStrategies),
     ("retry policy and headers", TestRetryPolicy),
-    ("non-replayable request is not retried", TestNonReplayableRequest)
+    ("non-replayable request is not retried", TestNonReplayableRequest),
+    ("multipart stream ownership", TestMultipartStreamOwnership)
 };
 
 var failures = new List<string>();
@@ -390,6 +392,86 @@ static void TestPaginationStrategies()
     catch (InvalidOperationException ex) { True(ex.Message.Contains("later page", StringComparison.Ordinal)); }
 }
 
+static void TestNormalizedPaginationResponseAdapter()
+{
+    var metadata = new RuntimePaginationMetadata
+    {
+        Strategy = "CursorPaginationAfter",
+        ResponseFields = ["data.items", "data.page_info"]
+    };
+    var page = CloudflarePaginationResponseAdapter.FromJson<CfDnsRecord>(
+        JsonNode.Parse("{\"data\":{\"items\":[{\"id\":\"r1\",\"type\":\"A\"}],\"page_info\":{\"has_more\":true,\"cursor\":\"next-1\",\"page\":2,\"total_pages\":4}}}"),
+        metadata);
+    Equal(1, page.Items.Count);
+    Equal("r1", page.Items[0].Id);
+    Equal(2, page.CurrentPage);
+    Equal(4, page.TotalPages);
+    Equal("next-1", page.NextCursor);
+    Equal(true, page.HasMore);
+
+    var nestedCursor = CloudflarePaginationResponseAdapter.FromJson<CfDnsRecord>(
+        JsonNode.Parse("{\"result\":[{\"id\":\"r1\"}],\"result_info\":{\"cursors\":{\"after\":\"next-1\"}}}"),
+        new RuntimePaginationMetadata { ResponseFields = ["result", "result_info.cursors.after"] });
+    Equal("next-1", nestedCursor.NextCursor);
+
+    var afterValues = new List<string>();
+    var cursorMetadata = new RuntimePaginationMetadata
+    {
+        Strategy = "CursorPaginationAfter",
+        RequestFields = ["after"],
+        ResponseFields = ["result", "result_info.cursors.after"]
+    };
+    var cursorItems = Collect(new CloudflarePaginationExecutor().ExecuteAsync(
+        (parameters, _) =>
+        {
+            var after = parameters.TryGetValue("after", out var value) ? value?.ToString() : null;
+            afterValues.Add(after ?? "initial");
+            var body = after is null
+                ? "{\"result\":[{\"id\":\"r1\"}],\"result_info\":{\"cursors\":{\"after\":\"next-1\"}}}"
+                : "{\"result\":[{\"id\":\"r2\"}],\"result_info\":{\"cursors\":{}}}";
+            return Task.FromResult(CloudflarePaginationResponseAdapter.FromJson<CfDnsRecord>(JsonNode.Parse(body), cursorMetadata));
+        },
+        new Dictionary<string, object?>(),
+        cursorMetadata));
+    Equal("r1,r2", string.Join(',', cursorItems.Select(x => x.Id)));
+    Equal("initial,next-1", string.Join(',', afterValues));
+
+    var empty = CloudflarePaginationResponseAdapter.FromJson<CfDnsRecord>(
+        JsonNode.Parse("{\"result\":[],\"result_info\":{\"page\":3}}"),
+        new RuntimePaginationMetadata { ResponseFields = ["result", "result_info"] });
+    Equal(0, empty.Items.Count);
+    Equal(3, empty.CurrentPage);
+
+    var handler = new SequenceHandler(
+        Json(HttpStatusCode.OK, "{\"success\":true,\"result\":[{\"id\":\"r1\"}],\"result_info\":{\"page\":1}}"),
+        Json(HttpStatusCode.OK, "{\"success\":true,\"result\":[],\"result_info\":{\"page\":2}}"));
+    using var http = new HttpClient(handler);
+    using var transport = new HttpClientTransport(http);
+    var dispatcher = new CloudflareRuntimeDispatcher(new Uri("https://mock.test/"), transport);
+    var operation = new RuntimeOperationMetadata
+    {
+        OperationId = "normalized-list",
+        Method = HttpMethod.Get,
+        PathTemplate = "records",
+        Parameters = [new RuntimeParameterMetadata { Name = "page", Location = "query" }],
+        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" }]
+    };
+    var pagination = new RuntimePaginationMetadata
+    {
+        Strategy = "V4PagePaginationArray",
+        RequestFields = ["page"],
+        ResponseFields = ["result", "result_info"],
+        ResultPath = "result",
+        PageInfoPath = "result_info",
+        CurrentPagePath = "result_info.page"
+    };
+    var items = Collect(dispatcher.ExecutePagedAsync<CfDnsRecord>(operation, new BoundParameters(new Dictionary<string, object?>()), pagination));
+    Equal("r1", items.Single().Id);
+    Equal(2, handler.Requests.Count);
+    True(handler.Requests[0].RequestUri!.Query.Contains("page=1", StringComparison.Ordinal));
+    True(handler.Requests[1].RequestUri!.Query.Contains("page=2", StringComparison.Ordinal));
+}
+
 static void TestRetryPolicy()
 {
     var policy = new ExponentialBackoffRetryPolicy(new RetryPolicyOptions
@@ -507,6 +589,37 @@ static void TestNonReplayableRequest()
     }
 }
 
+static void TestMultipartStreamOwnership()
+{
+    var handler = new SequenceHandler(Json(HttpStatusCode.InternalServerError, "{\"success\":false,\"errors\":[{\"code\":1,\"message\":\"no retry\"}]}"));
+    using var http = new HttpClient(handler);
+    using var transport = new HttpClientTransport(http);
+    var policy = new ExponentialBackoffRetryPolicy(new RetryPolicyOptions { BaseDelay = TimeSpan.Zero, MaxDelay = TimeSpan.Zero, JitterRatio = 0 });
+    var dispatcher = new CloudflareRuntimeDispatcher(new Uri("https://mock.test/"), transport, retryPolicy: policy);
+    var metadata = new RuntimeOperationMetadata
+    {
+        OperationId = "idempotent-upload",
+        Method = HttpMethod.Post,
+        PathTemplate = "upload",
+        Idempotency = new RuntimeIdempotencyMetadata { Supported = true, KeyParameterName = "idempotencyKey", RetrySafeWhenKeyPresent = true },
+        RequestRepresentations = [new RuntimeRequestRepresentation { ContentType = "multipart/form-data", Parts = [new RuntimeMultipartPart { ParameterName = "file", PartName = "file", ContentType = "application/octet-stream", Format = "binary", Required = true }] }],
+        ResponseRepresentations = [new RuntimeResponseRepresentation { StatusCode = 200, ContentType = "application/json", ParsingMode = "Json" }]
+    };
+    var stream = new TrackingStream([1, 2, 3]);
+    try
+    {
+        dispatcher.ExecuteAsync<JsonNode>(metadata, new BoundParameters(new Dictionary<string, object?> { ["idempotencyKey"] = "key-1", ["file"] = stream })).GetAwaiter().GetResult();
+        throw new InvalidOperationException("expected HTTP error");
+    }
+    catch (CloudflareApiException ex)
+    {
+        Equal(1, handler.Requests.Count);
+        Equal(0, ex.RetryCount);
+        True(!stream.WasDisposed);
+    }
+    stream.Dispose();
+}
+
 static List<T> Collect<T>(IAsyncEnumerable<T> source)
 {
     var values = new List<T>();
@@ -559,4 +672,15 @@ sealed class NonSeekableStream : MemoryStream
 {
     public NonSeekableStream(byte[] buffer) : base(buffer, writable: false) { }
     public override bool CanSeek => false;
+}
+
+sealed class TrackingStream : MemoryStream
+{
+    public TrackingStream(byte[] buffer) : base(buffer, writable: false) { }
+    public bool WasDisposed { get; private set; }
+    protected override void Dispose(bool disposing)
+    {
+        WasDisposed = true;
+        base.Dispose(disposing);
+    }
 }

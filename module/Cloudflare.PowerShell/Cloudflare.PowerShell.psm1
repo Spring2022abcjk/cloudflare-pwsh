@@ -17,6 +17,28 @@ function ConvertTo-CfQueryDictionary {
     return $result
 }
 
+function New-CfApiErrorRecord {
+    param(
+        [Parameter(Mandatory)][Cloudflare.PowerShell.CloudflareApiException]$Exception,
+        [Parameter()][object]$TargetObject
+    )
+    $status = [int]$Exception.StatusCode
+    $category = switch ($status) {
+        400 { [System.Management.Automation.ErrorCategory]::InvalidArgument; break }
+        401 { [System.Management.Automation.ErrorCategory]::SecurityError; break }
+        403 { [System.Management.Automation.ErrorCategory]::SecurityError; break }
+        404 { [System.Management.Automation.ErrorCategory]::ObjectNotFound; break }
+        408 { [System.Management.Automation.ErrorCategory]::ResourceUnavailable; break }
+        429 { [System.Management.Automation.ErrorCategory]::ResourceUnavailable; break }
+        default { [System.Management.Automation.ErrorCategory]::InvalidOperation }
+    }
+    return [System.Management.Automation.ErrorRecord]::new(
+        $Exception,
+        $Exception.FullyQualifiedErrorId,
+        $category,
+        $TargetObject)
+}
+
 function Get-CfDnsRecord {
     [CmdletBinding(DefaultParameterSetName = 'List')]
     param(
@@ -57,7 +79,7 @@ function Get-CfDnsRecord {
         } finally { $enumerator.DisposeAsync().GetAwaiter().GetResult() }
     } catch [Cloudflare.PowerShell.CloudflareApiException] {
         $exception = $_.Exception
-        $record = [System.Management.Automation.ErrorRecord]::new($exception, $exception.FullyQualifiedErrorId, [System.Management.Automation.ErrorCategory]::InvalidOperation, $ZoneId)
+        $record = New-CfApiErrorRecord $exception $ZoneId
         $PSCmdlet.ThrowTerminatingError($record)
     } finally { $client.Dispose() }
 }
@@ -80,7 +102,7 @@ function New-CfDnsRecord {
         $client.CreateDnsRecordAsync($ZoneId, $body, (ConvertTo-CfQueryDictionary $query), [System.Threading.CancellationToken]::None).GetAwaiter().GetResult()
     } catch [Cloudflare.PowerShell.CloudflareApiException] {
         $exception = $_.Exception
-        $record = [System.Management.Automation.ErrorRecord]::new($exception, $exception.FullyQualifiedErrorId, [System.Management.Automation.ErrorCategory]::InvalidOperation, $ZoneId)
+        $record = New-CfApiErrorRecord $exception $ZoneId
         $PSCmdlet.ThrowTerminatingError($record)
     } finally { $client.Dispose() }
 }
@@ -99,7 +121,7 @@ function Remove-CfDnsRecord {
     try { [void]$client.DeleteDnsRecordAsync($ZoneId, $RecordId, [System.Threading.CancellationToken]::None).GetAwaiter().GetResult() }
     catch [Cloudflare.PowerShell.CloudflareApiException] {
         $exception = $_.Exception
-        $record = [System.Management.Automation.ErrorRecord]::new($exception, $exception.FullyQualifiedErrorId, [System.Management.Automation.ErrorCategory]::InvalidOperation, $RecordId)
+        $record = New-CfApiErrorRecord $exception $RecordId
         $PSCmdlet.ThrowTerminatingError($record)
     } finally { $client.Dispose() }
 }
@@ -125,7 +147,7 @@ function Set-CfDnsRecord {
         else { $client.EditDnsRecordAsync($ZoneId, $RecordId, $body, [System.Threading.CancellationToken]::None).GetAwaiter().GetResult() }
     } catch [Cloudflare.PowerShell.CloudflareApiException] {
         $exception = $_.Exception
-        $record = [System.Management.Automation.ErrorRecord]::new($exception, $exception.FullyQualifiedErrorId, [System.Management.Automation.ErrorCategory]::InvalidOperation, $RecordId)
+        $record = New-CfApiErrorRecord $exception $RecordId
         $PSCmdlet.ThrowTerminatingError($record)
     } finally { $client.Dispose() }
 }

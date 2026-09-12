@@ -30,7 +30,11 @@ public sealed class P1ModuleMockHandler : HttpMessageHandler
         Requests.Add(request);
         Bodies.Add(request.Content is null ? "" : await request.Content.ReadAsStringAsync(cancellationToken));
         if (request.RequestUri.Query.Contains("name=fail", StringComparison.Ordinal))
-            return new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new StringContent("{\"success\":false,\"errors\":[{\"code\":1001,\"message\":\"bad request\"}]}", Encoding.UTF8, "application/json") };
+        {
+            var error = new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new StringContent("{\"success\":false,\"errors\":[{\"code\":1001,\"message\":\"bad request\"}]}", Encoding.UTF8, "application/json") };
+            error.Headers.TryAddWithoutValidation("CF-Ray", "smoke-ray-1");
+            return error;
+        }
         var page = request.RequestUri.Query.Contains("page=2", StringComparison.Ordinal) ? "[]" : "[{\"id\":\"r1\",\"name\":\"example.com\",\"type\":\"A\",\"content\":\"198.51.100.4\"}]";
         if (request.Method == HttpMethod.Delete)
             return Response("{\"success\":true,\"result\":{}}");
@@ -71,6 +75,11 @@ try {
     throw 'Expected a PowerShell ErrorRecord.'
 } catch {
     if ($_.Exception.FullyQualifiedErrorId -ne 'Cloudflare.Api.400') { throw "Unexpected stable error id: $($_.Exception.FullyQualifiedErrorId)" }
+    if ($_.CategoryInfo.Category -ne 'InvalidArgument') { throw "Unexpected ErrorRecord category: $($_.CategoryInfo.Category)" }
+    if ($_.TargetObject -ne 'zone') { throw "Unexpected ErrorRecord target: $($_.TargetObject)" }
+    if ($_.Exception.RequestId -ne 'smoke-ray-1') { throw "Request ID was not retained: $($_.Exception.RequestId)" }
+    if ($_.Exception.Errors[0].Code -ne 1001) { throw 'Cloudflare error code was not retained.' }
+    if ($_.Exception.RawBody -notmatch 'bad request') { throw 'Safe raw error body was not retained.' }
 }
 
 Write-Output 'PASS module import and cmdlet smoke'

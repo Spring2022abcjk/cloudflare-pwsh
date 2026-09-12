@@ -39,7 +39,7 @@ public sealed class ExponentialBackoffRetryPolicy : ICloudflareRetryPolicy
         if (!request.IsReplayable || !request.IsRetrySafe || retryCount >= _options.MaxRetries) return false;
         var overrideValue = GetHeader(response, "x-should-retry");
         if (bool.TryParse(overrideValue, out var overrideDecision)) return overrideDecision;
-        if (exception is HttpRequestException or TimeoutException or TaskCanceledException) return true;
+        if (exception is HttpRequestException or IOException or TimeoutException or TaskCanceledException) return true;
         if (response is null) return false;
         var status = (int)response.StatusCode;
         return response.StatusCode is HttpStatusCode.RequestTimeout

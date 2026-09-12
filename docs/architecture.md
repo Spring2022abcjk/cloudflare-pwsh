@@ -39,7 +39,7 @@ API corrections and PowerShell projection overrides are separate:
 - `overrides/api-corrections.json` changes the interpreted API contract and retains a correction trace.
 - `overrides/powershell-projection.json` chooses the public verb/noun, parameter names, confirmation policy, output policy, and help-oriented metadata.
 
-Generated C# is currently limited to typed models and operation/projection metadata under `src/Cloudflare.PowerShell/Generated`. The public ergonomic surface remains handwritten in `module/Cloudflare.PowerShell/Cloudflare.PowerShell.psm1`. Generated files are never hand-edited. A generated `PSCmdlet` surface is an isolated experiment, not the current implementation route.
+Generated C# currently includes typed models and operation/projection metadata under `src/Cloudflare.PowerShell/Generated`. P3.2 is now validating a generated `PSCmdlet` public surface for four representative commands; the public handwritten module remains the authoritative behavior reference until behavioral parity is evidenced. Generated files are never hand-edited. The shared runtime is a production runtime foundation, but the repository is not release-ready merely because that foundation is complete.
 
 ## Confirmed Architecture Facts
 
@@ -122,7 +122,7 @@ Pagination when declared by metadata
 Typed result / raw text / binary stream
 ```
 
-The dispatcher consumes normalized/generated metadata and bound values; it does not parse OpenAPI. Request and response representations select serializers and parsers. JSON Cloudflare results, raw text, binary, multipart, and no-content responses are runtime cases, not endpoint-specific generator branches.
+The dispatcher consumes normalized/generated metadata and bound values; it does not parse OpenAPI. Request and response representations select serializers and parsers. JSON Cloudflare results, raw text, binary, multipart, and no-content responses are runtime cases, not endpoint-specific generator branches. This shared runtime is the production runtime foundation for generated operations; it is not a release-ready public SDK by itself.
 
 The generator emits declarative `GeneratedOperationMetadata` records from the
 normalized operation projection. `GeneratedOperationMetadataAdapter` maps those
@@ -138,8 +138,9 @@ Retry is separate from idempotency. A request may be retryable only when its bod
 ## Deferred Boundaries
 
 Mutation idempotency policy, legacy authentication, full PowerShell binary UX,
-full generated public cmdlets, module publishing, real-account integration, and
-the final handwritten-vs-generated-cmdlet decision remain unresolved. The P3.1
-runtime has deterministic mock coverage for multipart, binary streams, and all
-six recognized pagination strategies; HTTP 2xx with `success=false` remains
-intentionally unresolved.
+full generated public-cmdlet migration, module publishing, real-account
+integration, and the final handwritten-vs-generated-cmdlet decision remain
+unresolved. P3.2 is limited to its four representative cmdlets until parity
+evidence supports expansion. The P3.1 runtime has deterministic mock coverage
+for multipart, binary streams, and all six recognized pagination strategies;
+HTTP 2xx with `success=false` remains intentionally unresolved.

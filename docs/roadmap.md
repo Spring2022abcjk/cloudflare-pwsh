@@ -52,9 +52,11 @@ The engine compares old/new normalized revisions semantically and classifies end
 
 ## P3 — Productionization
 
-Status: active. The goal is to move from architecture validation to a runnable, extensible, and controllably releasable generated SDK. P3.1 is the current priority; broad public cmdlet expansion waits for the shared runtime to stabilize.
+Status: active. The goal is to move from architecture validation to a runnable, extensible, and controllably releasable generated SDK. P3.1 is complete and P3.2 is the current priority; broader public cmdlet expansion remains outside this phase.
 
 ### P3.1 — Production Runtime
+
+Status: completed in this workspace; see [P3.1 summary](./P3.1-summary.md) and [P3.1 progress](./P3.1-progress.md).
 
 Implement and validate a transport-independent runtime abstraction covering request/response representations, serializers, parsers, content lifetimes, generic operation dispatch from generated metadata, raw text, binary, multipart, streaming, shared pagination, replayability-aware retry, separately modeled idempotency, authentication context, cancellation, and stable error mapping.
 
@@ -62,7 +64,9 @@ The first delivery slices are runtime abstraction, generic dispatch, raw text, b
 
 ### P3.2 — Generated Public Surface
 
-After runtime stabilization, evaluate broader PowerShell projection, generated `PSCmdlet` dispatch, help generation, argument completion, pipeline behavior, `ShouldProcess`, and output typing. The handwritten module remains the authoritative runtime reference until generated dispatch has equivalent mock coverage.
+Status: active in this workspace; see [P3.2 progress](./P3.2-progress.md).
+
+Validate the generated public PowerShell surface against the corrected normalized model and projection. The first representative cmdlets are `Get-CfZone`, `Get-CfDnsRecord`, `New-CfDnsRecord`, and `Remove-CfDnsRecord`. Generated commands must bind PowerShell parameters and delegate execution through generated operation metadata and the shared runtime. They must prove parameter-set metadata, pipeline binding, typed output, shared pagination, `ShouldProcess`, presence/null semantics, stable errors, and handwritten-versus-generated behavioral parity. The handwritten module remains the authoritative behavior reference until parity evidence is complete. `Set-CfDnsRecord` PUT/PATCH parity is conditional on the first four cmdlets passing.
 
 ### P3.3 — API Coverage Expansion
 
@@ -86,6 +90,6 @@ Automate schema updates, compatibility reports, regeneration CI, breaking-change
 
 ## Deferred items
 
-The following are not complete merely because P2 is complete: HTTP `2xx` with `success=false` semantics, production retry/idempotency policy details, legacy authentication, multipart runtime, binary/streaming runtime, complete pagination strategies, generated help, public generated `PSCmdlet` migration, real-account behavior, publishing, and release/security policy.
+The following remain outside the completed P3.1 boundary or unresolved in P3.2: HTTP `2xx` with `success=false` semantics, production retry/idempotency policy details, legacy authentication, full PowerShell binary UX, final public generated `PSCmdlet` migration decision, complete real-account behavior, publishing, and release/security policy.
 
 The formal support baseline remains PowerShell 7.6+ and .NET 10 on the Windows-first host. See [ADR 0001](./adr/0001-net10-powershell76-baseline.md).

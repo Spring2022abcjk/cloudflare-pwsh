@@ -83,6 +83,63 @@ P3.1 is complete only when all of the following are evidenced:
 
 HTTP `2xx` with `success=false`, full legacy authentication, generated public `PSCmdlet` migration, publishing, and real-account behavior remain deferred unless authoritative evidence changes their status.
 
+## P3.2 Generated Public PowerShell Surface
+
+P3.1 is complete against its runtime gate. P3.2 is active on the branch rooted
+at the merged P3.1 commit and validates whether generated `PSCmdlet` classes
+can become a real public PowerShell surface while preserving the handwritten
+module's behavior.
+
+The first representative commands are deliberately limited to four:
+
+- `Get-CfZone`: list/get parameter sets, scope and primary-id binding,
+  pipeline-by-property-name, typed output, pagination, and shared dispatch.
+- `Get-CfDnsRecord`: zone scope, record primary id, list/get, pagination, typed
+  union response, and item output.
+- `New-CfDnsRecord`: typed union input, JSON body, presence/null semantics,
+  `ShouldProcess`, and `CloudflareResult` output.
+- `Remove-CfDnsRecord`: `ShouldProcess`, confirmation impact, DELETE binding,
+  no request body after the normalized DNS correction, and shared error mapping.
+
+Generated commands are binding and output adapters only. They must construct
+runtime bound arguments and call `GeneratedOperationMetadataAdapter` plus the
+generic dispatcher. They must not create `HttpRequestMessage` instances or
+duplicate query/body serialization, parsing, retry, pagination, cancellation,
+or error conversion. A thin shared `PSCmdlet` base/helper may own runtime
+resolution, authentication context, cancellation, common error conversion,
+`ShouldProcess` plumbing, and output helpers; operation-specific parameters
+remain in generated commands.
+
+P3.2 must prove projection-driven parameter sets, requiredness and applicability,
+pipeline binding, `[OutputType(...)]` and actual typed output, shared-runtime
+pagination, `ShouldProcess`/`-WhatIf`, omitted versus explicit-null
+`Optional<T>` semantics, stable generated/handwritten `ErrorRecord` parity, and
+captured handwritten-versus-generated HTTP/output/error behavioral parity.
+Help metadata and examples must be consumable, but complete external-help
+rendering and full binary UX (`-OutFile`/`-PassThru`) remain deferred.
+
+The phase adds focused metadata, dispatch, pipeline, `ShouldProcess`, error,
+paging, presence, and parity tests plus `tools/Invoke-P32Tests.ps1`. Every
+slice also runs the complete P1/P2/P3.1 regression chain. `Set-CfDnsRecord`
+PUT/PATCH multi-operation parity is added only after the four representative
+commands pass all prior gates.
+
+P3.2 is not an API-coverage expansion, publishing effort, legacy-auth effort,
+full real-account mutation validation, normalized-model redesign, P3.1
+runtime rewrite, or a decision to guess HTTP `2xx` with `success=false`.
+
+## P3.2 acceptance gate
+
+P3.2 is complete only when the four representative generated cmdlets dispatch
+through the shared runtime; their projection metadata and runtime output are
+consistent; pipeline, typed output, pagination, `ShouldProcess`, presence/null,
+and error behavior are evidenced; DNS DELETE correction remains effective;
+generated code has no endpoint-specific transport logic; handwritten-versus-
+generated parity tests are green; all P1/P2/P3.1 regressions are green; and a
+formal `docs/adr/0002-generated-pscmdlet-surface.md` records the migration
+decision from evidence. Only then may `Set-CfDnsRecord` be used as the final
+conditional PUT/PATCH validation.
+
 ## Progress reporting
 
 Maintain `docs/P3.1-progress.md` throughout implementation with four explicit sections: `Implemented`, `Validated`, `Still Deferred`, and `Next`. A passing static test or build must not be reported as runtime, host, package, or real-account acceptance.

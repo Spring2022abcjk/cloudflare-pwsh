@@ -318,13 +318,16 @@ function ConvertTo-OperationProjection {
             stopRule = [string]$pagination.stopRule
         }
     }
-    $operationOutputType = Get-JsonValue $override 'outputType'
-    if ([string]::IsNullOrWhiteSpace([string]$operationOutputType)) { $operationOutputType = [string](Get-P32PolicyValue $CommandPolicy 'outputType') }
-    if ([string]::IsNullOrWhiteSpace([string]$operationOutputType)) { throw "P3.2 operation '$operationId' has no outputType projection." }
     $operationOutputPolicy = Get-JsonValue $override 'outputPolicy'
     if ([string]::IsNullOrWhiteSpace([string]$operationOutputPolicy)) { $operationOutputPolicy = Get-P32PolicyValue $OperationPolicy 'outputPolicy' }
     if ([string]::IsNullOrWhiteSpace([string]$operationOutputPolicy)) { $operationOutputPolicy = Get-P32PolicyValue $CommandPolicy 'outputPolicy' }
     if ([string]::IsNullOrWhiteSpace([string]$operationOutputPolicy)) { throw "P3.2 operation '$operationId' has no outputPolicy projection." }
+    $operationOutputType = if ($operationOutputPolicy -eq 'none') { $null } else {
+        $candidate = Get-JsonValue $override 'outputType'
+        if ([string]::IsNullOrWhiteSpace([string]$candidate)) { $candidate = Get-P32PolicyValue $CommandPolicy 'outputType' }
+        if ([string]::IsNullOrWhiteSpace([string]$candidate)) { throw "P3.2 operation '$operationId' has no outputType projection for outputPolicy '$operationOutputPolicy'." }
+        [string]$candidate
+    }
     $supportsShouldProcess = Get-JsonValue $override 'supportsShouldProcess'
     $confirmImpact = Get-JsonValue $override 'confirmImpact'
     if ($null -eq $supportsShouldProcess) { $supportsShouldProcess = $false }
@@ -339,7 +342,7 @@ function ConvertTo-OperationProjection {
         parameters = $projectedParameters
         bodyParameterName = if ($null -eq $body) { $null } else { $body.parameterName }
         bodyModel = if ($null -eq $body) { $null } else { $body.model }
-         outputType = [string]$operationOutputType
+         outputType = $operationOutputType
          constantName = [string](Get-P32PolicyValue $OperationPolicy 'constantName')
          outputPolicy = [string]$operationOutputPolicy
          invokeKind = if ($null -ne (Get-P32PolicyValue $OperationPolicy 'invokeKind')) { [string](Get-P32PolicyValue $OperationPolicy 'invokeKind') } elseif ($null -ne $paginationModel -and [string]$paginationModel.strategy -ne 'SinglePage') { 'paged' } else { 'single' }
@@ -432,6 +435,11 @@ function ConvertTo-CmdletProjection {
     $execution = Get-P32PolicyValue $CommandPolicy 'execution'
     if ($null -eq $execution) { throw "P3.2 command '$cmdletName' has no execution strategy." }
     $model = Get-P32PolicyValue $CommandPolicy 'model'
+    $commandOutputPolicy = Get-P32PolicyValue $CommandPolicy 'outputPolicy'
+    if ([string]::IsNullOrWhiteSpace([string]$commandOutputPolicy)) { $commandOutputPolicy = $outputPolicy }
+    $commandOutputType = $null
+    $commandOutputType = Get-P32PolicyValue $CommandPolicy 'outputType'
+    if ([string]::IsNullOrWhiteSpace([string]$commandOutputType) -and $commandOutputPolicy -ne 'none') { $commandOutputType = [string]$first.outputType }
     [ordered]@{
         cmdletName = $CmdletName
         className = if ([string]::IsNullOrWhiteSpace([string](Get-P32PolicyValue $CommandPolicy 'className'))) { "$($CmdletName -replace '-', '')Command" } else { [string]$CommandPolicy.className }
@@ -443,8 +451,8 @@ function ConvertTo-CmdletProjection {
         operationIds = @($bindings | ForEach-Object operationId)
         parameterSets = $parameterSets
         parameters = $parameters
-        outputType = if ([string]::IsNullOrWhiteSpace([string](Get-P32PolicyValue $CommandPolicy 'outputType'))) { [string]$first.outputType } else { [string](Get-P32PolicyValue $CommandPolicy 'outputType') }
-        outputPolicy = if ([string]::IsNullOrWhiteSpace([string](Get-P32PolicyValue $CommandPolicy 'outputPolicy'))) { $outputPolicy } else { [string](Get-P32PolicyValue $CommandPolicy 'outputPolicy') }
+        outputType = $commandOutputType
+        outputPolicy = $commandOutputPolicy
         pagingBehavior = if ($paging.Count -eq 1) { [string]$paging[0].runtime.pagination.strategy } else { $null }
         supportsShouldProcess = if ($null -ne (Get-P32PolicyValue $CommandPolicy 'supportsShouldProcess')) { [bool](Get-P32PolicyValue $CommandPolicy 'supportsShouldProcess') } else { @($bindings | Where-Object supportsShouldProcess).Count -gt 0 }
         confirmImpact = if ([string]::IsNullOrWhiteSpace([string](Get-P32PolicyValue $CommandPolicy 'confirmImpact'))) { [string]$impact } else { [string](Get-P32PolicyValue $CommandPolicy 'confirmImpact') }

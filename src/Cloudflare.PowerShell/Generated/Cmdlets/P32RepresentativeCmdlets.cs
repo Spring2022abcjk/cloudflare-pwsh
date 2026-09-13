@@ -148,7 +148,7 @@ public sealed class GetCfDnsRecordCommand : CloudflareCmdletBase
 
     [Parameter(ParameterSetName = "Get")]
     [Parameter(ParameterSetName = "List")]
-    public bool IncludeShadowMetadata { get; set; }
+    public bool IncludeShadowMetadata { get; set; } = false;
 
     [Parameter(ParameterSetName = "List")]
     [AllowNull]
@@ -185,7 +185,7 @@ public sealed class GetCfDnsRecordCommand : CloudflareCmdletBase
     public decimal PerPage { get; set; } = 100m;
 
     [Parameter(ParameterSetName = "List")]
-    public bool Proxied { get; set; }
+    public bool Proxied { get; set; } = false;
 
     [Parameter(ParameterSetName = "List")]
     [AllowNull]
@@ -306,7 +306,7 @@ public sealed class NewCfDnsRecordCommand : CloudflareCmdletBase
     public CfDnsRecordInput Record { get; set; } = null!;
 
     [Parameter(ParameterSetName = "Create")]
-    public bool IncludeShadowMetadata { get; set; }
+    public bool IncludeShadowMetadata { get; set; } = false;
 
     protected override void ProcessRecord()
     {
@@ -325,7 +325,6 @@ public sealed class NewCfDnsRecordCommand : CloudflareCmdletBase
 }
 
 [Cmdlet(VerbsCommon.Remove, "CfDnsRecord", DefaultParameterSetName = "Delete", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.High)]
-[OutputType(typeof(Cloudflare.PowerShell.CfDnsRecord))]
 public sealed class RemoveCfDnsRecordCommand : CloudflareCmdletBase
 {
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Delete", ValueFromPipelineByPropertyName = true)]
@@ -372,7 +371,7 @@ public sealed class SetCfDnsRecordCommand : CloudflareCmdletBase
 
     [Parameter(ParameterSetName = "Edit")]
     [Parameter(ParameterSetName = "Replace")]
-    public bool IncludeShadowMetadata { get; set; }
+    public bool IncludeShadowMetadata { get; set; } = false;
 
     protected override void ProcessRecord()
     {

@@ -86,7 +86,7 @@ function Get-PropertyDeclaration {
     $lines = [System.Collections.Generic.List[string]]::new()
     foreach ($line in Get-ParameterAttributeLines $Cmdlet $Parameter) { $lines.Add($line) }
     $initializer = ConvertTo-CSharpLiteral $Parameter.defaultValue ([string]$Parameter.type)
-    if ($null -ne $initializer -and [string]$Parameter.type -notin @('bool', 'bool?')) { $initializer = " = $initializer" }
+    if ($null -ne $initializer) { $initializer = " = $initializer" }
     else { $initializer = '' }
     if ([string]$Parameter.initializerPolicy -eq 'null-forgiving') { $initializer = ' = null!' }
     $terminator = if ([string]::IsNullOrEmpty($initializer)) { '' } else { ';' }
@@ -213,7 +213,10 @@ function Add-GeneratedCmdlet {
     param([Parameter(Mandatory)][ref]$Lines, [Parameter(Mandatory)][object]$Cmdlet)
     $target = $Lines.Value
     $target.Add((Get-CmdletAttribute $Cmdlet))
-    $target.Add("[OutputType(typeof($($Cmdlet.outputType)))]")
+    if ([string]$Cmdlet.outputPolicy -ne 'none') {
+        if ([string]::IsNullOrWhiteSpace([string]$Cmdlet.outputType)) { throw "P3.2 cmdlet '$($Cmdlet.cmdletName)' has outputPolicy '$($Cmdlet.outputPolicy)' but no outputType." }
+        $target.Add("[OutputType(typeof($($Cmdlet.outputType)))]")
+    }
     $target.Add("public sealed class $($Cmdlet.className) : CloudflareCmdletBase")
     $target.Add('{')
     foreach ($parameter in @($Cmdlet.parameters | Sort-Object { if ($null -eq $_.position) { 999 } else { [int]$_.position } }, name)) {
@@ -351,6 +354,51 @@ function Write-HelpMetadata {
     Write-Utf8CrLf $Path ($lines -join "`n")
 }
 
+function ConvertTo-HelpXmlText {
+    param([AllowNull()][object]$Value)
+    if ($null -eq $Value) { return '' }
+    return [System.Security.SecurityElement]::Escape([string]$Value)
+}
+
+function Get-HelpResourceContent {
+    param([Parameter(Mandatory)][object[]]$Cmdlets, [Parameter(Mandatory)][string]$Path)
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $lines.Add('<?xml version="1.0" encoding="utf-8"?>')
+    $lines.Add('<helpItems schema="maml" xmlns="http://msh">')
+    foreach ($cmdlet in @($Cmdlets | Sort-Object cmdletName)) {
+        $parts = ([string]$cmdlet.cmdletName).Split('-', 2)
+        $help = $cmdlet.help
+        if ($null -eq $help -or [string]::IsNullOrWhiteSpace([string]$help.synopsis) -or [string]::IsNullOrWhiteSpace([string]$help.description)) {
+            throw "P3.2 cmdlet '$($cmdlet.cmdletName)' has incomplete help metadata."
+        }
+        $name = ConvertTo-HelpXmlText $cmdlet.cmdletName
+        $verb = ConvertTo-HelpXmlText $parts[0]
+        $noun = ConvertTo-HelpXmlText $parts[1]
+        $synopsis = ConvertTo-HelpXmlText $help.synopsis
+        $description = ConvertTo-HelpXmlText $help.description
+        $lines.Add('  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">')
+        $lines.Add('    <command:details>')
+        $lines.Add("      <command:name>$name</command:name>")
+        $lines.Add("      <command:verb>$verb</command:verb>")
+        $lines.Add("      <command:noun>$noun</command:noun>")
+        $lines.Add('      <maml:description>')
+        $lines.Add("        <maml:para>$synopsis</maml:para>")
+        $lines.Add('      </maml:description>')
+        $lines.Add('    </command:details>')
+        $lines.Add('    <maml:description>')
+        $lines.Add("      <maml:para>$description</maml:para>")
+        $lines.Add('    </maml:description>')
+        $lines.Add('  </command:command>')
+    }
+    $lines.Add('</helpItems>')
+    return ($lines -join "`n")
+}
+
+function Write-HelpResource {
+    param([Parameter(Mandatory)][object[]]$Cmdlets, [Parameter(Mandatory)][string]$Path)
+    Write-Utf8CrLf $Path (Get-HelpResourceContent $Cmdlets $Path)
+}
+
 function Assert-RuntimeMetadataSourceContract {
     param(
         [Parameter(Mandatory)][object]$Artifact,
@@ -434,6 +482,11 @@ function Assert-ArtifactContract {
         if ([string]::IsNullOrWhiteSpace([string]$cmdlet.className) -or [string]::IsNullOrWhiteSpace([string]$cmdlet.runtimeMetadataType)) { throw "P3.2 cmdlet '$($cmdlet.cmdletName)' has incomplete renderer metadata." }
         if ($null -eq $cmdlet.execution -or [string]::IsNullOrWhiteSpace([string]$cmdlet.execution.strategy)) { throw "P3.2 cmdlet '$($cmdlet.cmdletName)' has no execution strategy." }
         if ([string]$cmdlet.outputPolicy -notin @('item', 'single', 'none')) { throw "P3.2 cmdlet '$($cmdlet.cmdletName)' has an unsupported output policy." }
+        if ([string]$cmdlet.outputPolicy -eq 'none') {
+            if (-not [string]::IsNullOrWhiteSpace([string]$cmdlet.outputType)) { throw "P3.2 cmdlet '$($cmdlet.cmdletName)' has outputType metadata despite outputPolicy 'none'." }
+        } elseif ([string]::IsNullOrWhiteSpace([string]$cmdlet.outputType)) {
+            throw "P3.2 cmdlet '$($cmdlet.cmdletName)' has outputPolicy '$($cmdlet.outputPolicy)' but no outputType metadata."
+        }
         $sets = @($cmdlet.parameterSets | ForEach-Object name)
         if ($sets.Count -eq 0 -or @($sets | Sort-Object -Unique).Count -ne $sets.Count) { throw "P3.2 cmdlet '$($cmdlet.cmdletName)' has no unique parameter sets." }
         foreach ($parameter in @($cmdlet.parameters)) {
@@ -449,6 +502,8 @@ function Assert-ArtifactContract {
             $set = @($cmdlet.parameterSets | Where-Object { [string]$_.operationId -eq [string]$operation.operationId })
             if ($set.Count -ne 1) { throw "P3.2 operation '$($operation.operationId)' is not mapped by exactly one parameter set." }
             if ([string]$set[0].operationBinding.invokeKind -notin @('single', 'paged')) { throw "P3.2 operation '$($operation.operationId)' has unsupported invokeKind." }
+            if ([string]$operation.outputPolicy -eq 'none' -and -not [string]::IsNullOrWhiteSpace([string]$operation.outputType)) { throw "P3.2 operation '$($operation.operationId)' has outputType metadata despite outputPolicy 'none'." }
+            if ([string]$operation.outputPolicy -ne 'none' -and [string]::IsNullOrWhiteSpace([string]$operation.outputType)) { throw "P3.2 operation '$($operation.operationId)' has no outputType metadata." }
             if ([string]$set[0].operationBinding.method -ne [string]$operation.method -or [string]$set[0].operationBinding.pathTemplate -ne [string]$operation.pathTemplate) { throw "P3.2 operation '$($operation.operationId)' parameter-set binding drifted from HTTP metadata." }
             $applicableParameters = @($cmdlet.parameters | Where-Object { @($_.appliesTo) -contains [string]$operation.parameterSet })
             $bodyParameterName = [string](Get-JsonValue $set[0].operationBinding 'bodyParameter')
@@ -545,6 +600,18 @@ if ($ValidateOnly) {
     Write-Utf8CrLf $SourcePath $rendered
 }
 
+$helpResourcePath = Join-Path $ProjectRoot 'module/Cloudflare.PowerShell/Cloudflare.PowerShell-help.xml'
+$renderedHelpResource = Get-HelpResourceContent @($artifact.cmdlets) $helpResourcePath
+if ($ValidateOnly) {
+    if (-not (Test-Path -LiteralPath $helpResourcePath -PathType Leaf)) { throw "P3.2 ValidateOnly help resource is missing: $helpResourcePath" }
+    $existingHelpResource = Get-Content -Raw -LiteralPath $helpResourcePath -Encoding UTF8
+    $expectedHelpHash = [System.BitConverter]::ToString([System.Security.Cryptography.SHA256]::HashData([System.Text.Encoding]::UTF8.GetBytes((Normalize-GeneratedSource $renderedHelpResource)))).Replace('-', '').ToLowerInvariant()
+    $actualHelpHash = [System.BitConverter]::ToString([System.Security.Cryptography.SHA256]::HashData([System.Text.Encoding]::UTF8.GetBytes((Normalize-GeneratedSource $existingHelpResource)))).Replace('-', '').ToLowerInvariant()
+    if ($expectedHelpHash -ne $actualHelpHash -or (Normalize-GeneratedSource $existingHelpResource) -cne (Normalize-GeneratedSource $renderedHelpResource)) {
+        throw "P3.2 generated help resource drifted for '$helpResourcePath'. Expected SHA256 '$expectedHelpHash', actual '$actualHelpHash'."
+    }
+}
+
 if (-not $ValidateOnly) {
     foreach ($model in @($artifact.models)) {
         $modelPath = [string]$model.path
@@ -560,6 +627,7 @@ if (-not $ValidateOnly) {
         if (-not [string]::IsNullOrWhiteSpace($runtimeMetadataPath)) { Write-RuntimeMetadata $cmdlet ([string]$cmdlet.runtimeMetadataType) (Join-Path $ProjectRoot $runtimeMetadataPath) }
     }
     Write-HelpMetadata @($artifact.cmdlets) (Join-Path $GeneratedRoot 'Metadata/P32CmdletHelpMetadata.cs')
+    Write-HelpResource @($artifact.cmdlets) $helpResourcePath
 }
 
 [pscustomobject]@{

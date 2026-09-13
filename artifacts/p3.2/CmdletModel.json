@@ -26,7 +26,7 @@
     },
     {
       "path": "overrides/powershell-p32-projection.json",
-      "sha256": "54b44174202f5bb0f5262c2238a58f6e2984fb71453ab5d1836c7034898a5b88"
+      "sha256": "f7c23998759d47c6fd22a1b76e136d1a4001f18742decd6c8890c5af7516201b"
     }
   ],
   "cmdlets": [
@@ -4224,7 +4224,7 @@
           "scopeRole": "Parent"
         }
       ],
-      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+      "outputType": null,
       "outputPolicy": "none",
       "pagingBehavior": null,
       "supportsShouldProcess": true,
@@ -4310,7 +4310,7 @@
           ],
           "bodyParameterName": null,
           "bodyModel": null,
-          "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+          "outputType": null,
           "constantName": "",
           "outputPolicy": "none",
           "invokeKind": "single",
@@ -5072,5 +5072,5 @@
     "Token",
     "Handler"
   ],
-  "canonicalDigest": "f2e617376a229bb8f55bf21cf794501411025cd9a33ec2a9bfafb0dbe0a2356a"
+  "canonicalDigest": "e868cb0454869251ae1e5ae4a55bceae6f196983b9c3df8e330e4fcddcfa5b84"
 }

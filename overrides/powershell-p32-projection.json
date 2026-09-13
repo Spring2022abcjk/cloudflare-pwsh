@@ -91,7 +91,6 @@
       "className": "RemoveCfDnsRecordCommand",
       "resource": "dns",
       "runtimeMetadataType": "CfDnsRecordRuntimeMetadata",
-      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
       "defaultParameterSetName": "Delete",
       "outputPolicy": "none",
       "execution": { "strategy": "parameter-set", "shouldProcess": true, "shouldProcessTarget": "DnsRecordId", "shouldProcessAction": "Delete DNS record" },

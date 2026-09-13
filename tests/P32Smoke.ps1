@@ -93,6 +93,16 @@ function Get-GeneratedCommand {
     return $command
 }
 
+function Get-HelpEvidence {
+    param([Parameter(Mandatory)][string]$Name)
+    $help = Get-Help $Name -Full -ErrorAction Stop
+    return [pscustomobject]@{
+        Name = $Name
+        Synopsis = [string]$help.Synopsis
+        Description = [string]$help.Description.Text
+    }
+}
+
 function Get-RequestFacts {
     param([Parameter(Mandatory)]$Request, [Parameter(Mandatory)][AllowEmptyString()][string]$Body)
     $authorization = if ($Request.Headers.Authorization) { $Request.Headers.Authorization.ToString() } else { '' }
@@ -211,6 +221,7 @@ Assert-True (@($zoneCommand.ParameterSets.Name) -contains 'List' -and @($zoneCom
 Assert-True (@($dnsCommand.ParameterSets.Name) -contains 'List' -and @($dnsCommand.ParameterSets.Name) -contains 'Get') 'Get-CfDnsRecord parameter sets are incomplete.'
 Assert-True ($zoneCommand.OutputType.Type.FullName -contains 'Cloudflare.PowerShell.CfZone') 'Get-CfZone output metadata is not typed.'
 Assert-True ($dnsCommand.OutputType.Type.FullName -contains 'Cloudflare.PowerShell.CfDnsRecord') 'Get-CfDnsRecord output metadata is not typed.'
+Assert-True (@($removeCommand.OutputType).Count -eq 0) 'Remove-CfDnsRecord incorrectly reports an output type.'
 $zoneAttribute = @($zoneCommand.Parameters['ZoneId'].Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] })[0]
 Assert-True $zoneAttribute.ValueFromPipelineByPropertyName 'Get-CfZone ZoneId pipeline binding is missing.'
 $newMetadata = [System.Management.Automation.CommandMetadata]::new($newCommand)
@@ -284,6 +295,47 @@ foreach ($model in $projection.cmdlets) {
 Write-Output 'PASS generated cmdlet metadata'
 
 $baseArgs = @{ BaseUrl = 'https://mock.test/client/v4/'; Token = 'token'; Handler = [P32MockHandler]::new() }
+$generatedSource = Get-Content -Raw -LiteralPath (Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Generated/Cmdlets/P32RepresentativeCmdlets.cs')
+$zoneModel = @($projection.cmdlets | Where-Object cmdletName -eq 'Get-CfZone')[0]
+$dnsModel = @($projection.cmdlets | Where-Object cmdletName -eq 'Get-CfDnsRecord')[0]
+foreach ($expectedDefault in @(
+        @{ Name = 'Match'; Value = '"all"'; Type = 'string\?' },
+        @{ Name = 'Page'; Value = '1m'; Type = 'decimal' },
+        @{ Name = 'PerPage'; Value = '20m'; Type = 'decimal' })) {
+    $pattern = "public $($expectedDefault.Type) $($expectedDefault.Name) \{ get; set; \} = $($expectedDefault.Value);"
+    Assert-True ($generatedSource -match $pattern) "Get-CfZone generated default initialization drifted for '$($expectedDefault.Name)'."
+    $modelParameter = @($zoneModel.parameters | Where-Object name -eq $expectedDefault.Name)[0]
+    Assert-True ([string]$modelParameter.defaultValue -eq ($expectedDefault.Value.Trim('"','m'))) "Get-CfZone canonical default drifted for '$($expectedDefault.Name)'."
+}
+foreach ($parameterName in @('Direction','Match','Order','Page','PerPage','TagMatch','IncludeShadowMetadata','Proxied')) {
+    $modelParameter = @($dnsModel.parameters | Where-Object name -eq $parameterName)[0]
+    Assert-True ($null -ne $modelParameter -and $null -ne $modelParameter.defaultValue) "Get-CfDnsRecord canonical default is missing for '$parameterName'."
+    $defaultLiteral = if ([string]$modelParameter.type -in @('bool','bool?')) { 'false' } elseif ([string]$modelParameter.type -eq 'decimal') { "$($modelParameter.defaultValue)m" } else { '"' + [string]$modelParameter.defaultValue + '"' }
+    $pattern = "public $([regex]::Escape([string]$modelParameter.type)) $parameterName \{ get; set; \} = $defaultLiteral;"
+    Assert-True ($generatedSource -match $pattern) "Get-CfDnsRecord generated default initialization drifted for '$parameterName'."
+}
+[P32MockHandler]::Reset()
+$zoneDefaultArgs = @{} + $baseArgs
+$zoneDefaultArgs['Match'] = 'all'
+$zoneDefaultArgs['Page'] = 1
+$zoneDefaultArgs['PerPage'] = 20
+$null = @(& $zoneCommand @zoneDefaultArgs)
+$zoneDefaultQuery = [string][P32MockHandler]::Requests[0].RequestUri.Query
+foreach ($expectedQuery in @('match=all','page=1','per_page=20')) { Assert-True ($zoneDefaultQuery -match [regex]::Escape($expectedQuery)) "Get-CfZone default query is missing '$expectedQuery'." }
+[P32MockHandler]::Reset()
+$dnsDefaultArgs = @{} + $baseArgs
+$dnsDefaultArgs['ZoneId'] = 'zone'
+$dnsDefaultArgs['Direction'] = 'asc'
+$dnsDefaultArgs['Match'] = 'all'
+$dnsDefaultArgs['Order'] = 'type'
+$dnsDefaultArgs['Page'] = 1
+$dnsDefaultArgs['PerPage'] = 100
+$dnsDefaultArgs['TagMatch'] = 'all'
+$null = @(& $dnsCommand @dnsDefaultArgs)
+$dnsDefaultQuery = [string][P32MockHandler]::Requests[0].RequestUri.Query
+foreach ($expectedQuery in @('direction=asc','match=all','order=type','page=1','per_page=100','tag_match=all')) { Assert-True ($dnsDefaultQuery -match [regex]::Escape($expectedQuery)) "Get-CfDnsRecord default query is missing '$expectedQuery'." }
+Assert-True ($dnsDefaultQuery -notmatch 'include_shadow_metadata=' -and $dnsDefaultQuery -notmatch 'proxied=') 'Get-CfDnsRecord omitted boolean defaults were not preserved as omitted wire values.'
+Write-Output 'PASS generated source and canonical-default query binding behavior'
 
 [P32MockHandler]::Reset()
 $zones = @(& $zoneCommand @baseArgs -AccountId account -AccountName acct -Direction asc -Match all -Name example.com -Order name -PerPage 1 -Status active -Type full)
@@ -333,10 +385,11 @@ Assert-True ([P32MockHandler]::Requests.Count -eq 0) 'Generated New-CfDnsRecord 
 Write-Output 'PASS generated ShouldProcess WhatIf'
 
 [P32MockHandler]::Reset()
-& $removeCommand -ZoneId zone -DnsRecordId record @baseArgs -Confirm:$false
+$removeOutput = @(& $removeCommand -ZoneId zone -DnsRecordId record @baseArgs -Confirm:$false)
 Assert-True ([P32MockHandler]::Requests.Count -eq 1) 'Generated Remove-CfDnsRecord did not send exactly one request.'
 Assert-True ([P32MockHandler]::Requests[0].Method -eq [System.Net.Http.HttpMethod]::Delete) 'Generated Remove-CfDnsRecord did not send DELETE.'
 Assert-True ([P32MockHandler]::Bodies[0] -eq '') 'Generated Remove-CfDnsRecord sent a DELETE body.'
+Assert-True ($removeOutput.Count -eq 0) 'Generated Remove-CfDnsRecord emitted an object despite outputPolicy none.'
 Write-Output 'PASS generated DELETE and ShouldProcess'
 
 [P32MockHandler]::Reset()
@@ -677,6 +730,15 @@ Assert-ErrorParity {
 } {
     & $setCommand @setGeneratedErrorArgs
 } 'Set-CfDnsRecord Replace'
+$setEditHandwrittenErrorArgs = @{} + $setEditArgs
+$setEditHandwrittenErrorArgs['ErrorAction'] = 'Stop'
+$setEditGeneratedErrorArgs = @{} + $setGeneratedEditArgs
+$setEditGeneratedErrorArgs['ErrorAction'] = 'Stop'
+Assert-ErrorParity {
+    & (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-SetCfDnsRecordHandwritten @bound } $setEditHandwrittenErrorArgs
+} {
+    & $setCommand @setEditGeneratedErrorArgs
+} 'Set-CfDnsRecord Edit'
 
 [P32MockHandler]::Reset()
 [P32MockHandler]::FailMode = 'retry'
@@ -694,3 +756,39 @@ $bindingFailed = $false
 try { & $dnsCommand -ZoneId zone -DnsRecordId record -Name invalid @baseArgs -ErrorAction Stop | Out-Null } catch { $bindingFailed = $true }
 Assert-True ($bindingFailed -and [P32MockHandler]::Requests.Count -eq 0) 'Generated DNS get accepted a list-only parameter or sent a request.'
 Write-Output 'PASS generated parameter applicability no-request boundary; requiredness is asserted from command metadata'
+
+$helpNames = @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord')
+$helpModels = @{}
+foreach ($model in @($projection.cmdlets)) { $helpModels[[string]$model.cmdletName] = $model.help }
+$moduleHelpPath = Join-Path $modulePath 'Cloudflare.PowerShell-help.xml'
+Assert-True (Test-Path -LiteralPath $moduleHelpPath -PathType Leaf) 'Generated module help resource is missing from the current module directory.'
+foreach ($evidence in @($helpNames | ForEach-Object { Get-HelpEvidence $_ })) {
+    $expectedHelp = $helpModels[$evidence.Name]
+    Assert-True (-not [string]::IsNullOrWhiteSpace($evidence.Synopsis) -and -not [string]::IsNullOrWhiteSpace($evidence.Description)) "Get-Help $($evidence.Name) returned empty generated help."
+    Assert-True ($evidence.Synopsis -eq [string]$expectedHelp.synopsis -and $evidence.Description -eq [string]$expectedHelp.description) "Get-Help $($evidence.Name) drifted from canonical projection help."
+}
+
+$isolatedHelpRoot = Join-Path ([IO.Path]::GetTempPath()) ('cloudflare-p32-help-' + [guid]::NewGuid().ToString('N'))
+try {
+    $null = New-Item -ItemType Directory -Path $isolatedHelpRoot -Force
+    Copy-Item -LiteralPath (Join-Path $modulePath 'Cloudflare.PowerShell.psd1') -Destination $isolatedHelpRoot -Force
+    Copy-Item -LiteralPath (Join-Path $modulePath 'Cloudflare.PowerShell.psm1') -Destination $isolatedHelpRoot -Force
+    Copy-Item -LiteralPath (Join-Path $modulePath 'Cloudflare.PowerShell.dll') -Destination $isolatedHelpRoot -Force
+    Copy-Item -LiteralPath $moduleHelpPath -Destination (Join-Path $isolatedHelpRoot 'Cloudflare.PowerShell-help.xml') -Force
+    Remove-Module -Name Cloudflare.PowerShell -Force -ErrorAction SilentlyContinue
+    Import-Module (Join-Path $isolatedHelpRoot 'Cloudflare.PowerShell.psd1') -Force
+    $loadedModule = @(Get-Module -Name Cloudflare.PowerShell | Select-Object -First 1)[0]
+    Assert-True ($null -ne $loadedModule -and [IO.Path]::GetFullPath($loadedModule.ModuleBase) -eq [IO.Path]::GetFullPath($isolatedHelpRoot)) 'Isolated module was not loaded from the temporary module directory.'
+    $isolatedHelpPath = Join-Path $isolatedHelpRoot 'Cloudflare.PowerShell-help.xml'
+    Assert-True (Test-Path -LiteralPath $isolatedHelpPath -PathType Leaf) 'Generated module help resource is missing from the isolated module directory.'
+    foreach ($evidence in @($helpNames | ForEach-Object { Get-HelpEvidence $_ })) {
+        $expectedHelp = $helpModels[$evidence.Name]
+        Assert-True (-not [string]::IsNullOrWhiteSpace($evidence.Synopsis) -and -not [string]::IsNullOrWhiteSpace($evidence.Description)) "Isolated Get-Help $($evidence.Name) returned empty generated help."
+        Assert-True ($evidence.Synopsis -eq [string]$expectedHelp.synopsis -and $evidence.Description -eq [string]$expectedHelp.description) "Isolated Get-Help $($evidence.Name) drifted from canonical projection help."
+    }
+}
+finally {
+    Remove-Module -Name Cloudflare.PowerShell -Force -ErrorAction SilentlyContinue
+    if (Test-Path -LiteralPath $isolatedHelpRoot) { Remove-Item -LiteralPath $isolatedHelpRoot -Recurse -Force }
+}
+Write-Output 'PASS actual Get-Help host discovery in current and isolated module directories'

@@ -142,6 +142,7 @@ try {
         'src/Cloudflare.PowerShell/Generated/Metadata/CfZoneOperationMetadata.cs',
         'src/Cloudflare.PowerShell/Generated/Metadata/CfZoneRuntimeMetadata.cs',
         'src/Cloudflare.PowerShell/Generated/Metadata/P32CmdletHelpMetadata.cs',
+        'module/Cloudflare.PowerShell/Cloudflare.PowerShell-help.xml',
         'src/Cloudflare.PowerShell/Generated/Metadata/Projection_Get_CfDnsRecord.cs',
         'src/Cloudflare.PowerShell/Generated/Metadata/Projection_New_CfDnsRecord.cs',
         'src/Cloudflare.PowerShell/Generated/Metadata/Projection_Remove_CfDnsRecord.cs',

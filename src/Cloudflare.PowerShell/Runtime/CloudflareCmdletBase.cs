@@ -41,36 +41,51 @@ public abstract class CloudflareCmdletBase : PSCmdlet
         return new BoundParameters(values);
     }
 
-    protected BoundParameters BindParametersWithBody(JsonNode body, params (string PublicName, string ApiName)[] mappings)
+    protected BoundParameters BindParametersWithBody(object? body, params (string PublicName, string ApiName)[] mappings)
     {
         var values = BindParameters(mappings).Values.ToDictionary(x => x.Key, x => x.Value, StringComparer.Ordinal);
         values["body"] = body;
         return new BoundParameters(values);
     }
 
-    protected T? InvokeSingle<T>(GeneratedOperationMetadata metadata, BoundParameters parameters)
+    protected T? InvokeSingle<T>(GeneratedOperationMetadata metadata, BoundParameters parameters, object? errorTarget = null)
     {
-        using var client = CreateClient();
-        var operation = GeneratedOperationMetadataAdapter.ToRuntime(metadata);
-        return client.Dispatcher.ExecuteAsync<T>(operation, parameters, CancellationToken).GetAwaiter().GetResult();
-    }
-
-    protected void WritePaged<T>(GeneratedOperationMetadata metadata, BoundParameters parameters)
-    {
-        using var client = CreateClient();
-        var operation = GeneratedOperationMetadataAdapter.ToRuntime(metadata);
-        var pagination = GeneratedOperationMetadataAdapter.ToRuntimePagination(metadata)
-            ?? throw new InvalidOperationException($"Generated operation '{metadata.OperationId}' is missing pagination metadata.");
-        var items = client.Dispatcher.ExecutePagedAsync<T>(operation, parameters, pagination, CancellationToken);
-        var enumerator = items.GetAsyncEnumerator(CancellationToken);
         try
         {
-            while (enumerator.MoveNextAsync().AsTask().GetAwaiter().GetResult())
-                WriteObject(enumerator.Current);
+            using var client = CreateClient();
+            var operation = GeneratedOperationMetadataAdapter.ToRuntime(metadata);
+            return client.Dispatcher.ExecuteAsync<T>(operation, parameters, CancellationToken).GetAwaiter().GetResult();
         }
-        finally
+        catch (CloudflareApiException exception)
         {
-            enumerator.DisposeAsync().AsTask().GetAwaiter().GetResult();
+            ThrowCloudflareError(exception, errorTarget);
+            return default;
+        }
+    }
+
+    protected void WritePaged<T>(GeneratedOperationMetadata metadata, BoundParameters parameters, object? errorTarget = null)
+    {
+        try
+        {
+            using var client = CreateClient();
+            var operation = GeneratedOperationMetadataAdapter.ToRuntime(metadata);
+            var pagination = GeneratedOperationMetadataAdapter.ToRuntimePagination(metadata)
+                ?? throw new InvalidOperationException($"Generated operation '{metadata.OperationId}' is missing pagination metadata.");
+            var items = client.Dispatcher.ExecutePagedAsync<T>(operation, parameters, pagination, CancellationToken);
+            var enumerator = items.GetAsyncEnumerator(CancellationToken);
+            try
+            {
+                while (enumerator.MoveNextAsync().AsTask().GetAwaiter().GetResult())
+                    WriteObject(enumerator.Current);
+            }
+            finally
+            {
+                enumerator.DisposeAsync().AsTask().GetAwaiter().GetResult();
+            }
+        }
+        catch (CloudflareApiException exception)
+        {
+            ThrowCloudflareError(exception, errorTarget);
         }
     }
 

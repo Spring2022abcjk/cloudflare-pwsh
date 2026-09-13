@@ -17,6 +17,11 @@ function ConvertTo-CSharpString {
     return ($Value.ToString() | ConvertTo-Json -Compress)
 }
 
+function Normalize-LineEndings {
+    param([string]$Content)
+    return $Content.Replace("`r`n", "`n").Replace("`r", "`n")
+}
+
 $cmdletModels = @(
     [ordered]@{
         cmdletName = 'Get-CfZone'
@@ -61,18 +66,46 @@ $cmdletModels = @(
         supportsShouldProcess = $true
         confirmImpact = 'High'
         help = [ordered]@{ synopsis = 'Removes a Cloudflare DNS record.'; description = 'Removes one DNS record by zone and record identifier.'; source = 'DeterministicDefault' }
+    },
+    [ordered]@{
+        cmdletName = 'Set-CfDnsRecord'
+        className = 'SetCfDnsRecordCommand'
+        outputType = 'Cloudflare.PowerShell.CfDnsRecord'
+        parameterSets = @('Replace', 'Edit')
+        parameterNames = @('ZoneId', 'DnsRecordId', 'Replace', 'Edit')
+        operationIds = @('dns-records-for-a-zone-update-dns-record', 'dns-records-for-a-zone-patch-dns-record')
+        supportsShouldProcess = $true
+        confirmImpact = 'High'
+        help = [ordered]@{ synopsis = 'Updates a Cloudflare DNS record.'; description = 'Replaces or edits one DNS record through the shared runtime.'; source = 'DeterministicDefault' }
     }
 )
 
-$requiredSourceClasses = @('GetCfZoneCommand', 'GetCfDnsRecordCommand', 'NewCfDnsRecordCommand', 'RemoveCfDnsRecordCommand')
+$requiredSourceClasses = @('GetCfZoneCommand', 'GetCfDnsRecordCommand', 'NewCfDnsRecordCommand', 'RemoveCfDnsRecordCommand', 'SetCfDnsRecordCommand')
+$cmdletTemplatePath = Join-Path $ProjectRoot 'tools/templates/P32RepresentativeCmdlets.cs.tmpl'
 $cmdletSourcePath = Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Generated/Cmdlets/P32RepresentativeCmdlets.cs'
+$cmdletTemplate = Get-Content -Raw -LiteralPath $cmdletTemplatePath -Encoding UTF8
+Write-Utf8CrLf $cmdletSourcePath $cmdletTemplate
 $cmdletSource = Get-Content -Raw -LiteralPath $cmdletSourcePath -Encoding UTF8
 $baseSource = Get-Content -Raw -LiteralPath (Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Runtime/CloudflareCmdletBase.cs') -Encoding UTF8
 foreach ($className in $requiredSourceClasses) {
     if ($cmdletSource -notmatch "public sealed class $className\s*:") { throw "Generated P3.2 source is missing '$className'." }
 }
+if ((Normalize-LineEndings $cmdletSource) -ne (Normalize-LineEndings $cmdletTemplate)) { throw 'Generated P3.2 cmdlet source differs from its checked-in template.' }
 if (($cmdletSource + $baseSource) -notmatch 'GeneratedOperationMetadataAdapter') { throw 'Generated P3.2 source is not connected to the metadata adapter.' }
-if ($cmdletSource -match 'new\s+HttpRequestMessage|QuerySerializer|ExecutePagedAsync.*while') { throw 'Generated P3.2 source contains forbidden transport or endpoint paging logic.' }
+foreach ($forbiddenPattern in @(
+        'new\s+HttpRequestMessage',
+        '\bHttpClient\b',
+        '\bJsonSerializer\b',
+        '\bQuerySerializer\b',
+        '\bTask\.Delay\b',
+        '\bGetAsyncEnumerator\b',
+        '\bMoveNextAsync\b',
+        '\bCloudflareApiException\b',
+        '\bThrowCloudflareError\b')) {
+    if ($cmdletSource -match $forbiddenPattern) { throw "Generated P3.2 source contains forbidden runtime logic: $forbiddenPattern" }
+}
+if ($cmdletSource -notmatch 'Cf(?:Zone|DnsRecord)RuntimeMetadata\.Get') { throw 'Generated P3.2 source is missing generated runtime metadata dispatch.' }
+Write-Output 'PASS P3.2 generator/template and generated-source boundary checks'
 
 $artifact = [ordered]@{
     version = 1
@@ -201,7 +234,8 @@ public static class P32CmdletHelpMetadata
             ["Get-CfZone"] = new("Gets a Cloudflare zone.", "Gets zones visible to the authenticated account and writes one typed zone per pipeline object.", "Override"),
             ["Get-CfDnsRecord"] = new("Gets Cloudflare DNS records.", "Gets one or more typed DNS records through the shared runtime.", "DeterministicDefault"),
             ["New-CfDnsRecord"] = new("Creates a Cloudflare DNS record.", "Creates a typed DNS record using the generated request model.", "DeterministicDefault"),
-            ["Remove-CfDnsRecord"] = new("Removes a Cloudflare DNS record.", "Removes one DNS record by zone and record identifier.", "DeterministicDefault")
+            ["Remove-CfDnsRecord"] = new("Removes a Cloudflare DNS record.", "Removes one DNS record by zone and record identifier.", "DeterministicDefault"),
+            ["Set-CfDnsRecord"] = new("Updates a Cloudflare DNS record.", "Replaces or edits one DNS record through the shared runtime.", "DeterministicDefault")
         };
 }
 '@

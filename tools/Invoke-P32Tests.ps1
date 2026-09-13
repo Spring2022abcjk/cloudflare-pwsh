@@ -18,6 +18,9 @@ try {
     & pwsh -NoLogo -NoProfile -File .\tools\Invoke-P24Tests.ps1 | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'P1 through P2.4 regression suite failed during P3.2 validation.' }
 
+    git diff --check
+    if ($LASTEXITCODE -ne 0) { throw 'P3.2 git diff --check failed.' }
+
     Write-Output 'PASS P3.2 generated public surface and P1-P2.4 regression suite'
 }
 finally { Pop-Location }

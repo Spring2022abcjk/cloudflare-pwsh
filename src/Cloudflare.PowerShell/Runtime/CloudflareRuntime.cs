@@ -142,6 +142,34 @@ public sealed class CloudflareClient : IDisposable
             operation, new BoundParameters(values), pagination, cancellationToken));
     }
 
+    public IAsyncEnumerable<CfZone> ListZonesAsync(
+        IReadOnlyDictionary<string, object?>? query = null,
+        CancellationToken cancellationToken = default)
+    {
+        var values = new Dictionary<string, object?>(StringComparer.Ordinal);
+        if (query is not null)
+            foreach (var item in query) values[item.Key] = item.Value;
+
+        var metadata = CfZoneRuntimeMetadata.Get(CfZoneOperationMetadata.Operation_zones_List_zones_get);
+        var operation = GeneratedOperationMetadataAdapter.ToRuntime(metadata);
+        var pagination = GeneratedOperationMetadataAdapter.ToRuntimePagination(metadata)
+            ?? throw new InvalidOperationException("Generated zone list operation is missing pagination metadata.");
+        return new CloudflareTaskBackedAsyncEnumerable<CfZone>(_dispatcher.ExecutePagedAsync<CfZone>(
+            operation, new BoundParameters(values), pagination, cancellationToken));
+    }
+
+    public async Task<CfZone> GetZoneAsync(
+        string zoneId,
+        CancellationToken cancellationToken = default)
+    {
+        var metadata = CfZoneRuntimeMetadata.Get(CfZoneOperationMetadata.Operation_zones_Get_zones_0_get);
+        var operation = GeneratedOperationMetadataAdapter.ToRuntime(metadata);
+        return (await _dispatcher.ExecuteAsync<CfZone>(
+            operation,
+            new BoundParameters(new Dictionary<string, object?> { ["zone_id"] = zoneId }),
+            cancellationToken).ConfigureAwait(false))!;
+    }
+
     public async Task<CfDnsRecord> GetDnsRecordAsync(string zoneId, string recordId, IReadOnlyDictionary<string, object?>? query = null, CancellationToken cancellationToken = default)
     {
         var values = new Dictionary<string, object?>(StringComparer.Ordinal) { ["zone_id"] = zoneId, ["dns_record_id"] = recordId };

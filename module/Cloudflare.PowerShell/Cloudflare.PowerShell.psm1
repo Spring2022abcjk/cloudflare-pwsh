@@ -84,8 +84,8 @@ function Get-CfDnsRecord {
         } finally { $enumerator.DisposeAsync().GetAwaiter().GetResult() }
     } catch [Cloudflare.PowerShell.CloudflareApiException] {
         $exception = $_.Exception
-        $record = New-CfApiErrorRecord $exception $ZoneId
-        $PSCmdlet.ThrowTerminatingError($record)
+        $errorRecord = New-CfApiErrorRecord $exception $ZoneId
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
     } finally { $client.Dispose() }
 }
 
@@ -103,12 +103,13 @@ function New-CfDnsRecord {
     $client = New-CfClient $BaseUrl $Token $Handler
     try {
         $body = $Record.ToJson()
-        $query = @{ include_shadow_metadata = $IncludeShadowMetadata }
+        $query = @{}
+        if ($PSBoundParameters.ContainsKey('IncludeShadowMetadata')) { $query['include_shadow_metadata'] = $IncludeShadowMetadata }
         $client.CreateDnsRecordAsync($ZoneId, $body, (ConvertTo-CfQueryDictionary $query), [System.Threading.CancellationToken]::None).GetAwaiter().GetResult()
     } catch [Cloudflare.PowerShell.CloudflareApiException] {
         $exception = $_.Exception
-        $record = New-CfApiErrorRecord $exception $ZoneId
-        $PSCmdlet.ThrowTerminatingError($record)
+        $errorRecord = New-CfApiErrorRecord $exception $ZoneId
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
     } finally { $client.Dispose() }
 }
 
@@ -126,8 +127,8 @@ function Remove-CfDnsRecord {
     try { [void]$client.DeleteDnsRecordAsync($ZoneId, $RecordId, [System.Threading.CancellationToken]::None).GetAwaiter().GetResult() }
     catch [Cloudflare.PowerShell.CloudflareApiException] {
         $exception = $_.Exception
-        $record = New-CfApiErrorRecord $exception $RecordId
-        $PSCmdlet.ThrowTerminatingError($record)
+        $errorRecord = New-CfApiErrorRecord $exception $RecordId
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
     } finally { $client.Dispose() }
 }
 
@@ -152,12 +153,61 @@ function Set-CfDnsRecord {
         else { $client.EditDnsRecordAsync($ZoneId, $RecordId, $body, [System.Threading.CancellationToken]::None).GetAwaiter().GetResult() }
     } catch [Cloudflare.PowerShell.CloudflareApiException] {
         $exception = $_.Exception
-        $record = New-CfApiErrorRecord $exception $RecordId
-        $PSCmdlet.ThrowTerminatingError($record)
+        $errorRecord = New-CfApiErrorRecord $exception $RecordId
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
+    } finally { $client.Dispose() }
+}
+
+function Invoke-CfZoneHandwritten {
+    [CmdletBinding(DefaultParameterSetName = 'List')]
+    param(
+        [Parameter(Mandatory, ParameterSetName = 'Get', ValueFromPipelineByPropertyName)][string]$ZoneId,
+        [Parameter(ParameterSetName = 'List')][string]$AccountId,
+        [Parameter(ParameterSetName = 'List')][string]$AccountName,
+        [Parameter(ParameterSetName = 'List')][string]$Direction,
+        [Parameter(ParameterSetName = 'List')][string]$Match,
+        [Parameter(ParameterSetName = 'List')][string]$Name,
+        [Parameter(ParameterSetName = 'List')][string]$Order,
+        [Parameter(ParameterSetName = 'List')][decimal]$Page,
+        [Parameter(ParameterSetName = 'List')][decimal]$PerPage,
+        [Parameter(ParameterSetName = 'List')][string]$Status,
+        [Parameter(ParameterSetName = 'List')][string[]]$Type,
+        [Parameter()][string]$BaseUrl = 'https://api.cloudflare.com/client/v4/',
+        [Parameter()][string]$Token = $env:CF_API_TOKEN,
+        [Parameter()][System.Net.Http.HttpMessageHandler]$Handler
+    )
+    $client = New-CfClient $BaseUrl $Token $Handler
+    try {
+        if ($PSCmdlet.ParameterSetName -eq 'Get') {
+            $client.GetZoneAsync($ZoneId, [System.Threading.CancellationToken]::None).GetAwaiter().GetResult()
+            return
+        }
+        $query = @{}
+        foreach ($publicName in @('AccountId','AccountName','Direction','Match','Name','Order','Page','PerPage','Status','Type')) {
+            if ($PSBoundParameters.ContainsKey($publicName)) {
+                $apiName = switch ($publicName) {
+                    'AccountId' { 'account.id' }
+                    'AccountName' { 'account.name' }
+                    'PerPage' { 'per_page' }
+                    default { $publicName.ToLowerInvariant() }
+                }
+                $query[$apiName] = $PSBoundParameters[$publicName]
+            }
+        }
+        $async = $client.ListZonesAsync((ConvertTo-CfQueryDictionary $query), [System.Threading.CancellationToken]::None)
+        $enumerator = $async.GetAsyncEnumerator([System.Threading.CancellationToken]::None)
+        try {
+            while ($enumerator.MoveNextAsync().GetAwaiter().GetResult()) { $enumerator.Current }
+        } finally { $enumerator.DisposeAsync().GetAwaiter().GetResult() }
+    } catch [Cloudflare.PowerShell.CloudflareApiException] {
+        $exception = $_.Exception
+        $target = if ($PSCmdlet.ParameterSetName -eq 'Get') { $ZoneId } else { $null }
+        $errorRecord = New-CfApiErrorRecord $exception $target
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
     } finally { $client.Dispose() }
 }
 
 # P3.2 generated commands are exported alongside the handwritten baseline while
 # parity is being established. Tests select the generated command explicitly by
 # command type so function precedence cannot hide generated dispatch.
-Export-ModuleMember -Function @('Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord') -Cmdlet @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord')
+Export-ModuleMember -Function @('Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord') -Cmdlet @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord')

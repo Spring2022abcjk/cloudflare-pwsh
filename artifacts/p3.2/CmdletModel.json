@@ -139,6 +139,32 @@
         "description": "Removes one DNS record by zone and record identifier.",
         "source": "DeterministicDefault"
       }
+    },
+    {
+      "cmdletName": "Set-CfDnsRecord",
+      "className": "SetCfDnsRecordCommand",
+      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+      "parameterSets": [
+        "Replace",
+        "Edit"
+      ],
+      "parameterNames": [
+        "ZoneId",
+        "DnsRecordId",
+        "Replace",
+        "Edit"
+      ],
+      "operationIds": [
+        "dns-records-for-a-zone-update-dns-record",
+        "dns-records-for-a-zone-patch-dns-record"
+      ],
+      "supportsShouldProcess": true,
+      "confirmImpact": "High",
+      "help": {
+        "synopsis": "Updates a Cloudflare DNS record.",
+        "description": "Replaces or edits one DNS record through the shared runtime.",
+        "source": "DeterministicDefault"
+      }
     }
   ],
   "commonInfrastructureParameters": [

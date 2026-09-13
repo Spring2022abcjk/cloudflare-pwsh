@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
     [string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot),
-    [switch]$SkipBuild
+    [switch]$SkipBuild,
+    [switch]$WriteReport
 )
 
 Set-StrictMode -Version Latest
@@ -40,24 +41,25 @@ $probe = @'
 param([string]$AssemblyPath, [string]$ProjectRoot)
 $ErrorActionPreference = 'Stop'
 Import-Module -Name $AssemblyPath -Force
-$generatedCommand = Get-Command Get-CfZone -CommandType Cmdlet -ErrorAction Stop
+$generatedCommand = Get-Command Get-CfZone -ErrorAction Stop
 $zoneParameter = $generatedCommand.Parameters['ZoneId']
 $zoneParameterAttribute = @($zoneParameter.Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] })[0]
 $publicModule = Join-Path $ProjectRoot 'module/Cloudflare.PowerShell/Cloudflare.PowerShell.psd1'
 Import-Module -Name $publicModule -Force
-$handwrittenCommand = Get-Command Get-CfDnsRecord -CommandType Function -ErrorAction Stop
+$publicModuleInfo = Get-Module Cloudflare.PowerShell -ErrorAction Stop
+$handwrittenCommand = & $publicModuleInfo { Get-Command Invoke-CfDnsRecordHandwritten -CommandType Function -ErrorAction Stop }
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
-1..100 | ForEach-Object { Get-Command Get-CfZone -CommandType Cmdlet | Out-Null }
+1..100 | ForEach-Object { Get-Command Get-CfZone | Out-Null }
 $sw.Stop()
 $generatedMs = $sw.Elapsed.TotalMilliseconds
 $sw.Restart()
-1..100 | ForEach-Object { Get-Command Get-CfDnsRecord -CommandType Function | Out-Null }
+1..100 | ForEach-Object { & $publicModuleInfo { Get-Command Invoke-CfDnsRecordHandwritten -CommandType Function | Out-Null } }
 $sw.Stop()
 $handwrittenMs = $sw.Elapsed.TotalMilliseconds
 $sourceLines = @(Get-Content -LiteralPath (Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Generated/Experiments/P23_GetCfZoneCommand.cs') | Where-Object { $_.Trim().Length -gt 0 }).Count
 $moduleLines = @(Get-Content -LiteralPath (Join-Path $ProjectRoot 'module/Cloudflare.PowerShell/Cloudflare.PowerShell.psm1'))
-$start = @($moduleLines | Select-String -Pattern '^function Get-CfDnsRecord')
-$end = @($moduleLines | Select-String -Pattern '^function New-CfDnsRecord')
+$start = @($moduleLines | Select-String -Pattern '^function Invoke-CfDnsRecordHandwritten')
+$end = @($moduleLines | Select-String -Pattern '^function Invoke-NewCfDnsRecordHandwritten')
 $handwrittenLines = if ($start.Count -eq 1 -and $end.Count -eq 1) { @($moduleLines[($start[0].LineNumber - 1)..($end[0].LineNumber - 2)] | Where-Object { $_.Trim().Length -gt 0 }).Count } else { 0 }
 [ordered]@{
     generated = [ordered]@{
@@ -76,7 +78,7 @@ $handwrittenLines = if ($start.Count -eq 1 -and $end.Count -eq 1) { @($moduleLin
         parameterSets = @($handwrittenCommand.ParameterSets.Name)
         outputTypes = @($handwrittenCommand.OutputType.Type | ForEach-Object FullName)
         zoneIdValueFromPipelineByPropertyName = $false
-        helpAvailable = -not [string]::IsNullOrWhiteSpace((Get-Help Get-CfDnsRecord -ErrorAction SilentlyContinue).Synopsis)
+        helpAvailable = -not [string]::IsNullOrWhiteSpace((& $publicModuleInfo { Get-Help Invoke-CfDnsRecordHandwritten -ErrorAction SilentlyContinue }).Synopsis)
         loading = $true
         metadataProbeMilliseconds = [math]::Round($handwrittenMs, 3)
         nonBlankSourceLines = $handwrittenLines
@@ -95,11 +97,13 @@ try {
     if (-not $comparison.generated.helpAvailable) { throw 'Generated cmdlet help metadata did not load.' }
     if ($comparison.generated.runtimeDispatch) { throw 'Generated experiment must remain dispatch-deferred.' }
     if (-not $comparison.handwritten.runtimeDispatch) { throw 'Handwritten baseline classification is wrong.' }
-    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $reportPath) | Out-Null
-    $reportJson = ($comparison | ConvertTo-Json -Depth 30).Replace("`r`n", "`n").Replace("`r", "`n").Replace("`n", "`r`n")
-    [IO.File]::WriteAllText($reportPath, $reportJson, [Text.UTF8Encoding]::new($false))
     Write-Output 'PASS P2.3 projection metadata and generated cmdlet loading'
-    Write-Output "P2.3 comparison report: $reportPath"
+    if ($WriteReport) {
+        New-Item -ItemType Directory -Force -Path (Split-Path -Parent $reportPath) | Out-Null
+        $reportJson = ($comparison | ConvertTo-Json -Depth 30).Replace("`r`n", "`n").Replace("`r", "`n").Replace("`n", "`r`n")
+        [IO.File]::WriteAllText($reportPath, $reportJson, [Text.UTF8Encoding]::new($false))
+        Write-Output "P2.3 comparison report: $reportPath"
+    }
 }
 finally {
     if (Test-Path -LiteralPath $probePath) { Remove-Item -LiteralPath $probePath -Force }

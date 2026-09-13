@@ -9,10 +9,10 @@ public static class P32CmdletHelpMetadata
     public static IReadOnlyDictionary<string, GeneratedHelpModel> Commands { get; } =
         new Dictionary<string, GeneratedHelpModel>(StringComparer.Ordinal)
         {
-            ["Get-CfZone"] = new("Gets a Cloudflare zone.", "Gets zones visible to the authenticated account and writes one typed zone per pipeline object.", "Override"),
-            ["Get-CfDnsRecord"] = new("Gets Cloudflare DNS records.", "Gets one or more typed DNS records through the shared runtime.", "DeterministicDefault"),
-            ["New-CfDnsRecord"] = new("Creates a Cloudflare DNS record.", "Creates a typed DNS record using the generated request model.", "DeterministicDefault"),
-            ["Remove-CfDnsRecord"] = new("Removes a Cloudflare DNS record.", "Removes one DNS record by zone and record identifier.", "DeterministicDefault"),
-            ["Set-CfDnsRecord"] = new("Updates a Cloudflare DNS record.", "Replaces or edits one DNS record through the shared runtime.", "DeterministicDefault")
+            ["Get-CfZone"] = new("Gets Cloudflare zones.", "Gets zones visible to the authenticated account and writes one typed zone per pipeline object.", "P3.2ProjectionPolicy"),
+            ["Get-CfDnsRecord"] = new("Gets Cloudflare DNS records.", "Gets one or more typed DNS records through the shared runtime.", "P3.2ProjectionPolicy"),
+            ["New-CfDnsRecord"] = new("Creates a Cloudflare DNS record.", "Creates a typed DNS record using the generated request model.", "P3.2ProjectionPolicy"),
+            ["Remove-CfDnsRecord"] = new("Removes a Cloudflare DNS record.", "Removes one DNS record by zone and record identifier.", "P3.2ProjectionPolicy"),
+            ["Set-CfDnsRecord"] = new("Updates a Cloudflare DNS record.", "Replaces or edits one DNS record through the shared runtime.", "P3.2ProjectionPolicy")
         };
 }

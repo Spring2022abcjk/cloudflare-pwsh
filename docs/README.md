@@ -20,6 +20,9 @@
 - [P3 计划](./P3-plan.md)：runtime-first 的 productionization 计划、P3.1 分片和验收门。
 - [P3.1 进度](./P3.1-progress.md)：当前 runtime 已实现、已验证、仍延期和下一步。
 - [P3.2 进度](./P3.2-progress.md)：generated public PowerShell surface 的范围、证据、验收门和下一步。
+- [P3.2 前两个 P1 修复计划](./P3.2-plan.md)：公共路由、canonical projection、生成器漂移检查和证据边界。
+- [P3.2 独立评审提示词](./P3.2-independent-review-prompt.md)：新智能体会话使用的只读评审提示词。
+- `tools/Invoke-P32ReadOnlyTests.ps1`：在隔离临时副本中执行 P3.2 独立只读验收，不写当前工作树。
 - [ADR 0001](./adr/0001-net10-powershell76-baseline.md)：PowerShell 7.6/.NET 10 统一基线决策。
 
 ## 证据等级

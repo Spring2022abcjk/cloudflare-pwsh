@@ -44,7 +44,7 @@ function New-CfApiErrorRecord {
         $TargetObject)
 }
 
-function Get-CfDnsRecord {
+function Invoke-CfDnsRecordHandwritten {
     [CmdletBinding(DefaultParameterSetName = 'List')]
     param(
         [Parameter(Mandatory, Position = 0, ParameterSetName = 'List')]
@@ -89,7 +89,7 @@ function Get-CfDnsRecord {
     } finally { $client.Dispose() }
 }
 
-function New-CfDnsRecord {
+function Invoke-NewCfDnsRecordHandwritten {
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
     param(
         [Parameter(Mandatory, Position = 0)][string]$ZoneId,
@@ -113,7 +113,7 @@ function New-CfDnsRecord {
     } finally { $client.Dispose() }
 }
 
-function Remove-CfDnsRecord {
+function Invoke-RemoveCfDnsRecordHandwritten {
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
     param(
         [Parameter(Mandatory, Position = 0)][string]$ZoneId,
@@ -132,7 +132,7 @@ function Remove-CfDnsRecord {
     } finally { $client.Dispose() }
 }
 
-function Set-CfDnsRecord {
+function Invoke-SetCfDnsRecordHandwritten {
     [CmdletBinding(DefaultParameterSetName = 'Replace', SupportsShouldProcess, ConfirmImpact = 'High')]
     param(
         [Parameter(Mandatory, Position = 0)][string]$ZoneId,
@@ -207,7 +207,6 @@ function Invoke-CfZoneHandwritten {
     } finally { $client.Dispose() }
 }
 
-# P3.2 generated commands are exported alongside the handwritten baseline while
-# parity is being established. Tests select the generated command explicitly by
-# command type so function precedence cannot hide generated dispatch.
-Export-ModuleMember -Function @('Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord') -Cmdlet @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord')
+# P3.2 generated commands are the public surface. Handwritten implementations
+# remain module-internal parity references during the migration boundary.
+Export-ModuleMember -Function @() -Cmdlet @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord')

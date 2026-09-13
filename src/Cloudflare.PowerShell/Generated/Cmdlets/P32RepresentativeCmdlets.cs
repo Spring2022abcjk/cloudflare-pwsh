@@ -7,43 +7,63 @@ using System.Text.Json.Nodes;
 namespace Cloudflare.PowerShell;
 
 [Cmdlet(VerbsCommon.Get, "CfZone", DefaultParameterSetName = "List")]
-[OutputType(typeof(CfZone))]
+[OutputType(typeof(Cloudflare.PowerShell.CfZone))]
 public sealed class GetCfZoneCommand : CloudflareCmdletBase
 {
-    [Parameter(Mandatory = true, ParameterSetName = "Get", ValueFromPipelineByPropertyName = true)]
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Get", ValueFromPipelineByPropertyName = true)]
     public string? ZoneId { get; set; }
 
     [Parameter(ParameterSetName = "List")]
+    [AllowNull]
     public string? AccountId { get; set; }
+
     [Parameter(ParameterSetName = "List")]
+    [AllowNull]
     public string? AccountName { get; set; }
+
     [Parameter(ParameterSetName = "List")]
+    [AllowNull]
     public string? Direction { get; set; }
+
     [Parameter(ParameterSetName = "List")]
-    public string? Match { get; set; }
+    [AllowNull]
+    public string? Match { get; set; } = "all";
+
     [Parameter(ParameterSetName = "List")]
+    [AllowNull]
     public string? Name { get; set; }
+
     [Parameter(ParameterSetName = "List")]
+    [AllowNull]
     public string? Order { get; set; }
+
     [Parameter(ParameterSetName = "List")]
-    public decimal Page { get; set; }
+    public decimal Page { get; set; } = 1m;
+
     [Parameter(ParameterSetName = "List")]
-    public decimal PerPage { get; set; }
+    public decimal PerPage { get; set; } = 20m;
+
     [Parameter(ParameterSetName = "List")]
+    [AllowNull]
     public string? Status { get; set; }
+
     [Parameter(ParameterSetName = "List")]
+    [AllowNull]
     public string[]? Type { get; set; }
 
     protected override void ProcessRecord()
     {
         if (ParameterSetName.Equals("Get", StringComparison.Ordinal))
         {
-            var parameters = BindParameters((nameof(ZoneId), "zone_id"));
-            WriteObject(InvokeSingle<CfZone>(CfZoneRuntimeMetadata.Get(CfZoneOperationMetadata.Operation_zones_Get_zones_0_get), parameters, ZoneId));
+        var parameters = BindParameters(
+            (nameof(ZoneId), "zone_id") );
+            WriteObject(InvokeSingle<Cloudflare.PowerShell.CfZone>(CfZoneRuntimeMetadata.Get("zones-0-get"), parameters, ZoneId));
             return;
         }
 
-        var listParameters = BindParameters(
+        if (ParameterSetName.Equals("List", StringComparison.Ordinal))
+        {
+        var parameters = BindParameters(
             (nameof(AccountId), "account.id"),
             (nameof(AccountName), "account.name"),
             (nameof(Direction), "direction"),
@@ -53,114 +73,233 @@ public sealed class GetCfZoneCommand : CloudflareCmdletBase
             (nameof(Page), "page"),
             (nameof(PerPage), "per_page"),
             (nameof(Status), "status"),
-            (nameof(Type), "type"));
-        WritePaged<CfZone>(CfZoneRuntimeMetadata.Get(CfZoneOperationMetadata.Operation_zones_List_zones_get), listParameters);
+            (nameof(Type), "type") );
+            WritePaged<Cloudflare.PowerShell.CfZone>(CfZoneRuntimeMetadata.Get("zones-get"), parameters, null);
+            return;
+        }
+
+        throw new InvalidOperationException("Unsupported parameter set for Get-CfZone.");
     }
 }
 
 [Cmdlet(VerbsCommon.Get, "CfDnsRecord", DefaultParameterSetName = "List")]
-[OutputType(typeof(CfDnsRecord))]
+[OutputType(typeof(Cloudflare.PowerShell.CfDnsRecord))]
 public sealed class GetCfDnsRecordCommand : CloudflareCmdletBase
 {
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = "List", ValueFromPipelineByPropertyName = true)]
     [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Get", ValueFromPipelineByPropertyName = true)]
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = "List", ValueFromPipelineByPropertyName = true)]
     public string? ZoneId { get; set; }
 
-    [Parameter(Mandatory = true, Position = 1, ParameterSetName = "Get")]
+    [Parameter(Mandatory = true, Position = 1, ParameterSetName = "Get", ValueFromPipelineByPropertyName = true)]
+    [Alias("RecordId")]
     public string? DnsRecordId { get; set; }
 
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? Comment { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? CommentAbsent { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? CommentContains { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? CommentEndswith { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? CommentExact { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? CommentPresent { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? CommentStartswith { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? Content { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? ContentContains { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? ContentEndswith { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? ContentExact { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? ContentStartswith { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? Direction { get; set; }
-    [Parameter(ParameterSetName = "List")][Parameter(ParameterSetName = "Get")]
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? Comment { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? CommentAbsent { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? CommentContains { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? CommentEndswith { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? CommentExact { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? CommentPresent { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? CommentStartswith { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? Content { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? ContentContains { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? ContentEndswith { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? ContentExact { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? ContentStartswith { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? Direction { get; set; } = "asc";
+
+    [Parameter(ParameterSetName = "Get")]
+    [Parameter(ParameterSetName = "List")]
     public bool IncludeShadowMetadata { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? Match { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? Name { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? NameContains { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? NameEndswith { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? NameExact { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? NameStartswith { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? Order { get; set; }
-    [Parameter(ParameterSetName = "List")] public decimal Page { get; set; }
-    [Parameter(ParameterSetName = "List")] public decimal PerPage { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public bool? Proxied { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? Search { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? ShadowedByName { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? ShadowingName { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string[]? Tag { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? TagContains { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? TagEndswith { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? TagExact { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? TagMatch { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? TagPresent { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? TagStartswith { get; set; }
-    [Parameter(ParameterSetName = "List")][AllowNull] public string? Type { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? Match { get; set; } = "all";
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? Name { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? NameContains { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? NameEndswith { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? NameExact { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? NameStartswith { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? Order { get; set; } = "type";
+
+    [Parameter(ParameterSetName = "List")]
+    public decimal Page { get; set; } = 1m;
+
+    [Parameter(ParameterSetName = "List")]
+    public decimal PerPage { get; set; } = 100m;
+
+    [Parameter(ParameterSetName = "List")]
+    public bool Proxied { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? Search { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? ShadowedByName { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? ShadowingName { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string[]? Tag { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? TagAbsent { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? TagContains { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? TagEndswith { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? TagExact { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? TagMatch { get; set; } = "all";
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? TagPresent { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? TagStartswith { get; set; }
+
+    [Parameter(ParameterSetName = "List")]
+    [AllowNull]
+    public string? Type { get; set; }
 
     protected override void ProcessRecord()
     {
-        var parameters = BindParameters(
-                (nameof(ZoneId), "zone_id"),
-                (nameof(DnsRecordId), "dns_record_id"),
-                (nameof(IncludeShadowMetadata), "include_shadow_metadata"),
-                (nameof(Comment), "comment"),
-                (nameof(CommentAbsent), "comment.absent"),
-                (nameof(CommentContains), "comment.contains"),
-                (nameof(CommentEndswith), "comment.endswith"),
-                (nameof(CommentExact), "comment.exact"),
-                (nameof(CommentPresent), "comment.present"),
-                (nameof(CommentStartswith), "comment.startswith"),
-                (nameof(Content), "content"),
-                (nameof(ContentContains), "content.contains"),
-                (nameof(ContentEndswith), "content.endswith"),
-                (nameof(ContentExact), "content.exact"),
-                (nameof(ContentStartswith), "content.startswith"),
-                (nameof(Direction), "direction"),
-                (nameof(Match), "match"),
-                (nameof(Name), "name"),
-                (nameof(NameContains), "name.contains"),
-                (nameof(NameEndswith), "name.endswith"),
-                (nameof(NameExact), "name.exact"),
-                (nameof(NameStartswith), "name.startswith"),
-                (nameof(Order), "order"),
-                (nameof(Page), "page"),
-                (nameof(PerPage), "per_page"),
-                (nameof(Proxied), "proxied"),
-                (nameof(Search), "search"),
-                (nameof(ShadowedByName), "shadowed_by_name"),
-                (nameof(ShadowingName), "shadowing_name"),
-                (nameof(Tag), "tag"),
-                (nameof(TagContains), "tag.contains"),
-                (nameof(TagEndswith), "tag.endswith"),
-                (nameof(TagExact), "tag.exact"),
-                (nameof(TagMatch), "tag_match"),
-                (nameof(TagPresent), "tag.present"),
-                (nameof(TagStartswith), "tag.startswith"),
-                (nameof(Type), "type"));
         if (ParameterSetName.Equals("Get", StringComparison.Ordinal))
-            {
-                WriteObject(InvokeSingle<CfDnsRecord>(CfDnsRecordRuntimeMetadata.Get(CfDnsRecordOperationMetadata.Operation_dns_records_Get_dns_records_for_a_zone_dns_record_details), parameters, ZoneId));
-                return;
-            }
+        {
+        var parameters = BindParameters(
+            (nameof(DnsRecordId), "dns_record_id"),
+            (nameof(IncludeShadowMetadata), "include_shadow_metadata"),
+            (nameof(ZoneId), "zone_id") );
+            WriteObject(InvokeSingle<Cloudflare.PowerShell.CfDnsRecord>(CfDnsRecordRuntimeMetadata.Get("dns-records-for-a-zone-dns-record-details"), parameters, ZoneId));
+            return;
+        }
 
-        WritePaged<CfDnsRecord>(CfDnsRecordRuntimeMetadata.Get(CfDnsRecordOperationMetadata.Operation_dns_records_List_dns_records_for_a_zone_list_dns_records), parameters, ZoneId);
+        if (ParameterSetName.Equals("List", StringComparison.Ordinal))
+        {
+        var parameters = BindParameters(
+            (nameof(Comment), "comment"),
+            (nameof(CommentAbsent), "comment.absent"),
+            (nameof(CommentContains), "comment.contains"),
+            (nameof(CommentEndswith), "comment.endswith"),
+            (nameof(CommentExact), "comment.exact"),
+            (nameof(CommentPresent), "comment.present"),
+            (nameof(CommentStartswith), "comment.startswith"),
+            (nameof(Content), "content"),
+            (nameof(ContentContains), "content.contains"),
+            (nameof(ContentEndswith), "content.endswith"),
+            (nameof(ContentExact), "content.exact"),
+            (nameof(ContentStartswith), "content.startswith"),
+            (nameof(Direction), "direction"),
+            (nameof(IncludeShadowMetadata), "include_shadow_metadata"),
+            (nameof(Match), "match"),
+            (nameof(Name), "name"),
+            (nameof(NameContains), "name.contains"),
+            (nameof(NameEndswith), "name.endswith"),
+            (nameof(NameExact), "name.exact"),
+            (nameof(NameStartswith), "name.startswith"),
+            (nameof(Order), "order"),
+            (nameof(Page), "page"),
+            (nameof(PerPage), "per_page"),
+            (nameof(Proxied), "proxied"),
+            (nameof(Search), "search"),
+            (nameof(ShadowedByName), "shadowed_by_name"),
+            (nameof(ShadowingName), "shadowing_name"),
+            (nameof(Tag), "tag"),
+            (nameof(TagAbsent), "tag.absent"),
+            (nameof(TagContains), "tag.contains"),
+            (nameof(TagEndswith), "tag.endswith"),
+            (nameof(TagExact), "tag.exact"),
+            (nameof(TagMatch), "tag_match"),
+            (nameof(TagPresent), "tag.present"),
+            (nameof(TagStartswith), "tag.startswith"),
+            (nameof(Type), "type"),
+            (nameof(ZoneId), "zone_id") );
+            WritePaged<Cloudflare.PowerShell.CfDnsRecord>(CfDnsRecordRuntimeMetadata.Get("dns-records-for-a-zone-list-dns-records"), parameters, ZoneId);
+            return;
+        }
+
+        throw new InvalidOperationException("Unsupported parameter set for Get-CfDnsRecord.");
     }
 }
 
-[Cmdlet(VerbsCommon.New, "CfDnsRecord", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Medium)]
-[OutputType(typeof(CfDnsRecord))]
+[Cmdlet(VerbsCommon.New, "CfDnsRecord", DefaultParameterSetName = "Create", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.Medium)]
+[OutputType(typeof(Cloudflare.PowerShell.CfDnsRecord))]
 public sealed class NewCfDnsRecordCommand : CloudflareCmdletBase
 {
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Create")]
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Create", ValueFromPipelineByPropertyName = true)]
     public string? ZoneId { get; set; }
 
     [Parameter(Mandatory = true, Position = 1, ParameterSetName = "Create")]
@@ -172,61 +311,92 @@ public sealed class NewCfDnsRecordCommand : CloudflareCmdletBase
     protected override void ProcessRecord()
     {
         if (!ShouldProcess(ZoneId, "Create DNS record")) return;
-        var parameters = BindParametersWithBody(
-                Record.ToJson(),
-                (nameof(ZoneId), "zone_id"),
-                (nameof(IncludeShadowMetadata), "include_shadow_metadata"));
-        WriteObject(InvokeSingle<CfDnsRecord>(CfDnsRecordRuntimeMetadata.Get(CfDnsRecordOperationMetadata.Operation_dns_records_Create_dns_records_for_a_zone_create_dns_record), parameters, ZoneId));
+        if (ParameterSetName.Equals("Create", StringComparison.Ordinal))
+        {
+        var parameters = BindParametersWithBody(Record.ToJson(),
+            (nameof(IncludeShadowMetadata), "include_shadow_metadata"),
+            (nameof(ZoneId), "zone_id"));
+            WriteObject(InvokeSingle<Cloudflare.PowerShell.CfDnsRecord>(CfDnsRecordRuntimeMetadata.Get("dns-records-for-a-zone-create-dns-record"), parameters, ZoneId));
+            return;
+        }
+
+        throw new InvalidOperationException("Unsupported parameter set for New-CfDnsRecord.");
     }
 }
 
-[Cmdlet(VerbsCommon.Remove, "CfDnsRecord", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.High)]
-[OutputType(typeof(CfDnsRecord))]
+[Cmdlet(VerbsCommon.Remove, "CfDnsRecord", DefaultParameterSetName = "Delete", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.High)]
+[OutputType(typeof(Cloudflare.PowerShell.CfDnsRecord))]
 public sealed class RemoveCfDnsRecordCommand : CloudflareCmdletBase
 {
-    [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Delete")]
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Delete", ValueFromPipelineByPropertyName = true)]
     public string? ZoneId { get; set; }
 
-    [Parameter(Mandatory = true, Position = 1, ParameterSetName = "Delete")]
+    [Parameter(Mandatory = true, Position = 1, ParameterSetName = "Delete", ValueFromPipelineByPropertyName = true)]
+    [Alias("RecordId")]
     public string? DnsRecordId { get; set; }
 
     protected override void ProcessRecord()
     {
         if (!ShouldProcess(DnsRecordId, "Delete DNS record")) return;
+        if (ParameterSetName.Equals("Delete", StringComparison.Ordinal))
+        {
         var parameters = BindParameters(
-                (nameof(ZoneId), "zone_id"),
-                (nameof(DnsRecordId), "dns_record_id"));
-        _ = InvokeSingle<JsonNode>(CfDnsRecordRuntimeMetadata.Get(CfDnsRecordOperationMetadata.Operation_dns_records_Delete_dns_records_for_a_zone_delete_dns_record), parameters, DnsRecordId);
+            (nameof(DnsRecordId), "dns_record_id"),
+            (nameof(ZoneId), "zone_id") );
+            _ = InvokeSingle<JsonNode>(CfDnsRecordRuntimeMetadata.Get("dns-records-for-a-zone-delete-dns-record"), parameters, DnsRecordId);
+            return;
+        }
+
+        throw new InvalidOperationException("Unsupported parameter set for Remove-CfDnsRecord.");
     }
 }
 
 [Cmdlet(VerbsCommon.Set, "CfDnsRecord", DefaultParameterSetName = "Replace", SupportsShouldProcess = true, ConfirmImpact = ConfirmImpact.High)]
-[OutputType(typeof(CfDnsRecord))]
+[OutputType(typeof(Cloudflare.PowerShell.CfDnsRecord))]
 public sealed class SetCfDnsRecordCommand : CloudflareCmdletBase
 {
-    [Parameter(Mandatory = true, Position = 0)]
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Edit", ValueFromPipelineByPropertyName = true)]
+    [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Replace", ValueFromPipelineByPropertyName = true)]
     public string? ZoneId { get; set; }
 
-    [Parameter(Mandatory = true, Position = 1)]
+    [Parameter(Mandatory = true, Position = 1, ParameterSetName = "Edit", ValueFromPipelineByPropertyName = true)]
+    [Parameter(Mandatory = true, Position = 1, ParameterSetName = "Replace", ValueFromPipelineByPropertyName = true)]
+    [Alias("RecordId")]
     public string? DnsRecordId { get; set; }
 
-    [Parameter(Mandatory = true, ParameterSetName = "Replace")]
+    [Parameter(Mandatory = true, Position = 2, ParameterSetName = "Edit")]
+    public Hashtable Edit { get; set; } = null!;
+
+    [Parameter(Mandatory = true, Position = 2, ParameterSetName = "Replace")]
     public Hashtable Replace { get; set; } = null!;
 
-    [Parameter(Mandatory = true, ParameterSetName = "Edit")]
-    public Hashtable Edit { get; set; } = null!;
+    [Parameter(ParameterSetName = "Edit")]
+    [Parameter(ParameterSetName = "Replace")]
+    public bool IncludeShadowMetadata { get; set; }
 
     protected override void ProcessRecord()
     {
         if (!ShouldProcess(DnsRecordId, $"{ParameterSetName} DNS record")) return;
-        var body = ParameterSetName.Equals("Replace", StringComparison.Ordinal) ? Replace : Edit;
-        var operation = ParameterSetName.Equals("Replace", StringComparison.Ordinal)
-            ? CfDnsRecordRuntimeMetadata.Get(CfDnsRecordOperationMetadata.Operation_dns_records_Update_dns_records_for_a_zone_update_dns_record)
-            : CfDnsRecordRuntimeMetadata.Get(CfDnsRecordOperationMetadata.Operation_dns_records_Edit_dns_records_for_a_zone_patch_dns_record);
-        var parameters = BindParametersWithBody(
-            body,
-            (nameof(ZoneId), "zone_id"),
-            (nameof(DnsRecordId), "dns_record_id"));
-        WriteObject(InvokeSingle<CfDnsRecord>(operation, parameters, DnsRecordId));
+        if (ParameterSetName.Equals("Edit", StringComparison.Ordinal))
+        {
+        var parameters = BindParametersWithBody(Edit,
+            (nameof(DnsRecordId), "dns_record_id"),
+            (nameof(IncludeShadowMetadata), "include_shadow_metadata"),
+            (nameof(ZoneId), "zone_id"));
+            WriteObject(InvokeSingle<Cloudflare.PowerShell.CfDnsRecord>(CfDnsRecordRuntimeMetadata.Get("dns-records-for-a-zone-patch-dns-record"), parameters, DnsRecordId));
+            return;
+        }
+
+        if (ParameterSetName.Equals("Replace", StringComparison.Ordinal))
+        {
+        var parameters = BindParametersWithBody(Replace,
+            (nameof(DnsRecordId), "dns_record_id"),
+            (nameof(IncludeShadowMetadata), "include_shadow_metadata"),
+            (nameof(ZoneId), "zone_id"));
+            WriteObject(InvokeSingle<Cloudflare.PowerShell.CfDnsRecord>(CfDnsRecordRuntimeMetadata.Get("dns-records-for-a-zone-update-dns-record"), parameters, DnsRecordId));
+            return;
+        }
+
+        throw new InvalidOperationException("Unsupported parameter set for Set-CfDnsRecord.");
     }
 }

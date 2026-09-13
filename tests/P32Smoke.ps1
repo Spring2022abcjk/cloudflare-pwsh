@@ -86,7 +86,11 @@ function Assert-True {
 
 function Get-GeneratedCommand {
     param([Parameter(Mandatory)][string]$Name)
-    return Get-Command $Name -CommandType Cmdlet -ErrorAction Stop
+    $command = Get-Command $Name -ErrorAction Stop
+    Assert-True ($command.CommandType -eq 'Cmdlet') "Public command '$Name' did not resolve to a generated cmdlet."
+    $shadowingFunctions = @(Get-Command $Name -All -ErrorAction Stop | Where-Object CommandType -eq 'Function')
+    Assert-True ($shadowingFunctions.Count -eq 0) "Public command '$Name' is still shadowed by an exported function."
+    return $command
 }
 
 function Get-RequestFacts {
@@ -153,6 +157,51 @@ function Get-ErrorFacts {
     }
 }
 
+function Assert-RuntimeOperationParity {
+    param([Parameter(Mandatory)][object]$Expected, [Parameter(Mandatory)][object]$Actual)
+    $label = [string]$Expected.operationId
+    Assert-True ([string]$Actual.OperationId -eq $label) "Runtime operation id drifted for '$label'."
+    Assert-True ([string]$Actual.Method -eq [string]$Expected.method) "Runtime method drifted for '$label'."
+    Assert-True ([string]$Actual.PathTemplate -eq [string]$Expected.pathTemplate) "Runtime path drifted for '$label'."
+    $expectedParameters = @($Expected.runtime.parameters | ForEach-Object { "$($_.name)|$($_.location)|$(([bool]$_.required).ToString().ToLowerInvariant())" } | Sort-Object)
+    $actualParameters = @($Actual.Parameters | ForEach-Object { "$($_.Name)|$($_.Location)|$(([bool]$_.Required).ToString().ToLowerInvariant())" } | Sort-Object)
+    Assert-True (($actualParameters -join '|') -eq ($expectedParameters -join '|')) "Runtime parameters drifted for '$label'."
+    $expectedRequests = @($Expected.runtime.requestRepresentations | Where-Object { $null -ne $_ })
+    $actualRequests = @($Actual.RequestRepresentations)
+    Assert-True ($actualRequests.Count -eq $expectedRequests.Count) "Runtime request representation count drifted for '$label'."
+    for ($index = 0; $index -lt $expectedRequests.Count; $index++) {
+        Assert-True ([string]$actualRequests[$index].ContentType -eq [string]$expectedRequests[$index].contentType -and [string]$actualRequests[$index].BodyParameterName -eq [string]$expectedRequests[$index].bodyParameterName) "Runtime request representation drifted for '$label'."
+        $expectedParts = @($expectedRequests[$index].parts)
+        $actualParts = @($actualRequests[$index].Parts)
+        Assert-True ($actualParts.Count -eq $expectedParts.Count) "Runtime request parts drifted for '$label'."
+        for ($partIndex = 0; $partIndex -lt $expectedParts.Count; $partIndex++) {
+            $expectedPart = $expectedParts[$partIndex]
+            $actualPart = $actualParts[$partIndex]
+            Assert-True ([string]$actualPart.ParameterName -eq [string]$expectedPart.parameterName -and [string]$actualPart.PartName -eq [string]$expectedPart.partName -and [string]$actualPart.ContentType -eq [string]$expectedPart.contentType -and [string]$actualPart.Format -eq [string]$expectedPart.format -and [bool]$actualPart.Required -eq [bool]$expectedPart.required) "Runtime request part metadata drifted for '$label'."
+        }
+    }
+    $expectedResponses = @($Expected.runtime.responseRepresentations | Where-Object { $null -ne $_ })
+    $actualResponses = @($Actual.ResponseRepresentations)
+    Assert-True ($actualResponses.Count -eq $expectedResponses.Count) "Runtime response representation count drifted for '$label'."
+    for ($index = 0; $index -lt $expectedResponses.Count; $index++) {
+        $statusMatches = ($null -eq $expectedResponses[$index].statusCode -and $null -eq $actualResponses[$index].StatusCode) -or ([int]$actualResponses[$index].StatusCode -eq [int]$expectedResponses[$index].statusCode)
+        Assert-True ($statusMatches -and [string]$actualResponses[$index].ContentType -eq [string]$expectedResponses[$index].contentType -and [string]$actualResponses[$index].EnvelopePolicy -eq [string]$expectedResponses[$index].envelopePolicy -and [string]$actualResponses[$index].ParsingMode -eq [string]$expectedResponses[$index].parsingMode) "Runtime response representation drifted for '$label'."
+    }
+    $expectedPaging = $Expected.runtime.pagination
+    $actualPaging = $Actual.Pagination
+    if ($null -eq $expectedPaging) {
+        Assert-True ($null -eq $actualPaging) "Runtime pagination unexpectedly exists for '$label'."
+        return
+    }
+    Assert-True ($null -ne $actualPaging) "Runtime pagination is missing for '$label'."
+    foreach ($field in @('strategy','resultPath','pageInfoPath','currentPagePath','totalPagesPath','nextCursorPath','hasMorePath','nextPageRule','stopRule')) {
+        $actualName = $field.Substring(0,1).ToUpperInvariant() + $field.Substring(1)
+        Assert-True ([string]$actualPaging.$actualName -eq [string]$expectedPaging.$field) "Runtime pagination '$field' drifted for '$label'."
+    }
+    Assert-True ((@($actualPaging.RequestFields) -join '|') -eq (@($expectedPaging.requestFields) -join '|')) "Runtime pagination request fields drifted for '$label'."
+    Assert-True ((@($actualPaging.ResponseFields) -join '|') -eq (@($expectedPaging.responseFields) -join '|')) "Runtime pagination response fields drifted for '$label'."
+}
+
 $zoneCommand = Get-GeneratedCommand 'Get-CfZone'
 $dnsCommand = Get-GeneratedCommand 'Get-CfDnsRecord'
 $newCommand = Get-GeneratedCommand 'New-CfDnsRecord'
@@ -175,6 +224,13 @@ $setReplaceAttributes = @($setCommand.Parameters['Replace'].Attributes | Where-O
 $setEditAttributes = @($setCommand.Parameters['Edit'].Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] })
 Assert-True ($setReplaceAttributes.Count -eq 1 -and $setReplaceAttributes[0].Mandatory -and $setReplaceAttributes[0].ParameterSetName -eq 'Replace') 'Set-CfDnsRecord Replace requiredness drifted.'
 Assert-True ($setEditAttributes.Count -eq 1 -and $setEditAttributes[0].Mandatory -and $setEditAttributes[0].ParameterSetName -eq 'Edit') 'Set-CfDnsRecord Edit requiredness drifted.'
+Assert-True $dnsCommand.Parameters.ContainsKey('TagAbsent') 'Get-CfDnsRecord TagAbsent projection is missing.'
+Assert-True $setCommand.Parameters.ContainsKey('IncludeShadowMetadata') 'Set-CfDnsRecord IncludeShadowMetadata projection is missing.'
+$setShadowAttributes = @($setCommand.Parameters['IncludeShadowMetadata'].Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] })
+Assert-True ($setShadowAttributes.Count -eq 2 -and @($setShadowAttributes.ParameterSetName) -contains 'Edit' -and @($setShadowAttributes.ParameterSetName) -contains 'Replace') 'Set-CfDnsRecord IncludeShadowMetadata parameter-set applicability drifted.'
+Assert-True ($dnsCommand.Parameters['DnsRecordId'].Aliases -contains 'RecordId') 'Get-CfDnsRecord RecordId compatibility alias is missing.'
+Assert-True ($removeCommand.Parameters['DnsRecordId'].Aliases -contains 'RecordId') 'Remove-CfDnsRecord RecordId compatibility alias is missing.'
+Assert-True ($setCommand.Parameters['DnsRecordId'].Aliases -contains 'RecordId') 'Set-CfDnsRecord RecordId compatibility alias is missing.'
 Assert-True ([Cloudflare.PowerShell.P32CmdletHelpMetadata]::Commands.ContainsKey('Get-CfZone')) 'Generated Get-CfZone help model is missing.'
 Assert-True (-not [string]::IsNullOrWhiteSpace([Cloudflare.PowerShell.P32CmdletHelpMetadata]::Commands['Get-CfZone'].Synopsis)) 'Generated Get-CfZone help synopsis is missing.'
 $dnsRecordIdAttributes = @($dnsCommand.Parameters['DnsRecordId'].Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] })
@@ -186,12 +242,42 @@ Assert-True ($newRecordAttributes.Count -eq 1 -and $newRecordAttributes[0].Manda
 $removeIdAttributes = @($removeCommand.Parameters['DnsRecordId'].Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] })
 Assert-True ($removeIdAttributes.Count -eq 1 -and $removeIdAttributes[0].Mandatory) 'DNS delete id requiredness drifted.'
 $projection = Get-Content -Raw -LiteralPath (Join-Path $ProjectRoot 'artifacts/p3.2/CmdletModel.json') | ConvertFrom-Json
+$runtimeOperationsByType = @{
+    CfDnsRecordRuntimeMetadata = @([Cloudflare.PowerShell.CfDnsRecordRuntimeMetadata]::Operations)
+    CfZoneRuntimeMetadata = @([Cloudflare.PowerShell.CfZoneRuntimeMetadata]::Operations)
+}
+foreach ($runtimeMetadataType in @($runtimeOperationsByType.Keys | Sort-Object)) {
+    $runtimeOperations = @($runtimeOperationsByType[$runtimeMetadataType])
+    $expectedRuntimeOperations = @($projection.cmdlets | Where-Object runtimeMetadataType -eq $runtimeMetadataType | ForEach-Object operations)
+    Assert-True ($runtimeOperations.Count -eq $expectedRuntimeOperations.Count) "$runtimeMetadataType operation count drifted."
+    foreach ($expectedOperation in $expectedRuntimeOperations) {
+        $actualOperation = @($runtimeOperations | Where-Object { [string]$_.OperationId -eq [string]$expectedOperation.operationId })
+        Assert-True ($actualOperation.Count -eq 1) "$runtimeMetadataType is missing '$($expectedOperation.operationId)'."
+        Assert-RuntimeOperationParity $expectedOperation $actualOperation[0]
+    }
+}
+$dnsRuntimeOperations = @($runtimeOperationsByType['CfDnsRecordRuntimeMetadata'])
+$dnsListRuntime = @($dnsRuntimeOperations | Where-Object { [string]$_.OperationId -eq 'dns-records-for-a-zone-list-dns-records' })
+Assert-True ($dnsListRuntime.Count -eq 1) 'DNS list runtime metadata operation is not unique.'
+$dnsListResponse = @($dnsListRuntime[0].ResponseRepresentations)[0]
+Assert-True ([string]$dnsListResponse.EnvelopePolicy -eq 'CloudflareResult' -and [string]$dnsListResponse.ParsingMode -eq 'Json') 'DNS list response envelope/parsing is not independently verified.'
+Assert-True ([string]$dnsListRuntime[0].Pagination.StopRule -eq 'empty result page') 'DNS list pagination stop rule is not independently verified.'
+$zoneRuntimeOperations = @($runtimeOperationsByType['CfZoneRuntimeMetadata'])
+$zoneGetRuntime = @($zoneRuntimeOperations | Where-Object { [string]$_.OperationId -eq 'zones-0-get' })
+$zoneListRuntime = @($zoneRuntimeOperations | Where-Object { [string]$_.OperationId -eq 'zones-get' })
+Assert-True ($zoneGetRuntime.Count -eq 1 -and $zoneListRuntime.Count -eq 1) 'Zone runtime metadata operations are not unique.'
+$zoneGetResponse = @($zoneGetRuntime[0].ResponseRepresentations)[0]
+$zoneListResponse = @($zoneListRuntime[0].ResponseRepresentations)[0]
+Assert-True ([string]$zoneGetResponse.EnvelopePolicy -eq 'CloudflareResult' -and [string]$zoneGetResponse.ParsingMode -eq 'Json') 'Zone get response envelope/parsing is not independently verified.'
+Assert-True ([string]$zoneListResponse.EnvelopePolicy -eq 'CloudflareResult' -and [string]$zoneListResponse.ParsingMode -eq 'Json') 'Zone list response envelope/parsing is not independently verified.'
+Assert-True ([string]$zoneGetRuntime[0].Pagination.StopRule -eq 'single response' -and [string]$zoneListRuntime[0].Pagination.StopRule -eq 'empty result page') 'Zone pagination stop rules are not independently verified.'
+Write-Output 'PASS full DNS and zone runtime metadata parity'
 foreach ($model in $projection.cmdlets) {
     $command = Get-GeneratedCommand $model.cmdletName
     $actualSets = @($command.ParameterSets.Name | Where-Object { $_ -ne '__AllParameterSets' } | Sort-Object -Unique)
-    $expectedSets = @($model.parameterSets | ForEach-Object { [string]$_ } | Sort-Object -Unique)
+    $expectedSets = @($model.parameterSets | ForEach-Object name | Sort-Object -Unique)
     Assert-True (($actualSets -join '|') -eq ($expectedSets -join '|')) "$($model.cmdletName) parameter-set projection drifted."
-    foreach ($parameterName in $model.parameterNames) {
+    foreach ($parameterName in @($model.parameters | ForEach-Object name)) {
         Assert-True $command.Parameters.ContainsKey([string]$parameterName) "$($model.cmdletName) is missing projected parameter '$parameterName'."
     }
 }
@@ -223,6 +309,14 @@ Assert-True ([P32MockHandler]::Requests.Count -eq 2) 'Generated Get-CfDnsRecord 
 $record = & $dnsCommand -ZoneId zone -DnsRecordId record @baseArgs
 Assert-True ($record.Id -eq 'record') 'Generated Get-CfDnsRecord get did not dispatch.'
 Write-Output 'PASS generated DNS list/get dispatch'
+
+[P32MockHandler]::Reset()
+$record = & $dnsCommand -ZoneId zone -RecordId record @baseArgs
+Assert-True ($record.Id -eq 'record' -and [P32MockHandler]::Requests[0].RequestUri.AbsolutePath -like '*/dns_records/record') 'Generated Get-CfDnsRecord did not bind the RecordId alias.'
+[P32MockHandler]::Reset()
+$records = @(& $dnsCommand -ZoneId zone -TagAbsent missing @baseArgs)
+Assert-True ($records.Count -eq 1 -and [P32MockHandler]::Requests[0].RequestUri.Query -match 'tag.absent=missing') 'Generated Get-CfDnsRecord did not bind TagAbsent.'
+Write-Output 'PASS generated DNS TagAbsent and RecordId alias binding'
 
 [P32MockHandler]::Reset()
 $input = [Cloudflare.PowerShell.CfARecordInput]::new()
@@ -265,7 +359,7 @@ catch {
 Write-Output 'PASS generated error parity'
 
 [P32MockHandler]::Reset()
-$handwritten = @(Get-CfDnsRecord -ZoneId zone -Name example.com -BaseUrl $baseArgs.BaseUrl -Token $baseArgs.Token -Handler $baseArgs.Handler)
+$handwritten = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-CfDnsRecordHandwritten @bound } @{ ZoneId = 'zone'; Name = 'example.com'; BaseUrl = $baseArgs.BaseUrl; Token = $baseArgs.Token; Handler = $baseArgs.Handler })
 $handwrittenRequest = [P32MockHandler]::Requests[0]
 $handwrittenBody = [P32MockHandler]::Bodies[0]
 [P32MockHandler]::Reset()
@@ -315,7 +409,7 @@ $dnsListParityArgs = @{
     Handler = $baseArgs.Handler
 }
 [P32MockHandler]::Reset()
-$handwritten = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Get-CfDnsRecord @bound } $dnsListParityArgs)
+$handwritten = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-CfDnsRecordHandwritten @bound } $dnsListParityArgs)
 $handwrittenFacts = @(for ($i = 0; $i -lt [P32MockHandler]::Requests.Count; $i++) { Get-RequestFacts ([P32MockHandler]::Requests[$i]) ([P32MockHandler]::Bodies[$i]) })
 $handwrittenOutput = $handwritten | ForEach-Object { "$($_.Id)|$($_.Name)|$($_.Type)|$($_.Content)|$($_.GetType().FullName)" }
 [P32MockHandler]::Reset()
@@ -344,7 +438,7 @@ $dnsGeneratedGetArgs = @{
     Handler = $baseArgs.Handler
 }
 [P32MockHandler]::Reset()
-$handwritten = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Get-CfDnsRecord @bound } $dnsGetParityArgs)
+$handwritten = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-CfDnsRecordHandwritten @bound } $dnsGetParityArgs)
 $handwrittenFacts = @(Get-RequestFacts ([P32MockHandler]::Requests[0]) ([P32MockHandler]::Bodies[0]))
 $handwrittenOutput = "$($handwritten[0].Id)|$($handwritten[0].Name)|$($handwritten[0].Type)|$($handwritten[0].GetType().FullName)"
 [P32MockHandler]::Reset()
@@ -367,7 +461,7 @@ $newParityArgs = @{
     Confirm = $false
 }
 [P32MockHandler]::Reset()
-$handwritten = @(& (Get-Module Cloudflare.PowerShell) { param($bound) New-CfDnsRecord @bound } $newParityArgs)
+$handwritten = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-NewCfDnsRecordHandwritten @bound } $newParityArgs)
 $handwrittenFacts = @(Get-RequestFacts ([P32MockHandler]::Requests[0]) ([P32MockHandler]::Bodies[0]))
 $handwrittenOutput = "$($handwritten[0].Id)|$($handwritten[0].Type)|$($handwritten[0].GetType().FullName)"
 [P32MockHandler]::Reset()
@@ -382,7 +476,7 @@ Write-Output 'PASS New-CfDnsRecord handwritten/generated method/path/query/heade
 $newExplicitFalseArgs = @{} + $newParityArgs
 $newExplicitFalseArgs['IncludeShadowMetadata'] = $false
 [P32MockHandler]::Reset()
-$null = @(& (Get-Module Cloudflare.PowerShell) { param($bound) New-CfDnsRecord @bound } $newExplicitFalseArgs)
+$null = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-NewCfDnsRecordHandwritten @bound } $newExplicitFalseArgs)
 $handwrittenFacts = @(Get-RequestFacts ([P32MockHandler]::Requests[0]) ([P32MockHandler]::Bodies[0]))
 [P32MockHandler]::Reset()
 $null = @(& $newCommand @newExplicitFalseArgs)
@@ -394,7 +488,7 @@ Write-Output 'PASS New-CfDnsRecord omitted versus explicit-false query parity'
 $newWhatIfArgs = @{} + $newParityArgs
 $newWhatIfArgs['WhatIf'] = $true
 [P32MockHandler]::Reset()
-$null = @(& (Get-Module Cloudflare.PowerShell) { param($bound) New-CfDnsRecord @bound } $newWhatIfArgs)
+$null = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-NewCfDnsRecordHandwritten @bound } $newWhatIfArgs)
 Assert-True ([P32MockHandler]::Requests.Count -eq 0) 'Handwritten New-CfDnsRecord WhatIf sent an HTTP request.'
 [P32MockHandler]::Reset()
 $null = @(& $newCommand @newWhatIfArgs)
@@ -417,8 +511,14 @@ $removeGeneratedArgs = @{
     Handler = $baseArgs.Handler
     Confirm = $false
 }
+
 [P32MockHandler]::Reset()
-$handwritten = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Remove-CfDnsRecord @bound } $removeParityArgs)
+$null = @(& $removeCommand @removeParityArgs)
+Assert-True ([P32MockHandler]::Requests.Count -eq 1 -and [P32MockHandler]::Requests[0].RequestUri.AbsolutePath -like '*/dns_records/record') 'Generated Remove-CfDnsRecord did not bind the RecordId alias.'
+Write-Output 'PASS generated Remove-CfDnsRecord RecordId alias binding'
+
+[P32MockHandler]::Reset()
+$handwritten = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-RemoveCfDnsRecordHandwritten @bound } $removeParityArgs)
 $handwrittenFacts = @(Get-RequestFacts ([P32MockHandler]::Requests[0]) ([P32MockHandler]::Bodies[0]))
 [P32MockHandler]::Reset()
 $generated = @(& $removeCommand @removeGeneratedArgs)
@@ -448,7 +548,7 @@ $setGeneratedReplaceArgs = @{
     Confirm = $false
 }
 [P32MockHandler]::Reset()
-$handwritten = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Set-CfDnsRecord @bound } $setReplaceArgs)
+$handwritten = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-SetCfDnsRecordHandwritten @bound } $setReplaceArgs)
 $handwrittenFacts = @(Get-RequestFacts ([P32MockHandler]::Requests[0]) ([P32MockHandler]::Bodies[0]))
 $handwrittenOutput = "$($handwritten[0].Id)|$($handwritten[0].Type)|$($handwritten[0].GetType().FullName)"
 [P32MockHandler]::Reset()
@@ -467,7 +567,7 @@ $setGeneratedEditArgs = @{} + $setGeneratedReplaceArgs
 $setGeneratedEditArgs.Remove('Replace')
 $setGeneratedEditArgs['Edit'] = $setEditBody
 [P32MockHandler]::Reset()
-$handwritten = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Set-CfDnsRecord @bound } $setEditArgs)
+$handwritten = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-SetCfDnsRecordHandwritten @bound } $setEditArgs)
 $handwrittenFacts = @(Get-RequestFacts ([P32MockHandler]::Requests[0]) ([P32MockHandler]::Bodies[0]))
 $handwrittenOutput = "$($handwritten[0].Id)|$($handwritten[0].Type)|$($handwritten[0].GetType().FullName)"
 [P32MockHandler]::Reset()
@@ -479,10 +579,23 @@ Assert-RequestFactsEqual $handwrittenFacts[0] $generatedFacts[0] 'Set-CfDnsRecor
 Assert-True ($generatedFacts[0].Method -eq 'PATCH' -and $generatedFacts[0].Body -match '"content":"198.51.100.9"') 'Set-CfDnsRecord Edit did not use PATCH/body.'
 Write-Output 'PASS Set-CfDnsRecord handwritten/generated PUT/PATCH method/path/query/headers/body/output parity'
 
+[P32MockHandler]::Reset()
+$null = @(& $setCommand @setReplaceArgs)
+Assert-True ([P32MockHandler]::Requests.Count -eq 1 -and [P32MockHandler]::Requests[0].RequestUri.AbsolutePath -like '*/dns_records/record' -and [P32MockHandler]::Requests[0].Method -eq [System.Net.Http.HttpMethod]::Put) 'Generated Set-CfDnsRecord did not bind the RecordId alias.'
+Write-Output 'PASS generated Set-CfDnsRecord RecordId alias binding'
+
+$setIncludeArgs = @{} + $setGeneratedReplaceArgs
+$setIncludeArgs['IncludeShadowMetadata'] = $true
+[P32MockHandler]::Reset()
+$null = @(& $setCommand @setIncludeArgs)
+$setIncludeFacts = @(Get-RequestFacts ([P32MockHandler]::Requests[0]) ([P32MockHandler]::Bodies[0]))
+Assert-True ($setIncludeFacts.Count -eq 1 -and $setIncludeFacts[0].Query -match 'include_shadow_metadata=True') 'Generated Set-CfDnsRecord IncludeShadowMetadata was omitted from the query.'
+Write-Output 'PASS generated Set-CfDnsRecord IncludeShadowMetadata query binding'
+
 $setWhatIfArgs = @{} + $setReplaceArgs
 $setWhatIfArgs['WhatIf'] = $true
 [P32MockHandler]::Reset()
-$null = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Set-CfDnsRecord @bound } $setWhatIfArgs)
+$null = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-SetCfDnsRecordHandwritten @bound } $setWhatIfArgs)
 Assert-True ([P32MockHandler]::Requests.Count -eq 0) 'Handwritten Set-CfDnsRecord WhatIf sent an HTTP request.'
 $setGeneratedWhatIfArgs = @{} + $setGeneratedReplaceArgs
 $setGeneratedWhatIfArgs['WhatIf'] = $true
@@ -494,7 +607,7 @@ Write-Output 'PASS handwritten/generated Set-CfDnsRecord ShouldProcess no-reques
 $removeWhatIfArgs = @{} + $removeParityArgs
 $removeWhatIfArgs['WhatIf'] = $true
 [P32MockHandler]::Reset()
-$null = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Remove-CfDnsRecord @bound } $removeWhatIfArgs)
+$null = @(& (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-RemoveCfDnsRecordHandwritten @bound } $removeWhatIfArgs)
 Assert-True ([P32MockHandler]::Requests.Count -eq 0) 'Handwritten Remove-CfDnsRecord WhatIf sent an HTTP request.'
 $removeGeneratedWhatIfArgs = @{} + $removeGeneratedArgs
 $removeGeneratedWhatIfArgs['WhatIf'] = $true
@@ -541,17 +654,17 @@ Assert-ErrorParity {
     & $zoneCommand @zoneErrorArgs
 } 'Get-CfZone'
 Assert-ErrorParity {
-    & (Get-Module Cloudflare.PowerShell) { param($bound) Get-CfDnsRecord @bound } $dnsHandwrittenErrorArgs
+    & (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-CfDnsRecordHandwritten @bound } $dnsHandwrittenErrorArgs
 } {
     & $dnsCommand @dnsErrorArgs
 } 'Get-CfDnsRecord'
 Assert-ErrorParity {
-    & (Get-Module Cloudflare.PowerShell) { param($bound) New-CfDnsRecord @bound } $newErrorArgs
+    & (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-NewCfDnsRecordHandwritten @bound } $newErrorArgs
 } {
     & $newCommand @newErrorArgs
 } 'New-CfDnsRecord'
 Assert-ErrorParity {
-    & (Get-Module Cloudflare.PowerShell) { param($bound) Remove-CfDnsRecord @bound } $removeHandwrittenErrorArgs
+    & (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-RemoveCfDnsRecordHandwritten @bound } $removeHandwrittenErrorArgs
 } {
     & $removeCommand @removeErrorArgs
 } 'Remove-CfDnsRecord'
@@ -560,7 +673,7 @@ $setHandwrittenErrorArgs['ErrorAction'] = 'Stop'
 $setGeneratedErrorArgs = @{} + $setGeneratedReplaceArgs
 $setGeneratedErrorArgs['ErrorAction'] = 'Stop'
 Assert-ErrorParity {
-    & (Get-Module Cloudflare.PowerShell) { param($bound) Set-CfDnsRecord @bound } $setHandwrittenErrorArgs
+    & (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-SetCfDnsRecordHandwritten @bound } $setHandwrittenErrorArgs
 } {
     & $setCommand @setGeneratedErrorArgs
 } 'Set-CfDnsRecord Replace'
@@ -571,7 +684,7 @@ $retryError = Get-ErrorFacts { & $dnsCommand @dnsErrorArgs }
 Assert-True ([P32MockHandler]::Requests.Count -eq 1 -and $retryError.RetryCount -eq 0) 'Generated default retry boundary changed unexpectedly.'
 [P32MockHandler]::Reset()
 [P32MockHandler]::FailMode = 'retry'
-$handwrittenRetryError = Get-ErrorFacts { & (Get-Module Cloudflare.PowerShell) { param($bound) Get-CfDnsRecord @bound } $dnsHandwrittenErrorArgs }
+$handwrittenRetryError = Get-ErrorFacts { & (Get-Module Cloudflare.PowerShell) { param($bound) Invoke-CfDnsRecordHandwritten @bound } $dnsHandwrittenErrorArgs }
 Assert-True ([P32MockHandler]::Requests.Count -eq 1 -and $handwrittenRetryError.RetryCount -eq 0) 'Handwritten default retry boundary changed unexpectedly.'
 Assert-True (($retryError | ConvertTo-Json -Compress -Depth 10) -eq ($handwrittenRetryError | ConvertTo-Json -Compress -Depth 10)) 'Generated/handwritten retry boundary parity failed.'
 Write-Output 'PASS generated/handwritten default retry boundary parity'

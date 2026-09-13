@@ -16,7 +16,7 @@
     "runtimeDispatch": false
   },
   "handwritten": {
-    "command": "Get-CfDnsRecord",
+    "command": "Invoke-CfDnsRecordHandwritten",
     "parameterSets": [
       "List",
       "Get"

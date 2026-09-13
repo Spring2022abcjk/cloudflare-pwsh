@@ -7,8 +7,8 @@
         "HttpMethod": "GET",
         "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
         "PathParameters": [
-          "dns_record_id",
-          "zone_id"
+          "zone_id",
+          "dns_record_id"
         ],
         "QueryParameters": [
           "include_shadow_metadata"
@@ -23,42 +23,42 @@
           "zone_id"
         ],
         "QueryParameters": [
-          "comment",
-          "comment.absent",
-          "comment.contains",
-          "comment.endswith",
-          "comment.exact",
-          "comment.present",
-          "comment.startswith",
-          "content",
-          "content.contains",
-          "content.endswith",
-          "content.exact",
-          "content.startswith",
-          "direction",
           "include_shadow_metadata",
-          "match",
           "name",
-          "name.contains",
-          "name.endswith",
           "name.exact",
+          "name.contains",
           "name.startswith",
-          "order",
+          "name.endswith",
+          "type",
+          "content",
+          "content.exact",
+          "content.contains",
+          "content.startswith",
+          "content.endswith",
+          "proxied",
+          "match",
+          "comment",
+          "comment.present",
+          "comment.absent",
+          "comment.exact",
+          "comment.contains",
+          "comment.startswith",
+          "comment.endswith",
+          "tag",
+          "tag.present",
+          "tag.absent",
+          "tag.exact",
+          "tag.contains",
+          "tag.startswith",
+          "tag.endswith",
+          "search",
+          "tag_match",
           "page",
           "per_page",
-          "proxied",
-          "search",
+          "order",
+          "direction",
           "shadowed_by_name",
-          "shadowing_name",
-          "tag",
-          "tag.absent",
-          "tag.contains",
-          "tag.endswith",
-          "tag.exact",
-          "tag.present",
-          "tag.startswith",
-          "tag_match",
-          "type"
+          "shadowing_name"
         ],
         "BodyModel": null
       }
@@ -71,8 +71,8 @@
           "HttpMethod": "GET",
           "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
           "PathParameters": [
-            "dns_record_id",
-            "zone_id"
+            "zone_id",
+            "dns_record_id"
           ],
           "QueryParameters": [
             "include_shadow_metadata"
@@ -80,8 +80,8 @@
           "BodyModel": null
         },
         "RequiredParameters": [
-          "dns_record_id",
-          "zone_id"
+          "zone_id",
+          "dns_record_id"
         ],
         "OptionalParameters": [
           "include_shadow_metadata"
@@ -97,42 +97,42 @@
             "zone_id"
           ],
           "QueryParameters": [
-            "comment",
-            "comment.absent",
-            "comment.contains",
-            "comment.endswith",
-            "comment.exact",
-            "comment.present",
-            "comment.startswith",
-            "content",
-            "content.contains",
-            "content.endswith",
-            "content.exact",
-            "content.startswith",
-            "direction",
             "include_shadow_metadata",
-            "match",
             "name",
-            "name.contains",
-            "name.endswith",
             "name.exact",
+            "name.contains",
             "name.startswith",
-            "order",
+            "name.endswith",
+            "type",
+            "content",
+            "content.exact",
+            "content.contains",
+            "content.startswith",
+            "content.endswith",
+            "proxied",
+            "match",
+            "comment",
+            "comment.present",
+            "comment.absent",
+            "comment.exact",
+            "comment.contains",
+            "comment.startswith",
+            "comment.endswith",
+            "tag",
+            "tag.present",
+            "tag.absent",
+            "tag.exact",
+            "tag.contains",
+            "tag.startswith",
+            "tag.endswith",
+            "search",
+            "tag_match",
             "page",
             "per_page",
-            "proxied",
-            "search",
+            "order",
+            "direction",
             "shadowed_by_name",
-            "shadowing_name",
-            "tag",
-            "tag.absent",
-            "tag.contains",
-            "tag.endswith",
-            "tag.exact",
-            "tag.present",
-            "tag.startswith",
-            "tag_match",
-            "type"
+            "shadowing_name"
           ],
           "BodyModel": null
         },
@@ -140,49 +140,49 @@
           "zone_id"
         ],
         "OptionalParameters": [
-          "comment",
-          "comment.absent",
-          "comment.contains",
-          "comment.endswith",
-          "comment.exact",
-          "comment.present",
-          "comment.startswith",
-          "content",
-          "content.contains",
-          "content.endswith",
-          "content.exact",
-          "content.startswith",
-          "direction",
           "include_shadow_metadata",
-          "match",
           "name",
-          "name.contains",
-          "name.endswith",
           "name.exact",
+          "name.contains",
           "name.startswith",
-          "order",
+          "name.endswith",
+          "type",
+          "content",
+          "content.exact",
+          "content.contains",
+          "content.startswith",
+          "content.endswith",
+          "proxied",
+          "match",
+          "comment",
+          "comment.present",
+          "comment.absent",
+          "comment.exact",
+          "comment.contains",
+          "comment.startswith",
+          "comment.endswith",
+          "tag",
+          "tag.present",
+          "tag.absent",
+          "tag.exact",
+          "tag.contains",
+          "tag.startswith",
+          "tag.endswith",
+          "search",
+          "tag_match",
           "page",
           "per_page",
-          "proxied",
-          "search",
+          "order",
+          "direction",
           "shadowed_by_name",
-          "shadowing_name",
-          "tag",
-          "tag.absent",
-          "tag.contains",
-          "tag.endswith",
-          "tag.exact",
-          "tag.present",
-          "tag.startswith",
-          "tag_match",
-          "type"
+          "shadowing_name"
         ]
       }
     ],
     "Parameters": [
       {
         "Name": "comment",
-        "Type": "Inline_DADF1CBA58A7",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -193,7 +193,7 @@
       },
       {
         "Name": "comment.absent",
-        "Type": "Inline_0268C81DE8BC",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -204,7 +204,7 @@
       },
       {
         "Name": "comment.contains",
-        "Type": "Inline_CB9B873411E3",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -215,7 +215,7 @@
       },
       {
         "Name": "comment.endswith",
-        "Type": "Inline_477C6610239F",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -226,7 +226,7 @@
       },
       {
         "Name": "comment.exact",
-        "Type": "Inline_D7D2A756A1C3",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -237,7 +237,7 @@
       },
       {
         "Name": "comment.present",
-        "Type": "Inline_CE977A340E3B",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -248,7 +248,7 @@
       },
       {
         "Name": "comment.startswith",
-        "Type": "Inline_53242276CD45",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -259,7 +259,7 @@
       },
       {
         "Name": "content",
-        "Type": "Inline_50357BE0078D",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -270,7 +270,7 @@
       },
       {
         "Name": "content.contains",
-        "Type": "Inline_41743DF328F8",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -281,7 +281,7 @@
       },
       {
         "Name": "content.endswith",
-        "Type": "Inline_65640098A447",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -292,7 +292,7 @@
       },
       {
         "Name": "content.exact",
-        "Type": "Inline_D211DFAC57E3",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -303,7 +303,7 @@
       },
       {
         "Name": "content.startswith",
-        "Type": "Inline_2D82801D8DFC",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -314,7 +314,7 @@
       },
       {
         "Name": "direction",
-        "Type": "dns-records_direction",
+        "Type": "Direction",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -325,7 +325,7 @@
       },
       {
         "Name": "dns_record_id",
-        "Type": "dns-records_identifier",
+        "Type": "Identifier",
         "Binding": "path",
         "AppliesTo": [
           "dns-records-for-a-zone-dns-record-details"
@@ -338,7 +338,7 @@
       },
       {
         "Name": "include_shadow_metadata",
-        "Type": "Inline_FC261D0FF8EE",
+        "Type": "boolean",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-dns-record-details",
@@ -350,7 +350,7 @@
       },
       {
         "Name": "match",
-        "Type": "dns-records_match",
+        "Type": "MatchFilter",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -361,7 +361,7 @@
       },
       {
         "Name": "name",
-        "Type": "Inline_DBF19B766020",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -372,7 +372,7 @@
       },
       {
         "Name": "name.contains",
-        "Type": "Inline_D8DFFBBF4254",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -383,7 +383,7 @@
       },
       {
         "Name": "name.endswith",
-        "Type": "Inline_7B841D75B0E6",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -394,7 +394,7 @@
       },
       {
         "Name": "name.exact",
-        "Type": "Inline_106347877B97",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -405,7 +405,7 @@
       },
       {
         "Name": "name.startswith",
-        "Type": "Inline_BD4D2AF09C0B",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -416,7 +416,7 @@
       },
       {
         "Name": "order",
-        "Type": "dns-records_order",
+        "Type": "Order",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -427,7 +427,7 @@
       },
       {
         "Name": "page",
-        "Type": "dns-records_page",
+        "Type": "integer",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -438,7 +438,7 @@
       },
       {
         "Name": "per_page",
-        "Type": "dns-records_per_page",
+        "Type": "integer",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -449,7 +449,7 @@
       },
       {
         "Name": "proxied",
-        "Type": "dns-records_proxied",
+        "Type": "boolean",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -460,7 +460,7 @@
       },
       {
         "Name": "search",
-        "Type": "dns-records_search",
+        "Type": "Search",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -471,7 +471,7 @@
       },
       {
         "Name": "shadowed_by_name",
-        "Type": "Inline_93F17A9F097F",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -482,7 +482,7 @@
       },
       {
         "Name": "shadowing_name",
-        "Type": "Inline_07001EAED8D0",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -493,7 +493,7 @@
       },
       {
         "Name": "tag",
-        "Type": "Inline_EBBBC6B74451",
+        "Type": "array<string>",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -504,7 +504,7 @@
       },
       {
         "Name": "tag_match",
-        "Type": "dns-records_tag_match",
+        "Type": "TagMatch",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -515,7 +515,7 @@
       },
       {
         "Name": "tag.absent",
-        "Type": "Inline_7E27C06946CE",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -526,7 +526,7 @@
       },
       {
         "Name": "tag.contains",
-        "Type": "Inline_AFDB21C3B17D",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -537,7 +537,7 @@
       },
       {
         "Name": "tag.endswith",
-        "Type": "Inline_D0A72DEB4547",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -548,7 +548,7 @@
       },
       {
         "Name": "tag.exact",
-        "Type": "Inline_AD5FB713CC6D",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -559,7 +559,7 @@
       },
       {
         "Name": "tag.present",
-        "Type": "Inline_C05A78CF07F6",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -570,7 +570,7 @@
       },
       {
         "Name": "tag.startswith",
-        "Type": "Inline_7088CC9530E7",
+        "Type": "string",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -581,7 +581,7 @@
       },
       {
         "Name": "type",
-        "Type": "dns-records_type",
+        "Type": "DnsRecordType",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-list-dns-records"
@@ -592,7 +592,7 @@
       },
       {
         "Name": "zone_id",
-        "Type": "dns-records_identifier",
+        "Type": "Identifier",
         "Binding": "path",
         "AppliesTo": [
           "dns-records-for-a-zone-dns-record-details",
@@ -626,7 +626,7 @@
         "QueryParameters": [
           "include_shadow_metadata"
         ],
-        "BodyModel": "dns-records_dns-record-post"
+        "BodyModel": "RecordCreateParams"
       }
     ],
     "ParameterSets": [
@@ -642,7 +642,7 @@
           "QueryParameters": [
             "include_shadow_metadata"
           ],
-          "BodyModel": "dns-records_dns-record-post"
+          "BodyModel": "RecordCreateParams"
         },
         "RequiredParameters": [
           "zone_id"
@@ -655,7 +655,7 @@
     "Parameters": [
       {
         "Name": "include_shadow_metadata",
-        "Type": "Inline_B69738F93588",
+        "Type": "boolean",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-create-dns-record"
@@ -666,7 +666,7 @@
       },
       {
         "Name": "zone_id",
-        "Type": "dns-records_identifier",
+        "Type": "Identifier",
         "Binding": "path",
         "AppliesTo": [
           "dns-records-for-a-zone-create-dns-record"
@@ -693,11 +693,11 @@
         "HttpMethod": "DELETE",
         "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
         "PathParameters": [
-          "dns_record_id",
-          "zone_id"
+          "zone_id",
+          "dns_record_id"
         ],
         "QueryParameters": [],
-        "BodyModel": ""
+        "BodyModel": "DeleteBody"
       }
     ],
     "ParameterSets": [
@@ -708,15 +708,15 @@
           "HttpMethod": "DELETE",
           "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
           "PathParameters": [
-            "dns_record_id",
-            "zone_id"
+            "zone_id",
+            "dns_record_id"
           ],
           "QueryParameters": [],
-          "BodyModel": ""
+          "BodyModel": "DeleteBody"
         },
         "RequiredParameters": [
-          "dns_record_id",
-          "zone_id"
+          "zone_id",
+          "dns_record_id"
         ],
         "OptionalParameters": []
       }
@@ -724,7 +724,7 @@
     "Parameters": [
       {
         "Name": "dns_record_id",
-        "Type": "dns-records_identifier",
+        "Type": "Identifier",
         "Binding": "path",
         "AppliesTo": [
           "dns-records-for-a-zone-delete-dns-record"
@@ -737,7 +737,7 @@
       },
       {
         "Name": "zone_id",
-        "Type": "dns-records_identifier",
+        "Type": "Identifier",
         "Binding": "path",
         "AppliesTo": [
           "dns-records-for-a-zone-delete-dns-record"
@@ -756,12 +756,6 @@
     "ConfirmImpact": "High",
     "OverrideTrace": [
       {
-        "ruleId": "rule-0",
-        "reason": "Schema declares a request body but official wrappers send DELETE without a body.",
-        "source": "official TypeScript/Python/Go wrapper comparison",
-        "match": "{\"operationId\":\"dns-records-for-a-zone-delete-dns-record\"}"
-      },
-      {
         "RuleIndex": 0,
         "Match": {
           "operationId": "dns-records-for-a-zone-delete-dns-record"
@@ -779,26 +773,26 @@
         "HttpMethod": "PATCH",
         "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
         "PathParameters": [
-          "dns_record_id",
-          "zone_id"
+          "zone_id",
+          "dns_record_id"
         ],
         "QueryParameters": [
           "include_shadow_metadata"
         ],
-        "BodyModel": "dns-records_dns-record-patch"
+        "BodyModel": "RecordEditParams"
       },
       {
         "OperationId": "dns-records-for-a-zone-update-dns-record",
         "HttpMethod": "PUT",
         "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
         "PathParameters": [
-          "dns_record_id",
-          "zone_id"
+          "zone_id",
+          "dns_record_id"
         ],
         "QueryParameters": [
           "include_shadow_metadata"
         ],
-        "BodyModel": "dns-records_dns-record-post"
+        "BodyModel": "RecordUpdateParams"
       }
     ],
     "ParameterSets": [
@@ -809,17 +803,17 @@
           "HttpMethod": "PATCH",
           "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
           "PathParameters": [
-            "dns_record_id",
-            "zone_id"
+            "zone_id",
+            "dns_record_id"
           ],
           "QueryParameters": [
             "include_shadow_metadata"
           ],
-          "BodyModel": "dns-records_dns-record-patch"
+          "BodyModel": "RecordEditParams"
         },
         "RequiredParameters": [
-          "dns_record_id",
-          "zone_id"
+          "zone_id",
+          "dns_record_id"
         ],
         "OptionalParameters": [
           "include_shadow_metadata"
@@ -832,17 +826,17 @@
           "HttpMethod": "PUT",
           "PathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
           "PathParameters": [
-            "dns_record_id",
-            "zone_id"
+            "zone_id",
+            "dns_record_id"
           ],
           "QueryParameters": [
             "include_shadow_metadata"
           ],
-          "BodyModel": "dns-records_dns-record-post"
+          "BodyModel": "RecordUpdateParams"
         },
         "RequiredParameters": [
-          "dns_record_id",
-          "zone_id"
+          "zone_id",
+          "dns_record_id"
         ],
         "OptionalParameters": [
           "include_shadow_metadata"
@@ -852,7 +846,7 @@
     "Parameters": [
       {
         "Name": "dns_record_id",
-        "Type": "dns-records_identifier",
+        "Type": "Identifier",
         "Binding": "path",
         "AppliesTo": [
           "dns-records-for-a-zone-patch-dns-record",
@@ -867,7 +861,7 @@
       },
       {
         "Name": "include_shadow_metadata",
-        "Type": "Inline_16AD61186BCE",
+        "Type": "boolean",
         "Binding": "query",
         "AppliesTo": [
           "dns-records-for-a-zone-patch-dns-record",
@@ -879,7 +873,7 @@
       },
       {
         "Name": "zone_id",
-        "Type": "dns-records_identifier",
+        "Type": "Identifier",
         "Binding": "path",
         "AppliesTo": [
           "dns-records-for-a-zone-patch-dns-record",

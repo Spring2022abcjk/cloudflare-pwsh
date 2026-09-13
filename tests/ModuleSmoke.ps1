@@ -47,6 +47,14 @@ public sealed class P1ModuleMockHandler : HttpMessageHandler
 '@
 
 Import-Module (Join-Path $modulePath 'Cloudflare.PowerShell.psd1') -Force
+$publicCommandNames = @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord')
+foreach ($name in $publicCommandNames) {
+    $command = Get-Command $name -ErrorAction Stop
+    if ($command.CommandType -ne 'Cmdlet') { throw "Public command '$name' did not resolve to a generated cmdlet." }
+    $shadowingFunctions = @(Get-Command $name -All -ErrorAction Stop | Where-Object CommandType -eq 'Function')
+    if ($shadowingFunctions.Count -ne 0) { throw "Public command '$name' is still shadowed by an exported function." }
+}
+Write-Output 'PASS ordinary public command routing'
 [P1ModuleMockHandler]::Reset()
 $handler = [P1ModuleMockHandler]::new()
 $records = @(Get-CfDnsRecord -ZoneId zone -BaseUrl 'https://mock.test/client/v4/' -Token token -Handler $handler)

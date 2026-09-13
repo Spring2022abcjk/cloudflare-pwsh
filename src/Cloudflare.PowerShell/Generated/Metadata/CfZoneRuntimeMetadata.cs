@@ -13,49 +13,18 @@ public static class CfZoneRuntimeMetadata
             PathTemplate = "/zones/{zone_id}",
             Parameters = [new GeneratedParameterMetadata { Name = "zone_id", Location = "path", Required = true }],
             RequestRepresentations = [],
-            ResponseRepresentations =
-            [
-                new GeneratedResponseRepresentationMetadata { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" },
-                new GeneratedResponseRepresentationMetadata { StatusCode = null, ContentType = "application/json", EnvelopePolicy = "ErrorEnvelope", ParsingMode = "Json" }
-            ],
-            Pagination = new GeneratedPaginationMetadata { Strategy = "SinglePage", RequestFields = [], ResponseFields = [], StopRule = "single response" }
+            ResponseRepresentations = [new GeneratedResponseRepresentationMetadata { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" }, new GeneratedResponseRepresentationMetadata { StatusCode = null, ContentType = "application/json", EnvelopePolicy = "ErrorEnvelope", ParsingMode = "Json" }],
+            Pagination = new GeneratedPaginationMetadata { Strategy = "SinglePage", RequestFields = [], ResponseFields = [], ResultPath = null, PageInfoPath = null, CurrentPagePath = null, TotalPagesPath = null, NextCursorPath = null, HasMorePath = null, NextPageRule = "", StopRule = "single response" }
         },
         new GeneratedOperationMetadata
         {
             OperationId = "zones-get",
             Method = "GET",
             PathTemplate = "/zones",
-            Parameters =
-            [
-                new GeneratedParameterMetadata { Name = "account.id", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "account.name", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "direction", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "match", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "name", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "order", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "page", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "per_page", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "status", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "type", Location = "query", Required = false }
-            ],
+            Parameters = [new GeneratedParameterMetadata { Name = "account.id", Location = "query", Required = false }, new GeneratedParameterMetadata { Name = "account.name", Location = "query", Required = false }, new GeneratedParameterMetadata { Name = "direction", Location = "query", Required = false }, new GeneratedParameterMetadata { Name = "match", Location = "query", Required = false }, new GeneratedParameterMetadata { Name = "name", Location = "query", Required = false }, new GeneratedParameterMetadata { Name = "order", Location = "query", Required = false }, new GeneratedParameterMetadata { Name = "page", Location = "query", Required = false }, new GeneratedParameterMetadata { Name = "per_page", Location = "query", Required = false }, new GeneratedParameterMetadata { Name = "status", Location = "query", Required = false }, new GeneratedParameterMetadata { Name = "type", Location = "query", Required = false }],
             RequestRepresentations = [],
-            ResponseRepresentations =
-            [
-                new GeneratedResponseRepresentationMetadata { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" },
-                new GeneratedResponseRepresentationMetadata { StatusCode = null, ContentType = "application/json", EnvelopePolicy = "ErrorEnvelope", ParsingMode = "Json" }
-            ],
-            Pagination = new GeneratedPaginationMetadata
-            {
-                Strategy = "V4PagePaginationArray",
-                RequestFields = ["page", "per_page"],
-                ResponseFields = ["result", "result_info"],
-                ResultPath = "result",
-                PageInfoPath = "result_info",
-                CurrentPagePath = "result_info.page",
-                TotalPagesPath = "result_info.total_pages",
-                NextPageRule = "page + 1",
-                StopRule = "empty result page"
-            }
+            ResponseRepresentations = [new GeneratedResponseRepresentationMetadata { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" }, new GeneratedResponseRepresentationMetadata { StatusCode = null, ContentType = "application/json", EnvelopePolicy = "ErrorEnvelope", ParsingMode = "Json" }],
+            Pagination = new GeneratedPaginationMetadata { Strategy = "V4PagePaginationArray", RequestFields = ["page", "per_page"], ResponseFields = ["result", "result_info"], ResultPath = "result", PageInfoPath = "result_info", CurrentPagePath = ("result_info" + ".page"), TotalPagesPath = ("result_info" + ".total_pages"), NextCursorPath = null, HasMorePath = null, NextPageRule = "page + 1", StopRule = "empty result page" }
         }
     ];
 

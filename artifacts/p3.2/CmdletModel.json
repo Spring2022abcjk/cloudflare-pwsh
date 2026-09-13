@@ -1,175 +1,5076 @@
 {
-  "version": 1,
+  "version": 3,
   "stage": "P3.2",
-  "source": "corrected projection model and generated runtime metadata",
+  "sourcePolicy": "normalized-model-plus-projection-policy",
+  "semanticAlgorithm": "SHA256-CanonicalJson-v1",
+  "sourceFiles": [
+    {
+      "path": "artifacts/generated-normalized/document.json",
+      "sha256": "a643a3c0de8f83f7a0a3eeb825aa3912befcf0f8b53dff4be0a78ee0419053e5"
+    },
+    {
+      "path": "fixtures/p2.1/zones/document.json",
+      "sha256": "389949a10805f3a01420e7caf9579bb2440199c60f6cbde863831859b326cfa4"
+    },
+    {
+      "path": "artifacts/p2.3/projection/zones.json",
+      "sha256": "ae45debf2a9684b90b626b1d6a790b4cb41b63b71be93057c1d972bce9a6ebb2"
+    },
+    {
+      "path": "overrides/powershell-projection.json",
+      "sha256": "7aab60ff31b2a36a7ec7e09666f9882e5358638ca4715469f887cab60d59a681"
+    },
+    {
+      "path": "overrides/powershell-p23-projection.json",
+      "sha256": "f9c11d3973b7c1ad8ce6f2bc4f6548adbb09df7df25e5658d1c250ef14c4a201"
+    },
+    {
+      "path": "overrides/powershell-p32-projection.json",
+      "sha256": "54b44174202f5bb0f5262c2238a58f6e2984fb71453ab5d1836c7034898a5b88"
+    }
+  ],
   "cmdlets": [
     {
       "cmdletName": "Get-CfZone",
       "className": "GetCfZoneCommand",
-      "outputType": "Cloudflare.PowerShell.CfZone",
-      "parameterSets": [
-        "Get",
-        "List"
-      ],
-      "parameterNames": [
-        "ZoneId",
-        "AccountId",
-        "AccountName",
-        "Direction",
-        "Match",
-        "Name",
-        "Order",
-        "Page",
-        "PerPage",
-        "Status",
-        "Type"
-      ],
+      "execution": {
+        "strategy": "parameter-set",
+        "shouldProcess": false
+      },
+      "runtimeMetadataType": "CfZoneRuntimeMetadata",
+      "generated": {
+        "operationMetadataType": "CfZoneOperationMetadata",
+        "operationMetadataPath": "src/Cloudflare.PowerShell/Generated/Metadata/CfZoneOperationMetadata.cs",
+        "runtimeMetadataPath": "src/Cloudflare.PowerShell/Generated/Metadata/CfZoneRuntimeMetadata.cs"
+      },
+      "model": {
+        "className": "CfZone",
+        "path": "src/Cloudflare.PowerShell/Generated/Models/CfZoneModels.cs",
+        "properties": [
+          {
+            "name": "Id",
+            "jsonName": "id",
+            "type": "string?"
+          },
+          {
+            "name": "Name",
+            "jsonName": "name",
+            "type": "string?"
+          },
+          {
+            "name": "Status",
+            "jsonName": "status",
+            "type": "string?"
+          },
+          {
+            "name": "Type",
+            "jsonName": "type",
+            "type": "string?"
+          }
+        ]
+      },
+      "defaultParameterSetName": "List",
       "operationIds": [
         "zones-0-get",
         "zones-get"
       ],
+      "parameterSets": [
+        {
+          "name": "Get",
+          "operationId": "zones-0-get",
+          "operationBinding": {
+            "method": "GET",
+            "pathTemplate": "/zones/{zone_id}",
+            "pathParameters": [
+              "ZoneId"
+            ],
+            "queryParameters": [],
+            "bodyParameter": null,
+            "bodyModel": null,
+            "invokeKind": "single",
+            "outputPolicy": "item",
+            "bodySerialization": null,
+            "errorTarget": "ZoneId"
+          },
+          "requiredParameters": [
+            "ZoneId"
+          ],
+          "optionalParameters": []
+        },
+        {
+          "name": "List",
+          "operationId": "zones-get",
+          "operationBinding": {
+            "method": "GET",
+            "pathTemplate": "/zones",
+            "pathParameters": [],
+            "queryParameters": [
+              "AccountId",
+              "AccountName",
+              "Direction",
+              "Match",
+              "Name",
+              "Order",
+              "Page",
+              "PerPage",
+              "Status",
+              "Type"
+            ],
+            "bodyParameter": null,
+            "bodyModel": null,
+            "invokeKind": "paged",
+            "outputPolicy": "item",
+            "bodySerialization": null,
+            "errorTarget": ""
+          },
+          "requiredParameters": [],
+          "optionalParameters": [
+            "AccountId",
+            "AccountName",
+            "Direction",
+            "Match",
+            "Name",
+            "Order",
+            "Page",
+            "PerPage",
+            "Status",
+            "Type"
+          ]
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "zones-get",
+              "location": "query",
+              "name": "account.id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'account.id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "AccountName",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "zones-get",
+              "location": "query",
+              "name": "account.name"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'account.name'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Direction",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "zones-get",
+              "location": "query",
+              "name": "direction"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'direction'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Match",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": "all",
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "zones-get",
+              "location": "query",
+              "name": "match"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'match'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Name",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "zones-get",
+              "location": "query",
+              "name": "name"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'name'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Order",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "zones-get",
+              "location": "query",
+              "name": "order"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'order'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Page",
+          "type": "decimal",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 1,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "zones-get",
+              "location": "query",
+              "name": "page"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'page'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "PerPage",
+          "type": "decimal",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 20,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "zones-get",
+              "location": "query",
+              "name": "per_page"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'per_page'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Status",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "zones-get",
+              "location": "query",
+              "name": "status"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'status'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Type",
+          "type": "string[]?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "zones-get",
+              "location": "query",
+              "name": "type"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'type'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "ZoneId",
+          "type": "string?",
+          "binding": "path",
+          "position": 0,
+          "appliesTo": [
+            "Get"
+          ],
+          "requiredIn": [
+            "Get"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "zones-0-get",
+              "location": "path",
+              "name": "zone_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Primary"
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfZone",
+      "outputPolicy": "item",
+      "pagingBehavior": "V4PagePaginationArray",
       "supportsShouldProcess": false,
       "confirmImpact": "None",
+      "shouldProcessTarget": "",
+      "shouldProcessAction": "",
       "help": {
-        "synopsis": "Gets a Cloudflare zone.",
+        "synopsis": "Gets Cloudflare zones.",
         "description": "Gets zones visible to the authenticated account and writes one typed zone per pipeline object.",
-        "source": "Override"
-      }
+        "source": "P3.2ProjectionPolicy"
+      },
+      "operations": [
+        {
+          "operationId": "zones-0-get",
+          "resource": "zones",
+          "parameterSet": "Get",
+          "method": "GET",
+          "pathTemplate": "/zones/{zone_id}",
+          "semantic": {
+            "kind": "Get",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "ZoneId",
+              "sourceName": "zone_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Get"
+              ],
+              "requiredIn": "Get",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "zones-0-get",
+                  "location": "path",
+                  "name": "zone_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'zone_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Primary"
+            }
+          ],
+          "bodyParameterName": null,
+          "bodyModel": null,
+          "outputType": "Cloudflare.PowerShell.CfZone",
+          "constantName": "Operation_zones_Get_zones_0_get",
+          "outputPolicy": "item",
+          "invokeKind": "single",
+          "bodySerialization": null,
+          "errorTarget": "ZoneId",
+          "supportsShouldProcess": false,
+          "confirmImpact": "None",
+          "help": {
+            "synopsis": "Gets a Cloudflare zone.",
+            "description": "Gets one zone by its zone identifier.",
+            "source": "Override"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "zone_id",
+                "location": "path",
+                "required": true
+              }
+            ],
+            "requestRepresentations": null,
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        },
+        {
+          "operationId": "zones-get",
+          "resource": "zones",
+          "parameterSet": "List",
+          "method": "GET",
+          "pathTemplate": "/zones",
+          "semantic": {
+            "kind": "List",
+            "source": "CollectionPathHeuristic",
+            "confidence": "Medium"
+          },
+          "parameters": [
+            {
+              "name": "AccountId",
+              "sourceName": "account.id",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "zones-get",
+                  "location": "query",
+                  "name": "account.id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'account.id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "AccountName",
+              "sourceName": "account.name",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "zones-get",
+                  "location": "query",
+                  "name": "account.name"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'account.name'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Direction",
+              "sourceName": "direction",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "zones-get",
+                  "location": "query",
+                  "name": "direction"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'direction'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Match",
+              "sourceName": "match",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": "all",
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "zones-get",
+                  "location": "query",
+                  "name": "match"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'match'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Name",
+              "sourceName": "name",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "zones-get",
+                  "location": "query",
+                  "name": "name"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'name'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Order",
+              "sourceName": "order",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "zones-get",
+                  "location": "query",
+                  "name": "order"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'order'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Page",
+              "sourceName": "page",
+              "type": "decimal",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": 1,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "zones-get",
+                  "location": "query",
+                  "name": "page"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'page'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "PerPage",
+              "sourceName": "per_page",
+              "type": "decimal",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": 20,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "zones-get",
+                  "location": "query",
+                  "name": "per_page"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'per_page'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Status",
+              "sourceName": "status",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "zones-get",
+                  "location": "query",
+                  "name": "status"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'status'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Type",
+              "sourceName": "type",
+              "type": "string[]?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "zones-get",
+                  "location": "query",
+                  "name": "type"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'type'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": null,
+          "bodyModel": null,
+          "outputType": "Cloudflare.PowerShell.CfZone",
+          "constantName": "Operation_zones_List_zones_get",
+          "outputPolicy": "item",
+          "invokeKind": "paged",
+          "bodySerialization": null,
+          "errorTarget": "",
+          "supportsShouldProcess": false,
+          "confirmImpact": "None",
+          "help": {
+            "synopsis": "Gets Cloudflare zones.",
+            "description": "Gets zones visible to the authenticated account and writes one typed zone per pipeline object.",
+            "source": "Override"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "account.id",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "account.name",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "direction",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "match",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "name",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "order",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "page",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "per_page",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "status",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "type",
+                "location": "query",
+                "required": false
+              }
+            ],
+            "requestRepresentations": null,
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "V4PagePaginationArray",
+              "requestFields": [
+                "page",
+                "per_page"
+              ],
+              "responseFields": [
+                "result",
+                "result_info"
+              ],
+              "resultPath": "result",
+              "pageInfoPath": "result_info",
+              "currentPagePath": "result_info.page",
+              "totalPagesPath": "result_info.total_pages",
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "page + 1",
+              "stopRule": "empty result page"
+            }
+          }
+        }
+      ]
     },
     {
       "cmdletName": "Get-CfDnsRecord",
       "className": "GetCfDnsRecordCommand",
-      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
-      "parameterSets": [
-        "Get",
-        "List"
-      ],
-      "parameterNames": [
-        "ZoneId",
-        "DnsRecordId",
-        "IncludeShadowMetadata",
-        "Comment",
-        "CommentAbsent",
-        "CommentContains",
-        "CommentEndswith",
-        "CommentExact",
-        "CommentPresent",
-        "CommentStartswith",
-        "Content",
-        "ContentContains",
-        "ContentEndswith",
-        "ContentExact",
-        "ContentStartswith",
-        "Direction",
-        "Match",
-        "Name",
-        "NameContains",
-        "NameEndswith",
-        "NameExact",
-        "NameStartswith",
-        "Order",
-        "Page",
-        "PerPage",
-        "Proxied",
-        "Search",
-        "ShadowedByName",
-        "ShadowingName",
-        "Tag",
-        "TagContains",
-        "TagEndswith",
-        "TagExact",
-        "TagMatch",
-        "TagPresent",
-        "TagStartswith",
-        "Type"
-      ],
+      "execution": {
+        "strategy": "parameter-set",
+        "shouldProcess": false
+      },
+      "runtimeMetadataType": "CfDnsRecordRuntimeMetadata",
+      "generated": null,
+      "model": null,
+      "defaultParameterSetName": "List",
       "operationIds": [
         "dns-records-for-a-zone-dns-record-details",
         "dns-records-for-a-zone-list-dns-records"
       ],
+      "parameterSets": [
+        {
+          "name": "Get",
+          "operationId": "dns-records-for-a-zone-dns-record-details",
+          "operationBinding": {
+            "method": "GET",
+            "pathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+            "pathParameters": [
+              "DnsRecordId",
+              "ZoneId"
+            ],
+            "queryParameters": [
+              "IncludeShadowMetadata"
+            ],
+            "bodyParameter": null,
+            "bodyModel": null,
+            "invokeKind": "single",
+            "outputPolicy": "item",
+            "bodySerialization": null,
+            "errorTarget": "ZoneId"
+          },
+          "requiredParameters": [
+            "DnsRecordId",
+            "ZoneId"
+          ],
+          "optionalParameters": [
+            "IncludeShadowMetadata"
+          ]
+        },
+        {
+          "name": "List",
+          "operationId": "dns-records-for-a-zone-list-dns-records",
+          "operationBinding": {
+            "method": "GET",
+            "pathTemplate": "/zones/{zone_id}/dns_records",
+            "pathParameters": [
+              "ZoneId"
+            ],
+            "queryParameters": [
+              "Comment",
+              "CommentAbsent",
+              "CommentContains",
+              "CommentEndswith",
+              "CommentExact",
+              "CommentPresent",
+              "CommentStartswith",
+              "Content",
+              "ContentContains",
+              "ContentEndswith",
+              "ContentExact",
+              "ContentStartswith",
+              "Direction",
+              "IncludeShadowMetadata",
+              "Match",
+              "Name",
+              "NameContains",
+              "NameEndswith",
+              "NameExact",
+              "NameStartswith",
+              "Order",
+              "Page",
+              "PerPage",
+              "Proxied",
+              "Search",
+              "ShadowedByName",
+              "ShadowingName",
+              "Tag",
+              "TagMatch",
+              "TagAbsent",
+              "TagContains",
+              "TagEndswith",
+              "TagExact",
+              "TagPresent",
+              "TagStartswith",
+              "Type"
+            ],
+            "bodyParameter": null,
+            "bodyModel": null,
+            "invokeKind": "paged",
+            "outputPolicy": "item",
+            "bodySerialization": null,
+            "errorTarget": "ZoneId"
+          },
+          "requiredParameters": [
+            "ZoneId"
+          ],
+          "optionalParameters": [
+            "Comment",
+            "CommentAbsent",
+            "CommentContains",
+            "CommentEndswith",
+            "CommentExact",
+            "CommentPresent",
+            "CommentStartswith",
+            "Content",
+            "ContentContains",
+            "ContentEndswith",
+            "ContentExact",
+            "ContentStartswith",
+            "Direction",
+            "IncludeShadowMetadata",
+            "Match",
+            "Name",
+            "NameContains",
+            "NameEndswith",
+            "NameExact",
+            "NameStartswith",
+            "Order",
+            "Page",
+            "PerPage",
+            "Proxied",
+            "Search",
+            "ShadowedByName",
+            "ShadowingName",
+            "Tag",
+            "TagMatch",
+            "TagAbsent",
+            "TagContains",
+            "TagEndswith",
+            "TagExact",
+            "TagPresent",
+            "TagStartswith",
+            "Type"
+          ]
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Comment",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "comment"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'comment'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "CommentAbsent",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "comment.absent"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'comment.absent'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "CommentContains",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "comment.contains"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'comment.contains'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "CommentEndswith",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "comment.endswith"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'comment.endswith'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "CommentExact",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "comment.exact"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'comment.exact'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "CommentPresent",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "comment.present"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'comment.present'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "CommentStartswith",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "comment.startswith"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'comment.startswith'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Content",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "content"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'content'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "ContentContains",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "content.contains"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'content.contains'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "ContentEndswith",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "content.endswith"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'content.endswith'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "ContentExact",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "content.exact"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'content.exact'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "ContentStartswith",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "content.startswith"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'content.startswith'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Direction",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": "asc",
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "direction"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'direction'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "DnsRecordId",
+          "type": "string?",
+          "binding": "path",
+          "position": 1,
+          "appliesTo": [
+            "Get"
+          ],
+          "requiredIn": [
+            "Get"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [
+            "RecordId"
+          ],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-dns-record-details",
+              "location": "path",
+              "name": "dns_record_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'dns_record_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Primary"
+        },
+        {
+          "name": "IncludeShadowMetadata",
+          "type": "bool",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "Get",
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": false,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-dns-record-details",
+              "location": "query",
+              "name": "include_shadow_metadata"
+            },
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "include_shadow_metadata"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'include_shadow_metadata'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Match",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": "all",
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "match"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'match'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Name",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "name"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'name'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "NameContains",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "name.contains"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'name.contains'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "NameEndswith",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "name.endswith"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'name.endswith'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "NameExact",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "name.exact"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'name.exact'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "NameStartswith",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "name.startswith"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'name.startswith'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Order",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": "type",
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "order"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'order'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Page",
+          "type": "decimal",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 1,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "page"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'page'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "PerPage",
+          "type": "decimal",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 100,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "per_page"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'per_page'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Proxied",
+          "type": "bool",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": false,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "proxied"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'proxied'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Search",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "search"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'search'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "ShadowedByName",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "shadowed_by_name"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'shadowed_by_name'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "ShadowingName",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "shadowing_name"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'shadowing_name'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Tag",
+          "type": "string[]?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "tag"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'tag'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "TagAbsent",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "tag.absent"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'tag.absent'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "TagContains",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "tag.contains"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'tag.contains'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "TagEndswith",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "tag.endswith"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'tag.endswith'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "TagExact",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "tag.exact"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'tag.exact'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "TagMatch",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": "all",
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "tag_match"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'tag_match'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "TagPresent",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "tag.present"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'tag.present'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "TagStartswith",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "tag.startswith"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'tag.startswith'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Type",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "query",
+              "name": "type"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'type'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "ZoneId",
+          "type": "string?",
+          "binding": "path",
+          "position": 0,
+          "appliesTo": [
+            "Get",
+            "List"
+          ],
+          "requiredIn": [
+            "Get",
+            "List"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-dns-record-details",
+              "location": "path",
+              "name": "zone_id"
+            },
+            {
+              "operationId": "dns-records-for-a-zone-list-dns-records",
+              "location": "path",
+              "name": "zone_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Parent"
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+      "outputPolicy": "item",
+      "pagingBehavior": "V4PagePaginationArray",
       "supportsShouldProcess": false,
       "confirmImpact": "None",
+      "shouldProcessTarget": "",
+      "shouldProcessAction": "",
       "help": {
         "synopsis": "Gets Cloudflare DNS records.",
         "description": "Gets one or more typed DNS records through the shared runtime.",
-        "source": "DeterministicDefault"
-      }
+        "source": "P3.2ProjectionPolicy"
+      },
+      "operations": [
+        {
+          "operationId": "dns-records-for-a-zone-dns-record-details",
+          "resource": "dns",
+          "parameterSet": "Get",
+          "method": "GET",
+          "pathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+          "semantic": {
+            "kind": "Get",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "DnsRecordId",
+              "sourceName": "dns_record_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 1,
+              "appliesTo": [
+                "Get"
+              ],
+              "requiredIn": "Get",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-dns-record-details",
+                  "location": "path",
+                  "name": "dns_record_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'dns_record_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Primary"
+            },
+            {
+              "name": "ZoneId",
+              "sourceName": "zone_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Get"
+              ],
+              "requiredIn": "Get",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-dns-record-details",
+                  "location": "path",
+                  "name": "zone_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'zone_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "IncludeShadowMetadata",
+              "sourceName": "include_shadow_metadata",
+              "type": "bool",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "Get"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": false,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-dns-record-details",
+                  "location": "query",
+                  "name": "include_shadow_metadata"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'include_shadow_metadata'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": null,
+          "bodyModel": null,
+          "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+          "constantName": "",
+          "outputPolicy": "item",
+          "invokeKind": "single",
+          "bodySerialization": null,
+          "errorTarget": "ZoneId",
+          "supportsShouldProcess": false,
+          "confirmImpact": "None",
+          "help": {
+            "synopsis": "Get-CfDnsRecord get operation.",
+            "description": "Generated help for normalized operation 'dns-records-for-a-zone-dns-record-details'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "dns_record_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "zone_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "include_shadow_metadata",
+                "location": "query",
+                "required": false
+              }
+            ],
+            "requestRepresentations": null,
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        },
+        {
+          "operationId": "dns-records-for-a-zone-list-dns-records",
+          "resource": "dns",
+          "parameterSet": "List",
+          "method": "GET",
+          "pathTemplate": "/zones/{zone_id}/dns_records",
+          "semantic": {
+            "kind": "List",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "ZoneId",
+              "sourceName": "zone_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": "List",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "path",
+                  "name": "zone_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'zone_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "Comment",
+              "sourceName": "comment",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "comment"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'comment'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "CommentAbsent",
+              "sourceName": "comment.absent",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "comment.absent"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'comment.absent'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "CommentContains",
+              "sourceName": "comment.contains",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "comment.contains"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'comment.contains'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "CommentEndswith",
+              "sourceName": "comment.endswith",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "comment.endswith"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'comment.endswith'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "CommentExact",
+              "sourceName": "comment.exact",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "comment.exact"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'comment.exact'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "CommentPresent",
+              "sourceName": "comment.present",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "comment.present"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'comment.present'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "CommentStartswith",
+              "sourceName": "comment.startswith",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "comment.startswith"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'comment.startswith'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Content",
+              "sourceName": "content",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "content"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'content'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "ContentContains",
+              "sourceName": "content.contains",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "content.contains"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'content.contains'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "ContentEndswith",
+              "sourceName": "content.endswith",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "content.endswith"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'content.endswith'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "ContentExact",
+              "sourceName": "content.exact",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "content.exact"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'content.exact'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "ContentStartswith",
+              "sourceName": "content.startswith",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "content.startswith"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'content.startswith'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Direction",
+              "sourceName": "direction",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": "asc",
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "direction"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'direction'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "IncludeShadowMetadata",
+              "sourceName": "include_shadow_metadata",
+              "type": "bool",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": false,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "include_shadow_metadata"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'include_shadow_metadata'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Match",
+              "sourceName": "match",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": "all",
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "match"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'match'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Name",
+              "sourceName": "name",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "name"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'name'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "NameContains",
+              "sourceName": "name.contains",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "name.contains"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'name.contains'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "NameEndswith",
+              "sourceName": "name.endswith",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "name.endswith"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'name.endswith'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "NameExact",
+              "sourceName": "name.exact",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "name.exact"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'name.exact'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "NameStartswith",
+              "sourceName": "name.startswith",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "name.startswith"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'name.startswith'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Order",
+              "sourceName": "order",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": "type",
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "order"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'order'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Page",
+              "sourceName": "page",
+              "type": "decimal",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": 1,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "page"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'page'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "PerPage",
+              "sourceName": "per_page",
+              "type": "decimal",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": 100,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "per_page"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'per_page'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Proxied",
+              "sourceName": "proxied",
+              "type": "bool",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": false,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "proxied"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'proxied'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Search",
+              "sourceName": "search",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "search"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'search'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "ShadowedByName",
+              "sourceName": "shadowed_by_name",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "shadowed_by_name"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'shadowed_by_name'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "ShadowingName",
+              "sourceName": "shadowing_name",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "shadowing_name"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'shadowing_name'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Tag",
+              "sourceName": "tag",
+              "type": "string[]?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "tag"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'tag'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "TagMatch",
+              "sourceName": "tag_match",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": "all",
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "tag_match"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'tag_match'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "TagAbsent",
+              "sourceName": "tag.absent",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "tag.absent"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'tag.absent'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "TagContains",
+              "sourceName": "tag.contains",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "tag.contains"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'tag.contains'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "TagEndswith",
+              "sourceName": "tag.endswith",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "tag.endswith"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'tag.endswith'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "TagExact",
+              "sourceName": "tag.exact",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "tag.exact"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'tag.exact'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "TagPresent",
+              "sourceName": "tag.present",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "tag.present"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'tag.present'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "TagStartswith",
+              "sourceName": "tag.startswith",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "tag.startswith"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'tag.startswith'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Type",
+              "sourceName": "type",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-list-dns-records",
+                  "location": "query",
+                  "name": "type"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'type'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": null,
+          "bodyModel": null,
+          "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+          "constantName": "",
+          "outputPolicy": "item",
+          "invokeKind": "paged",
+          "bodySerialization": null,
+          "errorTarget": "ZoneId",
+          "supportsShouldProcess": false,
+          "confirmImpact": "None",
+          "help": {
+            "synopsis": "Get-CfDnsRecord list operation.",
+            "description": "Generated help for normalized operation 'dns-records-for-a-zone-list-dns-records'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "zone_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "comment",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "comment.absent",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "comment.contains",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "comment.endswith",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "comment.exact",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "comment.present",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "comment.startswith",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "content",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "content.contains",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "content.endswith",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "content.exact",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "content.startswith",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "direction",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "include_shadow_metadata",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "match",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "name",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "name.contains",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "name.endswith",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "name.exact",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "name.startswith",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "order",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "page",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "per_page",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "proxied",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "search",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "shadowed_by_name",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "shadowing_name",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "tag",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "tag_match",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "tag.absent",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "tag.contains",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "tag.endswith",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "tag.exact",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "tag.present",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "tag.startswith",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "type",
+                "location": "query",
+                "required": false
+              }
+            ],
+            "requestRepresentations": null,
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "V4PagePaginationArray",
+              "requestFields": [
+                "page",
+                "per_page"
+              ],
+              "responseFields": [
+                "result",
+                "result_info"
+              ],
+              "resultPath": "result",
+              "pageInfoPath": "result_info",
+              "currentPagePath": "result_info.page",
+              "totalPagesPath": "result_info.total_pages",
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "page + 1",
+              "stopRule": "empty result page"
+            }
+          }
+        }
+      ]
     },
     {
       "cmdletName": "New-CfDnsRecord",
       "className": "NewCfDnsRecordCommand",
-      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
-      "parameterSets": [
-        "Create"
-      ],
-      "parameterNames": [
-        "ZoneId",
-        "Record",
-        "IncludeShadowMetadata"
-      ],
+      "execution": {
+        "strategy": "parameter-set",
+        "shouldProcess": true,
+        "shouldProcessTarget": "ZoneId",
+        "shouldProcessAction": "Create DNS record"
+      },
+      "runtimeMetadataType": "CfDnsRecordRuntimeMetadata",
+      "generated": null,
+      "model": null,
+      "defaultParameterSetName": "Create",
       "operationIds": [
         "dns-records-for-a-zone-create-dns-record"
       ],
+      "parameterSets": [
+        {
+          "name": "Create",
+          "operationId": "dns-records-for-a-zone-create-dns-record",
+          "operationBinding": {
+            "method": "POST",
+            "pathTemplate": "/zones/{zone_id}/dns_records",
+            "pathParameters": [
+              "ZoneId"
+            ],
+            "queryParameters": [
+              "IncludeShadowMetadata"
+            ],
+            "bodyParameter": "Record",
+            "bodyModel": "dns-records_dns-record-post",
+            "invokeKind": "single",
+            "outputPolicy": "single",
+            "bodySerialization": "ToJson",
+            "errorTarget": ""
+          },
+          "requiredParameters": [
+            "ZoneId",
+            "Record"
+          ],
+          "optionalParameters": [
+            "IncludeShadowMetadata"
+          ]
+        }
+      ],
+      "parameters": [
+        {
+          "name": "IncludeShadowMetadata",
+          "type": "bool",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "Create"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": false,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-create-dns-record",
+              "location": "query",
+              "name": "include_shadow_metadata"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'include_shadow_metadata'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Record",
+          "type": "CfDnsRecordInput",
+          "binding": "body",
+          "position": 1,
+          "appliesTo": [
+            "Create"
+          ],
+          "requiredIn": [
+            "Create"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "null-forgiving",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-create-dns-record",
+              "location": "body",
+              "name": "body"
+            }
+          ],
+          "help": {
+            "description": "Binds the normalized dns-records_dns-record-post request body.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": true,
+          "bodyModel": "dns-records_dns-record-post",
+          "scopeRole": null
+        },
+        {
+          "name": "ZoneId",
+          "type": "string?",
+          "binding": "path",
+          "position": 0,
+          "appliesTo": [
+            "Create"
+          ],
+          "requiredIn": [
+            "Create"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-create-dns-record",
+              "location": "path",
+              "name": "zone_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Parent"
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
       "supportsShouldProcess": true,
       "confirmImpact": "Medium",
+      "shouldProcessTarget": "ZoneId",
+      "shouldProcessAction": "Create DNS record",
       "help": {
         "synopsis": "Creates a Cloudflare DNS record.",
         "description": "Creates a typed DNS record using the generated request model.",
-        "source": "DeterministicDefault"
-      }
+        "source": "P3.2ProjectionPolicy"
+      },
+      "operations": [
+        {
+          "operationId": "dns-records-for-a-zone-create-dns-record",
+          "resource": "dns",
+          "parameterSet": "Create",
+          "method": "POST",
+          "pathTemplate": "/zones/{zone_id}/dns_records",
+          "semantic": {
+            "kind": "Create",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "ZoneId",
+              "sourceName": "zone_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Create"
+              ],
+              "requiredIn": "Create",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-create-dns-record",
+                  "location": "path",
+                  "name": "zone_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'zone_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "IncludeShadowMetadata",
+              "sourceName": "include_shadow_metadata",
+              "type": "bool",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "Create"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": false,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-create-dns-record",
+                  "location": "query",
+                  "name": "include_shadow_metadata"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'include_shadow_metadata'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Record",
+              "sourceName": "body",
+              "type": "CfDnsRecordInput",
+              "binding": "body",
+              "position": 1,
+              "appliesTo": [
+                "Create"
+              ],
+              "requiredIn": "Create",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "initializerPolicy": "null-forgiving",
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-create-dns-record",
+                  "location": "body",
+                  "name": "body"
+                }
+              ],
+              "help": {
+                "description": "Binds the normalized dns-records_dns-record-post request body.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": true,
+              "bodyModel": "dns-records_dns-record-post",
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": "Record",
+          "bodyModel": "dns-records_dns-record-post",
+          "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+          "constantName": "",
+          "outputPolicy": "single",
+          "invokeKind": "single",
+          "bodySerialization": "ToJson",
+          "errorTarget": "",
+          "supportsShouldProcess": true,
+          "confirmImpact": "Medium",
+          "help": {
+            "synopsis": "New-CfDnsRecord create operation.",
+            "description": "Generated help for normalized operation 'dns-records-for-a-zone-create-dns-record'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "zone_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "include_shadow_metadata",
+                "location": "query",
+                "required": false
+              }
+            ],
+            "requestRepresentations": {
+              "contentType": "application/json",
+              "bodyParameterName": "body",
+              "parts": []
+            },
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        }
+      ]
     },
     {
       "cmdletName": "Remove-CfDnsRecord",
       "className": "RemoveCfDnsRecordCommand",
-      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
-      "parameterSets": [
-        "Delete"
-      ],
-      "parameterNames": [
-        "ZoneId",
-        "DnsRecordId"
-      ],
+      "execution": {
+        "strategy": "parameter-set",
+        "shouldProcess": true,
+        "shouldProcessTarget": "DnsRecordId",
+        "shouldProcessAction": "Delete DNS record"
+      },
+      "runtimeMetadataType": "CfDnsRecordRuntimeMetadata",
+      "generated": null,
+      "model": null,
+      "defaultParameterSetName": "Delete",
       "operationIds": [
         "dns-records-for-a-zone-delete-dns-record"
       ],
+      "parameterSets": [
+        {
+          "name": "Delete",
+          "operationId": "dns-records-for-a-zone-delete-dns-record",
+          "operationBinding": {
+            "method": "DELETE",
+            "pathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+            "pathParameters": [
+              "DnsRecordId",
+              "ZoneId"
+            ],
+            "queryParameters": [],
+            "bodyParameter": null,
+            "bodyModel": null,
+            "invokeKind": "single",
+            "outputPolicy": "none",
+            "bodySerialization": null,
+            "errorTarget": ""
+          },
+          "requiredParameters": [
+            "DnsRecordId",
+            "ZoneId"
+          ],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "DnsRecordId",
+          "type": "string?",
+          "binding": "path",
+          "position": 1,
+          "appliesTo": [
+            "Delete"
+          ],
+          "requiredIn": [
+            "Delete"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [
+            "RecordId"
+          ],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-delete-dns-record",
+              "location": "path",
+              "name": "dns_record_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'dns_record_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Primary"
+        },
+        {
+          "name": "ZoneId",
+          "type": "string?",
+          "binding": "path",
+          "position": 0,
+          "appliesTo": [
+            "Delete"
+          ],
+          "requiredIn": [
+            "Delete"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-delete-dns-record",
+              "location": "path",
+              "name": "zone_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Parent"
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+      "outputPolicy": "none",
+      "pagingBehavior": null,
       "supportsShouldProcess": true,
       "confirmImpact": "High",
+      "shouldProcessTarget": "DnsRecordId",
+      "shouldProcessAction": "Delete DNS record",
       "help": {
         "synopsis": "Removes a Cloudflare DNS record.",
         "description": "Removes one DNS record by zone and record identifier.",
-        "source": "DeterministicDefault"
-      }
+        "source": "P3.2ProjectionPolicy"
+      },
+      "operations": [
+        {
+          "operationId": "dns-records-for-a-zone-delete-dns-record",
+          "resource": "dns",
+          "parameterSet": "Delete",
+          "method": "DELETE",
+          "pathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+          "semantic": {
+            "kind": "Delete",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "DnsRecordId",
+              "sourceName": "dns_record_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 1,
+              "appliesTo": [
+                "Delete"
+              ],
+              "requiredIn": "Delete",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-delete-dns-record",
+                  "location": "path",
+                  "name": "dns_record_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'dns_record_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Primary"
+            },
+            {
+              "name": "ZoneId",
+              "sourceName": "zone_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Delete"
+              ],
+              "requiredIn": "Delete",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-delete-dns-record",
+                  "location": "path",
+                  "name": "zone_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'zone_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            }
+          ],
+          "bodyParameterName": null,
+          "bodyModel": null,
+          "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+          "constantName": "",
+          "outputPolicy": "none",
+          "invokeKind": "single",
+          "bodySerialization": null,
+          "errorTarget": "",
+          "supportsShouldProcess": true,
+          "confirmImpact": "High",
+          "help": {
+            "synopsis": "Remove-CfDnsRecord delete operation.",
+            "description": "Generated help for normalized operation 'dns-records-for-a-zone-delete-dns-record'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "dns_record_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "zone_id",
+                "location": "path",
+                "required": true
+              }
+            ],
+            "requestRepresentations": null,
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        }
+      ]
     },
     {
       "cmdletName": "Set-CfDnsRecord",
       "className": "SetCfDnsRecordCommand",
-      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
-      "parameterSets": [
-        "Replace",
-        "Edit"
-      ],
-      "parameterNames": [
-        "ZoneId",
-        "DnsRecordId",
-        "Replace",
-        "Edit"
-      ],
+      "execution": {
+        "strategy": "parameter-set",
+        "shouldProcess": true,
+        "shouldProcessTarget": "DnsRecordId",
+        "shouldProcessAction": "{ParameterSetName} DNS record"
+      },
+      "runtimeMetadataType": "CfDnsRecordRuntimeMetadata",
+      "generated": null,
+      "model": null,
+      "defaultParameterSetName": "Replace",
       "operationIds": [
-        "dns-records-for-a-zone-update-dns-record",
-        "dns-records-for-a-zone-patch-dns-record"
+        "dns-records-for-a-zone-patch-dns-record",
+        "dns-records-for-a-zone-update-dns-record"
       ],
+      "parameterSets": [
+        {
+          "name": "Edit",
+          "operationId": "dns-records-for-a-zone-patch-dns-record",
+          "operationBinding": {
+            "method": "PATCH",
+            "pathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+            "pathParameters": [
+              "DnsRecordId",
+              "ZoneId"
+            ],
+            "queryParameters": [
+              "IncludeShadowMetadata"
+            ],
+            "bodyParameter": "Edit",
+            "bodyModel": "dns-records_dns-record-patch",
+            "invokeKind": "single",
+            "outputPolicy": "single",
+            "bodySerialization": "Value",
+            "errorTarget": ""
+          },
+          "requiredParameters": [
+            "DnsRecordId",
+            "ZoneId",
+            "Edit"
+          ],
+          "optionalParameters": [
+            "IncludeShadowMetadata"
+          ]
+        },
+        {
+          "name": "Replace",
+          "operationId": "dns-records-for-a-zone-update-dns-record",
+          "operationBinding": {
+            "method": "PUT",
+            "pathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+            "pathParameters": [
+              "DnsRecordId",
+              "ZoneId"
+            ],
+            "queryParameters": [
+              "IncludeShadowMetadata"
+            ],
+            "bodyParameter": "Replace",
+            "bodyModel": "dns-records_dns-record-post",
+            "invokeKind": "single",
+            "outputPolicy": "single",
+            "bodySerialization": "Value",
+            "errorTarget": ""
+          },
+          "requiredParameters": [
+            "DnsRecordId",
+            "ZoneId",
+            "Replace"
+          ],
+          "optionalParameters": [
+            "IncludeShadowMetadata"
+          ]
+        }
+      ],
+      "parameters": [
+        {
+          "name": "DnsRecordId",
+          "type": "string?",
+          "binding": "path",
+          "position": 1,
+          "appliesTo": [
+            "Edit",
+            "Replace"
+          ],
+          "requiredIn": [
+            "Edit",
+            "Replace"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [
+            "RecordId"
+          ],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-patch-dns-record",
+              "location": "path",
+              "name": "dns_record_id"
+            },
+            {
+              "operationId": "dns-records-for-a-zone-update-dns-record",
+              "location": "path",
+              "name": "dns_record_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'dns_record_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Primary"
+        },
+        {
+          "name": "Edit",
+          "type": "Hashtable",
+          "binding": "body",
+          "position": 2,
+          "appliesTo": [
+            "Edit"
+          ],
+          "requiredIn": [
+            "Edit"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "null-forgiving",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-patch-dns-record",
+              "location": "body",
+              "name": "body"
+            }
+          ],
+          "help": {
+            "description": "Binds the normalized dns-records_dns-record-patch request body.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": true,
+          "bodyModel": "dns-records_dns-record-patch",
+          "scopeRole": null
+        },
+        {
+          "name": "IncludeShadowMetadata",
+          "type": "bool",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "Edit",
+            "Replace"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": false,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-patch-dns-record",
+              "location": "query",
+              "name": "include_shadow_metadata"
+            },
+            {
+              "operationId": "dns-records-for-a-zone-update-dns-record",
+              "location": "query",
+              "name": "include_shadow_metadata"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'include_shadow_metadata'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Replace",
+          "type": "Hashtable",
+          "binding": "body",
+          "position": 2,
+          "appliesTo": [
+            "Replace"
+          ],
+          "requiredIn": [
+            "Replace"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "null-forgiving",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-update-dns-record",
+              "location": "body",
+              "name": "body"
+            }
+          ],
+          "help": {
+            "description": "Binds the normalized dns-records_dns-record-post request body.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": true,
+          "bodyModel": "dns-records_dns-record-post",
+          "scopeRole": null
+        },
+        {
+          "name": "ZoneId",
+          "type": "string?",
+          "binding": "path",
+          "position": 0,
+          "appliesTo": [
+            "Edit",
+            "Replace"
+          ],
+          "requiredIn": [
+            "Edit",
+            "Replace"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "dns-records-for-a-zone-patch-dns-record",
+              "location": "path",
+              "name": "zone_id"
+            },
+            {
+              "operationId": "dns-records-for-a-zone-update-dns-record",
+              "location": "path",
+              "name": "zone_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Parent"
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
       "supportsShouldProcess": true,
       "confirmImpact": "High",
+      "shouldProcessTarget": "DnsRecordId",
+      "shouldProcessAction": "{ParameterSetName} DNS record",
       "help": {
         "synopsis": "Updates a Cloudflare DNS record.",
         "description": "Replaces or edits one DNS record through the shared runtime.",
-        "source": "DeterministicDefault"
-      }
+        "source": "P3.2ProjectionPolicy"
+      },
+      "operations": [
+        {
+          "operationId": "dns-records-for-a-zone-patch-dns-record",
+          "resource": "dns",
+          "parameterSet": "Edit",
+          "method": "PATCH",
+          "pathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+          "semantic": {
+            "kind": "Edit",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "DnsRecordId",
+              "sourceName": "dns_record_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 1,
+              "appliesTo": [
+                "Edit"
+              ],
+              "requiredIn": "Edit",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-patch-dns-record",
+                  "location": "path",
+                  "name": "dns_record_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'dns_record_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Primary"
+            },
+            {
+              "name": "ZoneId",
+              "sourceName": "zone_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Edit"
+              ],
+              "requiredIn": "Edit",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-patch-dns-record",
+                  "location": "path",
+                  "name": "zone_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'zone_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "IncludeShadowMetadata",
+              "sourceName": "include_shadow_metadata",
+              "type": "bool",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "Edit"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": false,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-patch-dns-record",
+                  "location": "query",
+                  "name": "include_shadow_metadata"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'include_shadow_metadata'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Edit",
+              "sourceName": "body",
+              "type": "Hashtable",
+              "binding": "body",
+              "position": 2,
+              "appliesTo": [
+                "Edit"
+              ],
+              "requiredIn": "Edit",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "initializerPolicy": "null-forgiving",
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-patch-dns-record",
+                  "location": "body",
+                  "name": "body"
+                }
+              ],
+              "help": {
+                "description": "Binds the normalized dns-records_dns-record-patch request body.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": true,
+              "bodyModel": "dns-records_dns-record-patch",
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": "Edit",
+          "bodyModel": "dns-records_dns-record-patch",
+          "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+          "constantName": "",
+          "outputPolicy": "single",
+          "invokeKind": "single",
+          "bodySerialization": "Value",
+          "errorTarget": "",
+          "supportsShouldProcess": true,
+          "confirmImpact": "Medium",
+          "help": {
+            "synopsis": "Set-CfDnsRecord edit operation.",
+            "description": "Generated help for normalized operation 'dns-records-for-a-zone-patch-dns-record'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "dns_record_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "zone_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "include_shadow_metadata",
+                "location": "query",
+                "required": false
+              }
+            ],
+            "requestRepresentations": {
+              "contentType": "application/json",
+              "bodyParameterName": "body",
+              "parts": []
+            },
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        },
+        {
+          "operationId": "dns-records-for-a-zone-update-dns-record",
+          "resource": "dns",
+          "parameterSet": "Replace",
+          "method": "PUT",
+          "pathTemplate": "/zones/{zone_id}/dns_records/{dns_record_id}",
+          "semantic": {
+            "kind": "Update",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "DnsRecordId",
+              "sourceName": "dns_record_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 1,
+              "appliesTo": [
+                "Replace"
+              ],
+              "requiredIn": "Replace",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-update-dns-record",
+                  "location": "path",
+                  "name": "dns_record_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'dns_record_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Primary"
+            },
+            {
+              "name": "ZoneId",
+              "sourceName": "zone_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Replace"
+              ],
+              "requiredIn": "Replace",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-update-dns-record",
+                  "location": "path",
+                  "name": "zone_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'zone_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "IncludeShadowMetadata",
+              "sourceName": "include_shadow_metadata",
+              "type": "bool",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "Replace"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": false,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-update-dns-record",
+                  "location": "query",
+                  "name": "include_shadow_metadata"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'include_shadow_metadata'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Replace",
+              "sourceName": "body",
+              "type": "Hashtable",
+              "binding": "body",
+              "position": 2,
+              "appliesTo": [
+                "Replace"
+              ],
+              "requiredIn": "Replace",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "initializerPolicy": "null-forgiving",
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "dns-records-for-a-zone-update-dns-record",
+                  "location": "body",
+                  "name": "body"
+                }
+              ],
+              "help": {
+                "description": "Binds the normalized dns-records_dns-record-post request body.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": true,
+              "bodyModel": "dns-records_dns-record-post",
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": "Replace",
+          "bodyModel": "dns-records_dns-record-post",
+          "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+          "constantName": "",
+          "outputPolicy": "single",
+          "invokeKind": "single",
+          "bodySerialization": "Value",
+          "errorTarget": "",
+          "supportsShouldProcess": true,
+          "confirmImpact": "High",
+          "help": {
+            "synopsis": "Set-CfDnsRecord update operation.",
+            "description": "Generated help for normalized operation 'dns-records-for-a-zone-update-dns-record'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "dns_record_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "zone_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "include_shadow_metadata",
+                "location": "query",
+                "required": false
+              }
+            ],
+            "requestRepresentations": {
+              "contentType": "application/json",
+              "bodyParameterName": "body",
+              "parts": []
+            },
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "models": [
+    {
+      "className": "CfZone",
+      "path": "src/Cloudflare.PowerShell/Generated/Models/CfZoneModels.cs",
+      "properties": [
+        {
+          "name": "Id",
+          "jsonName": "id",
+          "type": "string?"
+        },
+        {
+          "name": "Name",
+          "jsonName": "name",
+          "type": "string?"
+        },
+        {
+          "name": "Status",
+          "jsonName": "status",
+          "type": "string?"
+        },
+        {
+          "name": "Type",
+          "jsonName": "type",
+          "type": "string?"
+        }
+      ]
     }
   ],
   "commonInfrastructureParameters": [
     "BaseUrl",
     "Token",
     "Handler"
-  ]
+  ],
+  "canonicalDigest": "f2e617376a229bb8f55bf21cf794501411025cd9a33ec2a9bfafb0dbe0a2356a"
 }

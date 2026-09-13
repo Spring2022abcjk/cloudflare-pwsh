@@ -6,7 +6,7 @@
     Description = 'P1 DNS vertical slice prototype.'
     PowerShellVersion = '7.6'
     RequiredAssemblies = @('Cloudflare.PowerShell.dll')
-    FunctionsToExport = @('Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord')
+    FunctionsToExport = @()
     CmdletsToExport = @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord')
     VariablesToExport = @()
     AliasesToExport = @()

@@ -1,11 +1,40 @@
 [CmdletBinding()]
-param([string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot))
+param(
+    [string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot),
+    [string]$ArtifactPath = (Join-Path $ProjectRoot 'artifacts/p3.2/CmdletModel.json'),
+    [string]$TemplatePath = (Join-Path $ProjectRoot 'tools/templates/P32RepresentativeCmdlets.cs.tmpl'),
+    [string]$SourcePath = (Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Generated/Cmdlets/P32RepresentativeCmdlets.cs'),
+    [string]$RuntimeSourcePath = (Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Generated/Metadata/CfDnsRecordRuntimeMetadata.cs'),
+    [string]$ZoneRuntimeSourcePath = (Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Generated/Metadata/CfZoneRuntimeMetadata.cs'),
+    [string]$GeneratedRoot = (Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Generated'),
+    [switch]$ValidateOnly
+)
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+$projectionLibrary = Join-Path $PSScriptRoot 'Project-P32Projection.ps1'
+$p32GenerateProjectRoot = $ProjectRoot
+$p32GenerateArtifactPath = $ArtifactPath
+$p32GenerateTemplatePath = $TemplatePath
+$p32GenerateSourcePath = $SourcePath
+. $projectionLibrary -ProjectRoot $ProjectRoot -Library
+$ProjectRoot = $p32GenerateProjectRoot
+$ArtifactPath = $p32GenerateArtifactPath
+$TemplatePath = $p32GenerateTemplatePath
+$SourcePath = $p32GenerateSourcePath
+
+function Get-JsonValue {
+    param([AllowNull()][object]$Object, [Parameter(Mandatory)][string]$Name)
+    if ($null -eq $Object) { return $null }
+    if ($Object -is [System.Collections.IDictionary] -and $Object.Contains($Name)) { return $Object[$Name] }
+    $property = $Object.PSObject.Properties[$Name]
+    if ($null -eq $property) { return $null }
+    return $property.Value
+}
+
 function Write-Utf8CrLf {
-    param([string]$Path, [string]$Content)
+    param([Parameter(Mandatory)][string]$Path, [Parameter(Mandatory)][string]$Content)
     New-Item -ItemType Directory -Force -Path (Split-Path -Parent $Path) | Out-Null
     $normalized = $Content.Replace("`r`n", "`n").Replace("`r", "`n").Replace("`n", "`r`n")
     [IO.File]::WriteAllText($Path, $normalized, [Text.UTF8Encoding]::new($false))
@@ -17,234 +46,527 @@ function ConvertTo-CSharpString {
     return ($Value.ToString() | ConvertTo-Json -Compress)
 }
 
-function Normalize-LineEndings {
-    param([string]$Content)
-    return $Content.Replace("`r`n", "`n").Replace("`r", "`n")
+function ConvertTo-CSharpBool {
+    param([object]$Value)
+    return ([bool]$Value).ToString().ToLowerInvariant()
 }
 
-$cmdletModels = @(
-    [ordered]@{
-        cmdletName = 'Get-CfZone'
-        className = 'GetCfZoneCommand'
-        outputType = 'Cloudflare.PowerShell.CfZone'
-        parameterSets = @('Get', 'List')
-        parameterNames = @('ZoneId', 'AccountId', 'AccountName', 'Direction', 'Match', 'Name', 'Order', 'Page', 'PerPage', 'Status', 'Type')
-        operationIds = @('zones-0-get', 'zones-get')
-        supportsShouldProcess = $false
-        confirmImpact = 'None'
-        help = [ordered]@{ synopsis = 'Gets a Cloudflare zone.'; description = 'Gets zones visible to the authenticated account and writes one typed zone per pipeline object.'; source = 'Override' }
-    },
-    [ordered]@{
-        cmdletName = 'Get-CfDnsRecord'
-        className = 'GetCfDnsRecordCommand'
-        outputType = 'Cloudflare.PowerShell.CfDnsRecord'
-        parameterSets = @('Get', 'List')
-        parameterNames = @('ZoneId', 'DnsRecordId', 'IncludeShadowMetadata', 'Comment', 'CommentAbsent', 'CommentContains', 'CommentEndswith', 'CommentExact', 'CommentPresent', 'CommentStartswith', 'Content', 'ContentContains', 'ContentEndswith', 'ContentExact', 'ContentStartswith', 'Direction', 'Match', 'Name', 'NameContains', 'NameEndswith', 'NameExact', 'NameStartswith', 'Order', 'Page', 'PerPage', 'Proxied', 'Search', 'ShadowedByName', 'ShadowingName', 'Tag', 'TagContains', 'TagEndswith', 'TagExact', 'TagMatch', 'TagPresent', 'TagStartswith', 'Type')
-        operationIds = @('dns-records-for-a-zone-dns-record-details', 'dns-records-for-a-zone-list-dns-records')
-        supportsShouldProcess = $false
-        confirmImpact = 'None'
-        help = [ordered]@{ synopsis = 'Gets Cloudflare DNS records.'; description = 'Gets one or more typed DNS records through the shared runtime.'; source = 'DeterministicDefault' }
-    },
-    [ordered]@{
-        cmdletName = 'New-CfDnsRecord'
-        className = 'NewCfDnsRecordCommand'
-        outputType = 'Cloudflare.PowerShell.CfDnsRecord'
-        parameterSets = @('Create')
-        parameterNames = @('ZoneId', 'Record', 'IncludeShadowMetadata')
-        operationIds = @('dns-records-for-a-zone-create-dns-record')
-        supportsShouldProcess = $true
-        confirmImpact = 'Medium'
-        help = [ordered]@{ synopsis = 'Creates a Cloudflare DNS record.'; description = 'Creates a typed DNS record using the generated request model.'; source = 'DeterministicDefault' }
-    },
-    [ordered]@{
-        cmdletName = 'Remove-CfDnsRecord'
-        className = 'RemoveCfDnsRecordCommand'
-        outputType = 'Cloudflare.PowerShell.CfDnsRecord'
-        parameterSets = @('Delete')
-        parameterNames = @('ZoneId', 'DnsRecordId')
-        operationIds = @('dns-records-for-a-zone-delete-dns-record')
-        supportsShouldProcess = $true
-        confirmImpact = 'High'
-        help = [ordered]@{ synopsis = 'Removes a Cloudflare DNS record.'; description = 'Removes one DNS record by zone and record identifier.'; source = 'DeterministicDefault' }
-    },
-    [ordered]@{
-        cmdletName = 'Set-CfDnsRecord'
-        className = 'SetCfDnsRecordCommand'
-        outputType = 'Cloudflare.PowerShell.CfDnsRecord'
-        parameterSets = @('Replace', 'Edit')
-        parameterNames = @('ZoneId', 'DnsRecordId', 'Replace', 'Edit')
-        operationIds = @('dns-records-for-a-zone-update-dns-record', 'dns-records-for-a-zone-patch-dns-record')
-        supportsShouldProcess = $true
-        confirmImpact = 'High'
-        help = [ordered]@{ synopsis = 'Updates a Cloudflare DNS record.'; description = 'Replaces or edits one DNS record through the shared runtime.'; source = 'DeterministicDefault' }
+function ConvertTo-CSharpLiteral {
+    param([AllowNull()][object]$Value, [Parameter(Mandatory)][string]$Type)
+    if ($null -eq $Value) { return $null }
+    if ($Type -eq 'string?' -or $Type -eq 'string') { return ConvertTo-CSharpString $Value }
+    if ($Type -eq 'bool' -or $Type -eq 'bool?') { return ConvertTo-CSharpBool $Value }
+    if ($Type -eq 'decimal') { return "$Value`m" }
+    if ($Type -eq 'int') { return [string][int]$Value }
+    return $null
+}
+
+function Get-ParameterAttributeLines {
+    param([Parameter(Mandatory)][object]$Cmdlet, [Parameter(Mandatory)][object]$Parameter)
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $appliesTo = @($Parameter.appliesTo)
+    if ($appliesTo.Count -eq 0) { throw "Parameter '$($Parameter.name)' has no parameter-set applicability." }
+    foreach ($set in $appliesTo) {
+        $arguments = [System.Collections.Generic.List[string]]::new()
+        if (@($Parameter.requiredIn) -contains $set) { $arguments.Add('Mandatory = true') }
+        if ($null -ne $Parameter.position) { $arguments.Add("Position = $([int]$Parameter.position)") }
+        $arguments.Add("ParameterSetName = $(ConvertTo-CSharpString $set)")
+        if ([bool]$Parameter.valueFromPipeline) { $arguments.Add('ValueFromPipeline = true') }
+        if ([bool]$Parameter.valueFromPipelineByPropertyName) { $arguments.Add('ValueFromPipelineByPropertyName = true') }
+        $lines.Add("    [Parameter($($arguments -join ', '))]")
     }
-)
-
-$requiredSourceClasses = @('GetCfZoneCommand', 'GetCfDnsRecordCommand', 'NewCfDnsRecordCommand', 'RemoveCfDnsRecordCommand', 'SetCfDnsRecordCommand')
-$cmdletTemplatePath = Join-Path $ProjectRoot 'tools/templates/P32RepresentativeCmdlets.cs.tmpl'
-$cmdletSourcePath = Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Generated/Cmdlets/P32RepresentativeCmdlets.cs'
-$cmdletTemplate = Get-Content -Raw -LiteralPath $cmdletTemplatePath -Encoding UTF8
-Write-Utf8CrLf $cmdletSourcePath $cmdletTemplate
-$cmdletSource = Get-Content -Raw -LiteralPath $cmdletSourcePath -Encoding UTF8
-$baseSource = Get-Content -Raw -LiteralPath (Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Runtime/CloudflareCmdletBase.cs') -Encoding UTF8
-foreach ($className in $requiredSourceClasses) {
-    if ($cmdletSource -notmatch "public sealed class $className\s*:") { throw "Generated P3.2 source is missing '$className'." }
+    foreach ($alias in @($Parameter.aliases)) { $lines.Add("    [Alias($(ConvertTo-CSharpString ([string]$alias)))]") }
+    $type = [string]$Parameter.type
+    if ([string]$Parameter.nullPolicy -eq 'omit' -and ($type -eq 'string?' -or $type -eq 'string[]?' -or $type -eq 'bool?')) { $lines.Add('    [AllowNull]') }
+    return $lines
 }
-if ((Normalize-LineEndings $cmdletSource) -ne (Normalize-LineEndings $cmdletTemplate)) { throw 'Generated P3.2 cmdlet source differs from its checked-in template.' }
-if (($cmdletSource + $baseSource) -notmatch 'GeneratedOperationMetadataAdapter') { throw 'Generated P3.2 source is not connected to the metadata adapter.' }
-foreach ($forbiddenPattern in @(
-        'new\s+HttpRequestMessage',
-        '\bHttpClient\b',
-        '\bJsonSerializer\b',
-        '\bQuerySerializer\b',
-        '\bTask\.Delay\b',
-        '\bGetAsyncEnumerator\b',
-        '\bMoveNextAsync\b',
-        '\bCloudflareApiException\b',
-        '\bThrowCloudflareError\b')) {
-    if ($cmdletSource -match $forbiddenPattern) { throw "Generated P3.2 source contains forbidden runtime logic: $forbiddenPattern" }
+
+function Get-PropertyDeclaration {
+    param([Parameter(Mandatory)][object]$Cmdlet, [Parameter(Mandatory)][object]$Parameter)
+    $lines = [System.Collections.Generic.List[string]]::new()
+    foreach ($line in Get-ParameterAttributeLines $Cmdlet $Parameter) { $lines.Add($line) }
+    $initializer = ConvertTo-CSharpLiteral $Parameter.defaultValue ([string]$Parameter.type)
+    if ($null -ne $initializer -and [string]$Parameter.type -notin @('bool', 'bool?')) { $initializer = " = $initializer" }
+    else { $initializer = '' }
+    if ([string]$Parameter.initializerPolicy -eq 'null-forgiving') { $initializer = ' = null!' }
+    $terminator = if ([string]::IsNullOrEmpty($initializer)) { '' } else { ';' }
+    $lines.Add("    public $($Parameter.type) $($Parameter.name) { get; set; }$initializer$terminator")
+    return $lines
 }
-if ($cmdletSource -notmatch 'Cf(?:Zone|DnsRecord)RuntimeMetadata\.Get') { throw 'Generated P3.2 source is missing generated runtime metadata dispatch.' }
-Write-Output 'PASS P3.2 generator/template and generated-source boundary checks'
 
-$artifact = [ordered]@{
-    version = 1
-    stage = 'P3.2'
-    source = 'corrected projection model and generated runtime metadata'
-    cmdlets = $cmdletModels
-    commonInfrastructureParameters = @('BaseUrl', 'Token', 'Handler')
+function Get-OperationParameterMapping {
+    param([Parameter(Mandatory)][object]$Parameter, [Parameter(Mandatory)][string]$OperationId)
+    $bindings = @($Parameter.apiBindings | Where-Object operationId -eq $OperationId)
+    if ($bindings.Count -ne 1) { throw "Parameter '$($Parameter.name)' has no unique API binding for '$OperationId'." }
+    return $bindings[0]
 }
-$artifactPath = Join-Path $ProjectRoot 'artifacts/p3.2/CmdletModel.json'
-Write-Utf8CrLf $artifactPath ($artifact | ConvertTo-Json -Depth 30)
 
-$zoneModel = @'
-// <auto-generated />
-#nullable enable
-using System.Text.Json.Serialization;
-
-namespace Cloudflare.PowerShell;
-
-public sealed class CfZone
-{
-    [JsonPropertyName("id")] public string? Id { get; set; }
-    [JsonPropertyName("name")] public string? Name { get; set; }
-    [JsonPropertyName("status")] public string? Status { get; set; }
-    [JsonPropertyName("type")] public string? Type { get; set; }
+function Get-BindParametersCall {
+    param([Parameter(Mandatory)][object]$Cmdlet, [Parameter(Mandatory)][object]$Operation)
+    $mappings = @($Cmdlet.parameters | Where-Object { -not [bool]$_.isBody -and @($_.appliesTo) -contains [string]$Operation.parameterSet } | ForEach-Object {
+        $parameter = $_
+        $binding = Get-OperationParameterMapping $parameter ([string]$Operation.operationId)
+        if ([string]$binding.location -eq 'body') { return }
+        "(nameof($($parameter.name)), $(ConvertTo-CSharpString ([string]$binding.name)))"
+    })
+    if ($mappings.Count -eq 0) { return 'BindParameters()' }
+    return "BindParameters(`r`n            $($mappings -join ",`r`n            ") )"
 }
-'@
-Write-Utf8CrLf (Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Generated/Models/CfZoneModels.cs') $zoneModel
 
-$zoneOperationIds = @{
-    'zones-0-get' = 'Operation_zones_Get_zones_0_get'
-    'zones-get' = 'Operation_zones_List_zones_get'
+function Get-CmdletAttribute {
+    param([Parameter(Mandatory)][object]$Cmdlet)
+    $parts = ([string]$Cmdlet.cmdletName).Split('-', 2)
+    $verbExpression = switch ($parts[0]) {
+        'Get' { 'VerbsCommon.Get' }
+        'New' { 'VerbsCommon.New' }
+        'Remove' { 'VerbsCommon.Remove' }
+        'Set' { 'VerbsCommon.Set' }
+        default { throw "Unsupported PowerShell verb '$($parts[0])'." }
+    }
+    $arguments = [System.Collections.Generic.List[string]]::new()
+    $arguments.Add($verbExpression)
+    $arguments.Add((ConvertTo-CSharpString $parts[1]))
+    if (-not [string]::IsNullOrWhiteSpace([string]$Cmdlet.defaultParameterSetName)) { $arguments.Add("DefaultParameterSetName = $(ConvertTo-CSharpString ([string]$Cmdlet.defaultParameterSetName))") }
+    if ([bool]$Cmdlet.supportsShouldProcess) {
+        $arguments.Add('SupportsShouldProcess = true')
+        $arguments.Add("ConfirmImpact = ConfirmImpact.$([string]$Cmdlet.confirmImpact)")
+    }
+    return "[Cmdlet($([string]::Join(', ', $arguments)))]"
 }
-$zoneOperations = @'
-// <auto-generated />
-#nullable enable
-namespace Cloudflare.PowerShell;
 
-public static class CfZoneOperationMetadata
-{
-    public const string Operation_zones_Get_zones_0_get = "zones-0-get";
-    public const string Operation_zones_List_zones_get = "zones-get";
-}
-'@
-Write-Utf8CrLf (Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Generated/Metadata/CfZoneOperationMetadata.cs') $zoneOperations
-
-$zoneRuntime = @'
-// <auto-generated />
-#nullable enable
-namespace Cloudflare.PowerShell;
-
-public static class CfZoneRuntimeMetadata
-{
-    public static IReadOnlyList<GeneratedOperationMetadata> Operations { get; } =
-    [
-        new GeneratedOperationMetadata
-        {
-            OperationId = "zones-0-get",
-            Method = "GET",
-            PathTemplate = "/zones/{zone_id}",
-            Parameters = [new GeneratedParameterMetadata { Name = "zone_id", Location = "path", Required = true }],
-            RequestRepresentations = [],
-            ResponseRepresentations =
-            [
-                new GeneratedResponseRepresentationMetadata { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" },
-                new GeneratedResponseRepresentationMetadata { StatusCode = null, ContentType = "application/json", EnvelopePolicy = "ErrorEnvelope", ParsingMode = "Json" }
-            ],
-            Pagination = new GeneratedPaginationMetadata { Strategy = "SinglePage", RequestFields = [], ResponseFields = [], StopRule = "single response" }
-        },
-        new GeneratedOperationMetadata
-        {
-            OperationId = "zones-get",
-            Method = "GET",
-            PathTemplate = "/zones",
-            Parameters =
-            [
-                new GeneratedParameterMetadata { Name = "account.id", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "account.name", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "direction", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "match", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "name", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "order", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "page", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "per_page", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "status", Location = "query", Required = false },
-                new GeneratedParameterMetadata { Name = "type", Location = "query", Required = false }
-            ],
-            RequestRepresentations = [],
-            ResponseRepresentations =
-            [
-                new GeneratedResponseRepresentationMetadata { StatusCode = 200, ContentType = "application/json", EnvelopePolicy = "CloudflareResult", ParsingMode = "Json" },
-                new GeneratedResponseRepresentationMetadata { StatusCode = null, ContentType = "application/json", EnvelopePolicy = "ErrorEnvelope", ParsingMode = "Json" }
-            ],
-            Pagination = new GeneratedPaginationMetadata
-            {
-                Strategy = "V4PagePaginationArray",
-                RequestFields = ["page", "per_page"],
-                ResponseFields = ["result", "result_info"],
-                ResultPath = "result",
-                PageInfoPath = "result_info",
-                CurrentPagePath = "result_info.page",
-                TotalPagesPath = "result_info.total_pages",
-                NextPageRule = "page + 1",
-                StopRule = "empty result page"
-            }
+function Add-BindParametersLines {
+    param([Parameter(Mandatory)][ref]$Lines, [Parameter(Mandatory)][object]$Cmdlet, [Parameter(Mandatory)][object]$Operation, [Parameter(Mandatory)][string]$VariableName)
+    $target = $Lines.Value
+    $call = Get-BindParametersCall $Cmdlet $Operation
+    $callLines = $call -split "`r?`n"
+    if ($callLines.Count -eq 1) { $target.Add("        var $VariableName = $call;") }
+    else {
+        $target.Add("        var $VariableName = $($callLines[0])")
+        for ($index = 1; $index -lt $callLines.Count; $index++) {
+            $suffix = if ($index -eq $callLines.Count - 1) { ';' } else { '' }
+            $target.Add("$($callLines[$index])$suffix")
         }
-    ];
-
-    public static GeneratedOperationMetadata Get(string operationId)
-        => Operations.Single(x => x.OperationId.Equals(operationId, StringComparison.Ordinal));
+    }
 }
-'@
-Write-Utf8CrLf (Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Generated/Metadata/CfZoneRuntimeMetadata.cs') $zoneRuntime
 
-$helpSource = @'
-// <auto-generated />
-#nullable enable
-namespace Cloudflare.PowerShell;
-
-public sealed record GeneratedHelpModel(string Synopsis, string Description, string Source);
-
-public static class P32CmdletHelpMetadata
-{
-    public static IReadOnlyDictionary<string, GeneratedHelpModel> Commands { get; } =
-        new Dictionary<string, GeneratedHelpModel>(StringComparer.Ordinal)
-        {
-            ["Get-CfZone"] = new("Gets a Cloudflare zone.", "Gets zones visible to the authenticated account and writes one typed zone per pipeline object.", "Override"),
-            ["Get-CfDnsRecord"] = new("Gets Cloudflare DNS records.", "Gets one or more typed DNS records through the shared runtime.", "DeterministicDefault"),
-            ["New-CfDnsRecord"] = new("Creates a Cloudflare DNS record.", "Creates a typed DNS record using the generated request model.", "DeterministicDefault"),
-            ["Remove-CfDnsRecord"] = new("Removes a Cloudflare DNS record.", "Removes one DNS record by zone and record identifier.", "DeterministicDefault"),
-            ["Set-CfDnsRecord"] = new("Updates a Cloudflare DNS record.", "Replaces or edits one DNS record through the shared runtime.", "DeterministicDefault")
-        };
+function Get-BodyExpression {
+    param([Parameter(Mandatory)][object]$Cmdlet, [Parameter(Mandatory)][object]$Operation)
+    $bodyName = [string]$Operation.operationBinding.bodyParameter
+    if ([string]::IsNullOrWhiteSpace($bodyName)) { throw "Operation '$($Operation.operationId)' has no body parameter." }
+    $bodyParameter = @($Cmdlet.parameters | Where-Object name -eq $bodyName)
+    if ($bodyParameter.Count -ne 1) { throw "Operation '$($Operation.operationId)' body parameter '$bodyName' is not projected exactly once." }
+    $serialization = [string]$Operation.operationBinding.bodySerialization
+    if ([string]::IsNullOrWhiteSpace($serialization) -or $serialization -eq 'Value') { return $bodyName }
+    if ($serialization -eq 'ToJson') { return "$bodyName.ToJson()" }
+    throw "Unsupported body serialization '$serialization' for operation '$($Operation.operationId)'."
 }
-'@
-Write-Utf8CrLf (Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Generated/Metadata/P32CmdletHelpMetadata.cs') $helpSource
+
+function Add-BindParametersWithBodyLines {
+    param([Parameter(Mandatory)][ref]$Lines, [Parameter(Mandatory)][object]$Cmdlet, [Parameter(Mandatory)][object]$Operation, [Parameter(Mandatory)][string]$BodyExpression)
+    $target = $Lines.Value
+    $parameterSetName = if ($null -ne $Operation.PSObject.Properties['parameterSet']) { [string]$Operation.parameterSet } else { [string]$Operation.name }
+    $mappings = @($Cmdlet.parameters | Where-Object { -not [bool]$_.isBody -and @($_.appliesTo) -contains $parameterSetName } | ForEach-Object {
+        $parameter = $_
+        $binding = Get-OperationParameterMapping $parameter ([string]$Operation.operationId)
+        if ([string]$binding.location -ne 'body') { "(nameof($($parameter.name)), $(ConvertTo-CSharpString ([string]$binding.name)))" }
+    })
+    if ($mappings.Count -eq 0) { $target.Add("        var parameters = BindParametersWithBody($BodyExpression);"); return }
+    $target.Add("        var parameters = BindParametersWithBody($BodyExpression,")
+    for ($index = 0; $index -lt $mappings.Count; $index++) {
+        $suffix = if ($index -eq $mappings.Count - 1) { ');' } else { ',' }
+        $target.Add("            $($mappings[$index])$suffix")
+    }
+}
+
+function Add-GeneratedParameterSetBranch {
+    param([Parameter(Mandatory)][ref]$Lines, [Parameter(Mandatory)][object]$Cmdlet, [Parameter(Mandatory)][object]$ParameterSet)
+    $target = $Lines.Value
+    $operationId = [string]$ParameterSet.operationId
+    $operation = @($Cmdlet.operations | Where-Object operationId -eq $operationId)
+    if ($operation.Count -ne 1) { throw "Cmdlet '$($Cmdlet.cmdletName)' parameter set '$($ParameterSet.name)' has no unique operation '$operationId'." }
+    $operation = $operation[0]
+    $runtimeType = [string]$Cmdlet.runtimeMetadataType
+    if ([string]::IsNullOrWhiteSpace($runtimeType)) { throw "Cmdlet '$($Cmdlet.cmdletName)' has no runtimeMetadataType." }
+    $target.Add("        if (ParameterSetName.Equals($(ConvertTo-CSharpString ([string]$ParameterSet.name)), StringComparison.Ordinal))")
+    $target.Add('        {')
+    if ($null -ne $ParameterSet.operationBinding.bodyParameter -and -not [string]::IsNullOrWhiteSpace([string]$ParameterSet.operationBinding.bodyParameter)) {
+        Add-BindParametersWithBodyLines -Lines $Lines -Cmdlet $Cmdlet -Operation $ParameterSet -BodyExpression (Get-BodyExpression $Cmdlet $ParameterSet)
+    } else {
+        Add-BindParametersLines -Lines $Lines -Cmdlet $Cmdlet -Operation $operation -VariableName 'parameters'
+    }
+    $errorTarget = [string]$ParameterSet.operationBinding.errorTarget
+    if ([string]::IsNullOrWhiteSpace($errorTarget)) { $errorTarget = [string](Get-JsonValue $Cmdlet.execution 'errorTarget') }
+    if ([string]::IsNullOrWhiteSpace($errorTarget)) { $errorTarget = [string]$Cmdlet.shouldProcessTarget }
+    if ([string]$ParameterSet.operationBinding.invokeKind -eq 'paged') {
+        $target.Add("            WritePaged<$($Cmdlet.outputType)>($runtimeType.Get($(ConvertTo-CSharpString $operationId)), parameters, $(if ([string]::IsNullOrWhiteSpace($errorTarget)) { 'null' } else { $errorTarget }));")
+    } elseif ([string]$ParameterSet.operationBinding.outputPolicy -eq 'none' -or [string]$Cmdlet.outputPolicy -eq 'none') {
+        $target.Add("            _ = InvokeSingle<JsonNode>($runtimeType.Get($(ConvertTo-CSharpString $operationId)), parameters, $(if ([string]::IsNullOrWhiteSpace($errorTarget)) { 'null' } else { $errorTarget }));")
+    } else {
+        $target.Add("            WriteObject(InvokeSingle<$($Cmdlet.outputType)>($runtimeType.Get($(ConvertTo-CSharpString $operationId)), parameters, $(if ([string]::IsNullOrWhiteSpace($errorTarget)) { 'null' } else { $errorTarget })));")
+    }
+    $target.Add('            return;')
+    $target.Add('        }')
+    $target.Add('')
+}
+
+function Add-GeneratedCmdlet {
+    param([Parameter(Mandatory)][ref]$Lines, [Parameter(Mandatory)][object]$Cmdlet)
+    $target = $Lines.Value
+    $target.Add((Get-CmdletAttribute $Cmdlet))
+    $target.Add("[OutputType(typeof($($Cmdlet.outputType)))]")
+    $target.Add("public sealed class $($Cmdlet.className) : CloudflareCmdletBase")
+    $target.Add('{')
+    foreach ($parameter in @($Cmdlet.parameters | Sort-Object { if ($null -eq $_.position) { 999 } else { [int]$_.position } }, name)) {
+        foreach ($line in Get-PropertyDeclaration $Cmdlet $parameter) { $target.Add($line) }
+        $target.Add('')
+    }
+    $target.Add('    protected override void ProcessRecord()')
+    $target.Add('    {')
+    $execution = $Cmdlet.execution
+    if ([string]$execution.strategy -ne 'parameter-set') { throw "Unsupported P3.2 execution strategy '$($execution.strategy)' for '$($Cmdlet.cmdletName)'." }
+    if ([bool]$execution.shouldProcess) {
+        $targetName = [string]$Cmdlet.shouldProcessTarget
+        if ([string]::IsNullOrWhiteSpace($targetName)) { $targetName = [string](Get-JsonValue $execution 'shouldProcessTarget') }
+        if ([string]::IsNullOrWhiteSpace($targetName)) { throw "Cmdlet '$($Cmdlet.cmdletName)' declares ShouldProcess without a target." }
+        if (@($Cmdlet.parameters | Where-Object name -eq $targetName).Count -ne 1) { throw "ShouldProcess target '$targetName' is not a projected parameter of '$($Cmdlet.cmdletName)'." }
+        $action = [string](Get-JsonValue $Cmdlet.execution 'shouldProcessAction')
+        if ([string]::IsNullOrWhiteSpace($action)) { throw "Cmdlet '$($Cmdlet.cmdletName)' declares ShouldProcess without an action." }
+        if ($action.Contains('{ParameterSetName}')) {
+            $actionLiteral = '$"' + $action.Replace('"', '\"') + '"'
+        } else { $actionLiteral = ConvertTo-CSharpString $action }
+        $target.Add("        if (!ShouldProcess($targetName, $actionLiteral)) return;")
+    }
+    foreach ($parameterSet in @($Cmdlet.parameterSets | Sort-Object name)) { Add-GeneratedParameterSetBranch -Lines $Lines -Cmdlet $Cmdlet -ParameterSet $parameterSet }
+    $target.Add("        throw new InvalidOperationException($(ConvertTo-CSharpString "Unsupported parameter set for $($Cmdlet.cmdletName)."));")
+    $target.Add('    }')
+    $target.Add('}')
+    $target.Add('')
+}
+
+function ConvertTo-CSharpStringArray {
+    param([AllowNull()][object[]]$Values)
+    $items = @($Values | Where-Object { $null -ne $_ } | ForEach-Object { ConvertTo-CSharpString $_ })
+    if ($items.Count -eq 0) { return '[]' }
+    return "[$($items -join ', ')]"
+}
+
+function ConvertTo-CSharpRuntimeParameters {
+    param([AllowNull()][object[]]$Parameters)
+    $items = @($Parameters | ForEach-Object { "new GeneratedParameterMetadata { Name = $(ConvertTo-CSharpString $_.name), Location = $(ConvertTo-CSharpString $_.location), Required = $(ConvertTo-CSharpBool $_.required) }" })
+    if ($items.Count -eq 0) { return '[]' }
+    return "[$($items -join ', ')]"
+}
+
+function ConvertTo-CSharpRuntimeParts {
+    param([AllowNull()][object[]]$Parts)
+    $items = @($Parts | ForEach-Object {
+        "new GeneratedMultipartPartMetadata { ParameterName = $(ConvertTo-CSharpString $_.parameterName), PartName = $(ConvertTo-CSharpString $_.partName), ContentType = $(ConvertTo-CSharpString $_.contentType), Format = $(ConvertTo-CSharpString $_.format), Required = $(ConvertTo-CSharpBool $_.required) }"
+    })
+    if ($items.Count -eq 0) { return '[]' }
+    return "[$($items -join ', ')]"
+}
+
+function ConvertTo-CSharpRuntimeRepresentations {
+    param([AllowNull()][object[]]$Representations, [switch]$Request)
+    if ($null -eq $Representations) { return '[]' }
+    $items = @($Representations | Where-Object { $null -ne $_ } | ForEach-Object {
+        if ($Request) { "new GeneratedRequestRepresentationMetadata { ContentType = $(ConvertTo-CSharpString $_.contentType), BodyParameterName = $(ConvertTo-CSharpString $_.bodyParameterName), Parts = $(ConvertTo-CSharpRuntimeParts @($_.parts)) }" }
+        else { "new GeneratedResponseRepresentationMetadata { StatusCode = $(if ($null -eq $_.statusCode) {'null'} else {[string][int]$_.statusCode}), ContentType = $(ConvertTo-CSharpString $_.contentType), EnvelopePolicy = $(ConvertTo-CSharpString $_.envelopePolicy), ParsingMode = $(ConvertTo-CSharpString $_.parsingMode) }" }
+    })
+    if ($items.Count -eq 0) { return '[]' }
+    return "[$($items -join ', ')]"
+}
+
+function ConvertTo-CSharpRuntimePagination {
+    param([AllowNull()][object]$Pagination)
+    if ($null -eq $Pagination) { return 'null' }
+    $pathExpression = {
+        param([AllowNull()][object]$Value)
+        if ($null -eq $Value) { return 'null' }
+        $text = [string]$Value
+        $dot = $text.IndexOf('.')
+        if ($dot -gt 0) { return "($(ConvertTo-CSharpString $text.Substring(0, $dot)) + $(ConvertTo-CSharpString $text.Substring($dot)))" }
+        return ConvertTo-CSharpString $text
+    }
+    return "new GeneratedPaginationMetadata { Strategy = $(ConvertTo-CSharpString $Pagination.strategy), RequestFields = $(ConvertTo-CSharpStringArray @($Pagination.requestFields)), ResponseFields = $(ConvertTo-CSharpStringArray @($Pagination.responseFields)), ResultPath = $(ConvertTo-CSharpString $Pagination.resultPath), PageInfoPath = $(ConvertTo-CSharpString $Pagination.pageInfoPath), CurrentPagePath = $(& $pathExpression $Pagination.currentPagePath), TotalPagesPath = $(& $pathExpression $Pagination.totalPagesPath), NextCursorPath = $(& $pathExpression $Pagination.nextCursorPath), HasMorePath = $(& $pathExpression $Pagination.hasMorePath), NextPageRule = $(ConvertTo-CSharpString $Pagination.nextPageRule), StopRule = $(ConvertTo-CSharpString $Pagination.stopRule) }"
+}
+
+function Write-RuntimeMetadata {
+    param([Parameter(Mandatory)][object]$Cmdlet, [Parameter(Mandatory)][string]$ClassName, [Parameter(Mandatory)][string]$Path)
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $lines.Add('// <auto-generated />'); $lines.Add('#nullable enable'); $lines.Add('namespace Cloudflare.PowerShell;'); $lines.Add(''); $lines.Add("public static class $ClassName"); $lines.Add('{'); $lines.Add('    public static IReadOnlyList<GeneratedOperationMetadata> Operations { get; } ='); $lines.Add('    [')
+    $operations = @($Cmdlet.operations | Sort-Object operationId)
+    for ($index = 0; $index -lt $operations.Count; $index++) {
+        $op = $operations[$index]; $runtime = $op.runtime
+        $lines.Add('        new GeneratedOperationMetadata'); $lines.Add('        {')
+        $lines.Add("            OperationId = $(ConvertTo-CSharpString ([string]$op.operationId)),")
+        $lines.Add("            Method = $(ConvertTo-CSharpString ([string]$op.method)),")
+        $lines.Add("            PathTemplate = $(ConvertTo-CSharpString ([string]$op.pathTemplate)),")
+        $lines.Add("            Parameters = $(ConvertTo-CSharpRuntimeParameters @($runtime.parameters)),")
+        $lines.Add("            RequestRepresentations = $(ConvertTo-CSharpRuntimeRepresentations @($runtime.requestRepresentations) -Request),")
+        $lines.Add("            ResponseRepresentations = $(ConvertTo-CSharpRuntimeRepresentations @($runtime.responseRepresentations)),")
+        $lines.Add("            Pagination = $(ConvertTo-CSharpRuntimePagination $runtime.pagination)")
+        $lines.Add("        }$(if ($index -lt $operations.Count - 1) { ',' })")
+    }
+    $lines.Add('    ];'); $lines.Add(''); $lines.Add('    public static GeneratedOperationMetadata Get(string operationId)'); $lines.Add('        => Operations.Single(x => x.OperationId.Equals(operationId, StringComparison.Ordinal));'); $lines.Add('}')
+    Write-Utf8CrLf $Path ($lines -join "`n")
+}
+
+function Write-OperationMetadata {
+    param([Parameter(Mandatory)][object]$Cmdlet, [Parameter(Mandatory)][string]$ClassName, [Parameter(Mandatory)][string]$Path)
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $lines.Add('// <auto-generated />'); $lines.Add('#nullable enable'); $lines.Add('namespace Cloudflare.PowerShell;'); $lines.Add(''); $lines.Add("public static class $ClassName"); $lines.Add('{')
+    foreach ($op in @($Cmdlet.operations | Sort-Object operationId)) {
+        $constantName = [string]$op.constantName
+        if ([string]::IsNullOrWhiteSpace($constantName)) { throw "Operation '$($op.operationId)' has no generated constantName." }
+        $lines.Add("    public const string $constantName = $(ConvertTo-CSharpString ([string]$op.operationId));")
+    }
+    $lines.Add('}')
+    Write-Utf8CrLf $Path ($lines -join "`n")
+}
+
+function Write-GeneratedModel {
+    param([Parameter(Mandatory)][object]$Model, [Parameter(Mandatory)][string]$Path)
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $lines.Add('// <auto-generated />'); $lines.Add('#nullable enable'); $lines.Add('using System.Text.Json.Serialization;'); $lines.Add(''); $lines.Add('namespace Cloudflare.PowerShell;'); $lines.Add('');
+    $lines.Add("public sealed class $($Model.className)"); $lines.Add('{')
+    foreach ($property in @($Model.properties)) {
+        $lines.Add("    [JsonPropertyName($(ConvertTo-CSharpString ([string]$property.jsonName)))] public $($property.type) $($property.name) { get; set; }")
+    }
+    $lines.Add('}')
+    $content = $lines -join "`n"
+    Write-Utf8CrLf $Path $content
+}
+
+function Write-HelpMetadata {
+    param([Parameter(Mandatory)][object[]]$Cmdlets, [Parameter(Mandatory)][string]$Path)
+    $lines = [System.Collections.Generic.List[string]]::new()
+    $lines.Add('// <auto-generated />'); $lines.Add('#nullable enable'); $lines.Add('namespace Cloudflare.PowerShell;'); $lines.Add(''); $lines.Add('public sealed record GeneratedHelpModel(string Synopsis, string Description, string Source);'); $lines.Add(''); $lines.Add('public static class P32CmdletHelpMetadata'); $lines.Add('{'); $lines.Add('    public static IReadOnlyDictionary<string, GeneratedHelpModel> Commands { get; } ='); $lines.Add('        new Dictionary<string, GeneratedHelpModel>(StringComparer.Ordinal)'); $lines.Add('        {')
+    for ($index = 0; $index -lt $Cmdlets.Count; $index++) {
+        $help = $Cmdlets[$index].help
+        $comma = if ($index -lt $Cmdlets.Count - 1) { ',' } else { '' }
+        $lines.Add("            [$(ConvertTo-CSharpString ([string]$Cmdlets[$index].cmdletName))] = new($(ConvertTo-CSharpString ([string]$help.synopsis)), $(ConvertTo-CSharpString ([string]$help.description)), $(ConvertTo-CSharpString ([string]$help.source)))$comma")
+    }
+    $lines.Add('        };'); $lines.Add('}')
+    Write-Utf8CrLf $Path ($lines -join "`n")
+}
+
+function Assert-RuntimeMetadataSourceContract {
+    param(
+        [Parameter(Mandatory)][object]$Artifact,
+        [Parameter(Mandatory)][string]$RuntimeSource,
+        [Parameter(Mandatory)][string]$RuntimeMetadataType
+    )
+    if ($RuntimeSource -notmatch "public static class $([regex]::Escape($RuntimeMetadataType))\s*") {
+        throw "P3.2 runtime metadata source does not declare '$RuntimeMetadataType'."
+    }
+    $canonicalOperations = @($Artifact.cmdlets | Where-Object runtimeMetadataType -eq $RuntimeMetadataType | ForEach-Object operations)
+    if ($canonicalOperations.Count -eq 0) { throw "P3.2 canonical artifact has no operations for runtime metadata '$RuntimeMetadataType'." }
+    $runtimeOperationMatches = @([regex]::Matches($RuntimeSource, 'OperationId\s*=\s*"([^"]+)"'))
+    $expectedOperationIds = @($canonicalOperations | ForEach-Object operationId | Sort-Object)
+    $actualOperationIds = @($runtimeOperationMatches | ForEach-Object { $_.Groups[1].Value } | Sort-Object)
+    if (($expectedOperationIds -join '|') -ne ($actualOperationIds -join '|')) {
+        throw "P3.2 runtime metadata operation set drifted for '$RuntimeMetadataType'. Expected '$($expectedOperationIds -join ',')', actual '$($actualOperationIds -join ',')'."
+    }
+
+    foreach ($operation in $canonicalOperations) {
+        $operationMatch = @($runtimeOperationMatches | Where-Object { $_.Groups[1].Value -eq [string]$operation.operationId })
+        if ($operationMatch.Count -ne 1) { throw "Runtime metadata '$RuntimeMetadataType' is missing canonical operation '$($operation.operationId)'." }
+        $start = [int]$operationMatch[0].Index
+        $next = @($runtimeOperationMatches | Where-Object { $_.Index -gt $start } | Sort-Object Index | Select-Object -First 1)
+        $length = if ($next.Count -eq 1) { [int]$next[0].Index - $start } else { $RuntimeSource.Length - $start }
+        $operationBlock = $RuntimeSource.Substring($start, $length)
+        $expectedParameters = @($operation.runtime.parameters | ForEach-Object { "$($_.name)|$($_.location)|$(([bool]$_.required).ToString().ToLowerInvariant())" } | Sort-Object)
+        $actualParameters = @([regex]::Matches($operationBlock, 'Name\s*=\s*"([^"]+)",\s*Location\s*=\s*"([^"]+)",\s*Required\s*=\s*(true|false)') | ForEach-Object { "$($_.Groups[1].Value)|$($_.Groups[2].Value)|$($_.Groups[3].Value)" } | Sort-Object)
+        if (($expectedParameters -join '|') -ne ($actualParameters -join '|')) { throw "Runtime metadata '$RuntimeMetadataType' Parameters drifted for '$($operation.operationId)'." }
+        $expectedFields = @{
+            OperationId = "OperationId = $(ConvertTo-CSharpString ([string]$operation.operationId))"
+            Method = "Method = $(ConvertTo-CSharpString ([string]$operation.method))"
+            PathTemplate = "PathTemplate = $(ConvertTo-CSharpString ([string]$operation.pathTemplate))"
+            RequestRepresentations = "RequestRepresentations = $(ConvertTo-CSharpRuntimeRepresentations @($operation.runtime.requestRepresentations) -Request)"
+            ResponseRepresentations = "ResponseRepresentations = $(ConvertTo-CSharpRuntimeRepresentations @($operation.runtime.responseRepresentations))"
+            Pagination = "Pagination = $(ConvertTo-CSharpRuntimePagination $operation.runtime.pagination)"
+        }
+        foreach ($field in $expectedFields.GetEnumerator()) {
+            if ($operationBlock -notmatch [regex]::Escape($field.Value)) { throw "Runtime metadata '$RuntimeMetadataType' $($field.Key) drifted for '$($operation.operationId)'. Expected: $($field.Value)" }
+        }
+    }
+}
+
+function Normalize-GeneratedSource {
+    param([Parameter(Mandatory)][string]$Content)
+    return $Content.Replace("`r`n", "`n").Replace("`r", "`n").Replace("`n", "`r`n")
+}
+
+function Assert-ArtifactFresh {
+    param([Parameter(Mandatory)][object]$Artifact, [Parameter(Mandatory)][string]$ProjectRoot)
+    if ([int]$Artifact.version -ne 3 -or [string]$Artifact.sourcePolicy -ne 'normalized-model-plus-projection-policy' -or [string]$Artifact.semanticAlgorithm -ne 'SHA256-CanonicalJson-v1') { throw 'P3.2 canonical artifact is not version 3 normalized/projection output.' }
+    foreach ($source in @($Artifact.sourceFiles)) {
+        $path = Join-Path $ProjectRoot ([string]$source.path)
+        if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "P3.2 canonical artifact source is missing: $path" }
+        $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $path).Hash.ToLowerInvariant()
+        if ($actual -ne [string]$source.sha256) { throw "P3.2 canonical artifact is stale for '$($source.path)'. Run Project-P32Projection.ps1 first." }
+    }
+    $digest = Get-P32CanonicalDigest $Artifact
+    if ([string]$Artifact.canonicalDigest -ne $digest) { throw "P3.2 canonical artifact semantic digest is invalid. Expected '$digest', actual '$($Artifact.canonicalDigest)'." }
+}
+
+function Assert-ArtifactSemanticParity {
+    param([Parameter(Mandatory)][object]$Artifact, [Parameter(Mandatory)][string]$ProjectRoot)
+    $expected = New-P32CanonicalArtifact -Root $ProjectRoot `
+        -DnsPath (Join-Path $ProjectRoot 'artifacts/generated-normalized/document.json') `
+        -ZonePath (Join-Path $ProjectRoot 'fixtures/p2.1/zones/document.json') `
+        -ZoneProjection (Join-Path $ProjectRoot 'artifacts/p2.3/projection/zones.json') `
+        -BaseProjection (Join-Path $ProjectRoot 'overrides/powershell-projection.json') `
+        -P23Projection (Join-Path $ProjectRoot 'overrides/powershell-p23-projection.json') `
+        -P32Policy (Join-Path $ProjectRoot 'overrides/powershell-p32-projection.json')
+    $actualDigest = Get-P32CanonicalDigest $Artifact
+    $expectedDigest = Get-P32CanonicalDigest $expected
+    if ($actualDigest -ne $expectedDigest -or [string]$Artifact.canonicalDigest -ne $expectedDigest) {
+        throw "P3.2 canonical artifact semantic projection drifted. Expected '$expectedDigest', actual '$actualDigest'."
+    }
+}
+
+function Assert-ArtifactContract {
+    param([Parameter(Mandatory)][object]$Artifact)
+    $operationIds = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    foreach ($cmdlet in @($Artifact.cmdlets)) {
+        if ([string]::IsNullOrWhiteSpace([string]$cmdlet.className) -or [string]::IsNullOrWhiteSpace([string]$cmdlet.runtimeMetadataType)) { throw "P3.2 cmdlet '$($cmdlet.cmdletName)' has incomplete renderer metadata." }
+        if ($null -eq $cmdlet.execution -or [string]::IsNullOrWhiteSpace([string]$cmdlet.execution.strategy)) { throw "P3.2 cmdlet '$($cmdlet.cmdletName)' has no execution strategy." }
+        if ([string]$cmdlet.outputPolicy -notin @('item', 'single', 'none')) { throw "P3.2 cmdlet '$($cmdlet.cmdletName)' has an unsupported output policy." }
+        $sets = @($cmdlet.parameterSets | ForEach-Object name)
+        if ($sets.Count -eq 0 -or @($sets | Sort-Object -Unique).Count -ne $sets.Count) { throw "P3.2 cmdlet '$($cmdlet.cmdletName)' has no unique parameter sets." }
+        foreach ($parameter in @($cmdlet.parameters)) {
+            if (@($parameter.appliesTo | Where-Object { $sets -notcontains $_ }).Count -gt 0) { throw "P3.2 parameter '$($parameter.name)' references an unknown parameter set." }
+            if (@($parameter.appliesTo).Count -eq 0) { throw "P3.2 parameter '$($parameter.name)' has no applicability." }
+            if (@($parameter.appliesTo | Where-Object { @($parameter.requiredIn) -contains $_ -and @($parameter.apiBindings | Where-Object operationId -in @($cmdlet.operations | ForEach-Object operationId)).Count -eq 0 }).Count -gt 0) { throw "P3.2 parameter '$($parameter.name)' has required applicability without binding." }
+            $aliases = @($parameter.aliases)
+            if (($aliases -contains $parameter.name) -or (@($aliases | Sort-Object -Unique).Count -ne $aliases.Count)) { throw "P3.2 parameter '$($parameter.name)' has an invalid or duplicate alias." }
+        }
+        foreach ($operation in @($cmdlet.operations)) {
+            if (-not $operationIds.Add([string]$operation.operationId)) { throw "P3.2 operation '$($operation.operationId)' is duplicated in the canonical artifact." }
+            if ($null -eq $operation.runtime) { throw "P3.2 operation '$($operation.operationId)' has no runtime metadata." }
+            $set = @($cmdlet.parameterSets | Where-Object { [string]$_.operationId -eq [string]$operation.operationId })
+            if ($set.Count -ne 1) { throw "P3.2 operation '$($operation.operationId)' is not mapped by exactly one parameter set." }
+            if ([string]$set[0].operationBinding.invokeKind -notin @('single', 'paged')) { throw "P3.2 operation '$($operation.operationId)' has unsupported invokeKind." }
+            if ([string]$set[0].operationBinding.method -ne [string]$operation.method -or [string]$set[0].operationBinding.pathTemplate -ne [string]$operation.pathTemplate) { throw "P3.2 operation '$($operation.operationId)' parameter-set binding drifted from HTTP metadata." }
+            $applicableParameters = @($cmdlet.parameters | Where-Object { @($_.appliesTo) -contains [string]$operation.parameterSet })
+            $bodyParameterName = [string](Get-JsonValue $set[0].operationBinding 'bodyParameter')
+            $bodyParameters = @($applicableParameters | Where-Object isBody)
+            if ([string]::IsNullOrWhiteSpace($bodyParameterName)) {
+                if ($bodyParameters.Count -ne 0) { throw "P3.2 operation '$($operation.operationId)' has an unbound body parameter." }
+            } elseif ($bodyParameters.Count -ne 1 -or [string]$bodyParameters[0].name -ne $bodyParameterName) {
+                throw "P3.2 operation '$($operation.operationId)' body binding does not identify exactly one projected body parameter."
+            }
+            foreach ($parameter in $applicableParameters) {
+                $bindings = @($parameter.apiBindings | Where-Object { [string]$_.operationId -eq [string]$operation.operationId })
+                if ($bindings.Count -ne 1) { throw "P3.2 parameter '$($parameter.name)' is not consumed exactly once by '$($operation.operationId)'." }
+                if ([bool]$parameter.isBody -and [string]$bindings[0].location -ne 'body') { throw "P3.2 body parameter '$($parameter.name)' has a non-body API binding." }
+                if (-not [bool]$parameter.isBody -and [string]$bindings[0].location -eq 'body') { throw "P3.2 non-body parameter '$($parameter.name)' has a body API binding." }
+            }
+            $projectedRuntimeParameters = @($cmdlet.parameters | Where-Object { -not [bool]$_.isBody } | ForEach-Object {
+                $parameter = $_
+                $required = ([bool](@($parameter.requiredIn) -contains [string]$operation.parameterSet)).ToString().ToLowerInvariant()
+                @($parameter.apiBindings | Where-Object { $_.operationId -eq [string]$operation.operationId } | ForEach-Object {
+                    "$($_.name)|$($_.location)|$required"
+                })
+            } | Sort-Object)
+            $runtimeParameters = @($operation.runtime.parameters | ForEach-Object {
+                "$($_.name)|$($_.location)|$(([bool]$_.required).ToString().ToLowerInvariant())"
+            } | Sort-Object)
+            if (($projectedRuntimeParameters -join '|') -ne ($runtimeParameters -join '|')) {
+                throw "P3.2 operation '$($operation.operationId)' public/runtime parameter contract drifted."
+            }
+            if ([string]$operation.method -notmatch '^(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)$' -or [string]::IsNullOrWhiteSpace([string]$operation.pathTemplate)) { throw "P3.2 operation '$($operation.operationId)' has invalid HTTP metadata." }
+            foreach ($representation in @($operation.runtime.requestRepresentations)) {
+                if ($null -ne $representation -and ([string]::IsNullOrWhiteSpace([string]$representation.contentType) -or [string]::IsNullOrWhiteSpace([string]$representation.bodyParameterName))) { throw "P3.2 operation '$($operation.operationId)' has an invalid request representation." }
+                foreach ($part in @((Get-JsonValue $representation 'parts'))) { if ($null -ne $part -and ([string]::IsNullOrWhiteSpace([string]$part.parameterName) -or [string]::IsNullOrWhiteSpace([string]$part.partName) -or [string]::IsNullOrWhiteSpace([string]$part.contentType) -or [string]::IsNullOrWhiteSpace([string]$part.format))) { throw "P3.2 operation '$($operation.operationId)' has an invalid multipart part." } }
+            }
+            foreach ($representation in @($operation.runtime.responseRepresentations)) { if ($null -ne $representation -and ([string]::IsNullOrWhiteSpace([string]$representation.contentType) -or [string]::IsNullOrWhiteSpace([string]$representation.envelopePolicy) -or [string]::IsNullOrWhiteSpace([string]$representation.parsingMode))) { throw "P3.2 operation '$($operation.operationId)' has an invalid response representation." } }
+            if ($null -ne $operation.runtime.pagination -and [string]::IsNullOrWhiteSpace([string]$operation.runtime.pagination.stopRule)) { throw "P3.2 operation '$($operation.operationId)' has no pagination stop rule." }
+        }
+    }
+    foreach ($model in @($Artifact.models)) {
+        if ([string]::IsNullOrWhiteSpace([string]$model.className) -or @($model.properties).Count -eq 0) { throw 'P3.2 artifact contains an incomplete output model.' }
+        foreach ($property in @($model.properties)) { if ([string]::IsNullOrWhiteSpace([string]$property.name) -or [string]::IsNullOrWhiteSpace([string]$property.jsonName) -or [string]::IsNullOrWhiteSpace([string]$property.type)) { throw "P3.2 model '$($model.className)' contains an incomplete property." } }
+    }
+}
+
+if (-not (Test-Path -LiteralPath $ArtifactPath -PathType Leaf)) { throw "P3.2 canonical artifact is missing: $ArtifactPath" }
+if (-not (Test-Path -LiteralPath $TemplatePath -PathType Leaf)) { throw "P3.2 source template is missing: $TemplatePath" }
+
+$artifact = Get-Content -Raw -LiteralPath $ArtifactPath | ConvertFrom-Json
+Assert-ArtifactFresh $artifact $ProjectRoot
+Assert-ArtifactSemanticParity $artifact $ProjectRoot
+Assert-ArtifactContract $artifact
+$template = Get-Content -Raw -LiteralPath $TemplatePath -Encoding UTF8
+if ($template -notmatch '\{\{P32_CMDLETS\}\}') { throw 'P3.2 source template is missing the canonical renderer token.' }
+
+$lines = [System.Collections.Generic.List[string]]::new()
+$lines.Add('__P32_SEED__')
+foreach ($cmdlet in @($artifact.cmdlets)) { Add-GeneratedCmdlet -Lines ([ref]$lines) -Cmdlet $cmdlet }
+$lines.RemoveAt(0)
+$rendered = $template.Replace('{{P32_CMDLETS}}', (($lines -join "`n").TrimEnd([char[]]"`r`n")))
+if ($rendered -match '\{\{[^}]+\}\}') { throw 'P3.2 generated source contains unresolved template tokens.' }
+$sourceExists = Test-Path -LiteralPath $SourcePath -PathType Leaf
+if ($ValidateOnly -and -not $sourceExists) { throw "P3.2 ValidateOnly source is missing: $SourcePath" }
+$sourceForValidation = if ($sourceExists) { Get-Content -Raw -LiteralPath $SourcePath -Encoding UTF8 } else { $rendered }
+foreach ($cmdlet in @($artifact.cmdlets)) {
+    if ($sourceForValidation -notmatch "public sealed class $([regex]::Escape([string]$cmdlet.className))\s*:") { throw "Generated P3.2 source is missing '$($cmdlet.className)'." }
+    foreach ($parameter in @($cmdlet.parameters)) {
+        $declaration = "public $([regex]::Escape([string]$parameter.type)) $([regex]::Escape([string]$parameter.name))\s*\{"
+        if ($sourceForValidation -notmatch $declaration) { throw "Generated P3.2 source does not consume parameter '$($parameter.name)' with type '$($parameter.type)'." }
+        foreach ($alias in @($parameter.aliases)) { if ($sourceForValidation -notmatch "Alias\($(ConvertTo-CSharpString ([string]$alias))\)") { throw "Generated P3.2 source does not consume alias '$alias' for '$($parameter.name)'." } }
+    }
+}
+foreach ($runtimeMetadataType in @($artifact.cmdlets | ForEach-Object runtimeMetadataType | Sort-Object -Unique)) {
+    $runtimePath = switch ($runtimeMetadataType) {
+        'CfDnsRecordRuntimeMetadata' { $RuntimeSourcePath; break }
+        'CfZoneRuntimeMetadata' { $ZoneRuntimeSourcePath; break }
+        default {
+            $generatedRuntime = @($artifact.cmdlets | Where-Object runtimeMetadataType -eq $runtimeMetadataType | ForEach-Object { $_.generated.runtimeMetadataPath } | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Select-Object -First 1)
+            if ($generatedRuntime.Count -ne 1) { throw "P3.2 runtime metadata '$runtimeMetadataType' has no source path." }
+            Join-Path $ProjectRoot ([string]$generatedRuntime[0])
+        }
+    }
+    if (-not (Test-Path -LiteralPath $runtimePath -PathType Leaf)) { throw "Runtime metadata '$runtimeMetadataType' is missing: $runtimePath" }
+    Assert-RuntimeMetadataSourceContract $artifact (Get-Content -Raw -LiteralPath $runtimePath -Encoding UTF8) $runtimeMetadataType
+}
+
+$renderedNormalized = Normalize-GeneratedSource $rendered
+if ($ValidateOnly) {
+    $existingNormalized = Normalize-GeneratedSource $sourceForValidation
+    $expectedHash = [System.BitConverter]::ToString([System.Security.Cryptography.SHA256]::HashData([System.Text.Encoding]::UTF8.GetBytes($renderedNormalized))).Replace('-', '').ToLowerInvariant()
+    $actualHash = [System.BitConverter]::ToString([System.Security.Cryptography.SHA256]::HashData([System.Text.Encoding]::UTF8.GetBytes($existingNormalized))).Replace('-', '').ToLowerInvariant()
+    if ($expectedHash -ne $actualHash -or $renderedNormalized -cne $existingNormalized) {
+        throw "P3.2 generated source renderer drifted for '$SourcePath'. Expected renderer SHA256 '$expectedHash', actual source SHA256 '$actualHash'."
+    }
+} else {
+    Write-Utf8CrLf $SourcePath $rendered
+}
+
+if (-not $ValidateOnly) {
+    foreach ($model in @($artifact.models)) {
+        $modelPath = [string]$model.path
+        if ([string]::IsNullOrWhiteSpace($modelPath)) { throw "P3.2 model '$($model.className)' has no generated path." }
+        Write-GeneratedModel $model (Join-Path $ProjectRoot $modelPath)
+    }
+    foreach ($cmdlet in @($artifact.cmdlets)) {
+        $generated = $cmdlet.generated
+        if ($null -eq $generated) { continue }
+        $operationMetadataPath = [string]$generated.operationMetadataPath
+        if (-not [string]::IsNullOrWhiteSpace($operationMetadataPath)) { Write-OperationMetadata $cmdlet ([string]$generated.operationMetadataType) (Join-Path $ProjectRoot $operationMetadataPath) }
+        $runtimeMetadataPath = [string]$generated.runtimeMetadataPath
+        if (-not [string]::IsNullOrWhiteSpace($runtimeMetadataPath)) { Write-RuntimeMetadata $cmdlet ([string]$cmdlet.runtimeMetadataType) (Join-Path $ProjectRoot $runtimeMetadataPath) }
+    }
+    Write-HelpMetadata @($artifact.cmdlets) (Join-Path $GeneratedRoot 'Metadata/P32CmdletHelpMetadata.cs')
+}
 
 [pscustomobject]@{
     Stage = 'P3.2'
-    Cmdlets = @($cmdletModels.cmdletName)
-    ProjectionArtifact = 'artifacts/p3.2/CmdletModel.json'
-    GeneratedSource = 'src/Cloudflare.PowerShell/Generated/Cmdlets/P32RepresentativeCmdlets.cs'
-    RuntimeMetadata = @('CfZoneRuntimeMetadata', 'CfDnsRecordRuntimeMetadata')
+    Cmdlets = @($artifact.cmdlets | ForEach-Object cmdletName)
+    ProjectionArtifact = [IO.Path]::GetRelativePath($ProjectRoot, $ArtifactPath).Replace('\', '/')
+    GeneratedSource = [IO.Path]::GetRelativePath($ProjectRoot, $SourcePath).Replace('\', '/')
+    RuntimeMetadata = @($artifact.cmdlets | ForEach-Object runtimeMetadataType | Sort-Object -Unique)
 } | ConvertTo-Json -Depth 10
+Write-Output 'PASS P3.2 canonical-artifact source generation and runtime drift checks'

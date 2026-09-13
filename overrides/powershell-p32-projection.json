@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "stage": "P3.2",
+  "commands": [
+    {
+      "cmdletName": "Get-CfZone",
+      "className": "GetCfZoneCommand",
+      "resource": "zones",
+      "runtimeMetadataType": "CfZoneRuntimeMetadata",
+      "outputType": "Cloudflare.PowerShell.CfZone",
+      "defaultParameterSetName": "List",
+      "outputPolicy": "item",
+      "projectionAlignment": "p23-resource",
+      "generated": {
+        "operationMetadataType": "CfZoneOperationMetadata",
+        "operationMetadataPath": "src/Cloudflare.PowerShell/Generated/Metadata/CfZoneOperationMetadata.cs",
+        "runtimeMetadataPath": "src/Cloudflare.PowerShell/Generated/Metadata/CfZoneRuntimeMetadata.cs"
+      },
+      "execution": { "strategy": "parameter-set", "shouldProcess": false },
+      "operations": {
+        "zones-0-get": { "parameterSet": "Get", "invokeKind": "single", "errorTarget": "ZoneId", "constantName": "Operation_zones_Get_zones_0_get" },
+        "zones-get": { "parameterSet": "List", "invokeKind": "paged", "constantName": "Operation_zones_List_zones_get" }
+      },
+      "help": {
+        "synopsis": "Gets Cloudflare zones.",
+        "description": "Gets zones visible to the authenticated account and writes one typed zone per pipeline object.",
+        "source": "P3.2ProjectionPolicy"
+      },
+      "model": {
+        "className": "CfZone",
+        "path": "src/Cloudflare.PowerShell/Generated/Models/CfZoneModels.cs",
+        "properties": [
+          { "name": "Id", "jsonName": "id", "type": "string?" },
+          { "name": "Name", "jsonName": "name", "type": "string?" },
+          { "name": "Status", "jsonName": "status", "type": "string?" },
+          { "name": "Type", "jsonName": "type", "type": "string?" }
+        ]
+      }
+    },
+    {
+      "cmdletName": "Get-CfDnsRecord",
+      "className": "GetCfDnsRecordCommand",
+      "resource": "dns",
+      "runtimeMetadataType": "CfDnsRecordRuntimeMetadata",
+      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+      "defaultParameterSetName": "List",
+      "outputPolicy": "item",
+      "execution": { "strategy": "parameter-set", "shouldProcess": false },
+      "parameterAliases": { "DnsRecordId": [ "RecordId" ] },
+      "operations": {
+        "dns-records-for-a-zone-dns-record-details": { "parameterSet": "Get", "invokeKind": "single", "errorTarget": "ZoneId" },
+        "dns-records-for-a-zone-list-dns-records": {
+          "parameterSet": "List",
+          "invokeKind": "paged",
+          "errorTarget": "ZoneId",
+          "typeOverrides": { "tag": "string[]?" }
+        }
+      },
+      "help": {
+        "synopsis": "Gets Cloudflare DNS records.",
+        "description": "Gets one or more typed DNS records through the shared runtime.",
+        "source": "P3.2ProjectionPolicy"
+      }
+    },
+    {
+      "cmdletName": "New-CfDnsRecord",
+      "className": "NewCfDnsRecordCommand",
+      "resource": "dns",
+      "runtimeMetadataType": "CfDnsRecordRuntimeMetadata",
+      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+      "defaultParameterSetName": "Create",
+      "outputPolicy": "single",
+      "execution": { "strategy": "parameter-set", "shouldProcess": true, "shouldProcessTarget": "ZoneId", "shouldProcessAction": "Create DNS record" },
+      "operations": {
+        "dns-records-for-a-zone-create-dns-record": {
+          "parameterSet": "Create",
+          "invokeKind": "single",
+          "bodyParameterName": "Record",
+          "bodyParameterType": "CfDnsRecordInput",
+          "bodySerialization": "ToJson"
+        }
+      },
+      "help": {
+        "synopsis": "Creates a Cloudflare DNS record.",
+        "description": "Creates a typed DNS record using the generated request model.",
+        "source": "P3.2ProjectionPolicy"
+      }
+    },
+    {
+      "cmdletName": "Remove-CfDnsRecord",
+      "className": "RemoveCfDnsRecordCommand",
+      "resource": "dns",
+      "runtimeMetadataType": "CfDnsRecordRuntimeMetadata",
+      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+      "defaultParameterSetName": "Delete",
+      "outputPolicy": "none",
+      "execution": { "strategy": "parameter-set", "shouldProcess": true, "shouldProcessTarget": "DnsRecordId", "shouldProcessAction": "Delete DNS record" },
+      "parameterAliases": { "DnsRecordId": [ "RecordId" ] },
+      "operations": {
+        "dns-records-for-a-zone-delete-dns-record": { "parameterSet": "Delete", "invokeKind": "single", "outputPolicy": "none" }
+      },
+      "help": {
+        "synopsis": "Removes a Cloudflare DNS record.",
+        "description": "Removes one DNS record by zone and record identifier.",
+        "source": "P3.2ProjectionPolicy"
+      }
+    },
+    {
+      "cmdletName": "Set-CfDnsRecord",
+      "className": "SetCfDnsRecordCommand",
+      "resource": "dns",
+      "runtimeMetadataType": "CfDnsRecordRuntimeMetadata",
+      "outputType": "Cloudflare.PowerShell.CfDnsRecord",
+      "defaultParameterSetName": "Replace",
+      "outputPolicy": "single",
+      "execution": { "strategy": "parameter-set", "shouldProcess": true, "shouldProcessTarget": "DnsRecordId", "shouldProcessAction": "{ParameterSetName} DNS record" },
+      "parameterAliases": { "DnsRecordId": [ "RecordId" ] },
+      "operations": {
+        "dns-records-for-a-zone-patch-dns-record": {
+          "parameterSet": "Edit",
+          "invokeKind": "single",
+          "bodyParameterName": "Edit",
+          "bodyParameterType": "Hashtable",
+          "bodySerialization": "Value"
+        },
+        "dns-records-for-a-zone-update-dns-record": {
+          "parameterSet": "Replace",
+          "invokeKind": "single",
+          "bodyParameterName": "Replace",
+          "bodyParameterType": "Hashtable",
+          "bodySerialization": "Value"
+        }
+      },
+      "help": {
+        "synopsis": "Updates a Cloudflare DNS record.",
+        "description": "Replaces or edits one DNS record through the shared runtime.",
+        "source": "P3.2ProjectionPolicy"
+      }
+    }
+  ]
+}

@@ -214,14 +214,16 @@ function ConvertTo-CSharpResponseRepresentationMetadata {
 
 function ConvertTo-CSharpPaginationMetadata {
     param([object]$Pagination)
-    if ($null -eq $Pagination) { return 'null' }
+    if ($null -eq $Pagination) { return 'new GeneratedPaginationMetadata { Strategy = "SinglePage", RequestFields = [], ResponseFields = [], ResultPath = null, PageInfoPath = null, CurrentPagePath = null, TotalPagesPath = null, NextCursorPath = null, HasMorePath = null, NextPageRule = "", StopRule = "single response" }' }
     $requestFields = ConvertTo-CSharpStringArray @($Pagination.requestFields)
     $responseFields = ConvertTo-CSharpStringArray @($Pagination.responseFields)
     $resultPath = if (@($Pagination.responseFields).Count -gt 0) { ConvertTo-CSharpString @($Pagination.responseFields)[0] } else { 'null' }
     $pageInfoPath = if (@($Pagination.responseFields).Count -gt 1) { ConvertTo-CSharpString @($Pagination.responseFields)[1] } else { 'null' }
     $currentPagePath = if ($null -ne $pageInfoPath -and $pageInfoPath -ne 'null') { "($pageInfoPath + `".page`")" } else { 'null' }
     $totalPagesPath = if ($null -ne $pageInfoPath -and $pageInfoPath -ne 'null') { "($pageInfoPath + `".total_pages`")" } else { 'null' }
-    return "new GeneratedPaginationMetadata { Strategy = $(ConvertTo-CSharpString $Pagination.strategy), RequestFields = $requestFields, ResponseFields = $responseFields, ResultPath = $resultPath, PageInfoPath = $pageInfoPath, CurrentPagePath = $currentPagePath, TotalPagesPath = $totalPagesPath, NextPageRule = $(ConvertTo-CSharpString $Pagination.nextPageRule), StopRule = $(ConvertTo-CSharpString $Pagination.stopRule) }"
+    $nextCursorPath = if ($null -ne (Get-JsonPropertyValue $Pagination 'nextCursorPath')) { ConvertTo-CSharpString $Pagination.nextCursorPath } else { 'null' }
+    $hasMorePath = if ($null -ne (Get-JsonPropertyValue $Pagination 'hasMorePath')) { ConvertTo-CSharpString $Pagination.hasMorePath } else { 'null' }
+    return "new GeneratedPaginationMetadata { Strategy = $(ConvertTo-CSharpString $Pagination.strategy), RequestFields = $requestFields, ResponseFields = $responseFields, ResultPath = $resultPath, PageInfoPath = $pageInfoPath, CurrentPagePath = $currentPagePath, TotalPagesPath = $totalPagesPath, NextCursorPath = $nextCursorPath, HasMorePath = $hasMorePath, NextPageRule = $(ConvertTo-CSharpString $Pagination.nextPageRule), StopRule = $(ConvertTo-CSharpString $Pagination.stopRule) }"
 }
 
 $correctionDocument = Get-Content -Raw -LiteralPath $correctionPath | ConvertFrom-Json
@@ -460,7 +462,7 @@ public static class CfDnsRecordRuntimeMetadata
     [
 $(($operations | Sort-Object { $_.Operation.operationId } | ForEach-Object {
     $op = $_.Operation
-    $parameters = @($op.parameters | ForEach-Object { ConvertTo-CSharpParameterMetadata $_ })
+    $parameters = @($op.parameters | Sort-Object location, name | ForEach-Object { ConvertTo-CSharpParameterMetadata $_ })
     $parameterLiteral = if ($parameters.Count -eq 0) { '[]' } else { "[$($parameters -join ', ')]" }
     $requests = @()
     $requestBody = Get-JsonPropertyValue $op 'requestBody'

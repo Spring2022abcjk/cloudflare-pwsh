@@ -124,6 +124,7 @@ public sealed class NormalizedSchema
     public string Kind { get; set; } = "reference";
     public string? SourceRef { get; set; }
     public string? PrimitiveType { get; set; }
+    public string? Items { get; set; }
     public string? Format { get; set; }
     public List<string> RequiredProperties { get; set; } = [];
     public Dictionary<string, NormalizedProperty> Properties { get; set; } = new(StringComparer.Ordinal);

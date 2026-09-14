@@ -459,12 +459,18 @@
         }
       ],
       "pagination": {
-        "strategy": "SinglePage",
-        "requestFields": [],
-        "responseFields": [],
-        "nextPageRule": "",
-        "stopRule": "single response",
-        "evidence": "no recognized page-array pattern"
+        "strategy": "V4PagePaginationArray",
+        "requestFields": [
+          "page",
+          "per_page"
+        ],
+        "responseFields": [
+          "result",
+          "result_info"
+        ],
+        "nextPageRule": "page \u002B 1",
+        "stopRule": "empty result page",
+        "evidence": "query page/per_page plus result collection schema"
       },
       "sourceLocation": "#/paths/~1accounts~1{account_id}~1d1~1database/get",
       "correctionTrace": []
@@ -756,6 +762,7 @@
       "name": "Inline_FE0C0CEC520A",
       "kind": "array",
       "primitiveType": "array",
+      "items": "Inline_5B4B52FD72E8",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -1099,6 +1106,27 @@
       "allOf": [],
       "enum": []
     },
+    "Inline_5B4B52FD72E8": {
+      "name": "Inline_5B4B52FD72E8",
+      "kind": "enum",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": [
+        "uuid",
+        "name",
+        "created_at",
+        "version",
+        "jurisdiction",
+        "num_tables",
+        "file_size",
+        "running_in_region",
+        "read_replication"
+      ]
+    },
     "Inline_226B5A8054F6": {
       "name": "Inline_226B5A8054F6",
       "kind": "reference",
@@ -1265,6 +1293,7 @@
       "kind": "array",
       "sourceRef": "#/components/schemas/d1_messages",
       "primitiveType": "array",
+      "items": "Inline_AFA2BB80C341",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -1324,6 +1353,7 @@
       "name": "Inline_11EDC94E7705",
       "kind": "array",
       "primitiveType": "array",
+      "items": "d1_database-response",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -1447,6 +1477,39 @@
       "allOf": [],
       "enum": []
     },
+    "Inline_AFA2BB80C341": {
+      "name": "Inline_AFA2BB80C341",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "name": "code",
+          "schema": "Inline_B4EE54EA2546",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "message": {
+          "name": "message",
+          "schema": "Inline_195A354F2351",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
     "Inline_05816C21123D": {
       "name": "Inline_05816C21123D",
       "kind": "primitive",
@@ -1491,6 +1554,64 @@
       "allOf": [],
       "enum": []
     },
+    "d1_database-response": {
+      "name": "d1_database-response",
+      "kind": "object",
+      "sourceRef": "#/components/schemas/d1_database-response",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {
+        "created_at": {
+          "name": "created_at",
+          "schema": "d1_created-at",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": true,
+          "writeOnly": false
+        },
+        "jurisdiction": {
+          "name": "jurisdiction",
+          "schema": "d1_jurisdiction-nullable",
+          "required": false,
+          "allowsNull": true,
+          "nullPolicy": "send-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "name": {
+          "name": "name",
+          "schema": "d1_database-name",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "uuid": {
+          "name": "uuid",
+          "schema": "d1_database-identifier",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": true,
+          "writeOnly": false
+        },
+        "version": {
+          "name": "version",
+          "schema": "d1_database-version",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
     "Inline_1C1CE68FE458": {
       "name": "Inline_1C1CE68FE458",
       "kind": "enum",
@@ -1504,6 +1625,28 @@
         "auto",
         "disabled"
       ]
+    },
+    "Inline_195A354F2351": {
+      "name": "Inline_195A354F2351",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_B4EE54EA2546": {
+      "name": "Inline_B4EE54EA2546",
+      "kind": "primitive",
+      "primitiveType": "integer",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
     }
   }
 }

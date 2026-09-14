@@ -714,6 +714,7 @@
       "name": "Inline_5B66DEAEA70A",
       "kind": "array",
       "primitiveType": "array",
+      "items": "Inline_426DF7A01565",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -1085,6 +1086,22 @@
       "allOf": [],
       "enum": []
     },
+    "Inline_426DF7A01565": {
+      "name": "Inline_426DF7A01565",
+      "kind": "enum",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": [
+        "full",
+        "partial",
+        "secondary",
+        "internal"
+      ]
+    },
     "Inline_0A15AB9F31F6": {
       "name": "Inline_0A15AB9F31F6",
       "kind": "object",
@@ -1202,6 +1219,7 @@
       "kind": "array",
       "sourceRef": "#/components/schemas/zones_vanity_name_servers",
       "primitiveType": "array",
+      "items": "Inline_DE489D73FB57",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -1279,6 +1297,7 @@
       "name": "Inline_3230171BE4B0",
       "kind": "array",
       "primitiveType": "array",
+      "items": "zones_zone",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -1360,6 +1379,7 @@
       "kind": "array",
       "sourceRef": "#/components/schemas/zones_messages",
       "primitiveType": "array",
+      "items": "Inline_BBE53807EE66",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -1605,6 +1625,18 @@
       "allOf": [],
       "enum": []
     },
+    "Inline_DE489D73FB57": {
+      "name": "Inline_DE489D73FB57",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "format": "hostname",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
     "Inline_0ECCE2009141": {
       "name": "Inline_0ECCE2009141",
       "kind": "object",
@@ -1683,6 +1715,39 @@
       "allOf": [],
       "enum": []
     },
+    "Inline_BBE53807EE66": {
+      "name": "Inline_BBE53807EE66",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "name": "code",
+          "schema": "Inline_D65E0202E032",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "message": {
+          "name": "message",
+          "schema": "Inline_5F13A647369C",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
     "Inline_0BDE0D312775": {
       "name": "Inline_0BDE0D312775",
       "kind": "enum",
@@ -1725,6 +1790,7 @@
       "name": "Inline_3367F299B433",
       "kind": "array",
       "primitiveType": "array",
+      "items": "Inline_4A306292FA4B",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -1842,6 +1908,7 @@
       "name": "Inline_6AE76F8541AD",
       "kind": "array",
       "primitiveType": "array",
+      "items": "Inline_40DC7B5E37F0",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -1864,6 +1931,7 @@
       "name": "Inline_B4241C09385B",
       "kind": "array",
       "primitiveType": "array",
+      "items": "Inline_188729003647",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -2090,6 +2158,7 @@
       "name": "Inline_DF9A8CFA4415",
       "kind": "array",
       "primitiveType": "array",
+      "items": "Inline_DB04F7DDDDAC",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -2143,6 +2212,40 @@
       "kind": "primitive",
       "primitiveType": "string",
       "format": "date-time",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_5F13A647369C": {
+      "name": "Inline_5F13A647369C",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_D65E0202E032": {
+      "name": "Inline_D65E0202E032",
+      "kind": "primitive",
+      "primitiveType": "integer",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_4A306292FA4B": {
+      "name": "Inline_4A306292FA4B",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "format": "hostname",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -2220,6 +2323,29 @@
       "name": "Inline_D1BE7F2021C2",
       "kind": "primitive",
       "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_40DC7B5E37F0": {
+      "name": "Inline_40DC7B5E37F0",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_188729003647": {
+      "name": "Inline_188729003647",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "format": "hostname",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -2352,6 +2478,18 @@
       "name": "Inline_3ED0EA5179ED",
       "kind": "primitive",
       "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_DB04F7DDDDAC": {
+      "name": "Inline_DB04F7DDDDAC",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "format": "hostname",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],

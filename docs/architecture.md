@@ -135,6 +135,32 @@ Transport owns the HTTP request/response and serialized `HttpContent` disposal b
 
 Retry is separate from idempotency. A request may be retryable only when its body is replayable and the retry policy permits the status/exception; a mutation is not automatically retry-safe. Authentication is supplied through an `AuthenticationContext`, and secrets never enter generated metadata.
 
+## P3.3 Coverage Direction
+
+P3.3 adds a discovery/reporting boundary before public expansion:
+
+```text
+Full pinned OpenAPI
+        ↓
+Normalizer → API correction trace
+        ↓
+Projection diagnostics → runtime capability diagnostics
+        ↓
+Deterministic operation classification/report
+        ↓
+Bounded canonical public projection
+        ↓
+Generated PSCmdlet → shared runtime
+```
+
+Normalization success, projection construction, and generated C# are separate
+stage results. An operation is not `Supported` until public eligibility and the
+same request/output/error/safety evidence used by P3.2 are present. Operations
+that are not admitted to the current bounded public policy remain explicitly
+classified rather than silently omitted. The discovery baseline and schema are
+defined in [P3.3 plan](./P3.3-plan.md) and emitted by
+`tools/Invoke-P33CoverageDiscovery.ps1`.
+
 ## Deferred Boundaries
 
 Mutation idempotency policy, legacy authentication, full PowerShell binary UX,

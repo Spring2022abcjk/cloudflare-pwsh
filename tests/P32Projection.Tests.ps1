@@ -43,6 +43,15 @@ Assert-True (@($artifact.cmdlets | Where-Object { $_.PSObject.Properties.Name -c
 Write-Output 'PASS P3.2 capability-driven renderer boundary'
 $tempRoot = Join-Path ([IO.Path]::GetTempPath()) ('p32-projection-tests-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $tempRoot -Force | Out-Null
+$hashHelper = Join-Path $ProjectRoot 'tools/P32Hash.ps1'
+. $hashHelper
+$lfPath = Join-Path $tempRoot 'portable-hash-lf.txt'
+$crlfPath = Join-Path $tempRoot 'portable-hash-crlf.txt'
+$utf8 = [Text.UTF8Encoding]::new($false)
+[IO.File]::WriteAllText($lfPath, "alpha`nbeta`n", $utf8)
+[IO.File]::WriteAllText($crlfPath, "alpha`r`nbeta`r`n", $utf8)
+Assert-True ((Get-P32PortableFileHash -Path $lfPath) -eq (Get-P32PortableFileHash -Path $crlfPath)) 'Portable P3.2 input hash is line-ending sensitive.'
+Write-Output 'PASS portable P3.2 input hash ignores CRLF/LF'
 
 function Invoke-GeneratorFailureCase {
     param(

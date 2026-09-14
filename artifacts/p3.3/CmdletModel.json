@@ -1,0 +1,2772 @@
+{
+  "version": 1,
+  "stage": "P3.3",
+  "sourcePolicy": "normalized-model-plus-projection-policy",
+  "semanticAlgorithm": "SHA256-CanonicalJson-v1",
+  "sourceFiles": [
+    {
+      "path": "ref/api-schemas/openapi.json",
+      "sha256": "f71c82b532b284e41a0e9de41ac1ee398e1b7b658f521e7f8ee478ce922fbf45"
+    },
+    {
+      "path": "overrides/api-corrections.json",
+      "sha256": "5b5b4d4706b34857dee85b8035b6508cb51717667e29e19b410a37d2aa134fde"
+    },
+    {
+      "path": "fixtures/p3.3/d1-database/document.json",
+      "sha256": "07a53c2ef1682d3d6e232aa9b46ef05b4adb30d58a92da511a6c462fc616dfec"
+    },
+    {
+      "path": "overrides/powershell-projection.json",
+      "sha256": "e07a129b9e80b9efaa5653046214cb1c34ac04ee5f55e97ab356d0238e1bdd60"
+    },
+    {
+      "path": "overrides/powershell-p33-d1-projection.json",
+      "sha256": "7739fd5d0e8315542a4f0a3bb49833bfb792a958ecc86e8fb4a4afe53cac49b3"
+    },
+    {
+      "path": "tools/Generate-P33D1Fixture.ps1",
+      "sha256": "323ad6acd47b89c7cb7686af363d14208825f0e0307a0c6e4a12c980b76090ca"
+    },
+    {
+      "path": "tools/Project-P32Projection.ps1",
+      "sha256": "a47038c71a409ccbf836c1925b15ad91bd76487dce4bdcde6a1b2318944a5895"
+    },
+    {
+      "path": "tools/Generate-P32Source.ps1",
+      "sha256": "6242112cb3ab07f96926cefbd07b6d6a71b211b37f906492629a4975ce287571"
+    },
+    {
+      "path": "tools/P33ModelSchemaParity.ps1",
+      "sha256": "2ec70663b84e667b7d6c8102719a8477e69b5b4c36cc1dad0faaa2c8628c50dd"
+    },
+    {
+      "path": "tools/Generate-P33D1Source.ps1",
+      "sha256": "858ef73f0c18288d3896aadb1545a5408bc0e6e306508e16e24354df7d677999"
+    },
+    {
+      "path": "tools/templates/P32RepresentativeCmdlets.cs.tmpl",
+      "sha256": "141a348614a8e23cdceda5812ade4c8ec9c2bd908e9830c1ee9fc90cfb23403e"
+    },
+    {
+      "path": "module/Cloudflare.PowerShell/Cloudflare.PowerShell.psd1",
+      "sha256": "f70506c6418b404ae604da53b5bee02222c4de128006e3a43e45b04e82b61e63"
+    },
+    {
+      "path": "module/Cloudflare.PowerShell/Cloudflare.PowerShell.psm1",
+      "sha256": "f31e874245e2d5ead05ab3edbc7e1ec5d1baa1758ed094d50bb0977736ca6595"
+    }
+  ],
+  "cmdlets": [
+    {
+      "cmdletName": "Get-CfD1Database",
+      "className": "GetCfD1DatabaseCommand",
+      "execution": {
+        "strategy": "parameter-set",
+        "shouldProcess": false
+      },
+      "runtimeMetadataType": "CfD1DatabaseRuntimeMetadata",
+      "generated": {
+        "operationMetadataType": "CfD1DatabaseOperationMetadata",
+        "operationMetadataPath": "src/Cloudflare.PowerShell/Generated/Metadata/CfD1DatabaseOperationMetadata.cs",
+        "runtimeMetadataPath": "src/Cloudflare.PowerShell/Generated/Metadata/CfD1DatabaseRuntimeMetadata.cs"
+      },
+      "model": {
+        "className": "CfD1Database",
+        "path": "src/Cloudflare.PowerShell/Generated/Models/CfD1Database.cs",
+        "directions": [
+          "response"
+        ],
+        "schemaSources": [
+          {
+            "schema": "d1_database-details-response",
+            "direction": "response"
+          },
+          {
+            "schema": "d1_database-response",
+            "direction": "response"
+          }
+        ],
+        "properties": [
+          {
+            "name": "CreatedAt",
+            "jsonName": "created_at",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "d1_database-details-response",
+                "property": "created_at",
+                "direction": "response"
+              },
+              {
+                "schema": "d1_database-response",
+                "property": "created_at",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "FileSize",
+            "jsonName": "file_size",
+            "type": "decimal?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "d1_database-details-response",
+                "property": "file_size",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Jurisdiction",
+            "jsonName": "jurisdiction",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "d1_database-details-response",
+                "property": "jurisdiction",
+                "direction": "response"
+              },
+              {
+                "schema": "d1_database-response",
+                "property": "jurisdiction",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Name",
+            "jsonName": "name",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "d1_database-details-response",
+                "property": "name",
+                "direction": "response"
+              },
+              {
+                "schema": "d1_database-response",
+                "property": "name",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "NumTables",
+            "jsonName": "num_tables",
+            "type": "decimal?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "d1_database-details-response",
+                "property": "num_tables",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "ReadReplication",
+            "jsonName": "read_replication",
+            "type": "CfD1ReadReplicationDetails?",
+            "nullable": true,
+            "presence": "optional",
+            "nestedModel": "CfD1ReadReplicationDetails",
+            "schemaSources": [
+              {
+                "schema": "d1_database-details-response",
+                "property": "read_replication",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Uuid",
+            "jsonName": "uuid",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "d1_database-details-response",
+                "property": "uuid",
+                "direction": "response"
+              },
+              {
+                "schema": "d1_database-response",
+                "property": "uuid",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Version",
+            "jsonName": "version",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "d1_database-details-response",
+                "property": "version",
+                "direction": "response"
+              },
+              {
+                "schema": "d1_database-response",
+                "property": "version",
+                "direction": "response"
+              }
+            ]
+          }
+        ]
+      },
+      "defaultParameterSetName": "List",
+      "operationIds": [
+        "d1-get-database",
+        "d1-list-databases"
+      ],
+      "parameterSets": [
+        {
+          "name": "Get",
+          "operationId": "d1-get-database",
+          "operationBinding": {
+            "method": "GET",
+            "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+            "pathParameters": [
+              "AccountId",
+              "DatabaseId"
+            ],
+            "queryParameters": [
+              "Fields"
+            ],
+            "bodyParameter": null,
+            "bodyModel": null,
+            "invokeKind": "single",
+            "outputPolicy": "item",
+            "bodySerialization": null,
+            "errorTarget": "DatabaseId"
+          },
+          "requiredParameters": [
+            "AccountId",
+            "DatabaseId"
+          ],
+          "optionalParameters": [
+            "Fields"
+          ]
+        },
+        {
+          "name": "List",
+          "operationId": "d1-list-databases",
+          "operationBinding": {
+            "method": "GET",
+            "pathTemplate": "/accounts/{account_id}/d1/database",
+            "pathParameters": [
+              "AccountId"
+            ],
+            "queryParameters": [
+              "Name",
+              "Page",
+              "PerPage"
+            ],
+            "bodyParameter": null,
+            "bodyModel": null,
+            "invokeKind": "paged",
+            "outputPolicy": "item",
+            "bodySerialization": null,
+            "errorTarget": "AccountId"
+          },
+          "requiredParameters": [
+            "AccountId"
+          ],
+          "optionalParameters": [
+            "Name",
+            "Page",
+            "PerPage"
+          ]
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "type": "string?",
+          "binding": "path",
+          "position": 0,
+          "appliesTo": [
+            "Get",
+            "List"
+          ],
+          "requiredIn": [
+            "Get",
+            "List"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "d1-get-database",
+              "location": "path",
+              "name": "account_id"
+            },
+            {
+              "operationId": "d1-list-databases",
+              "location": "path",
+              "name": "account_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Parent"
+        },
+        {
+          "name": "DatabaseId",
+          "type": "string?",
+          "binding": "path",
+          "position": 1,
+          "appliesTo": [
+            "Get"
+          ],
+          "requiredIn": [
+            "Get"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "d1-get-database",
+              "location": "path",
+              "name": "database_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'database_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Primary"
+        },
+        {
+          "name": "Fields",
+          "type": "string[]?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "Get"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "d1-get-database",
+              "location": "query",
+              "name": "fields"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'fields'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Name",
+          "type": "string?",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "d1-list-databases",
+              "location": "query",
+              "name": "name"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'name'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "Page",
+          "type": "decimal",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 1,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "d1-list-databases",
+              "location": "query",
+              "name": "page"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'page'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "PerPage",
+          "type": "decimal",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 1000,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "d1-list-databases",
+              "location": "query",
+              "name": "per_page"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'per_page'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfD1Database",
+      "outputPolicy": "item",
+      "pagingBehavior": "V4PagePaginationArray",
+      "supportsShouldProcess": false,
+      "confirmImpact": "None",
+      "shouldProcessTarget": "",
+      "shouldProcessAction": "",
+      "help": {
+        "synopsis": "Gets Cloudflare D1 databases.",
+        "description": "Gets one or more typed D1 database records through the shared runtime.",
+        "source": "P3.3ProjectionPolicy"
+      },
+      "operations": [
+        {
+          "operationId": "d1-get-database",
+          "resource": "d1/database",
+          "parameterSet": "Get",
+          "method": "GET",
+          "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+          "semantic": {
+            "kind": "Get",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "AccountId",
+              "sourceName": "account_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Get"
+              ],
+              "requiredIn": "Get",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-get-database",
+                  "location": "path",
+                  "name": "account_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'account_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "DatabaseId",
+              "sourceName": "database_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 1,
+              "appliesTo": [
+                "Get"
+              ],
+              "requiredIn": "Get",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-get-database",
+                  "location": "path",
+                  "name": "database_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'database_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Primary"
+            },
+            {
+              "name": "Fields",
+              "sourceName": "fields",
+              "type": "string[]?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "Get"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-get-database",
+                  "location": "query",
+                  "name": "fields"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'fields'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": null,
+          "bodyModel": null,
+          "outputType": "Cloudflare.PowerShell.CfD1Database",
+          "constantName": "Operation_d1_Get_d1_get_database",
+          "outputPolicy": "item",
+          "invokeKind": "single",
+          "bodySerialization": null,
+          "errorTarget": "DatabaseId",
+          "supportsShouldProcess": false,
+          "confirmImpact": "None",
+          "help": {
+            "synopsis": "Get-CfD1Database get operation.",
+            "description": "Generated help for normalized operation 'd1-get-database'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "account_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "database_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "fields",
+                "location": "query",
+                "required": false
+              }
+            ],
+            "requestRepresentations": null,
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        },
+        {
+          "operationId": "d1-list-databases",
+          "resource": "d1/database",
+          "parameterSet": "List",
+          "method": "GET",
+          "pathTemplate": "/accounts/{account_id}/d1/database",
+          "semantic": {
+            "kind": "List",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "AccountId",
+              "sourceName": "account_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": "List",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-list-databases",
+                  "location": "path",
+                  "name": "account_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'account_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "Name",
+              "sourceName": "name",
+              "type": "string?",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-list-databases",
+                  "location": "query",
+                  "name": "name"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'name'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "Page",
+              "sourceName": "page",
+              "type": "decimal",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": 1,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-list-databases",
+                  "location": "query",
+                  "name": "page"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'page'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "PerPage",
+              "sourceName": "per_page",
+              "type": "decimal",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": 1000,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-list-databases",
+                  "location": "query",
+                  "name": "per_page"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'per_page'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": null,
+          "bodyModel": null,
+          "outputType": "Cloudflare.PowerShell.CfD1Database",
+          "constantName": "Operation_d1_List_d1_list_databases",
+          "outputPolicy": "item",
+          "invokeKind": "paged",
+          "bodySerialization": null,
+          "errorTarget": "AccountId",
+          "supportsShouldProcess": false,
+          "confirmImpact": "None",
+          "help": {
+            "synopsis": "Get-CfD1Database list operation.",
+            "description": "Generated help for normalized operation 'd1-list-databases'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "account_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "name",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "page",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "per_page",
+                "location": "query",
+                "required": false
+              }
+            ],
+            "requestRepresentations": null,
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "V4PagePaginationArray",
+              "requestFields": [
+                "page",
+                "per_page"
+              ],
+              "responseFields": [
+                "result",
+                "result_info"
+              ],
+              "resultPath": "result",
+              "pageInfoPath": "result_info",
+              "currentPagePath": "result_info.page",
+              "totalPagesPath": "result_info.total_pages",
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "page + 1",
+              "stopRule": "empty result page"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "cmdletName": "New-CfD1Database",
+      "className": "NewCfD1DatabaseCommand",
+      "execution": {
+        "strategy": "parameter-set",
+        "shouldProcess": true,
+        "shouldProcessTarget": "AccountId",
+        "shouldProcessAction": "Create D1 database"
+      },
+      "runtimeMetadataType": "CfD1DatabaseRuntimeMetadata",
+      "generated": null,
+      "model": {
+        "className": "CfD1DatabaseCreateRequest",
+        "path": "src/Cloudflare.PowerShell/Generated/Models/CfD1DatabaseCreateRequest.cs",
+        "directions": [
+          "request"
+        ],
+        "schemaSources": [
+          {
+            "schema": "Inline_FA2961F0C454",
+            "direction": "request"
+          }
+        ],
+        "properties": [
+          {
+            "name": "Jurisdiction",
+            "jsonName": "jurisdiction",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "Inline_FA2961F0C454",
+                "property": "jurisdiction",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "Name",
+            "jsonName": "name",
+            "type": "string",
+            "nullable": false,
+            "presence": "required",
+            "schemaSources": [
+              {
+                "schema": "Inline_FA2961F0C454",
+                "property": "name",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "PrimaryLocationHint",
+            "jsonName": "primary_location_hint",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "Inline_FA2961F0C454",
+                "property": "primary_location_hint",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "ReadReplication",
+            "jsonName": "read_replication",
+            "type": "CfD1ReadReplicationDetails?",
+            "nullable": true,
+            "presence": "optional",
+            "nestedModel": "CfD1ReadReplicationDetails",
+            "schemaSources": [
+              {
+                "schema": "Inline_FA2961F0C454",
+                "property": "read_replication",
+                "direction": "request"
+              }
+            ]
+          }
+        ]
+      },
+      "defaultParameterSetName": "Create",
+      "operationIds": [
+        "d1-create-database"
+      ],
+      "parameterSets": [
+        {
+          "name": "Create",
+          "operationId": "d1-create-database",
+          "operationBinding": {
+            "method": "POST",
+            "pathTemplate": "/accounts/{account_id}/d1/database",
+            "pathParameters": [
+              "AccountId"
+            ],
+            "queryParameters": [],
+            "bodyParameter": "Database",
+            "bodyModel": "Inline_FA2961F0C454",
+            "invokeKind": "single",
+            "outputPolicy": "single",
+            "bodySerialization": "Value",
+            "errorTarget": "AccountId"
+          },
+          "requiredParameters": [
+            "AccountId",
+            "Database"
+          ],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "type": "string?",
+          "binding": "path",
+          "position": 0,
+          "appliesTo": [
+            "Create"
+          ],
+          "requiredIn": [
+            "Create"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "d1-create-database",
+              "location": "path",
+              "name": "account_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Parent"
+        },
+        {
+          "name": "Database",
+          "type": "CfD1DatabaseCreateRequest",
+          "binding": "body",
+          "position": 1,
+          "appliesTo": [
+            "Create"
+          ],
+          "requiredIn": [
+            "Create"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "null-forgiving",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "d1-create-database",
+              "location": "body",
+              "name": "body"
+            }
+          ],
+          "help": {
+            "description": "Binds the normalized Inline_FA2961F0C454 request body.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": true,
+          "bodyModel": "Inline_FA2961F0C454",
+          "scopeRole": null
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfD1Database",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium",
+      "shouldProcessTarget": "AccountId",
+      "shouldProcessAction": "Create D1 database",
+      "help": {
+        "synopsis": "Creates a Cloudflare D1 database.",
+        "description": "Creates a typed D1 database using the generated request model.",
+        "source": "P3.3ProjectionPolicy"
+      },
+      "operations": [
+        {
+          "operationId": "d1-create-database",
+          "resource": "d1/database",
+          "parameterSet": "Create",
+          "method": "POST",
+          "pathTemplate": "/accounts/{account_id}/d1/database",
+          "semantic": {
+            "kind": "Create",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "AccountId",
+              "sourceName": "account_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Create"
+              ],
+              "requiredIn": "Create",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-create-database",
+                  "location": "path",
+                  "name": "account_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'account_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "Database",
+              "sourceName": "body",
+              "type": "CfD1DatabaseCreateRequest",
+              "binding": "body",
+              "position": 1,
+              "appliesTo": [
+                "Create"
+              ],
+              "requiredIn": "Create",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "initializerPolicy": "null-forgiving",
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-create-database",
+                  "location": "body",
+                  "name": "body"
+                }
+              ],
+              "help": {
+                "description": "Binds the normalized Inline_FA2961F0C454 request body.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": true,
+              "bodyModel": "Inline_FA2961F0C454",
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": "Database",
+          "bodyModel": "Inline_FA2961F0C454",
+          "outputType": "Cloudflare.PowerShell.CfD1Database",
+          "constantName": "Operation_d1_Create_d1_create_database",
+          "outputPolicy": "single",
+          "invokeKind": "single",
+          "bodySerialization": "Value",
+          "errorTarget": "AccountId",
+          "supportsShouldProcess": true,
+          "confirmImpact": "Medium",
+          "help": {
+            "synopsis": "New-CfD1Database create operation.",
+            "description": "Generated help for normalized operation 'd1-create-database'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "account_id",
+                "location": "path",
+                "required": true
+              }
+            ],
+            "requestRepresentations": {
+              "contentType": "application/json",
+              "bodyParameterName": "body",
+              "parts": []
+            },
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "cmdletName": "Remove-CfD1Database",
+      "className": "RemoveCfD1DatabaseCommand",
+      "execution": {
+        "strategy": "parameter-set",
+        "shouldProcess": true,
+        "shouldProcessTarget": "DatabaseId",
+        "shouldProcessAction": "Delete D1 database"
+      },
+      "runtimeMetadataType": "CfD1DatabaseRuntimeMetadata",
+      "generated": null,
+      "model": null,
+      "defaultParameterSetName": "Delete",
+      "operationIds": [
+        "d1-delete-database"
+      ],
+      "parameterSets": [
+        {
+          "name": "Delete",
+          "operationId": "d1-delete-database",
+          "operationBinding": {
+            "method": "DELETE",
+            "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+            "pathParameters": [
+              "AccountId",
+              "DatabaseId"
+            ],
+            "queryParameters": [],
+            "bodyParameter": null,
+            "bodyModel": null,
+            "invokeKind": "single",
+            "outputPolicy": "none",
+            "bodySerialization": null,
+            "errorTarget": "DatabaseId"
+          },
+          "requiredParameters": [
+            "AccountId",
+            "DatabaseId"
+          ],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "type": "string?",
+          "binding": "path",
+          "position": 0,
+          "appliesTo": [
+            "Delete"
+          ],
+          "requiredIn": [
+            "Delete"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "d1-delete-database",
+              "location": "path",
+              "name": "account_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Parent"
+        },
+        {
+          "name": "DatabaseId",
+          "type": "string?",
+          "binding": "path",
+          "position": 1,
+          "appliesTo": [
+            "Delete"
+          ],
+          "requiredIn": [
+            "Delete"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "d1-delete-database",
+              "location": "path",
+              "name": "database_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'database_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Primary"
+        }
+      ],
+      "outputType": null,
+      "outputPolicy": "none",
+      "pagingBehavior": null,
+      "supportsShouldProcess": true,
+      "confirmImpact": "High",
+      "shouldProcessTarget": "DatabaseId",
+      "shouldProcessAction": "Delete D1 database",
+      "help": {
+        "synopsis": "Removes a Cloudflare D1 database.",
+        "description": "Removes one D1 database by account and database identifier.",
+        "source": "P3.3ProjectionPolicy"
+      },
+      "operations": [
+        {
+          "operationId": "d1-delete-database",
+          "resource": "d1/database",
+          "parameterSet": "Delete",
+          "method": "DELETE",
+          "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+          "semantic": {
+            "kind": "Delete",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "AccountId",
+              "sourceName": "account_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Delete"
+              ],
+              "requiredIn": "Delete",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-delete-database",
+                  "location": "path",
+                  "name": "account_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'account_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "DatabaseId",
+              "sourceName": "database_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 1,
+              "appliesTo": [
+                "Delete"
+              ],
+              "requiredIn": "Delete",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-delete-database",
+                  "location": "path",
+                  "name": "database_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'database_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Primary"
+            }
+          ],
+          "bodyParameterName": null,
+          "bodyModel": null,
+          "outputType": null,
+          "constantName": "Operation_d1_Delete_d1_delete_database",
+          "outputPolicy": "none",
+          "invokeKind": "single",
+          "bodySerialization": null,
+          "errorTarget": "DatabaseId",
+          "supportsShouldProcess": true,
+          "confirmImpact": "High",
+          "help": {
+            "synopsis": "Remove-CfD1Database delete operation.",
+            "description": "Generated help for normalized operation 'd1-delete-database'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "account_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "database_id",
+                "location": "path",
+                "required": true
+              }
+            ],
+            "requestRepresentations": null,
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "cmdletName": "Set-CfD1Database",
+      "className": "SetCfD1DatabaseCommand",
+      "execution": {
+        "strategy": "parameter-set",
+        "shouldProcess": true,
+        "shouldProcessTarget": "DatabaseId",
+        "shouldProcessAction": "{ParameterSetName} D1 database"
+      },
+      "runtimeMetadataType": "CfD1DatabaseRuntimeMetadata",
+      "generated": null,
+      "model": {
+        "className": "CfD1DatabaseUpdateRequest",
+        "path": "src/Cloudflare.PowerShell/Generated/Models/CfD1DatabaseUpdateRequest.cs",
+        "directions": [
+          "request"
+        ],
+        "schemaSources": [
+          {
+            "schema": "d1_database-update-request-body",
+            "direction": "request"
+          }
+        ],
+        "properties": [
+          {
+            "name": "ReadReplication",
+            "jsonName": "read_replication",
+            "type": "CfD1ReadReplicationDetails",
+            "nullable": false,
+            "presence": "required",
+            "nestedModel": "CfD1ReadReplicationDetails",
+            "schemaSources": [
+              {
+                "schema": "d1_database-update-request-body",
+                "property": "read_replication",
+                "direction": "request"
+              }
+            ]
+          }
+        ]
+      },
+      "defaultParameterSetName": "Update",
+      "operationIds": [
+        "d1-update-database",
+        "d1-update-partial-database"
+      ],
+      "parameterSets": [
+        {
+          "name": "Update",
+          "operationId": "d1-update-database",
+          "operationBinding": {
+            "method": "PUT",
+            "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+            "pathParameters": [
+              "AccountId",
+              "DatabaseId"
+            ],
+            "queryParameters": [],
+            "bodyParameter": "Database",
+            "bodyModel": "d1_database-update-request-body",
+            "invokeKind": "single",
+            "outputPolicy": "single",
+            "bodySerialization": "Value",
+            "errorTarget": "DatabaseId"
+          },
+          "requiredParameters": [
+            "AccountId",
+            "DatabaseId",
+            "Database"
+          ],
+          "optionalParameters": []
+        },
+        {
+          "name": "PartialUpdate",
+          "operationId": "d1-update-partial-database",
+          "operationBinding": {
+            "method": "PATCH",
+            "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+            "pathParameters": [
+              "AccountId",
+              "DatabaseId"
+            ],
+            "queryParameters": [],
+            "bodyParameter": "PartialDatabase",
+            "bodyModel": "d1_database-update-partial-request-body",
+            "invokeKind": "single",
+            "outputPolicy": "single",
+            "bodySerialization": "Value",
+            "errorTarget": "DatabaseId"
+          },
+          "requiredParameters": [
+            "AccountId",
+            "DatabaseId",
+            "PartialDatabase"
+          ],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "AccountId",
+          "type": "string?",
+          "binding": "path",
+          "position": 0,
+          "appliesTo": [
+            "PartialUpdate",
+            "Update"
+          ],
+          "requiredIn": [
+            "PartialUpdate",
+            "Update"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "d1-update-database",
+              "location": "path",
+              "name": "account_id"
+            },
+            {
+              "operationId": "d1-update-partial-database",
+              "location": "path",
+              "name": "account_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'account_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Parent"
+        },
+        {
+          "name": "Database",
+          "type": "CfD1DatabaseUpdateRequest",
+          "binding": "body",
+          "position": 2,
+          "appliesTo": [
+            "Update"
+          ],
+          "requiredIn": [
+            "Update"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "null-forgiving",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "d1-update-database",
+              "location": "body",
+              "name": "body"
+            }
+          ],
+          "help": {
+            "description": "Binds the normalized d1_database-update-request-body request body.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": true,
+          "bodyModel": "d1_database-update-request-body",
+          "scopeRole": null
+        },
+        {
+          "name": "DatabaseId",
+          "type": "string?",
+          "binding": "path",
+          "position": 1,
+          "appliesTo": [
+            "PartialUpdate",
+            "Update"
+          ],
+          "requiredIn": [
+            "PartialUpdate",
+            "Update"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "d1-update-database",
+              "location": "path",
+              "name": "database_id"
+            },
+            {
+              "operationId": "d1-update-partial-database",
+              "location": "path",
+              "name": "database_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'database_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Primary"
+        },
+        {
+          "name": "PartialDatabase",
+          "type": "CfD1DatabasePartialUpdateRequest",
+          "binding": "body",
+          "position": 2,
+          "appliesTo": [
+            "PartialUpdate"
+          ],
+          "requiredIn": [
+            "PartialUpdate"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "null-forgiving",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "d1-update-partial-database",
+              "location": "body",
+              "name": "body"
+            }
+          ],
+          "help": {
+            "description": "Binds the normalized d1_database-update-partial-request-body request body.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": true,
+          "bodyModel": "d1_database-update-partial-request-body",
+          "scopeRole": null
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfD1Database",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": true,
+      "confirmImpact": "High",
+      "shouldProcessTarget": "DatabaseId",
+      "shouldProcessAction": "{ParameterSetName} D1 database",
+      "help": {
+        "synopsis": "Updates a Cloudflare D1 database.",
+        "description": "Replaces or partially updates one D1 database through the shared runtime.",
+        "source": "P3.3ProjectionPolicy"
+      },
+      "operations": [
+        {
+          "operationId": "d1-update-database",
+          "resource": "d1/database",
+          "parameterSet": "Update",
+          "method": "PUT",
+          "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+          "semantic": {
+            "kind": "Update",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "AccountId",
+              "sourceName": "account_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Update"
+              ],
+              "requiredIn": "Update",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-update-database",
+                  "location": "path",
+                  "name": "account_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'account_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "DatabaseId",
+              "sourceName": "database_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 1,
+              "appliesTo": [
+                "Update"
+              ],
+              "requiredIn": "Update",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-update-database",
+                  "location": "path",
+                  "name": "database_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'database_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Primary"
+            },
+            {
+              "name": "Database",
+              "sourceName": "body",
+              "type": "CfD1DatabaseUpdateRequest",
+              "binding": "body",
+              "position": 2,
+              "appliesTo": [
+                "Update"
+              ],
+              "requiredIn": "Update",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "initializerPolicy": "null-forgiving",
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-update-database",
+                  "location": "body",
+                  "name": "body"
+                }
+              ],
+              "help": {
+                "description": "Binds the normalized d1_database-update-request-body request body.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": true,
+              "bodyModel": "d1_database-update-request-body",
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": "Database",
+          "bodyModel": "d1_database-update-request-body",
+          "outputType": "Cloudflare.PowerShell.CfD1Database",
+          "constantName": "Operation_d1_Update_d1_update_database",
+          "outputPolicy": "single",
+          "invokeKind": "single",
+          "bodySerialization": "Value",
+          "errorTarget": "DatabaseId",
+          "supportsShouldProcess": true,
+          "confirmImpact": "High",
+          "help": {
+            "synopsis": "Set-CfD1Database update operation.",
+            "description": "Generated help for normalized operation 'd1-update-database'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "account_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "database_id",
+                "location": "path",
+                "required": true
+              }
+            ],
+            "requestRepresentations": {
+              "contentType": "application/json",
+              "bodyParameterName": "body",
+              "parts": []
+            },
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        },
+        {
+          "operationId": "d1-update-partial-database",
+          "resource": "d1/database",
+          "parameterSet": "PartialUpdate",
+          "method": "PATCH",
+          "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+          "semantic": {
+            "kind": "Update",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "AccountId",
+              "sourceName": "account_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "PartialUpdate"
+              ],
+              "requiredIn": "PartialUpdate",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-update-partial-database",
+                  "location": "path",
+                  "name": "account_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'account_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "DatabaseId",
+              "sourceName": "database_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 1,
+              "appliesTo": [
+                "PartialUpdate"
+              ],
+              "requiredIn": "PartialUpdate",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-update-partial-database",
+                  "location": "path",
+                  "name": "database_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'database_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Primary"
+            },
+            {
+              "name": "PartialDatabase",
+              "sourceName": "body",
+              "type": "CfD1DatabasePartialUpdateRequest",
+              "binding": "body",
+              "position": 2,
+              "appliesTo": [
+                "PartialUpdate"
+              ],
+              "requiredIn": "PartialUpdate",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "initializerPolicy": "null-forgiving",
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "d1-update-partial-database",
+                  "location": "body",
+                  "name": "body"
+                }
+              ],
+              "help": {
+                "description": "Binds the normalized d1_database-update-partial-request-body request body.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": true,
+              "bodyModel": "d1_database-update-partial-request-body",
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": "PartialDatabase",
+          "bodyModel": "d1_database-update-partial-request-body",
+          "outputType": "Cloudflare.PowerShell.CfD1Database",
+          "constantName": "Operation_d1_PartialUpdate_d1_update_partial_database",
+          "outputPolicy": "single",
+          "invokeKind": "single",
+          "bodySerialization": "Value",
+          "errorTarget": "DatabaseId",
+          "supportsShouldProcess": true,
+          "confirmImpact": "Medium",
+          "help": {
+            "synopsis": "Set-CfD1Database update operation.",
+            "description": "Generated help for normalized operation 'd1-update-partial-database'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "account_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "database_id",
+                "location": "path",
+                "required": true
+              }
+            ],
+            "requestRepresentations": {
+              "contentType": "application/json",
+              "bodyParameterName": "body",
+              "parts": []
+            },
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "models": [
+    {
+      "className": "CfD1Database",
+      "path": "src/Cloudflare.PowerShell/Generated/Models/CfD1Database.cs",
+      "directions": [
+        "response"
+      ],
+      "schemaSources": [
+        {
+          "schema": "d1_database-details-response",
+          "direction": "response",
+          "sourceRef": "#/components/schemas/d1_database-details-response",
+          "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+        },
+        {
+          "schema": "d1_database-response",
+          "direction": "response",
+          "sourceRef": "#/components/schemas/d1_database-response",
+          "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+        }
+      ],
+      "properties": [
+        {
+          "name": "CreatedAt",
+          "jsonName": "created_at",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "created_at",
+              "direction": "response"
+            },
+            {
+              "schema": "d1_database-response",
+              "property": "created_at",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "created_at",
+              "direction": "response",
+              "normalizedSchema": "d1_created-at",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "#/components/schemas/d1_created-at",
+              "sourceRef": "#/components/schemas/d1_database-details-response",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            },
+            {
+              "schema": "d1_database-response",
+              "property": "created_at",
+              "direction": "response",
+              "normalizedSchema": "d1_created-at",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "#/components/schemas/d1_created-at",
+              "sourceRef": "#/components/schemas/d1_database-response",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ]
+        },
+        {
+          "name": "FileSize",
+          "jsonName": "file_size",
+          "type": "decimal?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "file_size",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "file_size",
+              "direction": "response",
+              "normalizedSchema": "d1_file-size",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "number",
+              "normalizedSourceRef": "#/components/schemas/d1_file-size",
+              "sourceRef": "#/components/schemas/d1_database-details-response",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Jurisdiction",
+          "jsonName": "jurisdiction",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "jurisdiction",
+              "direction": "response"
+            },
+            {
+              "schema": "d1_database-response",
+              "property": "jurisdiction",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "jurisdiction",
+              "direction": "response",
+              "normalizedSchema": "d1_jurisdiction-nullable",
+              "normalizedKind": "enum",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "#/components/schemas/d1_jurisdiction-nullable",
+              "sourceRef": "#/components/schemas/d1_database-details-response",
+              "required": false,
+              "allowsNull": true,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "send-null",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            },
+            {
+              "schema": "d1_database-response",
+              "property": "jurisdiction",
+              "direction": "response",
+              "normalizedSchema": "d1_jurisdiction-nullable",
+              "normalizedKind": "enum",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "#/components/schemas/d1_jurisdiction-nullable",
+              "sourceRef": "#/components/schemas/d1_database-response",
+              "required": false,
+              "allowsNull": true,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "send-null",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Name",
+          "jsonName": "name",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "name",
+              "direction": "response"
+            },
+            {
+              "schema": "d1_database-response",
+              "property": "name",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "name",
+              "direction": "response",
+              "normalizedSchema": "d1_database-name",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "#/components/schemas/d1_database-name",
+              "sourceRef": "#/components/schemas/d1_database-details-response",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            },
+            {
+              "schema": "d1_database-response",
+              "property": "name",
+              "direction": "response",
+              "normalizedSchema": "d1_database-name",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "#/components/schemas/d1_database-name",
+              "sourceRef": "#/components/schemas/d1_database-response",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ]
+        },
+        {
+          "name": "NumTables",
+          "jsonName": "num_tables",
+          "type": "decimal?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "num_tables",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "num_tables",
+              "direction": "response",
+              "normalizedSchema": "d1_table-count",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "number",
+              "normalizedSourceRef": "#/components/schemas/d1_table-count",
+              "sourceRef": "#/components/schemas/d1_database-details-response",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ]
+        },
+        {
+          "name": "ReadReplication",
+          "jsonName": "read_replication",
+          "type": "CfD1ReadReplicationDetails?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "read_replication",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "read_replication",
+              "direction": "response",
+              "normalizedSchema": "d1_read-replication-details-for-response",
+              "normalizedKind": "object",
+              "normalizedPrimitiveType": "object",
+              "normalizedSourceRef": "#/components/schemas/d1_read-replication-details-for-response",
+              "sourceRef": "#/components/schemas/d1_database-details-response",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ],
+          "nestedModel": "CfD1ReadReplicationDetails"
+        },
+        {
+          "name": "Uuid",
+          "jsonName": "uuid",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "uuid",
+              "direction": "response"
+            },
+            {
+              "schema": "d1_database-response",
+              "property": "uuid",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "uuid",
+              "direction": "response",
+              "normalizedSchema": "d1_database-identifier",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "#/components/schemas/d1_database-identifier",
+              "sourceRef": "#/components/schemas/d1_database-details-response",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            },
+            {
+              "schema": "d1_database-response",
+              "property": "uuid",
+              "direction": "response",
+              "normalizedSchema": "d1_database-identifier",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "#/components/schemas/d1_database-identifier",
+              "sourceRef": "#/components/schemas/d1_database-response",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Version",
+          "jsonName": "version",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "version",
+              "direction": "response"
+            },
+            {
+              "schema": "d1_database-response",
+              "property": "version",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "d1_database-details-response",
+              "property": "version",
+              "direction": "response",
+              "normalizedSchema": "d1_database-version",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "#/components/schemas/d1_database-version",
+              "sourceRef": "#/components/schemas/d1_database-details-response",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            },
+            {
+              "schema": "d1_database-response",
+              "property": "version",
+              "direction": "response",
+              "normalizedSchema": "d1_database-version",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "#/components/schemas/d1_database-version",
+              "sourceRef": "#/components/schemas/d1_database-response",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ]
+        }
+      ],
+      "provenance": {
+        "kind": "normalized-schema-binding",
+        "sourcePath": "fixtures/p3.3/d1-database/document.json",
+        "modelClass": "CfD1Database"
+      }
+    },
+    {
+      "className": "CfD1DatabaseCreateRequest",
+      "path": "src/Cloudflare.PowerShell/Generated/Models/CfD1DatabaseCreateRequest.cs",
+      "directions": [
+        "request"
+      ],
+      "schemaSources": [
+        {
+          "schema": "Inline_FA2961F0C454",
+          "direction": "request",
+          "sourceRef": "",
+          "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+        }
+      ],
+      "properties": [
+        {
+          "name": "Jurisdiction",
+          "jsonName": "jurisdiction",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "Inline_FA2961F0C454",
+              "property": "jurisdiction",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "Inline_FA2961F0C454",
+              "property": "jurisdiction",
+              "direction": "request",
+              "normalizedSchema": "d1_jurisdiction",
+              "normalizedKind": "enum",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "#/components/schemas/d1_jurisdiction",
+              "sourceRef": "",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Name",
+          "jsonName": "name",
+          "type": "string",
+          "nullable": false,
+          "presence": "required",
+          "schemaSources": [
+            {
+              "schema": "Inline_FA2961F0C454",
+              "property": "name",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "Inline_FA2961F0C454",
+              "property": "name",
+              "direction": "request",
+              "normalizedSchema": "d1_database-name",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "#/components/schemas/d1_database-name",
+              "sourceRef": "",
+              "required": true,
+              "allowsNull": false,
+              "presence": "required",
+              "nullable": false,
+              "nullPolicy": "reject-null",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ]
+        },
+        {
+          "name": "PrimaryLocationHint",
+          "jsonName": "primary_location_hint",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "Inline_FA2961F0C454",
+              "property": "primary_location_hint",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "Inline_FA2961F0C454",
+              "property": "primary_location_hint",
+              "direction": "request",
+              "normalizedSchema": "d1_primary-location-hint",
+              "normalizedKind": "enum",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "#/components/schemas/d1_primary-location-hint",
+              "sourceRef": "",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ]
+        },
+        {
+          "name": "ReadReplication",
+          "jsonName": "read_replication",
+          "type": "CfD1ReadReplicationDetails?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "Inline_FA2961F0C454",
+              "property": "read_replication",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "Inline_FA2961F0C454",
+              "property": "read_replication",
+              "direction": "request",
+              "normalizedSchema": "d1_read-replication-details-for-request",
+              "normalizedKind": "object",
+              "normalizedPrimitiveType": "object",
+              "normalizedSourceRef": "#/components/schemas/d1_read-replication-details-for-request",
+              "sourceRef": "",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ],
+          "nestedModel": "CfD1ReadReplicationDetails"
+        }
+      ],
+      "provenance": {
+        "kind": "normalized-schema-binding",
+        "sourcePath": "fixtures/p3.3/d1-database/document.json",
+        "modelClass": "CfD1DatabaseCreateRequest"
+      }
+    },
+    {
+      "className": "CfD1DatabaseUpdateRequest",
+      "path": "src/Cloudflare.PowerShell/Generated/Models/CfD1DatabaseUpdateRequest.cs",
+      "directions": [
+        "request"
+      ],
+      "schemaSources": [
+        {
+          "schema": "d1_database-update-request-body",
+          "direction": "request",
+          "sourceRef": "#/components/schemas/d1_database-update-request-body",
+          "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ReadReplication",
+          "jsonName": "read_replication",
+          "type": "CfD1ReadReplicationDetails",
+          "nullable": false,
+          "presence": "required",
+          "schemaSources": [
+            {
+              "schema": "d1_database-update-request-body",
+              "property": "read_replication",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "d1_database-update-request-body",
+              "property": "read_replication",
+              "direction": "request",
+              "normalizedSchema": "d1_read-replication-details-for-request",
+              "normalizedKind": "object",
+              "normalizedPrimitiveType": "object",
+              "normalizedSourceRef": "#/components/schemas/d1_read-replication-details-for-request",
+              "sourceRef": "#/components/schemas/d1_database-update-request-body",
+              "required": true,
+              "allowsNull": false,
+              "presence": "required",
+              "nullable": false,
+              "nullPolicy": "reject-null",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ],
+          "nestedModel": "CfD1ReadReplicationDetails"
+        }
+      ],
+      "provenance": {
+        "kind": "normalized-schema-binding",
+        "sourcePath": "fixtures/p3.3/d1-database/document.json",
+        "modelClass": "CfD1DatabaseUpdateRequest"
+      }
+    },
+    {
+      "className": "CfD1DatabasePartialUpdateRequest",
+      "path": "src/Cloudflare.PowerShell/Generated/Models/CfD1DatabasePartialUpdateRequest.cs",
+      "directions": [
+        "request"
+      ],
+      "schemaSources": [
+        {
+          "schema": "d1_database-update-partial-request-body",
+          "direction": "request",
+          "sourceRef": "#/components/schemas/d1_database-update-partial-request-body",
+          "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ReadReplication",
+          "jsonName": "read_replication",
+          "type": "CfD1ReadReplicationDetails?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "d1_database-update-partial-request-body",
+              "property": "read_replication",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "d1_database-update-partial-request-body",
+              "property": "read_replication",
+              "direction": "request",
+              "normalizedSchema": "d1_read-replication-details-for-request",
+              "normalizedKind": "object",
+              "normalizedPrimitiveType": "object",
+              "normalizedSourceRef": "#/components/schemas/d1_read-replication-details-for-request",
+              "sourceRef": "#/components/schemas/d1_database-update-partial-request-body",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ],
+          "nestedModel": "CfD1ReadReplicationDetails"
+        }
+      ],
+      "provenance": {
+        "kind": "normalized-schema-binding",
+        "sourcePath": "fixtures/p3.3/d1-database/document.json",
+        "modelClass": "CfD1DatabasePartialUpdateRequest"
+      }
+    },
+    {
+      "className": "CfD1ReadReplicationDetails",
+      "path": "src/Cloudflare.PowerShell/Generated/Models/CfD1ReadReplicationDetails.cs",
+      "directions": [
+        "request",
+        "response"
+      ],
+      "schemaSources": [
+        {
+          "schema": "d1_read-replication-details-for-request",
+          "direction": "request",
+          "sourceRef": "#/components/schemas/d1_read-replication-details-for-request",
+          "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+        },
+        {
+          "schema": "d1_read-replication-details-for-response",
+          "direction": "response",
+          "sourceRef": "#/components/schemas/d1_read-replication-details-for-response",
+          "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+        }
+      ],
+      "properties": [
+        {
+          "name": "Mode",
+          "jsonName": "mode",
+          "type": "string",
+          "nullable": false,
+          "presence": "required",
+          "schemaSources": [
+            {
+              "schema": "d1_read-replication-details-for-request",
+              "property": "mode",
+              "direction": "request"
+            },
+            {
+              "schema": "d1_read-replication-details-for-response",
+              "property": "mode",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "d1_read-replication-details-for-request",
+              "property": "mode",
+              "direction": "request",
+              "normalizedSchema": "Inline_790FFEBF3951",
+              "normalizedKind": "enum",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/d1_read-replication-details-for-request",
+              "required": true,
+              "allowsNull": false,
+              "presence": "required",
+              "nullable": false,
+              "nullPolicy": "reject-null",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            },
+            {
+              "schema": "d1_read-replication-details-for-response",
+              "property": "mode",
+              "direction": "response",
+              "normalizedSchema": "Inline_1C1CE68FE458",
+              "normalizedKind": "enum",
+              "normalizedPrimitiveType": "string",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/d1_read-replication-details-for-response",
+              "required": true,
+              "allowsNull": false,
+              "presence": "required",
+              "nullable": false,
+              "nullPolicy": "reject-null",
+              "normalizedSourcePath": "fixtures/p3.3/d1-database/document.json"
+            }
+          ]
+        }
+      ],
+      "provenance": {
+        "kind": "normalized-schema-binding",
+        "sourcePath": "fixtures/p3.3/d1-database/document.json",
+        "modelClass": "CfD1ReadReplicationDetails"
+      }
+    }
+  ],
+  "commonInfrastructureParameters": [
+    "BaseUrl",
+    "Token",
+    "Handler"
+  ],
+  "canonicalDigest": "848c697471ebbf6dbda71d86a382ef859ebbc5c9b73dfee90d62ced28f2f46bd"
+}

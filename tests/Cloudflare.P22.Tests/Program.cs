@@ -124,7 +124,7 @@ static Dictionary<string, NormalizedSchema> CollectSchemas(NormalizedDocument so
         if (result.ContainsKey(name)) continue;
         result[name] = source.Schemas[name];
         var schema = result[name];
-        foreach (var child in schema.Properties.Values.Select(x => x.Schema).Concat(schema.OneOf).Concat(schema.AnyOf).Concat(schema.AllOf).Where(x => !string.IsNullOrEmpty(x)).OrderBy(x => x, StringComparer.Ordinal))
+        foreach (var child in schema.Properties.Values.Select(x => x.Schema).Concat(schema.OneOf).Concat(schema.AnyOf).Concat(schema.AllOf).Append(schema.Items ?? string.Empty).Where(x => !string.IsNullOrEmpty(x)).OrderBy(x => x, StringComparer.Ordinal))
             if (source.Schemas.ContainsKey(child)) pending.Enqueue(child);
     }
     return result;

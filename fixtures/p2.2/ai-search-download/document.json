@@ -398,6 +398,7 @@
       "name": "Inline_3018623F8202",
       "kind": "array",
       "primitiveType": "array",
+      "items": "Inline_244BF7DA5CDD",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -423,6 +424,7 @@
       "name": "Inline_3C6C3A772D7F",
       "kind": "array",
       "primitiveType": "array",
+      "items": "Inline_498F69338B2B",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -462,6 +464,7 @@
       "name": "Inline_2BB4D55EFD38",
       "kind": "array",
       "primitiveType": "array",
+      "items": "Inline_58293C2B1D9C",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -487,6 +490,227 @@
       "name": "Inline_C9F4AA9292E0",
       "kind": "array",
       "primitiveType": "array",
+      "items": "Inline_67E32F06DAD1",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_244BF7DA5CDD": {
+      "name": "Inline_244BF7DA5CDD",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "name": "code",
+          "schema": "Inline_E6612A395EDE",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "message": {
+          "name": "message",
+          "schema": "Inline_EE34BE4684C8",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_498F69338B2B": {
+      "name": "Inline_498F69338B2B",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "name": "code",
+          "schema": "Inline_42FDE534F081",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "message": {
+          "name": "message",
+          "schema": "Inline_D5FC793ED9E2",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_58293C2B1D9C": {
+      "name": "Inline_58293C2B1D9C",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "name": "code",
+          "schema": "Inline_DE3D8371FFDB",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "message": {
+          "name": "message",
+          "schema": "Inline_FC9C997B22DB",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_67E32F06DAD1": {
+      "name": "Inline_67E32F06DAD1",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "name": "code",
+          "schema": "Inline_00203E08EDA6",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "message": {
+          "name": "message",
+          "schema": "Inline_E6FC568CD171",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_E6612A395EDE": {
+      "name": "Inline_E6612A395EDE",
+      "kind": "primitive",
+      "primitiveType": "number",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_EE34BE4684C8": {
+      "name": "Inline_EE34BE4684C8",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_42FDE534F081": {
+      "name": "Inline_42FDE534F081",
+      "kind": "primitive",
+      "primitiveType": "number",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_D5FC793ED9E2": {
+      "name": "Inline_D5FC793ED9E2",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_DE3D8371FFDB": {
+      "name": "Inline_DE3D8371FFDB",
+      "kind": "primitive",
+      "primitiveType": "number",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_FC9C997B22DB": {
+      "name": "Inline_FC9C997B22DB",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_00203E08EDA6": {
+      "name": "Inline_00203E08EDA6",
+      "kind": "primitive",
+      "primitiveType": "number",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_E6FC568CD171": {
+      "name": "Inline_E6FC568CD171",
+      "kind": "primitive",
+      "primitiveType": "string",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],

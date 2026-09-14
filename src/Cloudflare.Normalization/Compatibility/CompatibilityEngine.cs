@@ -270,7 +270,7 @@ public static class CompatibilityEngine
         if (!result.TryGetValue(name, out var contexts)) result[name] = contexts = new HashSet<string>(StringComparer.Ordinal);
         if (!contexts.Add(context)) return;
         var schema = document.Schemas[name];
-        foreach (var child in schema.Properties.Values.Select(x => x.Schema).Concat(schema.OneOf).Concat(schema.AnyOf).Concat(schema.AllOf)) Walk(child, context, result, document);
+        foreach (var child in schema.Properties.Values.Select(x => x.Schema).Concat(schema.Items is null ? [] : [schema.Items]).Concat(schema.OneOf).Concat(schema.AnyOf).Concat(schema.AllOf)) Walk(child, context, result, document);
     }
 
     private static void Add(List<ApiChange> changes, ApiChangeKind kind, NormalizedOperation operation, string? schemaName, string path, string oldValue, string newValue, string evidence, CompatibilityImpact api, CompatibilityImpact sdk, CompatibilityImpact powerShell)
@@ -287,7 +287,7 @@ public static class CompatibilityEngine
     private static string Signature(NormalizedParameter parameter) => $"{parameter.Location}:{parameter.Schema}:{parameter.Required}:{parameter.AllowsNull}";
     private static string Serialization(SerializationModel model) => $"{model.Style}:{model.Explode}:{model.AllowReserved}:{model.ArrayNotation}:{model.ObjectNotation}:{model.CustomSerializerId}";
     private static string PropertySignature(NormalizedDocument document, NormalizedProperty property) => $"{SchemaSignature(document, property.Schema)}:required={property.Required}:nullable={property.AllowsNull}";
-    private static string SchemaSignature(NormalizedDocument document, string name) => document.Schemas.TryGetValue(name, out var schema) ? $"{schema.Name}:{schema.Kind}:{schema.PrimitiveType}:{schema.Format}:enum={Join(schema.Enum)}:oneOf={Join(schema.OneOf)}:anyOf={Join(schema.AnyOf)}" : $"missing:{name}";
+    private static string SchemaSignature(NormalizedDocument document, string name) => document.Schemas.TryGetValue(name, out var schema) ? $"{schema.Name}:{schema.Kind}:{schema.PrimitiveType}:{schema.Items}:{schema.Format}:enum={Join(schema.Enum)}:oneOf={Join(schema.OneOf)}:anyOf={Join(schema.AnyOf)}" : $"missing:{name}";
     private static string Json(JsonNode? value) => value?.ToJsonString() ?? "<none>";
     private static string Join(IEnumerable<string> values) => string.Join(';', values.OrderBy(x => x, StringComparer.Ordinal));
     private static bool Equal(string? left, string? right) => string.Equals(left, right, StringComparison.Ordinal);

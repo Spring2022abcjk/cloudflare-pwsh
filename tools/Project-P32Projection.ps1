@@ -14,6 +14,10 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+$p32HashHelper = Join-Path $PSScriptRoot 'P32Hash.ps1'
+if (-not (Test-Path -LiteralPath $p32HashHelper -PathType Leaf)) { throw "P3.2 hash helper is missing: $p32HashHelper" }
+. $p32HashHelper
+
 function Get-JsonValue {
     param([AllowNull()][object]$Object, [Parameter(Mandatory)][string]$Name)
     if ($null -eq $Object) { return $null }
@@ -171,7 +175,7 @@ function Get-P32SourceFiles {
         if (-not (Test-Path -LiteralPath $_ -PathType Leaf)) { throw "P3.2 projection input is missing: $_" }
         [ordered]@{
             path = [IO.Path]::GetRelativePath($ProjectRoot, $_).Replace('\', '/')
-            sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $_).Hash.ToLowerInvariant()
+            sha256 = Get-P32PortableFileHash -Path $_
         }
     })
 }

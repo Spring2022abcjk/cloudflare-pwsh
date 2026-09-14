@@ -76,7 +76,7 @@ static Dictionary<string, NormalizedSchema> CollectSchemas(NormalizedDocument so
         if (result.ContainsKey(name)) continue;
         result[name] = source.Schemas[name];
         var schema = result[name];
-        foreach (var child in schema.Properties.Values.Select(x => x.Schema).Concat(schema.OneOf).Concat(schema.AnyOf).Concat(schema.AllOf).Where(x => !string.IsNullOrEmpty(x)).OrderBy(x => x, StringComparer.Ordinal))
+        foreach (var child in schema.Properties.Values.Select(x => x.Schema).Concat(schema.Items is null ? [] : [schema.Items]).Concat(schema.OneOf).Concat(schema.AnyOf).Concat(schema.AllOf).Where(x => !string.IsNullOrEmpty(x)).OrderBy(x => x, StringComparer.Ordinal))
             if (source.Schemas.ContainsKey(child)) pending.Enqueue(child);
     }
     return result;
@@ -102,6 +102,7 @@ static void CheckD1(IReadOnlyDictionary<string, NormalizedOperation> byId)
     Equal(2, database.ScopeBindings.Count, "D1 nested binding count");
     Equal("Primary", database.ScopeBindings.Single(x => x.ParameterName == "database_id").Role, "D1 primary binding role");
     Equal("Database", database.ScopeBindings.Single(x => x.ParameterName == "database_id").ScopeType, "D1 primary binding type");
+    Equal("V4PagePaginationArray", list.Pagination?.Strategy, "D1 pagination");
 }
 
 static void CheckDeepNested(IReadOnlyDictionary<string, NormalizedOperation> byId)

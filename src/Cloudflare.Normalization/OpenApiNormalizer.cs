@@ -183,6 +183,8 @@ public sealed class OpenApiNormalizer
         if (_schemas.ContainsKey(name)) return;
         var schema = new NormalizedSchema { Name = name, SourceRef = sourceRef, Kind = DetermineKind(raw), PrimitiveType = StringValue(raw["type"]), Format = StringValue(raw["format"]) };
         _schemas[name] = schema;
+        if (raw["items"] is not null)
+            schema.Items = GetSchemaReferenceName(raw["items"], $"#/components/schemas/{Escape(name)}/items");
         if (raw["required"] is JsonArray required)
             schema.RequiredProperties = required.Select(x => x?.GetValue<string>() ?? string.Empty).Where(x => x.Length > 0).OrderBy(x => x, StringComparer.Ordinal).ToList();
         foreach (var property in (raw["properties"]?.AsObject() ?? new JsonObject()).OrderBy(x => x.Key, StringComparer.Ordinal))
@@ -348,7 +350,7 @@ public sealed class OpenApiNormalizer
         property = new NormalizedProperty();
         if (!visited.Add(schemaName) || !_schemas.TryGetValue(schemaName, out var schema)) return false;
         if (schema.Properties.TryGetValue(propertyName, out property!)) return true;
-        foreach (var child in schema.AllOf)
+        foreach (var child in schema.AllOf.AsEnumerable().Reverse())
             if (TryGetSchemaProperty(child, propertyName, out property, visited)) return true;
         return false;
     }

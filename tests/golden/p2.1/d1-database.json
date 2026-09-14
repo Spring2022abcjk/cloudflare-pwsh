@@ -333,7 +333,7 @@
         }
       ],
       "pagination": {
-        "strategy": "SinglePage",
+        "strategy": "V4PagePaginationArray",
         "outputPolicy": "item",
         "behavior": "shared-runtime"
       },

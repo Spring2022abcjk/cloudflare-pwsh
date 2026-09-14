@@ -1,0 +1,1827 @@
+{
+  "version": 1,
+  "sourcePath": "openapi.json",
+  "sourceRevision": "4.0.0",
+  "operations": [
+    {
+      "operationId": "d1-create-database",
+      "method": "POST",
+      "pathTemplate": "/accounts/{account_id}/d1/database",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        }
+      ],
+      "operationSemantic": {
+        "kind": "Create",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "parameters": [
+        {
+          "name": "account_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "d1_account-identifier",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": true,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1d1~1database/post/parameters"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "declaredContract": true,
+        "presence": "required",
+        "semantics": "",
+        "sourceRef": "",
+        "representations": [
+          {
+            "contentType": "application/json",
+            "schema": "Inline_FA2961F0C454",
+            "sourceRef": ""
+          }
+        ]
+      },
+      "responses": [
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "200"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_08BCB21BDC7A",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Class",
+            "value": "4XX"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "d1_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "requestFields": [],
+        "responseFields": [],
+        "nextPageRule": "",
+        "stopRule": "single response",
+        "evidence": "non-GET operation"
+      },
+      "sourceLocation": "#/paths/~1accounts~1{account_id}~1d1~1database/post",
+      "correctionTrace": []
+    },
+    {
+      "operationId": "d1-delete-database",
+      "method": "DELETE",
+      "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "database_id",
+          "scopeType": "Database",
+          "role": "Primary"
+        }
+      ],
+      "operationSemantic": {
+        "kind": "Delete",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "parameters": [
+        {
+          "name": "account_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "d1_account-identifier",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": true,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1d1~1database~1{database_id}/delete/parameters"
+        },
+        {
+          "name": "database_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "d1_database-identifier",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": true,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1d1~1database~1{database_id}/delete/parameters"
+        }
+      ],
+      "responses": [
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "200"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_D01FDAEFD04F",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Class",
+            "value": "4XX"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "d1_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "requestFields": [],
+        "responseFields": [],
+        "nextPageRule": "",
+        "stopRule": "single response",
+        "evidence": "non-GET operation"
+      },
+      "sourceLocation": "#/paths/~1accounts~1{account_id}~1d1~1database~1{database_id}/delete",
+      "correctionTrace": []
+    },
+    {
+      "operationId": "d1-get-database",
+      "method": "GET",
+      "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "database_id",
+          "scopeType": "Database",
+          "role": "Primary"
+        }
+      ],
+      "operationSemantic": {
+        "kind": "Get",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "parameters": [
+        {
+          "name": "account_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "d1_account-identifier",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": true,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1d1~1database~1{database_id}/get/parameters"
+        },
+        {
+          "name": "database_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "Inline_5941C2184D56",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": true,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1d1~1database~1{database_id}/get/parameters"
+        },
+        {
+          "name": "fields",
+          "location": "query",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_FE0C0CEC520A",
+          "serialization": {
+            "style": "form",
+            "explode": false,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1d1~1database~1{database_id}/get/parameters"
+        }
+      ],
+      "responses": [
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "200"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_7E7E87A55734",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Class",
+            "value": "4XX"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "d1_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "requestFields": [],
+        "responseFields": [],
+        "nextPageRule": "",
+        "stopRule": "single response",
+        "evidence": "no recognized page-array pattern"
+      },
+      "sourceLocation": "#/paths/~1accounts~1{account_id}~1d1~1database~1{database_id}/get",
+      "correctionTrace": []
+    },
+    {
+      "operationId": "d1-list-databases",
+      "method": "GET",
+      "pathTemplate": "/accounts/{account_id}/d1/database",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        }
+      ],
+      "operationSemantic": {
+        "kind": "List",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "parameters": [
+        {
+          "name": "account_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "d1_account-identifier",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": true,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1d1~1database/get/parameters"
+        },
+        {
+          "name": "name",
+          "location": "query",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "schema": "Inline_D5340E30A42B",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1d1~1database/get/parameters"
+        },
+        {
+          "name": "page",
+          "location": "query",
+          "required": false,
+          "allowsNull": false,
+          "defaultValue": 1,
+          "nullPolicy": "omit",
+          "schema": "Inline_940AEA19FFA7",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1d1~1database/get/parameters"
+        },
+        {
+          "name": "per_page",
+          "location": "query",
+          "required": false,
+          "allowsNull": false,
+          "defaultValue": 1000,
+          "nullPolicy": "omit",
+          "schema": "Inline_7E9029090147",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1d1~1database/get/parameters"
+        }
+      ],
+      "responses": [
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "200"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_259DE4FC3C69",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Class",
+            "value": "4XX"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "d1_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "V4PagePaginationArray",
+        "requestFields": [
+          "page",
+          "per_page"
+        ],
+        "responseFields": [
+          "result",
+          "result_info"
+        ],
+        "nextPageRule": "page \u002B 1",
+        "stopRule": "empty result page",
+        "evidence": "query page/per_page plus result collection schema"
+      },
+      "sourceLocation": "#/paths/~1accounts~1{account_id}~1d1~1database/get",
+      "correctionTrace": []
+    },
+    {
+      "operationId": "d1-update-database",
+      "method": "PUT",
+      "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "database_id",
+          "scopeType": "Database",
+          "role": "Primary"
+        }
+      ],
+      "operationSemantic": {
+        "kind": "Update",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "parameters": [
+        {
+          "name": "account_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "d1_account-identifier",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": true,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1d1~1database~1{database_id}/put/parameters"
+        },
+        {
+          "name": "database_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "d1_database-identifier",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": true,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1d1~1database~1{database_id}/put/parameters"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "declaredContract": true,
+        "presence": "required",
+        "semantics": "",
+        "sourceRef": "",
+        "representations": [
+          {
+            "contentType": "application/json",
+            "schema": "d1_database-update-request-body",
+            "sourceRef": ""
+          }
+        ]
+      },
+      "responses": [
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "200"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_6186C6A5D76F",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Class",
+            "value": "4XX"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "d1_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "requestFields": [],
+        "responseFields": [],
+        "nextPageRule": "",
+        "stopRule": "single response",
+        "evidence": "non-GET operation"
+      },
+      "sourceLocation": "#/paths/~1accounts~1{account_id}~1d1~1database~1{database_id}/put",
+      "correctionTrace": []
+    },
+    {
+      "operationId": "d1-update-partial-database",
+      "method": "PATCH",
+      "pathTemplate": "/accounts/{account_id}/d1/database/{database_id}",
+      "resourcePath": [
+        "d1",
+        "database"
+      ],
+      "scopeBindings": [
+        {
+          "parameterName": "account_id",
+          "scopeType": "Account",
+          "role": "Parent"
+        },
+        {
+          "parameterName": "database_id",
+          "scopeType": "Database",
+          "role": "Primary"
+        }
+      ],
+      "operationSemantic": {
+        "kind": "Update",
+        "source": "OperationIdHeuristic",
+        "confidence": "High"
+      },
+      "parameters": [
+        {
+          "name": "account_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "d1_account-identifier",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": true,
+          "isPrimaryResourceId": false,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1d1~1database~1{database_id}/patch/parameters"
+        },
+        {
+          "name": "database_id",
+          "location": "path",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "schema": "d1_database-identifier",
+          "serialization": {
+            "style": "form",
+            "explode": true,
+            "allowReserved": false,
+            "arrayNotation": "repeat",
+            "objectNotation": "dots"
+          },
+          "isParentScopeId": false,
+          "isPrimaryResourceId": true,
+          "sourceRef": "#/paths/~1accounts~1{account_id}~1d1~1database~1{database_id}/patch/parameters"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "declaredContract": true,
+        "presence": "required",
+        "semantics": "",
+        "sourceRef": "",
+        "representations": [
+          {
+            "contentType": "application/json",
+            "schema": "d1_database-update-partial-request-body",
+            "sourceRef": ""
+          }
+        ]
+      },
+      "responses": [
+        {
+          "statusSelector": {
+            "kind": "Exact",
+            "value": "200"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "Inline_F14E354B8834",
+              "envelopePolicy": "CloudflareResult",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        },
+        {
+          "statusSelector": {
+            "kind": "Class",
+            "value": "4XX"
+          },
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schema": "d1_api-response-common-failure",
+              "envelopePolicy": "ErrorEnvelope",
+              "parsingMode": "Json",
+              "sourceRef": ""
+            }
+          ]
+        }
+      ],
+      "pagination": {
+        "strategy": "SinglePage",
+        "requestFields": [],
+        "responseFields": [],
+        "nextPageRule": "",
+        "stopRule": "single response",
+        "evidence": "non-GET operation"
+      },
+      "sourceLocation": "#/paths/~1accounts~1{account_id}~1d1~1database~1{database_id}/patch",
+      "correctionTrace": []
+    }
+  ],
+  "schemas": {
+    "d1_account-identifier": {
+      "name": "d1_account-identifier",
+      "kind": "primitive",
+      "sourceRef": "#/components/schemas/d1_account-identifier",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_api-response-common": {
+      "name": "d1_api-response-common",
+      "kind": "object",
+      "sourceRef": "#/components/schemas/d1_api-response-common",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "messages",
+        "result",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "d1_messages",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "messages": {
+          "name": "messages",
+          "schema": "d1_messages",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "result": {
+          "name": "result",
+          "schema": "Inline_8DC8A72A3F7A",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_F602D543569D",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_api-response-common-failure": {
+      "name": "d1_api-response-common-failure",
+      "kind": "object",
+      "sourceRef": "#/components/schemas/d1_api-response-common-failure",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "messages",
+        "result",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_226B5A8054F6",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "messages": {
+          "name": "messages",
+          "schema": "Inline_9ED470CE7CC1",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "result": {
+          "name": "result",
+          "schema": "Inline_79CE718D1F8A",
+          "required": true,
+          "allowsNull": true,
+          "nullPolicy": "send-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_90E2C100621C",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_created-at": {
+      "name": "d1_created-at",
+      "kind": "primitive",
+      "sourceRef": "#/components/schemas/d1_created-at",
+      "primitiveType": "string",
+      "format": "date-time",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_database-details-response": {
+      "name": "d1_database-details-response",
+      "kind": "object",
+      "sourceRef": "#/components/schemas/d1_database-details-response",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {
+        "created_at": {
+          "name": "created_at",
+          "schema": "d1_created-at",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": true,
+          "writeOnly": false
+        },
+        "file_size": {
+          "name": "file_size",
+          "schema": "d1_file-size",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "jurisdiction": {
+          "name": "jurisdiction",
+          "schema": "d1_jurisdiction-nullable",
+          "required": false,
+          "allowsNull": true,
+          "nullPolicy": "send-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "name": {
+          "name": "name",
+          "schema": "d1_database-name",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "num_tables": {
+          "name": "num_tables",
+          "schema": "d1_table-count",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "read_replication": {
+          "name": "read_replication",
+          "schema": "d1_read-replication-details-for-response",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "uuid": {
+          "name": "uuid",
+          "schema": "d1_database-identifier",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": true,
+          "writeOnly": false
+        },
+        "version": {
+          "name": "version",
+          "schema": "d1_database-version",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_database-identifier": {
+      "name": "d1_database-identifier",
+      "kind": "primitive",
+      "sourceRef": "#/components/schemas/d1_database-identifier",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_database-name": {
+      "name": "d1_database-name",
+      "kind": "primitive",
+      "sourceRef": "#/components/schemas/d1_database-name",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_database-response": {
+      "name": "d1_database-response",
+      "kind": "object",
+      "sourceRef": "#/components/schemas/d1_database-response",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {
+        "created_at": {
+          "name": "created_at",
+          "schema": "d1_created-at",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": true,
+          "writeOnly": false
+        },
+        "jurisdiction": {
+          "name": "jurisdiction",
+          "schema": "d1_jurisdiction-nullable",
+          "required": false,
+          "allowsNull": true,
+          "nullPolicy": "send-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "name": {
+          "name": "name",
+          "schema": "d1_database-name",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "uuid": {
+          "name": "uuid",
+          "schema": "d1_database-identifier",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": true,
+          "writeOnly": false
+        },
+        "version": {
+          "name": "version",
+          "schema": "d1_database-version",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_database-update-partial-request-body": {
+      "name": "d1_database-update-partial-request-body",
+      "kind": "object",
+      "sourceRef": "#/components/schemas/d1_database-update-partial-request-body",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {
+        "read_replication": {
+          "name": "read_replication",
+          "schema": "d1_read-replication-details-for-request",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_database-update-request-body": {
+      "name": "d1_database-update-request-body",
+      "kind": "object",
+      "sourceRef": "#/components/schemas/d1_database-update-request-body",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "read_replication"
+      ],
+      "properties": {
+        "read_replication": {
+          "name": "read_replication",
+          "schema": "d1_read-replication-details-for-request",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_database-version": {
+      "name": "d1_database-version",
+      "kind": "primitive",
+      "sourceRef": "#/components/schemas/d1_database-version",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_file-size": {
+      "name": "d1_file-size",
+      "kind": "primitive",
+      "sourceRef": "#/components/schemas/d1_file-size",
+      "primitiveType": "number",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_jurisdiction": {
+      "name": "d1_jurisdiction",
+      "kind": "enum",
+      "sourceRef": "#/components/schemas/d1_jurisdiction",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": [
+        "eu",
+        "fedramp",
+        "us"
+      ]
+    },
+    "d1_jurisdiction-nullable": {
+      "name": "d1_jurisdiction-nullable",
+      "kind": "enum",
+      "sourceRef": "#/components/schemas/d1_jurisdiction-nullable",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": [
+        "eu",
+        "fedramp",
+        "us"
+      ]
+    },
+    "d1_messages": {
+      "name": "d1_messages",
+      "kind": "array",
+      "sourceRef": "#/components/schemas/d1_messages",
+      "primitiveType": "array",
+      "items": "Inline_AFA2BB80C341",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_primary-location-hint": {
+      "name": "d1_primary-location-hint",
+      "kind": "enum",
+      "sourceRef": "#/components/schemas/d1_primary-location-hint",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": [
+        "wnam",
+        "enam",
+        "weur",
+        "eeur",
+        "apac",
+        "oc"
+      ]
+    },
+    "d1_read-replication-details-for-request": {
+      "name": "d1_read-replication-details-for-request",
+      "kind": "object",
+      "sourceRef": "#/components/schemas/d1_read-replication-details-for-request",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "name": "mode",
+          "schema": "Inline_790FFEBF3951",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_read-replication-details-for-response": {
+      "name": "d1_read-replication-details-for-response",
+      "kind": "object",
+      "sourceRef": "#/components/schemas/d1_read-replication-details-for-response",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "name": "mode",
+          "schema": "Inline_1C1CE68FE458",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "d1_table-count": {
+      "name": "d1_table-count",
+      "kind": "primitive",
+      "sourceRef": "#/components/schemas/d1_table-count",
+      "primitiveType": "number",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_01773F2E9C79": {
+      "name": "Inline_01773F2E9C79",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {
+        "count": {
+          "name": "count",
+          "schema": "Inline_3091014021ED",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "page": {
+          "name": "page",
+          "schema": "Inline_2589E5315022",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "per_page": {
+          "name": "per_page",
+          "schema": "Inline_3F2FAE8CB2BF",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "total_count": {
+          "name": "total_count",
+          "schema": "Inline_05816C21123D",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_05816C21123D": {
+      "name": "Inline_05816C21123D",
+      "kind": "primitive",
+      "primitiveType": "number",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_08BCB21BDC7A": {
+      "name": "Inline_08BCB21BDC7A",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [
+        "d1_api-response-common",
+        "Inline_E261FCFC5F13"
+      ],
+      "enum": []
+    },
+    "Inline_11EDC94E7705": {
+      "name": "Inline_11EDC94E7705",
+      "kind": "array",
+      "primitiveType": "array",
+      "items": "d1_database-response",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_12B5E9C5DAAF": {
+      "name": "Inline_12B5E9C5DAAF",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {
+        "result": {
+          "name": "result",
+          "schema": "Inline_A2978C225810",
+          "required": false,
+          "allowsNull": true,
+          "nullPolicy": "send-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_195A354F2351": {
+      "name": "Inline_195A354F2351",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_1C1CE68FE458": {
+      "name": "Inline_1C1CE68FE458",
+      "kind": "enum",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": [
+        "auto",
+        "disabled"
+      ]
+    },
+    "Inline_226B5A8054F6": {
+      "name": "Inline_226B5A8054F6",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [
+        "d1_messages"
+      ],
+      "enum": []
+    },
+    "Inline_2589E5315022": {
+      "name": "Inline_2589E5315022",
+      "kind": "primitive",
+      "primitiveType": "number",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_259DE4FC3C69": {
+      "name": "Inline_259DE4FC3C69",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [
+        "d1_api-response-common",
+        "Inline_CE1242278BD8"
+      ],
+      "enum": []
+    },
+    "Inline_3091014021ED": {
+      "name": "Inline_3091014021ED",
+      "kind": "primitive",
+      "primitiveType": "number",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_3F2FAE8CB2BF": {
+      "name": "Inline_3F2FAE8CB2BF",
+      "kind": "primitive",
+      "primitiveType": "number",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_5941C2184D56": {
+      "name": "Inline_5941C2184D56",
+      "kind": "union",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [
+        "d1_database-identifier",
+        "d1_database-name"
+      ],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_5B4B52FD72E8": {
+      "name": "Inline_5B4B52FD72E8",
+      "kind": "enum",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": [
+        "uuid",
+        "name",
+        "created_at",
+        "version",
+        "jurisdiction",
+        "num_tables",
+        "file_size",
+        "running_in_region",
+        "read_replication"
+      ]
+    },
+    "Inline_6186C6A5D76F": {
+      "name": "Inline_6186C6A5D76F",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [
+        "d1_api-response-common",
+        "Inline_EE3A15FAA4F7"
+      ],
+      "enum": []
+    },
+    "Inline_790FFEBF3951": {
+      "name": "Inline_790FFEBF3951",
+      "kind": "enum",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": [
+        "auto",
+        "disabled"
+      ]
+    },
+    "Inline_79CE718D1F8A": {
+      "name": "Inline_79CE718D1F8A",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": [
+        ""
+      ]
+    },
+    "Inline_7E7E87A55734": {
+      "name": "Inline_7E7E87A55734",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [
+        "d1_api-response-common",
+        "Inline_A216346B1D11"
+      ],
+      "enum": []
+    },
+    "Inline_7E9029090147": {
+      "name": "Inline_7E9029090147",
+      "kind": "primitive",
+      "primitiveType": "number",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_8DC8A72A3F7A": {
+      "name": "Inline_8DC8A72A3F7A",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_90E2C100621C": {
+      "name": "Inline_90E2C100621C",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_940AEA19FFA7": {
+      "name": "Inline_940AEA19FFA7",
+      "kind": "primitive",
+      "primitiveType": "number",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_9ED470CE7CC1": {
+      "name": "Inline_9ED470CE7CC1",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [
+        "d1_messages"
+      ],
+      "enum": []
+    },
+    "Inline_A216346B1D11": {
+      "name": "Inline_A216346B1D11",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {
+        "result": {
+          "name": "result",
+          "schema": "d1_database-details-response",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_A2978C225810": {
+      "name": "Inline_A2978C225810",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": [
+        ""
+      ]
+    },
+    "Inline_AFA2BB80C341": {
+      "name": "Inline_AFA2BB80C341",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "name": "code",
+          "schema": "Inline_B4EE54EA2546",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "message": {
+          "name": "message",
+          "schema": "Inline_195A354F2351",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_B4EE54EA2546": {
+      "name": "Inline_B4EE54EA2546",
+      "kind": "primitive",
+      "primitiveType": "integer",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_CCA5DF7A0A08": {
+      "name": "Inline_CCA5DF7A0A08",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {
+        "result": {
+          "name": "result",
+          "schema": "d1_database-details-response",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_CE1242278BD8": {
+      "name": "Inline_CE1242278BD8",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {
+        "result": {
+          "name": "result",
+          "schema": "Inline_11EDC94E7705",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "result_info": {
+          "name": "result_info",
+          "schema": "Inline_01773F2E9C79",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_D01FDAEFD04F": {
+      "name": "Inline_D01FDAEFD04F",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [
+        "d1_api-response-common",
+        "Inline_12B5E9C5DAAF"
+      ],
+      "enum": []
+    },
+    "Inline_D5340E30A42B": {
+      "name": "Inline_D5340E30A42B",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_E261FCFC5F13": {
+      "name": "Inline_E261FCFC5F13",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {
+        "result": {
+          "name": "result",
+          "schema": "d1_database-details-response",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_EE3A15FAA4F7": {
+      "name": "Inline_EE3A15FAA4F7",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {
+        "result": {
+          "name": "result",
+          "schema": "d1_database-details-response",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_F14E354B8834": {
+      "name": "Inline_F14E354B8834",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [
+        "d1_api-response-common",
+        "Inline_CCA5DF7A0A08"
+      ],
+      "enum": []
+    },
+    "Inline_F602D543569D": {
+      "name": "Inline_F602D543569D",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": true,
+      "enum": [
+        "true"
+      ]
+    },
+    "Inline_FA2961F0C454": {
+      "name": "Inline_FA2961F0C454",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "name"
+      ],
+      "properties": {
+        "jurisdiction": {
+          "name": "jurisdiction",
+          "schema": "d1_jurisdiction",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "name": {
+          "name": "name",
+          "schema": "d1_database-name",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "primary_location_hint": {
+          "name": "primary_location_hint",
+          "schema": "d1_primary-location-hint",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "read_replication": {
+          "name": "read_replication",
+          "schema": "d1_read-replication-details-for-request",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_FE0C0CEC520A": {
+      "name": "Inline_FE0C0CEC520A",
+      "kind": "array",
+      "primitiveType": "array",
+      "items": "Inline_5B4B52FD72E8",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    }
+  }
+}

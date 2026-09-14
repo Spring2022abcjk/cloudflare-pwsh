@@ -30,3 +30,8 @@
 28. Prefer mock HTTP contract tests for runtime behavior; real-account tests are a later, separate validation layer.
 29. Do not mark an unresolved semantic—especially HTTP `2xx` with `success=false`—as decided without authoritative evidence.
 30. Complete and update the relevant roadmap/progress document at each runtime slice, including implemented, validated, deferred, and next work.
+31. Every P3.3 discovery operation must receive exactly one explicit final coverage classification; normalization or projection failure must not silently remove it.
+32. Keep coverage stage counts separate: normalized, corrected, projected, runtime-ready, public-eligible, and fully evidenced are not interchangeable.
+33. Coverage reports and derived family summaries must be deterministic; do not include wall-clock timestamps in semantic artifacts.
+34. Use corrections for API-contract evidence, projection overrides for PowerShell UX policy, and shared model/runtime changes for general capability gaps; do not use overrides to conceal a structural IR deficiency.
+35. A coverage percentage or generated-cmdlet count is not an acceptance gate without typed output, runtime, safety, parity, compatibility, and regression evidence.

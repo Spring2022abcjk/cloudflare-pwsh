@@ -6,23 +6,23 @@
   "sourceFiles": [
     {
       "path": "artifacts/generated-normalized/document.json",
-      "sha256": "a643a3c0de8f83f7a0a3eeb825aa3912befcf0f8b53dff4be0a78ee0419053e5"
+      "sha256": "e43119932e504964fcd09f4e42fe3e10f4dcf17c344a4839e73d31f39bbb6aa9"
     },
     {
       "path": "fixtures/p2.1/zones/document.json",
-      "sha256": "389949a10805f3a01420e7caf9579bb2440199c60f6cbde863831859b326cfa4"
+      "sha256": "cb02e884c1a8aab45ef7462da3167728ceea141d88f80fa6abc999dd7ad07fdc"
     },
     {
       "path": "artifacts/p2.3/projection/zones.json",
-      "sha256": "ae45debf2a9684b90b626b1d6a790b4cb41b63b71be93057c1d972bce9a6ebb2"
+      "sha256": "68735a32e2b979c134fd62d9f6ca6af3eeb24e4d51fb97d304b5633fd86feddf"
     },
     {
       "path": "overrides/powershell-projection.json",
-      "sha256": "7aab60ff31b2a36a7ec7e09666f9882e5358638ca4715469f887cab60d59a681"
+      "sha256": "e07a129b9e80b9efaa5653046214cb1c34ac04ee5f55e97ab356d0238e1bdd60"
     },
     {
       "path": "overrides/powershell-p23-projection.json",
-      "sha256": "f9c11d3973b7c1ad8ce6f2bc4f6548adbb09df7df25e5658d1c250ef14c4a201"
+      "sha256": "d0ff6ef75255a9872abcfb57e7e6fa0d33209c131d67f1905839d5f1af9ca85e"
     },
     {
       "path": "overrides/powershell-p32-projection.json",
@@ -5072,5 +5072,5 @@
     "Token",
     "Handler"
   ],
-  "canonicalDigest": "e868cb0454869251ae1e5ae4a55bceae6f196983b9c3df8e330e4fcddcfa5b84"
+  "canonicalDigest": "6de9075251afd85a1d822b3a9bed4807376aa50ae122c4741a883e181bdb70c5"
 }

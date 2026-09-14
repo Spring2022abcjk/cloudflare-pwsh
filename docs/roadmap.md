@@ -70,7 +70,12 @@ Validate the generated public PowerShell surface against the corrected normalize
 
 ### P3.3 — API Coverage Expansion
 
-Expand coverage through the normalized pipeline rather than hand-adding endpoint-specific cmdlets. Produce coverage, unsupported-operation, unknown-normalization, and projection-conflict reports.
+Status: active; see [P3.3 plan](./P3.3-plan.md). The first bounded slice is the
+six-operation `d1/database` extension selected from the deterministic full
+schema discovery baseline. Expand coverage through the normalized pipeline
+rather than hand-adding endpoint-specific cmdlets. Every scanned operation must
+be classified, and coverage, unsupported-operation, unknown-normalization, and
+projection-conflict reports must remain deterministic and actionable.
 
 ### P3.4 — Packaging, CI, and Update Workflow
 

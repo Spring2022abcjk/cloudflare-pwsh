@@ -156,10 +156,9 @@ try {
     Invoke-PwshChecked $projectionTests @{ ProjectRoot = $temporaryRoot } 'P3.2 projection and negative contract tests'
     Write-Evidence 'static/generation' 'PASS stale, semantic, parameter-consumption, renderer-exact, and DNS/Zone runtime negative checks.'
 
-    $powershellHome = Split-Path -Parent (Get-Command pwsh).Source
     Push-Location $temporaryRoot
     try {
-        dotnet build .\Cloudflare.P1.sln --configuration Release --nologo "-p:PowerShellHome=$powershellHome" | Out-Host
+        dotnet build .\Cloudflare.P1.sln --configuration Release --nologo | Out-Host
         if ($LASTEXITCODE -ne 0) { throw "Isolated Release build failed with exit code $LASTEXITCODE." }
     }
     finally { Pop-Location }

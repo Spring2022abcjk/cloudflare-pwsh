@@ -3,7 +3,6 @@ param([string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot))
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
-$powershellHome = Split-Path -Parent (Get-Command pwsh).Source
 Push-Location $ProjectRoot
 try {
     & pwsh -NoLogo -NoProfile -File .\tools\Generate-DnsSource.ps1 | Out-Host
@@ -16,7 +15,7 @@ try {
     & pwsh -NoLogo -NoProfile -File .\tests\P32Projection.Tests.ps1 | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'P3.2 canonical projection contract tests failed.' }
 
-    dotnet build .\Cloudflare.P1.sln --configuration Release --no-restore "-p:PowerShellHome=$powershellHome" | Out-Host
+    dotnet build .\Cloudflare.P1.sln --configuration Release --no-restore | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'P3.2 solution build failed.' }
 
     & pwsh -NoLogo -NoProfile -File .\tests\P32Smoke.ps1 | Out-Host

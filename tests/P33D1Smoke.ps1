@@ -23,6 +23,14 @@ try {
     Copy-Item -LiteralPath $moduleSourcePath -Destination $stagedModuleParent -Recurse -Force
     if ([IO.Path]::GetFullPath($modulePath) -eq $repositoryModulePath) { throw 'P3.3 smoke staging resolved to the repository module path.' }
     Copy-Item -LiteralPath $dllPath -Destination $modulePath -Force
+    $bundledRuntimeFiles = @(Get-ChildItem -LiteralPath $modulePath -Recurse -File | Where-Object {
+        $_.Name -in @('System.Management.Automation.dll', 'Microsoft.PowerShell.SDK.dll') -or
+        $_.Name -like 'Microsoft.PowerShell*.dll' -or
+        $_.FullName -match '[\\/]runtimes[\\/]'
+    })
+    if ($bundledRuntimeFiles.Count -ne 0) {
+        throw "Module staging contains bundled PowerShell runtime files: $($bundledRuntimeFiles.FullName -join ', ')"
+    }
 
 Add-Type -TypeDefinition @'
 #nullable enable
@@ -78,6 +86,11 @@ public sealed class P33D1MockHandler : HttpMessageHandler
 '@
 
 Import-Module (Join-Path $modulePath 'Cloudflare.PowerShell.psd1') -Force
+$hostSmaPath = [System.Management.Automation.PSCmdlet].Assembly.Location
+$expectedHostSmaPath = Join-Path $PSHOME 'System.Management.Automation.dll'
+if ([IO.Path]::GetFullPath($hostSmaPath) -ne [IO.Path]::GetFullPath($expectedHostSmaPath)) {
+    throw "PowerShell runtime SMA was not loaded from the current host: $hostSmaPath"
+}
 
 function Assert-True {
     param([bool]$Condition, [string]$Message)

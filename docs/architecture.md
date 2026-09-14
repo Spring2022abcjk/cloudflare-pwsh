@@ -94,7 +94,7 @@ The normalizer records these facts in request/response representations, content 
 
 P2.3 adds a separate projection overlay for PowerShell-only policy. The overlay can select deterministic PowerShell parameter names, pipeline binding, output type, output policy, confirmation, and help metadata without changing the normalized API fixtures or the P2.1 compatibility projection.
 
-The generated `Get-CfZone` `PSCmdlet` was initially isolated as a net10 experiment because the current host's `System.Management.Automation` assembly is net10 while the production module was net8; that `CS1705` evidence drove the repository-wide net10 migration. It proves command metadata loading, not HTTP dispatch. The handwritten module remains the runtime reference until generated dispatch has equivalent mock coverage. The supported baseline is PowerShell 7.6+ and .NET 10 on the Windows-first host; see [ADR 0001](./adr/0001-net10-powershell76-baseline.md).
+The generated `Get-CfZone` `PSCmdlet` was initially isolated as a net10 experiment because the current host's `System.Management.Automation` assembly is net10 while the production module was net8; that `CS1705` evidence drove the repository-wide net10 migration. It proves command metadata loading, not HTTP dispatch. The handwritten module remains the runtime reference until generated dispatch has equivalent mock coverage. Both binary-cmdlet projects compile against the private, build-only `System.Management.Automation` 7.6.0 package and rely on the importing `pwsh` host for runtime SMA. The supported baseline is PowerShell 7.6+ and .NET 10 on the Windows-first host; see [ADR 0001](./adr/0001-net10-powershell76-baseline.md).
 
 ## P2.4 Compatibility Facts
 

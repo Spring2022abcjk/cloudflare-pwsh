@@ -79,8 +79,7 @@ try {
     Invoke-P33Checked 'pwsh' @('-NoLogo','-NoProfile','-File',$generator,'-ProjectRoot',$p33TemporaryRoot) 'isolated D1 source generation'
     Invoke-P33Checked 'pwsh' @('-NoLogo','-NoProfile','-File',$generator,'-ProjectRoot',$p33TemporaryRoot,'-ValidateOnly') 'isolated D1 source drift validation'
 
-    $taskPowerShellHome = Split-Path -Parent (Get-Command pwsh).Source
-    Invoke-P33Checked 'dotnet' @('build',(Join-Path $p33TemporaryRoot 'Cloudflare.P1.sln'),'--configuration','Release','--nologo',"-p:PowerShellHome=$taskPowerShellHome") 'isolated Release build'
+    Invoke-P33Checked 'dotnet' @('build',(Join-Path $p33TemporaryRoot 'Cloudflare.P1.sln'),'--configuration','Release','--nologo') 'isolated Release build'
     Invoke-P33Checked 'pwsh' @('-NoLogo','-NoProfile','-File',$compatibility,'-ProjectRoot',$p33TemporaryRoot) 'isolated D1 projection compatibility'
     Invoke-P33Checked 'pwsh' @('-NoLogo','-NoProfile','-File',(Join-Path $p33TemporaryRoot 'tests/P33D1Projection.Tests.ps1'),'-ProjectRoot',$p33TemporaryRoot) 'isolated D1 projection tests'
     Invoke-P33Checked 'pwsh' @('-NoLogo','-NoProfile','-File',(Join-Path $p33TemporaryRoot 'tests/P33D1Smoke.ps1'),'-ProjectRoot',$p33TemporaryRoot) 'isolated D1 mock/runtime smoke'

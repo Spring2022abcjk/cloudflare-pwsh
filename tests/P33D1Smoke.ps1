@@ -13,14 +13,20 @@ $p33StagingRoot = Join-Path ([IO.Path]::GetTempPath()) ('cloudflare-p33-d1-smoke
 $stagedModuleParent = Join-Path $p33StagingRoot 'module'
 $modulePath = Join-Path $stagedModuleParent 'Cloudflare.PowerShell'
 $dllPath = Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/bin/Release/net10.0/Cloudflare.PowerShell.dll'
+. (Join-Path $ProjectRoot 'tools/ReadOnlyStaging.ps1') -Library
 try {
     foreach ($staleRoot in @(Get-ChildItem -LiteralPath ([IO.Path]::GetTempPath()) -Directory -Filter 'cloudflare-p33-d1-smoke-*' -Force | Where-Object { $_.FullName -ne $p33StagingRoot })) {
         try { Remove-Item -LiteralPath $staleRoot.FullName -Recurse -Force -ErrorAction Stop } catch { }
     }
     if (-not (Test-Path -LiteralPath $moduleSourcePath -PathType Container)) { throw "Smoke module source is missing: $moduleSourcePath" }
     if (-not (Test-Path -LiteralPath $dllPath -PathType Leaf)) { throw "Release PowerShell assembly is missing: $dllPath" }
-    New-Item -ItemType Directory -Force -Path $stagedModuleParent | Out-Null
-    Copy-Item -LiteralPath $moduleSourcePath -Destination $stagedModuleParent -Recurse -Force
+    $moduleInputPaths = @(
+        'Cloudflare.PowerShell.psd1',
+        'Cloudflare.PowerShell.psm1'
+    )
+    Copy-ReadOnlyStagingFiles -SourceRoot $moduleSourcePath -DestinationRoot $modulePath -RelativePaths $moduleInputPaths
+    $moduleInventory = @(Assert-ReadOnlyStagingInputContract -Root $modulePath -ExpectedRelativePaths $moduleInputPaths)
+    if ($moduleInventory.Count -ne $moduleInputPaths.Count) { throw 'P3.3 smoke module staging admitted an unexpected source file.' }
     if ([IO.Path]::GetFullPath($modulePath) -eq $repositoryModulePath) { throw 'P3.3 smoke staging resolved to the repository module path.' }
     Copy-Item -LiteralPath $dllPath -Destination $modulePath -Force
     $bundledRuntimeFiles = @(Get-ChildItem -LiteralPath $modulePath -Recurse -File | Where-Object {

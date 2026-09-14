@@ -9,6 +9,13 @@ $p33TemporaryRoot = Join-Path ([IO.Path]::GetTempPath()) ('cloudflare-p33-d1-rea
 $p33InitialStatus = $null
 $p33Failure = $null
 
+$p33StagingLibrary = Join-Path $PSScriptRoot 'ReadOnlyStaging.ps1'
+if (-not (Test-Path -LiteralPath $p33StagingLibrary -PathType Leaf)) { throw "Read-only staging helper is missing: $p33StagingLibrary" }
+. $p33StagingLibrary -Library
+$p33ContractLibrary = Join-Path $PSScriptRoot 'P33ReadOnlyStaging.ps1'
+if (-not (Test-Path -LiteralPath $p33ContractLibrary -PathType Leaf)) { throw "P3.3 staging contract is missing: $p33ContractLibrary" }
+. $p33ContractLibrary -Library
+
 function Get-P33WorktreeStatus {
     $lines = @(& git -C $p33ProjectRoot status --short)
     if ($LASTEXITCODE -ne 0) { throw 'Could not read the repository worktree status.' }
@@ -19,31 +26,6 @@ function Invoke-P33Checked {
     param([Parameter(Mandatory)][string]$FilePath, [Parameter(Mandatory)][string[]]$Arguments, [Parameter(Mandatory)][string]$Label)
     & $FilePath @Arguments | Out-Host
     if ($LASTEXITCODE -ne 0) { throw "$Label failed with exit code $LASTEXITCODE." }
-}
-
-$p33ExcludedDirectoryNames = @('.git', '.hg', '.svn', '.bzr', 'bin', 'obj')
-function Test-P33ExcludedRelativePath {
-    param([Parameter(Mandatory)][string]$RelativePath)
-    $parts = $RelativePath -split '[\\/]'
-    return @($parts | Where-Object { $p33ExcludedDirectoryNames -contains $_ }).Count -gt 0
-}
-
-function Copy-P33TreeWithoutBuildOrVcs {
-    param([Parameter(Mandatory)][string]$Source, [Parameter(Mandatory)][string]$Destination)
-    if (Test-Path -LiteralPath $Source -PathType Leaf) {
-        New-Item -ItemType Directory -Force -Path (Split-Path -Parent $Destination) | Out-Null
-        Copy-Item -LiteralPath $Source -Destination $Destination -Force
-        return
-    }
-    if (-not (Test-Path -LiteralPath $Source -PathType Container)) { throw "Input tree is missing: $Source" }
-    New-Item -ItemType Directory -Force -Path $Destination | Out-Null
-    foreach ($file in @(Get-ChildItem -LiteralPath $Source -File -Recurse -Force -ErrorAction Stop)) {
-        $relativePath = [IO.Path]::GetRelativePath($Source, $file.FullName)
-        if (Test-P33ExcludedRelativePath $relativePath) { continue }
-        $destinationPath = Join-Path $Destination $relativePath
-        New-Item -ItemType Directory -Force -Path (Split-Path -Parent $destinationPath) | Out-Null
-        Copy-Item -LiteralPath $file.FullName -Destination $destinationPath -Force
-    }
 }
 
 function Assert-P33HashParity {
@@ -61,14 +43,11 @@ function Assert-P33HashParity {
 try {
     $p33InitialStatus = Get-P33WorktreeStatus
     New-Item -ItemType Directory -Force -Path $p33TemporaryRoot | Out-Null
-    foreach ($entry in @('Cloudflare.P1.sln','.gitattributes','.gitignore','artifacts','experiments','fixtures','module','overrides','src','tests','tools')) {
-        $source = Join-Path $p33ProjectRoot $entry
-        if (-not (Test-Path -LiteralPath $source)) { throw "Required project entry is missing: $source" }
-        Copy-P33TreeWithoutBuildOrVcs -Source $source -Destination (Join-Path $p33TemporaryRoot $entry)
-    }
-    $schemaSource = Join-Path $p33ProjectRoot 'ref/api-schemas'
-    $schemaDestination = Join-Path $p33TemporaryRoot 'ref/api-schemas'
-    Copy-P33TreeWithoutBuildOrVcs -Source $schemaSource -Destination $schemaDestination
+    $p33RequiredPaths = @(Get-P33RequiredInputPaths -ProjectRoot $p33ProjectRoot)
+    Copy-ReadOnlyStagingFiles -SourceRoot $p33ProjectRoot -DestinationRoot $p33TemporaryRoot -RelativePaths $p33RequiredPaths
+    $p33Inventory = @(Assert-ReadOnlyStagingInputContract -Root $p33TemporaryRoot -ExpectedRelativePaths $p33RequiredPaths)
+    $p33Diagnostics = Get-ReadOnlyStagingDiagnostics -Root $p33TemporaryRoot
+    Write-Output "PASS P3.3 explicit staging contract files=$($p33Diagnostics.FileCount), bytes=$($p33Diagnostics.TotalBytes); no VCS/build/cache/log/temp inputs"
 
     $fixture = Join-Path $p33TemporaryRoot 'tools/Generate-P33D1Fixture.ps1'
     $projector = Join-Path $p33TemporaryRoot 'tools/Project-P33D1Projection.ps1'

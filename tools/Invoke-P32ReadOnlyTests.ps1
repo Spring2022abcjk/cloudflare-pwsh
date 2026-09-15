@@ -191,7 +191,7 @@ try {
 
     Invoke-PwshChecked $dnsGenerator @{
         ProjectRoot = $temporaryRoot
-        FixtureRoot = (Join-Path $temporaryRoot 'fixtures/dns-records')
+        NormalizedPath = (Join-Path $temporaryRoot 'artifacts/generated-normalized/document.json')
     } 'Isolated DNS source generation'
 
     Invoke-PwshChecked $projector @{

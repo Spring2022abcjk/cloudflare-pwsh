@@ -85,10 +85,11 @@ HTTP `2xx` with `success=false`, full legacy authentication, generated public `P
 
 ## P3.2 Generated Public PowerShell Surface
 
-P3.1 is complete against its runtime gate. P3.2 is active on the branch rooted
-at the merged P3.1 commit and validates whether generated `PSCmdlet` classes
-can become a real public PowerShell surface while preserving the handwritten
-module's behavior.
+P3.1 is complete against its runtime gate. P3.2 is completed in this workspace
+for the validated five-cmdlet representative slice. It validates that generated
+`PSCmdlet` classes can form a public PowerShell surface while preserving the
+handwritten module's behavior; it does not close the deferred release,
+real-account, device/manual, or unresolved runtime-semantic boundaries.
 
 The first representative commands are deliberately limited to four:
 
@@ -130,16 +131,16 @@ runtime rewrite, or a decision to guess HTTP `2xx` with `success=false`.
 
 ## P3.2 acceptance gate
 
-P3.2 is complete only when the four representative generated cmdlets dispatch
-through the shared runtime; their projection metadata and runtime output are
-consistent; pipeline, typed output, pagination, `ShouldProcess`, presence/null,
-and error behavior are evidenced; DNS DELETE correction remains effective;
-generated code has no endpoint-specific transport logic; handwritten-versus-
-generated parity tests are green; all P1/P2/P3.1 regressions are green; and a
-formal `docs/adr/0002-generated-pscmdlet-surface.md` records the migration
-decision from evidence. Only then may `Set-CfDnsRecord` be used as the final
-conditional PUT/PATCH validation.
+P3.2 is complete in this workspace: the five representative generated cmdlets
+dispatch through the shared runtime; their projection metadata and runtime
+output are consistent; pipeline, typed output, pagination, `ShouldProcess`,
+presence/null, and error behavior are evidenced; DNS DELETE correction remains
+effective; generated code has no endpoint-specific transport logic;
+handwritten-versus-generated parity tests are green; all P1/P2/P3.1
+regressions are green; and `docs/adr/0002-generated-pscmdlet-surface.md`
+records the migration decision from evidence. Broader public migration remains
+outside this bounded acceptance.
 
 ## Progress reporting
 
-Maintain `docs/P3.1-progress.md` throughout implementation with four explicit sections: `Implemented`, `Validated`, `Still Deferred`, and `Next`. A passing static test or build must not be reported as runtime, host, package, or real-account acceptance.
+Maintain `docs/P3.2-progress.md` throughout implementation with four explicit sections: `Implemented`, `Validated`, `Still Deferred`, and `Next`. A passing static test or build must not be reported as runtime, host, package, or real-account acceptance.

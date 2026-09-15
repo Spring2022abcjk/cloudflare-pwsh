@@ -39,7 +39,7 @@ API corrections and PowerShell projection overrides are separate:
 - `overrides/api-corrections.json` changes the interpreted API contract and retains a correction trace.
 - `overrides/powershell-projection.json` chooses the public verb/noun, parameter names, confirmation policy, output policy, and help-oriented metadata.
 
-Generated C# currently includes typed models and operation/projection metadata under `src/Cloudflare.PowerShell/Generated`. P3.2 is now validating a generated `PSCmdlet` public surface for four representative commands; the public handwritten module remains the authoritative behavior reference until behavioral parity is evidenced. Generated files are never hand-edited. The shared runtime is a production runtime foundation, but the repository is not release-ready merely because that foundation is complete.
+Generated C# currently includes typed models and operation/projection metadata under `src/Cloudflare.PowerShell/Generated`. P3.2 has validated a generated `PSCmdlet` public surface for five representative commands; the public handwritten module remains the behavior reference for comparison while broader migration is deferred. Generated files are never hand-edited. The shared runtime is a production runtime foundation, but the repository is not release-ready merely because that foundation is complete.
 
 ## Confirmed Architecture Facts
 
@@ -173,7 +173,7 @@ evidence.
 Mutation idempotency policy, legacy authentication, full PowerShell binary UX,
 full generated public-cmdlet migration, module publishing, real-account
 integration, and the final handwritten-vs-generated-cmdlet decision remain
-unresolved. P3.2 is limited to its four representative cmdlets until parity
-evidence supports expansion. The P3.1 runtime has deterministic mock coverage
+unresolved. P3.2 is limited to its five validated representative cmdlets until
+broader parity evidence supports expansion. The P3.1 runtime has deterministic mock coverage
 for multipart, binary streams, and all six recognized pagination strategies;
 HTTP 2xx with `success=false` remains intentionally unresolved.

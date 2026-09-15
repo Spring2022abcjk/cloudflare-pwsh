@@ -23,6 +23,10 @@
 - [P3.2 前两个 P1 修复计划](./P3.2-plan.md)：公共路由、canonical projection、生成器漂移检查和证据边界。
 - [P3.2 独立评审提示词](./P3.2-independent-review-prompt.md)：新智能体会话使用的只读评审提示词。
 - `tools/Invoke-P32ReadOnlyTests.ps1`：在隔离临时副本中执行 P3.2 独立只读验收，不写当前工作树。
+- [P3.3 计划](./P3.3-plan.md)：覆盖发现和 D1/D2 有界扩展的依赖、验收门与停止条件。
+- [P3.3 进度](./P3.3-progress.md)：D1/D2 实现、修复、验证和证据边界。
+- [P3.3 总结](./P3.3-summary.md)：P3.3 有界阶段的最终结论和未解决边界。
+- `tools/Invoke-P33D2ReadOnlyTests.ps1`：在隔离临时副本中执行 P3.3 D1/D2 只读验收。
 - [ADR 0001](./adr/0001-net10-powershell76-baseline.md)：PowerShell 7.6/.NET 10 统一基线决策。
 
 ## 证据等级

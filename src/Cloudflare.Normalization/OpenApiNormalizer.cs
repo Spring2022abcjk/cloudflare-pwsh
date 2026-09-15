@@ -185,6 +185,10 @@ public sealed class OpenApiNormalizer
         _schemas[name] = schema;
         if (raw["items"] is not null)
             schema.Items = GetSchemaReferenceName(raw["items"], $"#/components/schemas/{Escape(name)}/items");
+        if (raw["additionalProperties"] is JsonValue additionalPropertiesValue && additionalPropertiesValue.TryGetValue<bool>(out var additionalPropertiesAllowed))
+            schema.AdditionalPropertiesAllowed = additionalPropertiesAllowed;
+        else if (raw["additionalProperties"] is JsonObject additionalPropertiesSchema)
+            schema.AdditionalPropertiesSchema = GetSchemaReferenceName(additionalPropertiesSchema, $"#/components/schemas/{Escape(name)}/additionalProperties");
         if (raw["required"] is JsonArray required)
             schema.RequiredProperties = required.Select(x => x?.GetValue<string>() ?? string.Empty).Where(x => x.Length > 0).OrderBy(x => x, StringComparer.Ordinal).ToList();
         foreach (var property in (raw["properties"]?.AsObject() ?? new JsonObject()).OrderBy(x => x.Key, StringComparer.Ordinal))

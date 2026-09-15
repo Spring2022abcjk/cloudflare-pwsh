@@ -18,7 +18,7 @@ $report = Get-Content -Raw -LiteralPath $ReportPath | ConvertFrom-Json
 $allowed = @('Supported', 'SupportedWithOverride', 'UnsupportedRuntimeCapability', 'UnsupportedProjectionCapability', 'UnsupportedNormalizationCapability', 'AmbiguousSemantics', 'ExcludedByPolicy', 'NeedsManualReview')
 $rows = @($report.operations)
 
-Assert-True ($report.schemaVersion -eq 1) 'unexpected coverage report schema version'
+Assert-True ($report.schemaVersion -eq 2) 'unexpected coverage report schema version'
 Assert-True ($report.stage -eq 'P3.3') 'unexpected coverage report stage'
 Assert-True ($report.deterministic -eq $true) 'coverage report is not marked deterministic'
 Assert-True ($null -eq $report.generatedAt) 'coverage report contains a wall-clock timestamp'
@@ -26,6 +26,93 @@ Assert-True ($rows.Count -eq [int]$report.totalOperations) 'operation count does
 Assert-True (@($rows.operationKey | Sort-Object -Unique).Count -eq $rows.Count) 'operation keys are not unique'
 Assert-True (@($rows | Where-Object { $_.classification -notin $allowed }).Count -eq 0) 'report contains an unknown classification'
 Assert-True (@($rows | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.resourceFamily) -or [string]::IsNullOrWhiteSpace([string]$_.operationId) }).Count -eq 0) 'report contains an incomplete operation row'
+
+$requiredRowFields = @(
+    'resource', 'resourcePath', 'resourceFamily', 'operationId', 'method', 'pathTemplate',
+    'semanticKind', 'semanticSource', 'semanticConfidence', 'classification', 'reasonCodes',
+    'evidence', 'missingCapabilities', 'normalizedStatus', 'correctionStatus', 'correctionRules',
+    'projectionStatus', 'projectionOverride', 'projectedCmdletName', 'projectedParameterSet',
+    'projectionMappings', 'runtimeStatus', 'runtimeGaps', 'currentPublicCmdlet',
+    'currentPublicSurface', 'sourceLocation'
+)
+foreach ($row in $rows) {
+    foreach ($field in $requiredRowFields) {
+        Assert-True ($null -ne $row.PSObject.Properties[$field]) "coverage row '$($row.operationId)' is missing '$field'."
+    }
+    Assert-True (-not [string]::IsNullOrWhiteSpace([string]$row.resource)) "coverage row '$($row.operationId)' has no resource."
+    Assert-True (@($row.reasonCodes).Count -gt 0) "coverage row '$($row.operationId)' has no reasonCodes."
+    Assert-True (@($row.evidence).Count -gt 0) "coverage row '$($row.operationId)' has no evidence."
+    Assert-True (@($row.missingCapabilities | Where-Object { [string]::IsNullOrWhiteSpace([string]$_) }).Count -eq 0) "coverage row '$($row.operationId)' has a blank missing capability."
+    Assert-True (@($row.reasonCodes | Sort-Object -Unique).Count -eq @($row.reasonCodes).Count) "coverage row '$($row.operationId)' has duplicate reasonCodes."
+    Assert-True (@($row.evidence | Sort-Object -Unique).Count -eq @($row.evidence).Count) "coverage row '$($row.operationId)' has duplicate evidence."
+    Assert-True (@($row.missingCapabilities | Sort-Object -Unique).Count -eq @($row.missingCapabilities).Count) "coverage row '$($row.operationId)' has duplicate missingCapabilities."
+    Assert-True (@($row.projectionMappings | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.cmdletName) -or [string]::IsNullOrWhiteSpace([string]$_.parameterSet) }).Count -eq 0) "coverage row '$($row.operationId)' has an incomplete projection mapping."
+    if ($row.projectionMappings.Count -eq 1) {
+        Assert-True ([string]$row.projectedCmdletName -ceq [string]$row.projectionMappings[0].cmdletName -and [string]$row.projectedParameterSet -ceq [string]$row.projectionMappings[0].parameterSet) "coverage row '$($row.operationId)' projected mapping is not derived from its unique mapping."
+    } else {
+        Assert-True ($null -eq $row.projectedCmdletName -and $null -eq $row.projectedParameterSet) "coverage row '$($row.operationId)' exposes a non-unique projected mapping as unique."
+    }
+    if ([bool]$row.currentPublicSurface) {
+        Assert-True (-not [string]::IsNullOrWhiteSpace([string]$row.currentPublicCmdlet)) "coverage row '$($row.operationId)' marks public surface without a cmdlet."
+    } else {
+        Assert-True ([string]::IsNullOrWhiteSpace([string]$row.currentPublicCmdlet)) "coverage row '$($row.operationId)' has a public cmdlet while currentPublicSurface is false."
+    }
+}
+
+$operationKeyGroups = @($rows | Group-Object operationKey | Where-Object Count -ne 1)
+Assert-True ($operationKeyGroups.Count -eq 0) 'each operation identity must receive exactly one coverage row and classification.'
+Assert-True (@($rows | Where-Object { (@($_.classification)).Count -ne 1 }).Count -eq 0) 'each operation must receive exactly one final classification.'
+
+foreach ($row in $rows) {
+    $reasons = @($row.reasonCodes | ForEach-Object { [string]$_ })
+    $missing = @($row.missingCapabilities | ForEach-Object { [string]$_ })
+    $evidence = @($row.evidence | ForEach-Object { [string]$_ })
+    Assert-True ($evidence -contains 'normalized.operation' -and $evidence -contains 'normalized.source-location') "coverage row '$($row.operationId)' lacks normalized evidence."
+    if ([string]$row.correctionStatus -eq 'Applied') {
+        Assert-True (@($row.correctionRules).Count -gt 0 -and $evidence -contains 'correction.trace') "corrected operation '$($row.operationId)' lacks correction trace evidence."
+    } else {
+        Assert-True (@($row.correctionRules).Count -eq 0 -and $evidence -contains 'correction.none') "uncorrected operation '$($row.operationId)' has correction evidence."
+    }
+    if ([string]$row.projectionStatus -eq 'Conflict') {
+        Assert-True ($evidence -contains 'projection.collision') "projection-conflict operation '$($row.operationId)' lacks collision evidence."
+    } else {
+        Assert-True ($evidence -contains 'projection.constructed') "projection-ready operation '$($row.operationId)' lacks projection evidence."
+    }
+    if ([string]$row.runtimeStatus -eq 'Ready') {
+        Assert-True ($evidence -contains 'runtime.shared-capabilities') "runtime-ready operation '$($row.operationId)' lacks shared-capability evidence."
+    } else {
+        Assert-True ($evidence -contains 'runtime.capability-gap' -and $row.runtimeGaps.Count -gt 0) "runtime-gap operation '$($row.operationId)' lacks runtime evidence."
+    }
+    switch ([string]$row.classification) {
+        'Supported' {
+            Assert-True ($reasons -contains 'CurrentPublicSurface' -and $missing.Count -eq 0 -and $evidence -contains 'public.current-artifact') "Supported classification contract failed for '$($row.operationId)'."
+        }
+        'SupportedWithOverride' {
+            Assert-True ($reasons -contains 'CurrentPublicSurface' -and $reasons -contains 'ExplicitPolicyOrCorrection' -and $missing.Count -eq 0 -and $evidence -contains 'public.explicit-policy-or-correction') "SupportedWithOverride classification contract failed for '$($row.operationId)'."
+        }
+        'UnsupportedRuntimeCapability' {
+            Assert-True ($reasons.Count -gt 0 -and @($reasons | Where-Object { $_ -notmatch '^Unsupported(RequestContentType|ResponseParsingMode|ResponseEnvelope|PaginationStrategy|HttpMethod):?' }).Count -eq 0 -and @($missing | Where-Object { $_ -notmatch '^runtime\.' }).Count -eq 0 -and $evidence -contains 'classification.runtime-gap') "UnsupportedRuntimeCapability classification contract failed for '$($row.operationId)'."
+        }
+        'UnsupportedProjectionCapability' {
+            Assert-True ($reasons -contains 'ProjectionParameterNameCollision' -or $reasons -contains 'ProjectionParameterSetCollision') "UnsupportedProjectionCapability reason contract failed for '$($row.operationId)'."
+            Assert-True (@($missing | Where-Object { $_ -notmatch '^projection\.' }).Count -eq 0 -and $evidence -contains 'classification.projection-conflict') "UnsupportedProjectionCapability evidence contract failed for '$($row.operationId)'."
+        }
+        'UnsupportedNormalizationCapability' {
+            Assert-True ($evidence -contains 'classification.normalization-gap' -and @($missing | Where-Object { $_ -notmatch '^normalization\.' }).Count -eq 0) "UnsupportedNormalizationCapability contract failed for '$($row.operationId)'."
+        }
+        'AmbiguousSemantics' {
+            Assert-True ($reasons -contains 'UnknownOperationSemantic' -and $missing -contains 'normalization.semantic.kind' -and $evidence -contains 'classification.semantic-ambiguity') "AmbiguousSemantics contract failed for '$($row.operationId)'."
+        }
+        'NeedsManualReview' {
+            Assert-True ($reasons -contains 'LowSemanticConfidence' -and $missing -contains 'normalization.semantic.confidence' -and $evidence -contains 'classification.manual-review') "NeedsManualReview contract failed for '$($row.operationId)'."
+        }
+        'ExcludedByPolicy' {
+            Assert-True ($reasons -contains 'OutsideCurrentPublicSurface' -and $missing -contains 'p3.3.public-surface-admission' -and $evidence -contains 'public.bounded-policy-exclusion') "ExcludedByPolicy contract failed for '$($row.operationId)'."
+        }
+    }
+}
+
+Write-Output 'PASS P3.3 coverage operation uniqueness, complete row schema, projection/public mapping, and reason/evidence/capability contract'
 
 $classificationSum = @($report.classificationCounts.PSObject.Properties | Measure-Object -Property Value -Sum).Sum
 Assert-True ([int]$classificationSum -eq $rows.Count) 'classification counts do not reconcile to total operations'

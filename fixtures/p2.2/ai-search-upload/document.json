@@ -1066,6 +1066,7 @@
       "name": "Inline_B38399C17B37",
       "kind": "object",
       "primitiveType": "object",
+      "additionalPropertiesSchema": "Inline_19B4D160BAA1",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -1244,6 +1245,20 @@
       "allOf": [],
       "enum": []
     },
+    "Inline_19B4D160BAA1": {
+      "name": "Inline_19B4D160BAA1",
+      "kind": "union",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [
+        "Inline_0BC1909D6C35",
+        "Inline_D99AE0CBD965",
+        "Inline_F636EFF563C0"
+      ],
+      "allOf": [],
+      "enum": []
+    },
     "Inline_5A0B3C0F784D": {
       "name": "Inline_5A0B3C0F784D",
       "kind": "primitive",
@@ -1337,6 +1352,39 @@
           "writeOnly": false
         }
       },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_0BC1909D6C35": {
+      "name": "Inline_0BC1909D6C35",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_D99AE0CBD965": {
+      "name": "Inline_D99AE0CBD965",
+      "kind": "primitive",
+      "primitiveType": "number",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_F636EFF563C0": {
+      "name": "Inline_F636EFF563C0",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
       "oneOf": [],
       "anyOf": [],
       "allOf": [],

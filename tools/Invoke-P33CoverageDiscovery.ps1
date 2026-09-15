@@ -207,6 +207,15 @@ foreach ($operation in @($corrected.Operations | Sort-Object OperationId)) {
     $publicCmdlet = if ($publicByOperation.ContainsKey($operationId)) { [string]$publicByOperation[$operationId] } else { $null }
     $projectionCmdlet = if ($projection.Count -gt 0) { [string]$projection[0].cmdletName } else { $null }
     $parameterSet = if ($projection.Count -eq 1) { [string]$projection[0].parameterSet } else { $null }
+    $projectionMappings = @($projection | Sort-Object cmdletName, parameterSet | ForEach-Object {
+            [ordered]@{ cmdletName = [string]$_.cmdletName; parameterSet = [string]$_.parameterSet }
+        })
+    $evidence = [System.Collections.Generic.List[string]]::new()
+    $evidence.Add('normalized.operation')
+    $evidence.Add('normalized.source-location')
+    if ($correctionStatus -eq 'Applied') { $evidence.Add('correction.trace') } else { $evidence.Add('correction.none') }
+    if ($projectionStatus -eq 'Conflict') { $evidence.Add('projection.collision') } else { $evidence.Add('projection.constructed') }
+    if ($runtimeStatus -eq 'Ready') { $evidence.Add('runtime.shared-capabilities') } else { $evidence.Add('runtime.capability-gap') }
 
     if ($operation.OperationSemantic.Kind -eq 'Unknown') {
         $reasonCodes.Add('UnknownOperationSemantic')
@@ -240,8 +249,20 @@ foreach ($operation in @($corrected.Operations | Sort-Object OperationId)) {
         $classification = 'ExcludedByPolicy'
     }
 
+    switch ($classification) {
+        'Supported' { $evidence.Add('public.current-artifact') }
+        'SupportedWithOverride' { $evidence.Add('public.current-artifact'); $evidence.Add('public.explicit-policy-or-correction') }
+        'UnsupportedRuntimeCapability' { $evidence.Add('classification.runtime-gap') }
+        'UnsupportedProjectionCapability' { $evidence.Add('classification.projection-conflict') }
+        'UnsupportedNormalizationCapability' { $evidence.Add('classification.normalization-gap') }
+        'AmbiguousSemantics' { $evidence.Add('classification.semantic-ambiguity') }
+        'NeedsManualReview' { $evidence.Add('classification.manual-review') }
+        'ExcludedByPolicy' { $evidence.Add('public.bounded-policy-exclusion') }
+    }
+
     $rows.Add([pscustomobject][ordered]@{
             operationKey = $operationKey
+            resource = Get-ResourceFamily $operation
             resourcePath = @($operation.ResourcePath | ForEach-Object { [string]$_ })
             resourceFamily = Get-ResourceFamily $operation
             operationId = $operationId
@@ -252,6 +273,7 @@ foreach ($operation in @($corrected.Operations | Sort-Object OperationId)) {
             semanticConfidence = [string]$operation.OperationSemantic.Confidence
             classification = $classification
             reasonCodes = @($reasonCodes | Sort-Object -Unique)
+            evidence = @($evidence | Sort-Object -Unique)
             missingCapabilities = @($missingCapabilities | Sort-Object -Unique)
             normalizedStatus = $normalizationStatus
             correctionStatus = $correctionStatus
@@ -260,10 +282,12 @@ foreach ($operation in @($corrected.Operations | Sort-Object OperationId)) {
             projectionOverride = ($null -ne $operationPolicy)
             projectedCmdletName = $projectionCmdlet
             projectedParameterSet = $parameterSet
+            projectionMappings = $projectionMappings
             runtimeStatus = $runtimeStatus
             runtimeGaps = $runtimeGaps
             currentPublicCmdlet = $publicCmdlet
             currentPublicSurface = ($null -ne $publicCmdlet)
+            sourceLocation = [string]$operation.SourceLocation
         })
 }
 
@@ -311,7 +335,7 @@ $inputIdentity = [ordered]@{
 }
 
 $report = [pscustomobject][ordered]@{
-    schemaVersion = 1
+    schemaVersion = 2
     stage = 'P3.3'
     sourcePath = [IO.Path]::GetRelativePath($projectRoot, $schemaPath).Replace('\', '/')
     sourceRevision = [string]$openApi.SourceRevision

@@ -43,6 +43,31 @@ function Get-P33SchemaBaseType {
     }
 }
 
+function Get-P33SchemaType {
+    param([Parameter(Mandatory)][hashtable]$Schemas, [Parameter(Mandatory)][string]$SchemaName)
+    if (-not $Schemas.ContainsKey($SchemaName)) { throw "P3.3 typed model schema '$SchemaName' is missing from the normalized fixture." }
+    $schema = $Schemas[$SchemaName]
+    $primitiveType = [string](Get-P33JsonValue $schema 'primitiveType')
+    switch ($primitiveType) {
+        'string' { return 'string' }
+        'integer' { return 'int' }
+        'number' { return 'decimal' }
+        'boolean' { return 'bool' }
+        'array' {
+            $itemsName = [string](Get-P33JsonValue $schema 'items')
+            if ([string]::IsNullOrWhiteSpace($itemsName)) { throw "P3.3 typed model schema '$SchemaName' is an array without normalized item schema." }
+            return "$(Get-P33SchemaType $Schemas $itemsName)[]"
+        }
+        default {
+            $additionalPropertiesSchema = [string](Get-P33JsonValue $schema 'additionalPropertiesSchema')
+            if ([string]$schema.kind -eq 'object' -and -not [string]::IsNullOrWhiteSpace($additionalPropertiesSchema)) {
+                return "Dictionary<string, $(Get-P33SchemaType $Schemas $additionalPropertiesSchema)>"
+            }
+            throw "P3.3 typed model schema '$SchemaName' has unsupported normalized type '$primitiveType' and no typed object/array mapping."
+        }
+    }
+}
+
 function Get-P33ModelDefinition {
     param([Parameter(Mandatory)][object[]]$Models, [Parameter(Mandatory)][string]$ClassName)
     $matches = @($Models | Where-Object { [string]$_.className -ceq $ClassName })
@@ -137,7 +162,8 @@ function ConvertTo-P33ModelProjection {
             $childKind = [string](Get-P33JsonValue $childSchema 'kind')
             $nestedModel = [string](Get-P33JsonValue $property 'nestedModel')
             $baseType = $null
-            if ($childKind -eq 'object') {
+            $additionalPropertiesSchema = [string](Get-P33JsonValue $childSchema 'additionalPropertiesSchema')
+            if ($childKind -eq 'object' -and [string]::IsNullOrWhiteSpace($additionalPropertiesSchema)) {
                 if ([string]::IsNullOrWhiteSpace($nestedModel)) { throw "P3.3 model '$className.$propertyName' points to object schema '$childSchemaName' without nestedModel." }
                 $nestedDefinition = Get-P33ModelDefinition $AllModels $nestedModel
                 $nestedSources = @($nestedDefinition.schemaSources | ForEach-Object { "$(Get-P33JsonValue $_ 'schema')|$(Get-P33JsonValue $_ 'direction')" })
@@ -145,8 +171,8 @@ function ConvertTo-P33ModelProjection {
                 [void]$nestedModels.Add($nestedModel)
                 $baseType = $nestedModel
             } else {
-                if (-not [string]::IsNullOrWhiteSpace($nestedModel)) { throw "P3.3 model '$className.$propertyName' declares nestedModel '$nestedModel' for non-object schema '$childSchemaName'." }
-                $baseType = Get-P33SchemaBaseType $childSchema $childSchemaName
+                if (-not [string]::IsNullOrWhiteSpace($nestedModel)) { throw "P3.3 model '$className.$propertyName' declares nestedModel '$nestedModel' for non-object or dictionary schema '$childSchemaName'." }
+                $baseType = Get-P33SchemaType $Schemas $childSchemaName
             }
             [void]$baseTypes.Add($baseType)
             $required = [bool](Get-P33JsonValue $normalizedProperty 'required')
@@ -160,6 +186,9 @@ function ConvertTo-P33ModelProjection {
                     normalizedSchema = $childSchemaName
                     normalizedKind = $childKind
                     normalizedPrimitiveType = [string](Get-P33JsonValue $childSchema 'primitiveType')
+                    normalizedItemsSchema = [string](Get-P33JsonValue $childSchema 'items')
+                    normalizedAdditionalPropertiesAllowed = Get-P33JsonValue $childSchema 'additionalPropertiesAllowed'
+                    normalizedAdditionalPropertiesSchema = [string](Get-P33JsonValue $childSchema 'additionalPropertiesSchema')
                     normalizedSourceRef = [string](Get-P33JsonValue $childSchema 'sourceRef')
                     sourceRef = [string](Get-P33JsonValue $normalizedSchema 'sourceRef')
                     required = $required

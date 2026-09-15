@@ -209,4 +209,4 @@ function Invoke-CfZoneHandwritten {
 
 # P3.2/P3.3 generated commands are the public surface. Handwritten implementations
 # remain module-internal parity references during the migration boundary.
-Export-ModuleMember -Function @() -Cmdlet @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord', 'Get-CfD1Database', 'New-CfD1Database', 'Remove-CfD1Database', 'Set-CfD1Database')
+Export-ModuleMember -Function @() -Cmdlet @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord', 'Get-CfD1Database', 'New-CfD1Database', 'Remove-CfD1Database', 'Set-CfD1Database', 'Get-CfHealthCheck', 'New-CfHealthCheck', 'Remove-CfHealthCheck', 'Set-CfHealthCheck')

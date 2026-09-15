@@ -12,6 +12,18 @@
       },
       "reason": "Schema declares a request body but official wrappers send DELETE without a body.",
       "source": "official TypeScript/Python/Go wrapper comparison"
+    },
+    {
+      "match": { "operationId": "health-checks-delete-health-check" },
+      "actions": {
+        "requestBody": {
+          "declaredContract": true,
+          "effectivePresence": "absent",
+          "observedCorrection": "official-wrappers-send-no-body"
+        }
+      },
+      "reason": "Schema declares a request body with no schema, while the pinned official TypeScript, Python, and Go wrappers send DELETE without a body.",
+      "source": "ref/cloudflare-typescript/src/resources/healthchecks/healthchecks.ts; ref/cloudflare-python/src/cloudflare/resources/healthchecks/healthchecks.py; ref/cloudflare-go/healthchecks/healthcheck.go"
     }
   ]
 }

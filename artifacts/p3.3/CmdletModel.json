@@ -10,7 +10,7 @@
     },
     {
       "path": "overrides/api-corrections.json",
-      "sha256": "5b5b4d4706b34857dee85b8035b6508cb51717667e29e19b410a37d2aa134fde"
+      "sha256": "ff65a8757fad81bfe22e455580976a32fdf8a01b0c6b3d73d803e9e8f1fb496a"
     },
     {
       "path": "fixtures/p3.3/d1-database/document.json",
@@ -30,19 +30,19 @@
     },
     {
       "path": "tools/Project-P32Projection.ps1",
-      "sha256": "a47038c71a409ccbf836c1925b15ad91bd76487dce4bdcde6a1b2318944a5895"
+      "sha256": "31add60b4656a60360cd1cbe62f6c80dc4498f9e851a38c47b5a91d3fff6dd70"
     },
     {
       "path": "tools/Generate-P32Source.ps1",
-      "sha256": "6242112cb3ab07f96926cefbd07b6d6a71b211b37f906492629a4975ce287571"
+      "sha256": "ff991aa6a81fce6fca6155c244d6ffc3a90aff26141832d7d450d267417a7b55"
     },
     {
       "path": "tools/P33ModelSchemaParity.ps1",
-      "sha256": "2ec70663b84e667b7d6c8102719a8477e69b5b4c36cc1dad0faaa2c8628c50dd"
+      "sha256": "74b3e54eca1686cdfad7299da116fc31ec5617ae1ac2ac7e2d0663d85288386e"
     },
     {
       "path": "tools/Generate-P33D1Source.ps1",
-      "sha256": "858ef73f0c18288d3896aadb1545a5408bc0e6e306508e16e24354df7d677999"
+      "sha256": "827a56bdf563ae0336b52f1a7e512aed81d11646542ebb33ab480f99cda30cfd"
     },
     {
       "path": "tools/templates/P32RepresentativeCmdlets.cs.tmpl",
@@ -50,11 +50,11 @@
     },
     {
       "path": "module/Cloudflare.PowerShell/Cloudflare.PowerShell.psd1",
-      "sha256": "f70506c6418b404ae604da53b5bee02222c4de128006e3a43e45b04e82b61e63"
+      "sha256": "2711115a2968fc7c85973ef354150d3eb82d54500184082029a172465bd1bf1e"
     },
     {
       "path": "module/Cloudflare.PowerShell/Cloudflare.PowerShell.psm1",
-      "sha256": "f31e874245e2d5ead05ab3edbc7e1ec5d1baa1758ed094d50bb0977736ca6595"
+      "sha256": "2f31b5898338ddf71a19044255c38007b6c8aa2fa83af41d16ca3d7faf9886f7"
     }
   ],
   "cmdlets": [
@@ -2076,6 +2076,9 @@
               "normalizedSchema": "d1_created-at",
               "normalizedKind": "primitive",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_created-at",
               "sourceRef": "#/components/schemas/d1_database-details-response",
               "required": false,
@@ -2092,6 +2095,9 @@
               "normalizedSchema": "d1_created-at",
               "normalizedKind": "primitive",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_created-at",
               "sourceRef": "#/components/schemas/d1_database-response",
               "required": false,
@@ -2124,6 +2130,9 @@
               "normalizedSchema": "d1_file-size",
               "normalizedKind": "primitive",
               "normalizedPrimitiveType": "number",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_file-size",
               "sourceRef": "#/components/schemas/d1_database-details-response",
               "required": false,
@@ -2161,6 +2170,9 @@
               "normalizedSchema": "d1_jurisdiction-nullable",
               "normalizedKind": "enum",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_jurisdiction-nullable",
               "sourceRef": "#/components/schemas/d1_database-details-response",
               "required": false,
@@ -2177,6 +2189,9 @@
               "normalizedSchema": "d1_jurisdiction-nullable",
               "normalizedKind": "enum",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_jurisdiction-nullable",
               "sourceRef": "#/components/schemas/d1_database-response",
               "required": false,
@@ -2214,6 +2229,9 @@
               "normalizedSchema": "d1_database-name",
               "normalizedKind": "primitive",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_database-name",
               "sourceRef": "#/components/schemas/d1_database-details-response",
               "required": false,
@@ -2230,6 +2248,9 @@
               "normalizedSchema": "d1_database-name",
               "normalizedKind": "primitive",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_database-name",
               "sourceRef": "#/components/schemas/d1_database-response",
               "required": false,
@@ -2262,6 +2283,9 @@
               "normalizedSchema": "d1_table-count",
               "normalizedKind": "primitive",
               "normalizedPrimitiveType": "number",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_table-count",
               "sourceRef": "#/components/schemas/d1_database-details-response",
               "required": false,
@@ -2294,6 +2318,9 @@
               "normalizedSchema": "d1_read-replication-details-for-response",
               "normalizedKind": "object",
               "normalizedPrimitiveType": "object",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_read-replication-details-for-response",
               "sourceRef": "#/components/schemas/d1_database-details-response",
               "required": false,
@@ -2332,6 +2359,9 @@
               "normalizedSchema": "d1_database-identifier",
               "normalizedKind": "primitive",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_database-identifier",
               "sourceRef": "#/components/schemas/d1_database-details-response",
               "required": false,
@@ -2348,6 +2378,9 @@
               "normalizedSchema": "d1_database-identifier",
               "normalizedKind": "primitive",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_database-identifier",
               "sourceRef": "#/components/schemas/d1_database-response",
               "required": false,
@@ -2385,6 +2418,9 @@
               "normalizedSchema": "d1_database-version",
               "normalizedKind": "primitive",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_database-version",
               "sourceRef": "#/components/schemas/d1_database-details-response",
               "required": false,
@@ -2401,6 +2437,9 @@
               "normalizedSchema": "d1_database-version",
               "normalizedKind": "primitive",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_database-version",
               "sourceRef": "#/components/schemas/d1_database-response",
               "required": false,
@@ -2455,6 +2494,9 @@
               "normalizedSchema": "d1_jurisdiction",
               "normalizedKind": "enum",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_jurisdiction",
               "sourceRef": "",
               "required": false,
@@ -2487,6 +2529,9 @@
               "normalizedSchema": "d1_database-name",
               "normalizedKind": "primitive",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_database-name",
               "sourceRef": "",
               "required": true,
@@ -2519,6 +2564,9 @@
               "normalizedSchema": "d1_primary-location-hint",
               "normalizedKind": "enum",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_primary-location-hint",
               "sourceRef": "",
               "required": false,
@@ -2551,6 +2599,9 @@
               "normalizedSchema": "d1_read-replication-details-for-request",
               "normalizedKind": "object",
               "normalizedPrimitiveType": "object",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_read-replication-details-for-request",
               "sourceRef": "",
               "required": false,
@@ -2606,6 +2657,9 @@
               "normalizedSchema": "d1_read-replication-details-for-request",
               "normalizedKind": "object",
               "normalizedPrimitiveType": "object",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_read-replication-details-for-request",
               "sourceRef": "#/components/schemas/d1_database-update-request-body",
               "required": true,
@@ -2661,6 +2715,9 @@
               "normalizedSchema": "d1_read-replication-details-for-request",
               "normalizedKind": "object",
               "normalizedPrimitiveType": "object",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "#/components/schemas/d1_read-replication-details-for-request",
               "sourceRef": "#/components/schemas/d1_database-update-partial-request-body",
               "required": false,
@@ -2728,6 +2785,9 @@
               "normalizedSchema": "Inline_790FFEBF3951",
               "normalizedKind": "enum",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "",
               "sourceRef": "#/components/schemas/d1_read-replication-details-for-request",
               "required": true,
@@ -2744,6 +2804,9 @@
               "normalizedSchema": "Inline_1C1CE68FE458",
               "normalizedKind": "enum",
               "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
               "normalizedSourceRef": "",
               "sourceRef": "#/components/schemas/d1_read-replication-details-for-response",
               "required": true,
@@ -2768,5 +2831,5 @@
     "Token",
     "Handler"
   ],
-  "canonicalDigest": "848c697471ebbf6dbda71d86a382ef859ebbc5c9b73dfee90d62ced28f2f46bd"
+  "canonicalDigest": "6206e6268dd7711218a77466af4852717dd1adf9f5cc7e6b296ab1fe32d83571"
 }

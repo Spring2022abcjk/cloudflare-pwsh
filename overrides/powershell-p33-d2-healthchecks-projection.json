@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "stage": "P3.3",
+  "slice": "healthchecks",
+  "operations": {
+    "health-checks-create-health-check": { "verb": "New", "noun": "CfHealthCheck", "parameterSet": "Create", "supportsShouldProcess": true, "confirmImpact": "Medium" },
+    "health-checks-delete-health-check": { "verb": "Remove", "noun": "CfHealthCheck", "parameterRenames": { "healthcheck_id": "HealthCheckId" }, "supportsShouldProcess": true, "confirmImpact": "High" },
+    "health-checks-health-check-details": { "verb": "Get", "noun": "CfHealthCheck", "parameterSet": "Get", "parameterRenames": { "healthcheck_id": "HealthCheckId" } },
+    "health-checks-list-health-checks": { "verb": "Get", "noun": "CfHealthCheck", "parameterSet": "List" },
+    "health-checks-patch-health-check": { "verb": "Set", "noun": "CfHealthCheck", "parameterSet": "Edit", "parameterRenames": { "healthcheck_id": "HealthCheckId" }, "supportsShouldProcess": true, "confirmImpact": "High" },
+    "health-checks-update-health-check": { "verb": "Set", "noun": "CfHealthCheck", "parameterSet": "Update", "parameterRenames": { "healthcheck_id": "HealthCheckId" }, "supportsShouldProcess": true, "confirmImpact": "High" }
+  },
+  "objectTypeAllowlist": [],
+  "commands": [
+    {
+      "cmdletName": "Get-CfHealthCheck",
+      "className": "GetCfHealthCheckCommand",
+      "resource": "healthchecks",
+      "runtimeMetadataType": "CfHealthCheckRuntimeMetadata",
+      "outputType": "Cloudflare.PowerShell.CfHealthCheck",
+      "defaultParameterSetName": "List",
+      "outputPolicy": "item",
+      "generated": {
+        "operationMetadataType": "CfHealthCheckOperationMetadata",
+        "operationMetadataPath": "src/Cloudflare.PowerShell/Generated/Metadata/CfHealthCheckOperationMetadata.cs",
+        "runtimeMetadataPath": "src/Cloudflare.PowerShell/Generated/Metadata/CfHealthCheckRuntimeMetadata.cs"
+      },
+      "execution": { "strategy": "parameter-set", "shouldProcess": false },
+      "operations": {
+        "health-checks-health-check-details": { "parameterSet": "Get", "invokeKind": "single", "errorTarget": "HealthCheckId", "constantName": "Operation_healthchecks_Get_health_checks_health_check_details", "typeOverrides": { "zone_id": "string?", "healthcheck_id": "string?" } },
+        "health-checks-list-health-checks": { "parameterSet": "List", "invokeKind": "paged", "errorTarget": "ZoneId", "constantName": "Operation_healthchecks_List_health_checks_list_health_checks", "typeOverrides": { "zone_id": "string?" } }
+      },
+      "help": {
+        "synopsis": "Gets Cloudflare health checks.",
+        "description": "Gets one or more typed health check records through the shared runtime.",
+        "source": "P3.3D2ProjectionPolicy"
+      },
+      "model": {
+        "className": "CfHealthCheck",
+        "path": "src/Cloudflare.PowerShell/Generated/Models/CfHealthCheck.cs",
+        "directions": [ "response" ],
+        "schemaSources": [ { "schema": "healthchecks_healthchecks", "direction": "response" } ],
+        "properties": [
+          { "name": "Address", "jsonName": "address", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "address", "direction": "response" } ] },
+          { "name": "CheckRegions", "jsonName": "check_regions", "type": "string[]?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "check_regions", "direction": "response" } ] },
+          { "name": "ConsecutiveFails", "jsonName": "consecutive_fails", "type": "int?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "consecutive_fails", "direction": "response" } ] },
+          { "name": "ConsecutiveSuccesses", "jsonName": "consecutive_successes", "type": "int?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "consecutive_successes", "direction": "response" } ] },
+          { "name": "CreatedOn", "jsonName": "created_on", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "created_on", "direction": "response" } ] },
+          { "name": "Description", "jsonName": "description", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "description", "direction": "response" } ] },
+          { "name": "FailureReason", "jsonName": "failure_reason", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "failure_reason", "direction": "response" } ] },
+          { "name": "HttpConfig", "jsonName": "http_config", "type": "CfHealthCheckHttpConfig?", "nullable": true, "presence": "optional", "nestedModel": "CfHealthCheckHttpConfig", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "http_config", "direction": "response" } ] },
+          { "name": "Id", "jsonName": "id", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "id", "direction": "response" } ] },
+          { "name": "Interval", "jsonName": "interval", "type": "int?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "interval", "direction": "response" } ] },
+          { "name": "ModifiedOn", "jsonName": "modified_on", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "modified_on", "direction": "response" } ] },
+          { "name": "Name", "jsonName": "name", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "name", "direction": "response" } ] },
+          { "name": "Retries", "jsonName": "retries", "type": "int?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "retries", "direction": "response" } ] },
+          { "name": "Status", "jsonName": "status", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "status", "direction": "response" } ] },
+          { "name": "Suspended", "jsonName": "suspended", "type": "bool?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "suspended", "direction": "response" } ] },
+          { "name": "TcpConfig", "jsonName": "tcp_config", "type": "CfHealthCheckTcpConfig?", "nullable": true, "presence": "optional", "nestedModel": "CfHealthCheckTcpConfig", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "tcp_config", "direction": "response" } ] },
+          { "name": "Timeout", "jsonName": "timeout", "type": "int?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "timeout", "direction": "response" } ] },
+          { "name": "Type", "jsonName": "type", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_healthchecks", "property": "type", "direction": "response" } ] }
+        ]
+      }
+    },
+    {
+      "cmdletName": "New-CfHealthCheck",
+      "className": "NewCfHealthCheckCommand",
+      "resource": "healthchecks",
+      "runtimeMetadataType": "CfHealthCheckRuntimeMetadata",
+      "outputType": "Cloudflare.PowerShell.CfHealthCheck",
+      "defaultParameterSetName": "Create",
+      "outputPolicy": "single",
+      "execution": { "strategy": "parameter-set", "shouldProcess": true, "shouldProcessTarget": "ZoneId", "shouldProcessAction": "Create health check" },
+      "operations": {
+        "health-checks-create-health-check": { "parameterSet": "Create", "invokeKind": "single", "errorTarget": "ZoneId", "bodyParameterName": "HealthCheck", "bodyParameterType": "CfHealthCheckRequest", "bodySerialization": "Value", "constantName": "Operation_healthchecks_Create_health_checks_create_health_check", "typeOverrides": { "zone_id": "string?" } }
+      },
+      "help": {
+        "synopsis": "Creates a Cloudflare health check.",
+        "description": "Creates a typed health check through the shared runtime.",
+        "source": "P3.3D2ProjectionPolicy"
+      },
+      "model": {
+        "className": "CfHealthCheckRequest",
+        "path": "src/Cloudflare.PowerShell/Generated/Models/CfHealthCheckRequest.cs",
+        "directions": [ "request" ],
+        "schemaSources": [ { "schema": "healthchecks_query_healthcheck", "direction": "request" } ],
+        "properties": [
+          { "name": "Address", "jsonName": "address", "type": "string", "nullable": false, "presence": "required", "schemaSources": [ { "schema": "healthchecks_query_healthcheck", "property": "address", "direction": "request" } ] },
+          { "name": "CheckRegions", "jsonName": "check_regions", "type": "string[]?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_query_healthcheck", "property": "check_regions", "direction": "request" } ] },
+          { "name": "ConsecutiveFails", "jsonName": "consecutive_fails", "type": "int?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_query_healthcheck", "property": "consecutive_fails", "direction": "request" } ] },
+          { "name": "ConsecutiveSuccesses", "jsonName": "consecutive_successes", "type": "int?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_query_healthcheck", "property": "consecutive_successes", "direction": "request" } ] },
+          { "name": "Description", "jsonName": "description", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_query_healthcheck", "property": "description", "direction": "request" } ] },
+          { "name": "HttpConfig", "jsonName": "http_config", "type": "CfHealthCheckHttpConfig?", "nullable": true, "presence": "optional", "nestedModel": "CfHealthCheckHttpConfig", "schemaSources": [ { "schema": "healthchecks_query_healthcheck", "property": "http_config", "direction": "request" } ] },
+          { "name": "Interval", "jsonName": "interval", "type": "int?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_query_healthcheck", "property": "interval", "direction": "request" } ] },
+          { "name": "Name", "jsonName": "name", "type": "string", "nullable": false, "presence": "required", "schemaSources": [ { "schema": "healthchecks_query_healthcheck", "property": "name", "direction": "request" } ] },
+          { "name": "Retries", "jsonName": "retries", "type": "int?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_query_healthcheck", "property": "retries", "direction": "request" } ] },
+          { "name": "Suspended", "jsonName": "suspended", "type": "bool?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_query_healthcheck", "property": "suspended", "direction": "request" } ] },
+          { "name": "TcpConfig", "jsonName": "tcp_config", "type": "CfHealthCheckTcpConfig?", "nullable": true, "presence": "optional", "nestedModel": "CfHealthCheckTcpConfig", "schemaSources": [ { "schema": "healthchecks_query_healthcheck", "property": "tcp_config", "direction": "request" } ] },
+          { "name": "Timeout", "jsonName": "timeout", "type": "int?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_query_healthcheck", "property": "timeout", "direction": "request" } ] },
+          { "name": "Type", "jsonName": "type", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_query_healthcheck", "property": "type", "direction": "request" } ] }
+        ]
+      }
+    },
+    {
+      "cmdletName": "Remove-CfHealthCheck",
+      "className": "RemoveCfHealthCheckCommand",
+      "resource": "healthchecks",
+      "runtimeMetadataType": "CfHealthCheckRuntimeMetadata",
+      "defaultParameterSetName": "Delete",
+      "outputPolicy": "none",
+      "execution": { "strategy": "parameter-set", "shouldProcess": true, "shouldProcessTarget": "HealthCheckId", "shouldProcessAction": "Delete health check" },
+      "operations": {
+        "health-checks-delete-health-check": { "parameterSet": "Delete", "invokeKind": "single", "outputPolicy": "none", "errorTarget": "HealthCheckId", "constantName": "Operation_healthchecks_Delete_health_checks_delete_health_check", "typeOverrides": { "zone_id": "string?", "healthcheck_id": "string?" } }
+      },
+      "help": {
+        "synopsis": "Removes a Cloudflare health check.",
+        "description": "Removes one health check by zone and health check identifier.",
+        "source": "P3.3D2ProjectionPolicy"
+      }
+    },
+    {
+      "cmdletName": "Set-CfHealthCheck",
+      "className": "SetCfHealthCheckCommand",
+      "resource": "healthchecks",
+      "runtimeMetadataType": "CfHealthCheckRuntimeMetadata",
+      "outputType": "Cloudflare.PowerShell.CfHealthCheck",
+      "defaultParameterSetName": "Update",
+      "outputPolicy": "single",
+      "execution": { "strategy": "parameter-set", "shouldProcess": true, "shouldProcessTarget": "HealthCheckId", "shouldProcessAction": "{ParameterSetName} health check" },
+      "parameterSetDiscriminators": [ { "name": "Patch", "parameterSet": "Edit", "type": "SwitchParameter", "operationId": "health-checks-patch-health-check" } ],
+      "operations": {
+        "health-checks-patch-health-check": { "parameterSet": "Edit", "invokeKind": "single", "errorTarget": "HealthCheckId", "bodyParameterName": "HealthCheck", "bodyParameterType": "CfHealthCheckRequest", "bodySerialization": "Value", "constantName": "Operation_healthchecks_Edit_health_checks_patch_health_check", "typeOverrides": { "zone_id": "string?", "healthcheck_id": "string?" } },
+        "health-checks-update-health-check": { "parameterSet": "Update", "invokeKind": "single", "errorTarget": "HealthCheckId", "bodyParameterName": "HealthCheck", "bodyParameterType": "CfHealthCheckRequest", "bodySerialization": "Value", "constantName": "Operation_healthchecks_Update_health_checks_update_health_check", "typeOverrides": { "zone_id": "string?", "healthcheck_id": "string?" } }
+      },
+      "help": {
+        "synopsis": "Updates a Cloudflare health check.",
+        "description": "Replaces or edits one typed health check through the shared runtime.",
+        "source": "P3.3D2ProjectionPolicy"
+      },
+      "model": {
+        "className": "CfHealthCheckHttpConfig",
+        "path": "src/Cloudflare.PowerShell/Generated/Models/CfHealthCheckHttpConfig.cs",
+        "directions": [ "request", "response" ],
+        "schemaSources": [ { "schema": "healthchecks_http_config", "direction": "request" }, { "schema": "healthchecks_http_config", "direction": "response" } ],
+        "properties": [
+          { "name": "AllowInsecure", "jsonName": "allow_insecure", "type": "bool?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_http_config", "property": "allow_insecure", "direction": "request" }, { "schema": "healthchecks_http_config", "property": "allow_insecure", "direction": "response" } ] },
+          { "name": "ExpectedBody", "jsonName": "expected_body", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_http_config", "property": "expected_body", "direction": "request" }, { "schema": "healthchecks_http_config", "property": "expected_body", "direction": "response" } ] },
+          { "name": "ExpectedCodes", "jsonName": "expected_codes", "type": "string[]?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_http_config", "property": "expected_codes", "direction": "request" }, { "schema": "healthchecks_http_config", "property": "expected_codes", "direction": "response" } ] },
+          { "name": "FollowRedirects", "jsonName": "follow_redirects", "type": "bool?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_http_config", "property": "follow_redirects", "direction": "request" }, { "schema": "healthchecks_http_config", "property": "follow_redirects", "direction": "response" } ] },
+          { "name": "Header", "jsonName": "header", "type": "Dictionary<string, string[]>?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_http_config", "property": "header", "direction": "request" }, { "schema": "healthchecks_http_config", "property": "header", "direction": "response" } ] },
+          { "name": "Method", "jsonName": "method", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_http_config", "property": "method", "direction": "request" }, { "schema": "healthchecks_http_config", "property": "method", "direction": "response" } ] },
+          { "name": "Path", "jsonName": "path", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_http_config", "property": "path", "direction": "request" }, { "schema": "healthchecks_http_config", "property": "path", "direction": "response" } ] },
+          { "name": "Port", "jsonName": "port", "type": "int?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_http_config", "property": "port", "direction": "request" }, { "schema": "healthchecks_http_config", "property": "port", "direction": "response" } ] }
+        ]
+      }
+    }
+  ],
+  "additionalModels": [
+    {
+      "className": "CfHealthCheckTcpConfig",
+      "path": "src/Cloudflare.PowerShell/Generated/Models/CfHealthCheckTcpConfig.cs",
+      "directions": [ "request", "response" ],
+      "schemaSources": [ { "schema": "healthchecks_tcp_config", "direction": "request" }, { "schema": "healthchecks_tcp_config", "direction": "response" } ],
+      "properties": [
+        { "name": "Method", "jsonName": "method", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_tcp_config", "property": "method", "direction": "request" }, { "schema": "healthchecks_tcp_config", "property": "method", "direction": "response" } ] },
+        { "name": "Port", "jsonName": "port", "type": "int?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "healthchecks_tcp_config", "property": "port", "direction": "request" }, { "schema": "healthchecks_tcp_config", "property": "port", "direction": "response" } ] }
+      ]
+    }
+  ]
+}

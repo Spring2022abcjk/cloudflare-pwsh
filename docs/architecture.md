@@ -49,7 +49,7 @@ The six DNS operations `create`, `list`, `get`, `update`, `edit`, and `delete` p
 
 ### Typed unions
 
-DNS `anyOf`/`oneOf`/`allOf` composition is retained by the normalized model. Representative typed request inputs include `A`, `MX`, `CAA`, `HTTPS`, and `SVCB`. Union schemas must not silently become `object`, `Dictionary<string, object>`, or `PSCustomObject`-only models.
+DNS `anyOf`/`oneOf`/`allOf` composition is retained by the normalized model. Representative typed request inputs include `A`, `MX`, `CAA`, `HTTPS`, and `SVCB`. Union schemas must not silently become `object`, `Dictionary<string, object>`, or `PSCustomObject`-only models. When `additionalProperties` has a known normalized schema, the schema reference is retained and the capability-driven model projection may emit a typed `Dictionary<string, T>`; unknown map values remain a capability gap.
 
 ### Presence semantics
 
@@ -160,6 +160,13 @@ that are not admitted to the current bounded public policy remain explicitly
 classified rather than silently omitted. The discovery baseline and schema are
 defined in [P3.3 plan](./P3.3-plan.md) and emitted by
 `tools/Invoke-P33CoverageDiscovery.ps1`.
+
+The D1 `d1/database` bounded slice is complete. D2 `healthchecks` adds six
+zone-scoped operations through the same chain, including typed nested models,
+known map values, page-array pagination, and a generic PowerShell parameter-set
+discriminator for identical PUT/PATCH public bindings. Its evidence remains
+separate from real-account, device/manual, packaging, publishing, and release
+evidence.
 
 ## Deferred Boundaries
 

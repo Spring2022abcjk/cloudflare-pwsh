@@ -83,3 +83,25 @@ function Get-P33RequiredInputPaths {
         'tests/Cloudflare.PowerShell.Tests/Program.cs'
     ) | Sort-Object -Unique
 }
+
+function Get-P33D2RequiredInputPaths {
+    param([Parameter(Mandatory)][string]$ProjectRoot)
+
+    # D2 starts from the D1 declaration because the isolated solution must
+    # rebuild the existing public surface before adding healthchecks. D2
+    # outputs (fixture, artifacts, generated source/models/metadata) are not
+    # inputs here; each is recreated in the isolated root.
+    $d1 = @(Get-P33RequiredInputPaths -ProjectRoot $ProjectRoot)
+    $d2 = @(
+        'artifacts/p3.2/CmdletModel.json',
+        'overrides/powershell-p33-d2-healthchecks-projection.json',
+        'tests/P33D2Projection.Tests.ps1',
+        'tests/P33D2Smoke.ps1',
+        'tools/Generate-P33D2HealthchecksFixture.ps1',
+        'tools/Generate-P33D2Source.ps1',
+        'tools/Invoke-P33D2Compatibility.ps1',
+        'tools/Invoke-P33D2ReadOnlyTests.ps1',
+        'tools/Project-P33D2Projection.ps1'
+    )
+    return @($d1 + $d2 | Sort-Object -Unique)
+}

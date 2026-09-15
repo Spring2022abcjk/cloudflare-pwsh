@@ -109,7 +109,7 @@ if ($rendered -match '\{\{[^}]+\}\}') { throw 'P3.3 generated source contains un
 
 $sourceExists = Test-Path -LiteralPath $p33SourcePath -PathType Leaf
 if ($ValidateOnly -and -not $sourceExists) { throw "P3.3 ValidateOnly source is missing: $p33SourcePath" }
-$sourceForValidation = if ($sourceExists) { Get-Content -Raw -LiteralPath $p33SourcePath -Encoding UTF8 } else { $rendered }
+$sourceForValidation = if ($ValidateOnly -and $sourceExists) { Get-Content -Raw -LiteralPath $p33SourcePath -Encoding UTF8 } else { $rendered }
 foreach ($cmdlet in @($artifact.cmdlets)) {
     if ($sourceForValidation -notmatch "public sealed class $([regex]::Escape([string]$cmdlet.className))\s*:") { throw "Generated P3.3 source is missing '$($cmdlet.className)'." }
     foreach ($parameter in @($cmdlet.parameters)) {

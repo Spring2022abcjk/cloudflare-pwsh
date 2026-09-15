@@ -1,0 +1,4065 @@
+{
+  "version": 1,
+  "stage": "P3.3",
+  "slice": "healthchecks",
+  "sourcePolicy": "normalized-model-plus-projection-policy",
+  "semanticAlgorithm": "SHA256-CanonicalJson-v1",
+  "sourceFiles": [
+    {
+      "path": "ref/api-schemas/openapi.json",
+      "sha256": "f71c82b532b284e41a0e9de41ac1ee398e1b7b658f521e7f8ee478ce922fbf45"
+    },
+    {
+      "path": "overrides/api-corrections.json",
+      "sha256": "ff65a8757fad81bfe22e455580976a32fdf8a01b0c6b3d73d803e9e8f1fb496a"
+    },
+    {
+      "path": "fixtures/p3.3/healthchecks/document.json",
+      "sha256": "b88366e7c12547eebd6518b7f42fe6bcf57ef5fe296897281ac9de4af1f9fc12"
+    },
+    {
+      "path": "overrides/powershell-projection.json",
+      "sha256": "e07a129b9e80b9efaa5653046214cb1c34ac04ee5f55e97ab356d0238e1bdd60"
+    },
+    {
+      "path": "overrides/powershell-p33-d2-healthchecks-projection.json",
+      "sha256": "8cf1018f594d4df3a6b1140a9e623b146178e53de4dcb69753f823a7afa461cc"
+    },
+    {
+      "path": "tools/Generate-P33D2HealthchecksFixture.ps1",
+      "sha256": "2c3650c5c9d6fbf015bbb3e1f168649e2e492fab2672c84e35cb014d329c9805"
+    },
+    {
+      "path": "tools/Project-P32Projection.ps1",
+      "sha256": "31add60b4656a60360cd1cbe62f6c80dc4498f9e851a38c47b5a91d3fff6dd70"
+    },
+    {
+      "path": "tools/Generate-P32Source.ps1",
+      "sha256": "ff991aa6a81fce6fca6155c244d6ffc3a90aff26141832d7d450d267417a7b55"
+    },
+    {
+      "path": "tools/P33ModelSchemaParity.ps1",
+      "sha256": "74b3e54eca1686cdfad7299da116fc31ec5617ae1ac2ac7e2d0663d85288386e"
+    },
+    {
+      "path": "tools/Generate-P33D2Source.ps1",
+      "sha256": "00982c8142ce7793c9b671bf34a58aee201ec033332d9cd655c9aca657935a3e"
+    },
+    {
+      "path": "tools/templates/P32RepresentativeCmdlets.cs.tmpl",
+      "sha256": "141a348614a8e23cdceda5812ade4c8ec9c2bd908e9830c1ee9fc90cfb23403e"
+    },
+    {
+      "path": "module/Cloudflare.PowerShell/Cloudflare.PowerShell.psd1",
+      "sha256": "2711115a2968fc7c85973ef354150d3eb82d54500184082029a172465bd1bf1e"
+    },
+    {
+      "path": "module/Cloudflare.PowerShell/Cloudflare.PowerShell.psm1",
+      "sha256": "2f31b5898338ddf71a19044255c38007b6c8aa2fa83af41d16ca3d7faf9886f7"
+    }
+  ],
+  "cmdlets": [
+    {
+      "cmdletName": "Get-CfHealthCheck",
+      "className": "GetCfHealthCheckCommand",
+      "execution": {
+        "strategy": "parameter-set",
+        "shouldProcess": false
+      },
+      "runtimeMetadataType": "CfHealthCheckRuntimeMetadata",
+      "generated": {
+        "operationMetadataType": "CfHealthCheckOperationMetadata",
+        "operationMetadataPath": "src/Cloudflare.PowerShell/Generated/Metadata/CfHealthCheckOperationMetadata.cs",
+        "runtimeMetadataPath": "src/Cloudflare.PowerShell/Generated/Metadata/CfHealthCheckRuntimeMetadata.cs"
+      },
+      "model": {
+        "className": "CfHealthCheck",
+        "path": "src/Cloudflare.PowerShell/Generated/Models/CfHealthCheck.cs",
+        "directions": [
+          "response"
+        ],
+        "schemaSources": [
+          {
+            "schema": "healthchecks_healthchecks",
+            "direction": "response"
+          }
+        ],
+        "properties": [
+          {
+            "name": "Address",
+            "jsonName": "address",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "address",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "CheckRegions",
+            "jsonName": "check_regions",
+            "type": "string[]?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "check_regions",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "ConsecutiveFails",
+            "jsonName": "consecutive_fails",
+            "type": "int?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "consecutive_fails",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "ConsecutiveSuccesses",
+            "jsonName": "consecutive_successes",
+            "type": "int?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "consecutive_successes",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "CreatedOn",
+            "jsonName": "created_on",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "created_on",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Description",
+            "jsonName": "description",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "description",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "FailureReason",
+            "jsonName": "failure_reason",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "failure_reason",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "HttpConfig",
+            "jsonName": "http_config",
+            "type": "CfHealthCheckHttpConfig?",
+            "nullable": true,
+            "presence": "optional",
+            "nestedModel": "CfHealthCheckHttpConfig",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "http_config",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Id",
+            "jsonName": "id",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "id",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Interval",
+            "jsonName": "interval",
+            "type": "int?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "interval",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "ModifiedOn",
+            "jsonName": "modified_on",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "modified_on",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Name",
+            "jsonName": "name",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "name",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Retries",
+            "jsonName": "retries",
+            "type": "int?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "retries",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Status",
+            "jsonName": "status",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "status",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Suspended",
+            "jsonName": "suspended",
+            "type": "bool?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "suspended",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "TcpConfig",
+            "jsonName": "tcp_config",
+            "type": "CfHealthCheckTcpConfig?",
+            "nullable": true,
+            "presence": "optional",
+            "nestedModel": "CfHealthCheckTcpConfig",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "tcp_config",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Timeout",
+            "jsonName": "timeout",
+            "type": "int?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "timeout",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Type",
+            "jsonName": "type",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_healthchecks",
+                "property": "type",
+                "direction": "response"
+              }
+            ]
+          }
+        ]
+      },
+      "defaultParameterSetName": "List",
+      "operationIds": [
+        "health-checks-health-check-details",
+        "health-checks-list-health-checks"
+      ],
+      "parameterSets": [
+        {
+          "name": "Get",
+          "operationId": "health-checks-health-check-details",
+          "operationBinding": {
+            "method": "GET",
+            "pathTemplate": "/zones/{zone_id}/healthchecks/{healthcheck_id}",
+            "pathParameters": [
+              "HealthCheckId",
+              "ZoneId"
+            ],
+            "queryParameters": [],
+            "bodyParameter": null,
+            "bodyModel": null,
+            "invokeKind": "single",
+            "outputPolicy": "item",
+            "bodySerialization": null,
+            "errorTarget": "HealthCheckId"
+          },
+          "requiredParameters": [
+            "HealthCheckId",
+            "ZoneId"
+          ],
+          "optionalParameters": []
+        },
+        {
+          "name": "List",
+          "operationId": "health-checks-list-health-checks",
+          "operationBinding": {
+            "method": "GET",
+            "pathTemplate": "/zones/{zone_id}/healthchecks",
+            "pathParameters": [
+              "ZoneId"
+            ],
+            "queryParameters": [
+              "Page",
+              "PerPage"
+            ],
+            "bodyParameter": null,
+            "bodyModel": null,
+            "invokeKind": "paged",
+            "outputPolicy": "item",
+            "bodySerialization": null,
+            "errorTarget": "ZoneId"
+          },
+          "requiredParameters": [
+            "ZoneId"
+          ],
+          "optionalParameters": [
+            "Page",
+            "PerPage"
+          ]
+        }
+      ],
+      "parameters": [
+        {
+          "name": "HealthCheckId",
+          "type": "string?",
+          "binding": "path",
+          "position": 1,
+          "appliesTo": [
+            "Get"
+          ],
+          "requiredIn": [
+            "Get"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "health-checks-health-check-details",
+              "location": "path",
+              "name": "healthcheck_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'healthcheck_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Primary"
+        },
+        {
+          "name": "Page",
+          "type": "decimal",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 1,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "health-checks-list-health-checks",
+              "location": "query",
+              "name": "page"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'page'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "PerPage",
+          "type": "decimal",
+          "binding": "query",
+          "position": null,
+          "appliesTo": [
+            "List"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": 25,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "health-checks-list-health-checks",
+              "location": "query",
+              "name": "per_page"
+            }
+          ],
+          "help": {
+            "description": "Binds to API query parameter 'per_page'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": null
+        },
+        {
+          "name": "ZoneId",
+          "type": "string?",
+          "binding": "path",
+          "position": 0,
+          "appliesTo": [
+            "Get",
+            "List"
+          ],
+          "requiredIn": [
+            "Get",
+            "List"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "health-checks-health-check-details",
+              "location": "path",
+              "name": "zone_id"
+            },
+            {
+              "operationId": "health-checks-list-health-checks",
+              "location": "path",
+              "name": "zone_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Parent"
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfHealthCheck",
+      "outputPolicy": "item",
+      "pagingBehavior": "V4PagePaginationArray",
+      "supportsShouldProcess": false,
+      "confirmImpact": "None",
+      "shouldProcessTarget": "",
+      "shouldProcessAction": "",
+      "help": {
+        "synopsis": "Gets Cloudflare health checks.",
+        "description": "Gets one or more typed health check records through the shared runtime.",
+        "source": "P3.3D2ProjectionPolicy"
+      },
+      "operations": [
+        {
+          "operationId": "health-checks-health-check-details",
+          "resource": "healthchecks",
+          "parameterSet": "Get",
+          "method": "GET",
+          "pathTemplate": "/zones/{zone_id}/healthchecks/{healthcheck_id}",
+          "semantic": {
+            "kind": "Get",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "HealthCheckId",
+              "sourceName": "healthcheck_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 1,
+              "appliesTo": [
+                "Get"
+              ],
+              "requiredIn": "Get",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-health-check-details",
+                  "location": "path",
+                  "name": "healthcheck_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'healthcheck_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Primary"
+            },
+            {
+              "name": "ZoneId",
+              "sourceName": "zone_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Get"
+              ],
+              "requiredIn": "Get",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-health-check-details",
+                  "location": "path",
+                  "name": "zone_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'zone_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            }
+          ],
+          "bodyParameterName": null,
+          "bodyModel": null,
+          "outputType": "Cloudflare.PowerShell.CfHealthCheck",
+          "constantName": "Operation_healthchecks_Get_health_checks_health_check_details",
+          "outputPolicy": "item",
+          "invokeKind": "single",
+          "bodySerialization": null,
+          "errorTarget": "HealthCheckId",
+          "supportsShouldProcess": false,
+          "confirmImpact": "None",
+          "help": {
+            "synopsis": "Get-CfHealthCheck get operation.",
+            "description": "Generated help for normalized operation 'health-checks-health-check-details'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "healthcheck_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "zone_id",
+                "location": "path",
+                "required": true
+              }
+            ],
+            "requestRepresentations": null,
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        },
+        {
+          "operationId": "health-checks-list-health-checks",
+          "resource": "healthchecks",
+          "parameterSet": "List",
+          "method": "GET",
+          "pathTemplate": "/zones/{zone_id}/healthchecks",
+          "semantic": {
+            "kind": "List",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "ZoneId",
+              "sourceName": "zone_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": "List",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-list-health-checks",
+                  "location": "path",
+                  "name": "zone_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'zone_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "Page",
+              "sourceName": "page",
+              "type": "decimal",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": 1,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-list-health-checks",
+                  "location": "query",
+                  "name": "page"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'page'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            },
+            {
+              "name": "PerPage",
+              "sourceName": "per_page",
+              "type": "decimal",
+              "binding": "query",
+              "position": null,
+              "appliesTo": [
+                "List"
+              ],
+              "requiredIn": null,
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "omit",
+              "defaultValue": 25,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-list-health-checks",
+                  "location": "query",
+                  "name": "per_page"
+                }
+              ],
+              "help": {
+                "description": "Binds to API query parameter 'per_page'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": null,
+          "bodyModel": null,
+          "outputType": "Cloudflare.PowerShell.CfHealthCheck",
+          "constantName": "Operation_healthchecks_List_health_checks_list_health_checks",
+          "outputPolicy": "item",
+          "invokeKind": "paged",
+          "bodySerialization": null,
+          "errorTarget": "ZoneId",
+          "supportsShouldProcess": false,
+          "confirmImpact": "None",
+          "help": {
+            "synopsis": "Get-CfHealthCheck list operation.",
+            "description": "Generated help for normalized operation 'health-checks-list-health-checks'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "zone_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "page",
+                "location": "query",
+                "required": false
+              },
+              {
+                "name": "per_page",
+                "location": "query",
+                "required": false
+              }
+            ],
+            "requestRepresentations": null,
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "V4PagePaginationArray",
+              "requestFields": [
+                "page",
+                "per_page"
+              ],
+              "responseFields": [
+                "result",
+                "result_info"
+              ],
+              "resultPath": "result",
+              "pageInfoPath": "result_info",
+              "currentPagePath": "result_info.page",
+              "totalPagesPath": "result_info.total_pages",
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "page + 1",
+              "stopRule": "empty result page"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "cmdletName": "New-CfHealthCheck",
+      "className": "NewCfHealthCheckCommand",
+      "execution": {
+        "strategy": "parameter-set",
+        "shouldProcess": true,
+        "shouldProcessTarget": "ZoneId",
+        "shouldProcessAction": "Create health check"
+      },
+      "runtimeMetadataType": "CfHealthCheckRuntimeMetadata",
+      "generated": null,
+      "model": {
+        "className": "CfHealthCheckRequest",
+        "path": "src/Cloudflare.PowerShell/Generated/Models/CfHealthCheckRequest.cs",
+        "directions": [
+          "request"
+        ],
+        "schemaSources": [
+          {
+            "schema": "healthchecks_query_healthcheck",
+            "direction": "request"
+          }
+        ],
+        "properties": [
+          {
+            "name": "Address",
+            "jsonName": "address",
+            "type": "string",
+            "nullable": false,
+            "presence": "required",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_query_healthcheck",
+                "property": "address",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "CheckRegions",
+            "jsonName": "check_regions",
+            "type": "string[]?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_query_healthcheck",
+                "property": "check_regions",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "ConsecutiveFails",
+            "jsonName": "consecutive_fails",
+            "type": "int?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_query_healthcheck",
+                "property": "consecutive_fails",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "ConsecutiveSuccesses",
+            "jsonName": "consecutive_successes",
+            "type": "int?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_query_healthcheck",
+                "property": "consecutive_successes",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "Description",
+            "jsonName": "description",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_query_healthcheck",
+                "property": "description",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "HttpConfig",
+            "jsonName": "http_config",
+            "type": "CfHealthCheckHttpConfig?",
+            "nullable": true,
+            "presence": "optional",
+            "nestedModel": "CfHealthCheckHttpConfig",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_query_healthcheck",
+                "property": "http_config",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "Interval",
+            "jsonName": "interval",
+            "type": "int?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_query_healthcheck",
+                "property": "interval",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "Name",
+            "jsonName": "name",
+            "type": "string",
+            "nullable": false,
+            "presence": "required",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_query_healthcheck",
+                "property": "name",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "Retries",
+            "jsonName": "retries",
+            "type": "int?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_query_healthcheck",
+                "property": "retries",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "Suspended",
+            "jsonName": "suspended",
+            "type": "bool?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_query_healthcheck",
+                "property": "suspended",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "TcpConfig",
+            "jsonName": "tcp_config",
+            "type": "CfHealthCheckTcpConfig?",
+            "nullable": true,
+            "presence": "optional",
+            "nestedModel": "CfHealthCheckTcpConfig",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_query_healthcheck",
+                "property": "tcp_config",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "Timeout",
+            "jsonName": "timeout",
+            "type": "int?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_query_healthcheck",
+                "property": "timeout",
+                "direction": "request"
+              }
+            ]
+          },
+          {
+            "name": "Type",
+            "jsonName": "type",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_query_healthcheck",
+                "property": "type",
+                "direction": "request"
+              }
+            ]
+          }
+        ]
+      },
+      "defaultParameterSetName": "Create",
+      "operationIds": [
+        "health-checks-create-health-check"
+      ],
+      "parameterSets": [
+        {
+          "name": "Create",
+          "operationId": "health-checks-create-health-check",
+          "operationBinding": {
+            "method": "POST",
+            "pathTemplate": "/zones/{zone_id}/healthchecks",
+            "pathParameters": [
+              "ZoneId"
+            ],
+            "queryParameters": [],
+            "bodyParameter": "HealthCheck",
+            "bodyModel": "healthchecks_query_healthcheck",
+            "invokeKind": "single",
+            "outputPolicy": "single",
+            "bodySerialization": "Value",
+            "errorTarget": "ZoneId"
+          },
+          "requiredParameters": [
+            "ZoneId",
+            "HealthCheck"
+          ],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "HealthCheck",
+          "type": "CfHealthCheckRequest",
+          "binding": "body",
+          "position": 1,
+          "appliesTo": [
+            "Create"
+          ],
+          "requiredIn": [
+            "Create"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "null-forgiving",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "health-checks-create-health-check",
+              "location": "body",
+              "name": "body"
+            }
+          ],
+          "help": {
+            "description": "Binds the normalized healthchecks_query_healthcheck request body.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": true,
+          "bodyModel": "healthchecks_query_healthcheck",
+          "scopeRole": null
+        },
+        {
+          "name": "ZoneId",
+          "type": "string?",
+          "binding": "path",
+          "position": 0,
+          "appliesTo": [
+            "Create"
+          ],
+          "requiredIn": [
+            "Create"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "health-checks-create-health-check",
+              "location": "path",
+              "name": "zone_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Parent"
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfHealthCheck",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": true,
+      "confirmImpact": "Medium",
+      "shouldProcessTarget": "ZoneId",
+      "shouldProcessAction": "Create health check",
+      "help": {
+        "synopsis": "Creates a Cloudflare health check.",
+        "description": "Creates a typed health check through the shared runtime.",
+        "source": "P3.3D2ProjectionPolicy"
+      },
+      "operations": [
+        {
+          "operationId": "health-checks-create-health-check",
+          "resource": "healthchecks",
+          "parameterSet": "Create",
+          "method": "POST",
+          "pathTemplate": "/zones/{zone_id}/healthchecks",
+          "semantic": {
+            "kind": "Create",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "ZoneId",
+              "sourceName": "zone_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Create"
+              ],
+              "requiredIn": "Create",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-create-health-check",
+                  "location": "path",
+                  "name": "zone_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'zone_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "HealthCheck",
+              "sourceName": "body",
+              "type": "CfHealthCheckRequest",
+              "binding": "body",
+              "position": 1,
+              "appliesTo": [
+                "Create"
+              ],
+              "requiredIn": "Create",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "initializerPolicy": "null-forgiving",
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-create-health-check",
+                  "location": "body",
+                  "name": "body"
+                }
+              ],
+              "help": {
+                "description": "Binds the normalized healthchecks_query_healthcheck request body.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": true,
+              "bodyModel": "healthchecks_query_healthcheck",
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": "HealthCheck",
+          "bodyModel": "healthchecks_query_healthcheck",
+          "outputType": "Cloudflare.PowerShell.CfHealthCheck",
+          "constantName": "Operation_healthchecks_Create_health_checks_create_health_check",
+          "outputPolicy": "single",
+          "invokeKind": "single",
+          "bodySerialization": "Value",
+          "errorTarget": "ZoneId",
+          "supportsShouldProcess": true,
+          "confirmImpact": "Medium",
+          "help": {
+            "synopsis": "New-CfHealthCheck create operation.",
+            "description": "Generated help for normalized operation 'health-checks-create-health-check'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "zone_id",
+                "location": "path",
+                "required": true
+              }
+            ],
+            "requestRepresentations": {
+              "contentType": "application/json",
+              "bodyParameterName": "body",
+              "parts": []
+            },
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "cmdletName": "Remove-CfHealthCheck",
+      "className": "RemoveCfHealthCheckCommand",
+      "execution": {
+        "strategy": "parameter-set",
+        "shouldProcess": true,
+        "shouldProcessTarget": "HealthCheckId",
+        "shouldProcessAction": "Delete health check"
+      },
+      "runtimeMetadataType": "CfHealthCheckRuntimeMetadata",
+      "generated": null,
+      "model": null,
+      "defaultParameterSetName": "Delete",
+      "operationIds": [
+        "health-checks-delete-health-check"
+      ],
+      "parameterSets": [
+        {
+          "name": "Delete",
+          "operationId": "health-checks-delete-health-check",
+          "operationBinding": {
+            "method": "DELETE",
+            "pathTemplate": "/zones/{zone_id}/healthchecks/{healthcheck_id}",
+            "pathParameters": [
+              "HealthCheckId",
+              "ZoneId"
+            ],
+            "queryParameters": [],
+            "bodyParameter": null,
+            "bodyModel": null,
+            "invokeKind": "single",
+            "outputPolicy": "none",
+            "bodySerialization": null,
+            "errorTarget": "HealthCheckId"
+          },
+          "requiredParameters": [
+            "HealthCheckId",
+            "ZoneId"
+          ],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "HealthCheckId",
+          "type": "string?",
+          "binding": "path",
+          "position": 1,
+          "appliesTo": [
+            "Delete"
+          ],
+          "requiredIn": [
+            "Delete"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "health-checks-delete-health-check",
+              "location": "path",
+              "name": "healthcheck_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'healthcheck_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Primary"
+        },
+        {
+          "name": "ZoneId",
+          "type": "string?",
+          "binding": "path",
+          "position": 0,
+          "appliesTo": [
+            "Delete"
+          ],
+          "requiredIn": [
+            "Delete"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "health-checks-delete-health-check",
+              "location": "path",
+              "name": "zone_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Parent"
+        }
+      ],
+      "outputType": null,
+      "outputPolicy": "none",
+      "pagingBehavior": null,
+      "supportsShouldProcess": true,
+      "confirmImpact": "High",
+      "shouldProcessTarget": "HealthCheckId",
+      "shouldProcessAction": "Delete health check",
+      "help": {
+        "synopsis": "Removes a Cloudflare health check.",
+        "description": "Removes one health check by zone and health check identifier.",
+        "source": "P3.3D2ProjectionPolicy"
+      },
+      "operations": [
+        {
+          "operationId": "health-checks-delete-health-check",
+          "resource": "healthchecks",
+          "parameterSet": "Delete",
+          "method": "DELETE",
+          "pathTemplate": "/zones/{zone_id}/healthchecks/{healthcheck_id}",
+          "semantic": {
+            "kind": "Delete",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "HealthCheckId",
+              "sourceName": "healthcheck_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 1,
+              "appliesTo": [
+                "Delete"
+              ],
+              "requiredIn": "Delete",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-delete-health-check",
+                  "location": "path",
+                  "name": "healthcheck_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'healthcheck_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Primary"
+            },
+            {
+              "name": "ZoneId",
+              "sourceName": "zone_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Delete"
+              ],
+              "requiredIn": "Delete",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-delete-health-check",
+                  "location": "path",
+                  "name": "zone_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'zone_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            }
+          ],
+          "bodyParameterName": null,
+          "bodyModel": null,
+          "outputType": null,
+          "constantName": "Operation_healthchecks_Delete_health_checks_delete_health_check",
+          "outputPolicy": "none",
+          "invokeKind": "single",
+          "bodySerialization": null,
+          "errorTarget": "HealthCheckId",
+          "supportsShouldProcess": true,
+          "confirmImpact": "High",
+          "help": {
+            "synopsis": "Remove-CfHealthCheck delete operation.",
+            "description": "Generated help for normalized operation 'health-checks-delete-health-check'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "healthcheck_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "zone_id",
+                "location": "path",
+                "required": true
+              }
+            ],
+            "requestRepresentations": null,
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "cmdletName": "Set-CfHealthCheck",
+      "className": "SetCfHealthCheckCommand",
+      "execution": {
+        "strategy": "parameter-set",
+        "shouldProcess": true,
+        "shouldProcessTarget": "HealthCheckId",
+        "shouldProcessAction": "{ParameterSetName} health check"
+      },
+      "runtimeMetadataType": "CfHealthCheckRuntimeMetadata",
+      "generated": null,
+      "model": {
+        "className": "CfHealthCheckHttpConfig",
+        "path": "src/Cloudflare.PowerShell/Generated/Models/CfHealthCheckHttpConfig.cs",
+        "directions": [
+          "request",
+          "response"
+        ],
+        "schemaSources": [
+          {
+            "schema": "healthchecks_http_config",
+            "direction": "request"
+          },
+          {
+            "schema": "healthchecks_http_config",
+            "direction": "response"
+          }
+        ],
+        "properties": [
+          {
+            "name": "AllowInsecure",
+            "jsonName": "allow_insecure",
+            "type": "bool?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_http_config",
+                "property": "allow_insecure",
+                "direction": "request"
+              },
+              {
+                "schema": "healthchecks_http_config",
+                "property": "allow_insecure",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "ExpectedBody",
+            "jsonName": "expected_body",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_http_config",
+                "property": "expected_body",
+                "direction": "request"
+              },
+              {
+                "schema": "healthchecks_http_config",
+                "property": "expected_body",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "ExpectedCodes",
+            "jsonName": "expected_codes",
+            "type": "string[]?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_http_config",
+                "property": "expected_codes",
+                "direction": "request"
+              },
+              {
+                "schema": "healthchecks_http_config",
+                "property": "expected_codes",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "FollowRedirects",
+            "jsonName": "follow_redirects",
+            "type": "bool?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_http_config",
+                "property": "follow_redirects",
+                "direction": "request"
+              },
+              {
+                "schema": "healthchecks_http_config",
+                "property": "follow_redirects",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Header",
+            "jsonName": "header",
+            "type": "Dictionary<string, string[]>?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_http_config",
+                "property": "header",
+                "direction": "request"
+              },
+              {
+                "schema": "healthchecks_http_config",
+                "property": "header",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Method",
+            "jsonName": "method",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_http_config",
+                "property": "method",
+                "direction": "request"
+              },
+              {
+                "schema": "healthchecks_http_config",
+                "property": "method",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Path",
+            "jsonName": "path",
+            "type": "string?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_http_config",
+                "property": "path",
+                "direction": "request"
+              },
+              {
+                "schema": "healthchecks_http_config",
+                "property": "path",
+                "direction": "response"
+              }
+            ]
+          },
+          {
+            "name": "Port",
+            "jsonName": "port",
+            "type": "int?",
+            "nullable": true,
+            "presence": "optional",
+            "schemaSources": [
+              {
+                "schema": "healthchecks_http_config",
+                "property": "port",
+                "direction": "request"
+              },
+              {
+                "schema": "healthchecks_http_config",
+                "property": "port",
+                "direction": "response"
+              }
+            ]
+          }
+        ]
+      },
+      "defaultParameterSetName": "Update",
+      "operationIds": [
+        "health-checks-patch-health-check",
+        "health-checks-update-health-check"
+      ],
+      "parameterSets": [
+        {
+          "name": "Edit",
+          "operationId": "health-checks-patch-health-check",
+          "operationBinding": {
+            "method": "PATCH",
+            "pathTemplate": "/zones/{zone_id}/healthchecks/{healthcheck_id}",
+            "pathParameters": [
+              "HealthCheckId",
+              "ZoneId"
+            ],
+            "queryParameters": [],
+            "bodyParameter": "HealthCheck",
+            "bodyModel": "healthchecks_query_healthcheck",
+            "invokeKind": "single",
+            "outputPolicy": "single",
+            "bodySerialization": "Value",
+            "errorTarget": "HealthCheckId"
+          },
+          "requiredParameters": [
+            "HealthCheckId",
+            "ZoneId",
+            "HealthCheck"
+          ],
+          "optionalParameters": []
+        },
+        {
+          "name": "Update",
+          "operationId": "health-checks-update-health-check",
+          "operationBinding": {
+            "method": "PUT",
+            "pathTemplate": "/zones/{zone_id}/healthchecks/{healthcheck_id}",
+            "pathParameters": [
+              "HealthCheckId",
+              "ZoneId"
+            ],
+            "queryParameters": [],
+            "bodyParameter": "HealthCheck",
+            "bodyModel": "healthchecks_query_healthcheck",
+            "invokeKind": "single",
+            "outputPolicy": "single",
+            "bodySerialization": "Value",
+            "errorTarget": "HealthCheckId"
+          },
+          "requiredParameters": [
+            "HealthCheckId",
+            "ZoneId",
+            "HealthCheck"
+          ],
+          "optionalParameters": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "HealthCheck",
+          "type": "CfHealthCheckRequest",
+          "binding": "body",
+          "position": 2,
+          "appliesTo": [
+            "Edit",
+            "Update"
+          ],
+          "requiredIn": [
+            "Edit",
+            "Update"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "null-forgiving",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "health-checks-patch-health-check",
+              "location": "body",
+              "name": "body"
+            },
+            {
+              "operationId": "health-checks-update-health-check",
+              "location": "body",
+              "name": "body"
+            }
+          ],
+          "help": {
+            "description": "Binds the normalized healthchecks_query_healthcheck request body.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": true,
+          "bodyModel": "healthchecks_query_healthcheck",
+          "scopeRole": null
+        },
+        {
+          "name": "HealthCheckId",
+          "type": "string?",
+          "binding": "path",
+          "position": 1,
+          "appliesTo": [
+            "Edit",
+            "Update"
+          ],
+          "requiredIn": [
+            "Edit",
+            "Update"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "health-checks-patch-health-check",
+              "location": "path",
+              "name": "healthcheck_id"
+            },
+            {
+              "operationId": "health-checks-update-health-check",
+              "location": "path",
+              "name": "healthcheck_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'healthcheck_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Primary"
+        },
+        {
+          "name": "ZoneId",
+          "type": "string?",
+          "binding": "path",
+          "position": 0,
+          "appliesTo": [
+            "Edit",
+            "Update"
+          ],
+          "requiredIn": [
+            "Edit",
+            "Update"
+          ],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": true,
+          "nullPolicy": "reject-null",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [
+            {
+              "operationId": "health-checks-patch-health-check",
+              "location": "path",
+              "name": "zone_id"
+            },
+            {
+              "operationId": "health-checks-update-health-check",
+              "location": "path",
+              "name": "zone_id"
+            }
+          ],
+          "help": {
+            "description": "Binds to API path parameter 'zone_id'.",
+            "source": "DeterministicDefault"
+          },
+          "isBody": false,
+          "bodyModel": null,
+          "scopeRole": "Parent"
+        },
+        {
+          "name": "Patch",
+          "sourceName": null,
+          "type": "SwitchParameter",
+          "operationId": "health-checks-patch-health-check",
+          "binding": "parameter-set-selector",
+          "position": null,
+          "appliesTo": [
+            "Edit"
+          ],
+          "requiredIn": [],
+          "valueFromPipeline": false,
+          "valueFromPipelineByPropertyName": false,
+          "nullPolicy": "omit",
+          "defaultValue": null,
+          "initializerPolicy": "",
+          "aliases": [],
+          "apiBindings": [],
+          "isBody": false,
+          "isSelector": true,
+          "scopeRole": null
+        }
+      ],
+      "outputType": "Cloudflare.PowerShell.CfHealthCheck",
+      "outputPolicy": "single",
+      "pagingBehavior": null,
+      "supportsShouldProcess": true,
+      "confirmImpact": "High",
+      "shouldProcessTarget": "HealthCheckId",
+      "shouldProcessAction": "{ParameterSetName} health check",
+      "help": {
+        "synopsis": "Updates a Cloudflare health check.",
+        "description": "Replaces or edits one typed health check through the shared runtime.",
+        "source": "P3.3D2ProjectionPolicy"
+      },
+      "operations": [
+        {
+          "operationId": "health-checks-patch-health-check",
+          "resource": "healthchecks",
+          "parameterSet": "Edit",
+          "method": "PATCH",
+          "pathTemplate": "/zones/{zone_id}/healthchecks/{healthcheck_id}",
+          "semantic": {
+            "kind": "Edit",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "HealthCheckId",
+              "sourceName": "healthcheck_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 1,
+              "appliesTo": [
+                "Edit"
+              ],
+              "requiredIn": "Edit",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-patch-health-check",
+                  "location": "path",
+                  "name": "healthcheck_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'healthcheck_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Primary"
+            },
+            {
+              "name": "ZoneId",
+              "sourceName": "zone_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Edit"
+              ],
+              "requiredIn": "Edit",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-patch-health-check",
+                  "location": "path",
+                  "name": "zone_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'zone_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "HealthCheck",
+              "sourceName": "body",
+              "type": "CfHealthCheckRequest",
+              "binding": "body",
+              "position": 2,
+              "appliesTo": [
+                "Edit"
+              ],
+              "requiredIn": "Edit",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "initializerPolicy": "null-forgiving",
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-patch-health-check",
+                  "location": "body",
+                  "name": "body"
+                }
+              ],
+              "help": {
+                "description": "Binds the normalized healthchecks_query_healthcheck request body.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": true,
+              "bodyModel": "healthchecks_query_healthcheck",
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": "HealthCheck",
+          "bodyModel": "healthchecks_query_healthcheck",
+          "outputType": "Cloudflare.PowerShell.CfHealthCheck",
+          "constantName": "Operation_healthchecks_Edit_health_checks_patch_health_check",
+          "outputPolicy": "single",
+          "invokeKind": "single",
+          "bodySerialization": "Value",
+          "errorTarget": "HealthCheckId",
+          "supportsShouldProcess": true,
+          "confirmImpact": "High",
+          "help": {
+            "synopsis": "Set-CfHealthCheck edit operation.",
+            "description": "Generated help for normalized operation 'health-checks-patch-health-check'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "healthcheck_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "zone_id",
+                "location": "path",
+                "required": true
+              }
+            ],
+            "requestRepresentations": {
+              "contentType": "application/json",
+              "bodyParameterName": "body",
+              "parts": []
+            },
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        },
+        {
+          "operationId": "health-checks-update-health-check",
+          "resource": "healthchecks",
+          "parameterSet": "Update",
+          "method": "PUT",
+          "pathTemplate": "/zones/{zone_id}/healthchecks/{healthcheck_id}",
+          "semantic": {
+            "kind": "Update",
+            "source": "OperationIdHeuristic",
+            "confidence": "High"
+          },
+          "parameters": [
+            {
+              "name": "HealthCheckId",
+              "sourceName": "healthcheck_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 1,
+              "appliesTo": [
+                "Update"
+              ],
+              "requiredIn": "Update",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-update-health-check",
+                  "location": "path",
+                  "name": "healthcheck_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'healthcheck_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Primary"
+            },
+            {
+              "name": "ZoneId",
+              "sourceName": "zone_id",
+              "type": "string?",
+              "binding": "path",
+              "position": 0,
+              "appliesTo": [
+                "Update"
+              ],
+              "requiredIn": "Update",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": true,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-update-health-check",
+                  "location": "path",
+                  "name": "zone_id"
+                }
+              ],
+              "help": {
+                "description": "Binds to API path parameter 'zone_id'.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": false,
+              "scopeRole": "Parent"
+            },
+            {
+              "name": "HealthCheck",
+              "sourceName": "body",
+              "type": "CfHealthCheckRequest",
+              "binding": "body",
+              "position": 2,
+              "appliesTo": [
+                "Update"
+              ],
+              "requiredIn": "Update",
+              "valueFromPipeline": false,
+              "valueFromPipelineByPropertyName": false,
+              "nullPolicy": "reject-null",
+              "defaultValue": null,
+              "initializerPolicy": "null-forgiving",
+              "aliases": [],
+              "apiBindings": [
+                {
+                  "operationId": "health-checks-update-health-check",
+                  "location": "body",
+                  "name": "body"
+                }
+              ],
+              "help": {
+                "description": "Binds the normalized healthchecks_query_healthcheck request body.",
+                "source": "DeterministicDefault"
+              },
+              "isBody": true,
+              "bodyModel": "healthchecks_query_healthcheck",
+              "scopeRole": null
+            }
+          ],
+          "bodyParameterName": "HealthCheck",
+          "bodyModel": "healthchecks_query_healthcheck",
+          "outputType": "Cloudflare.PowerShell.CfHealthCheck",
+          "constantName": "Operation_healthchecks_Update_health_checks_update_health_check",
+          "outputPolicy": "single",
+          "invokeKind": "single",
+          "bodySerialization": "Value",
+          "errorTarget": "HealthCheckId",
+          "supportsShouldProcess": true,
+          "confirmImpact": "High",
+          "help": {
+            "synopsis": "Set-CfHealthCheck update operation.",
+            "description": "Generated help for normalized operation 'health-checks-update-health-check'.",
+            "source": "DeterministicDefault"
+          },
+          "runtime": {
+            "parameters": [
+              {
+                "name": "healthcheck_id",
+                "location": "path",
+                "required": true
+              },
+              {
+                "name": "zone_id",
+                "location": "path",
+                "required": true
+              }
+            ],
+            "requestRepresentations": {
+              "contentType": "application/json",
+              "bodyParameterName": "body",
+              "parts": []
+            },
+            "responseRepresentations": [
+              {
+                "statusCode": 200,
+                "contentType": "application/json",
+                "envelopePolicy": "CloudflareResult",
+                "parsingMode": "Json"
+              },
+              {
+                "statusCode": null,
+                "contentType": "application/json",
+                "envelopePolicy": "ErrorEnvelope",
+                "parsingMode": "Json"
+              }
+            ],
+            "pagination": {
+              "strategy": "SinglePage",
+              "requestFields": null,
+              "responseFields": null,
+              "resultPath": null,
+              "pageInfoPath": null,
+              "currentPagePath": null,
+              "totalPagesPath": null,
+              "nextCursorPath": null,
+              "hasMorePath": null,
+              "nextPageRule": "",
+              "stopRule": "single response"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "models": [
+    {
+      "className": "CfHealthCheck",
+      "path": "src/Cloudflare.PowerShell/Generated/Models/CfHealthCheck.cs",
+      "directions": [
+        "response"
+      ],
+      "schemaSources": [
+        {
+          "schema": "healthchecks_healthchecks",
+          "direction": "response",
+          "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+          "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+        }
+      ],
+      "properties": [
+        {
+          "name": "Address",
+          "jsonName": "address",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "address",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "address",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_address",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_address",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "CheckRegions",
+          "jsonName": "check_regions",
+          "type": "string[]?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "check_regions",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "check_regions",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_check_regions",
+              "normalizedKind": "array",
+              "normalizedPrimitiveType": "array",
+              "normalizedItemsSchema": "Inline_6C0DA9B1D8AF",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_check_regions",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": true,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "send-null",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "ConsecutiveFails",
+          "jsonName": "consecutive_fails",
+          "type": "int?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "consecutive_fails",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "consecutive_fails",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_consecutive_fails",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "integer",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_consecutive_fails",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "ConsecutiveSuccesses",
+          "jsonName": "consecutive_successes",
+          "type": "int?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "consecutive_successes",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "consecutive_successes",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_consecutive_successes",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "integer",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_consecutive_successes",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "CreatedOn",
+          "jsonName": "created_on",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "created_on",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "created_on",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_timestamp",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_timestamp",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Description",
+          "jsonName": "description",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "description",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "description",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_description",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_description",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "FailureReason",
+          "jsonName": "failure_reason",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "failure_reason",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "failure_reason",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_failure_reason",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_failure_reason",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "HttpConfig",
+          "jsonName": "http_config",
+          "type": "CfHealthCheckHttpConfig?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "http_config",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "http_config",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_http_config",
+              "normalizedKind": "object",
+              "normalizedPrimitiveType": "object",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_http_config",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": true,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "send-null",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ],
+          "nestedModel": "CfHealthCheckHttpConfig"
+        },
+        {
+          "name": "Id",
+          "jsonName": "id",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "id",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "id",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_identifier",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_identifier",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Interval",
+          "jsonName": "interval",
+          "type": "int?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "interval",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "interval",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_interval",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "integer",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_interval",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "ModifiedOn",
+          "jsonName": "modified_on",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "modified_on",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "modified_on",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_timestamp",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_timestamp",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Name",
+          "jsonName": "name",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "name",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "name",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_name",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_name",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Retries",
+          "jsonName": "retries",
+          "type": "int?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "retries",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "retries",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_retries",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "integer",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_retries",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Status",
+          "jsonName": "status",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "status",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "status",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_status",
+              "normalizedKind": "enum",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_status",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Suspended",
+          "jsonName": "suspended",
+          "type": "bool?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "suspended",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "suspended",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_suspended",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "boolean",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_suspended",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "TcpConfig",
+          "jsonName": "tcp_config",
+          "type": "CfHealthCheckTcpConfig?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "tcp_config",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "tcp_config",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_tcp_config",
+              "normalizedKind": "object",
+              "normalizedPrimitiveType": "object",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_tcp_config",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": true,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "send-null",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ],
+          "nestedModel": "CfHealthCheckTcpConfig"
+        },
+        {
+          "name": "Timeout",
+          "jsonName": "timeout",
+          "type": "int?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "timeout",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "timeout",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_timeout",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "integer",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_timeout",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Type",
+          "jsonName": "type",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "type",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_healthchecks",
+              "property": "type",
+              "direction": "response",
+              "normalizedSchema": "healthchecks_type",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_type",
+              "sourceRef": "#/components/schemas/healthchecks_healthchecks",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        }
+      ],
+      "provenance": {
+        "kind": "normalized-schema-binding",
+        "sourcePath": "fixtures/p3.3/healthchecks/document.json",
+        "modelClass": "CfHealthCheck"
+      }
+    },
+    {
+      "className": "CfHealthCheckRequest",
+      "path": "src/Cloudflare.PowerShell/Generated/Models/CfHealthCheckRequest.cs",
+      "directions": [
+        "request"
+      ],
+      "schemaSources": [
+        {
+          "schema": "healthchecks_query_healthcheck",
+          "direction": "request",
+          "sourceRef": "#/components/schemas/healthchecks_query_healthcheck",
+          "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+        }
+      ],
+      "properties": [
+        {
+          "name": "Address",
+          "jsonName": "address",
+          "type": "string",
+          "nullable": false,
+          "presence": "required",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "address",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "address",
+              "direction": "request",
+              "normalizedSchema": "healthchecks_address",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_address",
+              "sourceRef": "#/components/schemas/healthchecks_query_healthcheck",
+              "required": true,
+              "allowsNull": false,
+              "presence": "required",
+              "nullable": false,
+              "nullPolicy": "reject-null",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "CheckRegions",
+          "jsonName": "check_regions",
+          "type": "string[]?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "check_regions",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "check_regions",
+              "direction": "request",
+              "normalizedSchema": "healthchecks_check_regions",
+              "normalizedKind": "array",
+              "normalizedPrimitiveType": "array",
+              "normalizedItemsSchema": "Inline_6C0DA9B1D8AF",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_check_regions",
+              "sourceRef": "#/components/schemas/healthchecks_query_healthcheck",
+              "required": false,
+              "allowsNull": true,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "send-null",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "ConsecutiveFails",
+          "jsonName": "consecutive_fails",
+          "type": "int?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "consecutive_fails",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "consecutive_fails",
+              "direction": "request",
+              "normalizedSchema": "healthchecks_consecutive_fails",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "integer",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_consecutive_fails",
+              "sourceRef": "#/components/schemas/healthchecks_query_healthcheck",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "ConsecutiveSuccesses",
+          "jsonName": "consecutive_successes",
+          "type": "int?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "consecutive_successes",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "consecutive_successes",
+              "direction": "request",
+              "normalizedSchema": "healthchecks_consecutive_successes",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "integer",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_consecutive_successes",
+              "sourceRef": "#/components/schemas/healthchecks_query_healthcheck",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Description",
+          "jsonName": "description",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "description",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "description",
+              "direction": "request",
+              "normalizedSchema": "healthchecks_description",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_description",
+              "sourceRef": "#/components/schemas/healthchecks_query_healthcheck",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "HttpConfig",
+          "jsonName": "http_config",
+          "type": "CfHealthCheckHttpConfig?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "http_config",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "http_config",
+              "direction": "request",
+              "normalizedSchema": "healthchecks_http_config",
+              "normalizedKind": "object",
+              "normalizedPrimitiveType": "object",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_http_config",
+              "sourceRef": "#/components/schemas/healthchecks_query_healthcheck",
+              "required": false,
+              "allowsNull": true,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "send-null",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ],
+          "nestedModel": "CfHealthCheckHttpConfig"
+        },
+        {
+          "name": "Interval",
+          "jsonName": "interval",
+          "type": "int?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "interval",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "interval",
+              "direction": "request",
+              "normalizedSchema": "healthchecks_interval",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "integer",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_interval",
+              "sourceRef": "#/components/schemas/healthchecks_query_healthcheck",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Name",
+          "jsonName": "name",
+          "type": "string",
+          "nullable": false,
+          "presence": "required",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "name",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "name",
+              "direction": "request",
+              "normalizedSchema": "healthchecks_name",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_name",
+              "sourceRef": "#/components/schemas/healthchecks_query_healthcheck",
+              "required": true,
+              "allowsNull": false,
+              "presence": "required",
+              "nullable": false,
+              "nullPolicy": "reject-null",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Retries",
+          "jsonName": "retries",
+          "type": "int?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "retries",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "retries",
+              "direction": "request",
+              "normalizedSchema": "healthchecks_retries",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "integer",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_retries",
+              "sourceRef": "#/components/schemas/healthchecks_query_healthcheck",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Suspended",
+          "jsonName": "suspended",
+          "type": "bool?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "suspended",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "suspended",
+              "direction": "request",
+              "normalizedSchema": "healthchecks_suspended",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "boolean",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_suspended",
+              "sourceRef": "#/components/schemas/healthchecks_query_healthcheck",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "TcpConfig",
+          "jsonName": "tcp_config",
+          "type": "CfHealthCheckTcpConfig?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "tcp_config",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "tcp_config",
+              "direction": "request",
+              "normalizedSchema": "healthchecks_tcp_config",
+              "normalizedKind": "object",
+              "normalizedPrimitiveType": "object",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_tcp_config",
+              "sourceRef": "#/components/schemas/healthchecks_query_healthcheck",
+              "required": false,
+              "allowsNull": true,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "send-null",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ],
+          "nestedModel": "CfHealthCheckTcpConfig"
+        },
+        {
+          "name": "Timeout",
+          "jsonName": "timeout",
+          "type": "int?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "timeout",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "timeout",
+              "direction": "request",
+              "normalizedSchema": "healthchecks_timeout",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "integer",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_timeout",
+              "sourceRef": "#/components/schemas/healthchecks_query_healthcheck",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Type",
+          "jsonName": "type",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "type",
+              "direction": "request"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_query_healthcheck",
+              "property": "type",
+              "direction": "request",
+              "normalizedSchema": "healthchecks_type",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "#/components/schemas/healthchecks_type",
+              "sourceRef": "#/components/schemas/healthchecks_query_healthcheck",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        }
+      ],
+      "provenance": {
+        "kind": "normalized-schema-binding",
+        "sourcePath": "fixtures/p3.3/healthchecks/document.json",
+        "modelClass": "CfHealthCheckRequest"
+      }
+    },
+    {
+      "className": "CfHealthCheckHttpConfig",
+      "path": "src/Cloudflare.PowerShell/Generated/Models/CfHealthCheckHttpConfig.cs",
+      "directions": [
+        "request",
+        "response"
+      ],
+      "schemaSources": [
+        {
+          "schema": "healthchecks_http_config",
+          "direction": "request",
+          "sourceRef": "#/components/schemas/healthchecks_http_config",
+          "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+        },
+        {
+          "schema": "healthchecks_http_config",
+          "direction": "response",
+          "sourceRef": "#/components/schemas/healthchecks_http_config",
+          "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+        }
+      ],
+      "properties": [
+        {
+          "name": "AllowInsecure",
+          "jsonName": "allow_insecure",
+          "type": "bool?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "allow_insecure",
+              "direction": "request"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "allow_insecure",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "allow_insecure",
+              "direction": "request",
+              "normalizedSchema": "Inline_07B85F696323",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "boolean",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "allow_insecure",
+              "direction": "response",
+              "normalizedSchema": "Inline_07B85F696323",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "boolean",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "ExpectedBody",
+          "jsonName": "expected_body",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "expected_body",
+              "direction": "request"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "expected_body",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "expected_body",
+              "direction": "request",
+              "normalizedSchema": "Inline_A32D05969D38",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "expected_body",
+              "direction": "response",
+              "normalizedSchema": "Inline_A32D05969D38",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "ExpectedCodes",
+          "jsonName": "expected_codes",
+          "type": "string[]?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "expected_codes",
+              "direction": "request"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "expected_codes",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "expected_codes",
+              "direction": "request",
+              "normalizedSchema": "Inline_28E9E2ACFFCD",
+              "normalizedKind": "array",
+              "normalizedPrimitiveType": "array",
+              "normalizedItemsSchema": "Inline_EE42F76C4734",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": true,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "send-null",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "expected_codes",
+              "direction": "response",
+              "normalizedSchema": "Inline_28E9E2ACFFCD",
+              "normalizedKind": "array",
+              "normalizedPrimitiveType": "array",
+              "normalizedItemsSchema": "Inline_EE42F76C4734",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": true,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "send-null",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "FollowRedirects",
+          "jsonName": "follow_redirects",
+          "type": "bool?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "follow_redirects",
+              "direction": "request"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "follow_redirects",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "follow_redirects",
+              "direction": "request",
+              "normalizedSchema": "Inline_CF8D0D9EE5EB",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "boolean",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "follow_redirects",
+              "direction": "response",
+              "normalizedSchema": "Inline_CF8D0D9EE5EB",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "boolean",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Header",
+          "jsonName": "header",
+          "type": "Dictionary<string, string[]>?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "header",
+              "direction": "request"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "header",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "header",
+              "direction": "request",
+              "normalizedSchema": "Inline_41A7AE1283E3",
+              "normalizedKind": "object",
+              "normalizedPrimitiveType": "object",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "Inline_5AF576089183",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": true,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "send-null",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "header",
+              "direction": "response",
+              "normalizedSchema": "Inline_41A7AE1283E3",
+              "normalizedKind": "object",
+              "normalizedPrimitiveType": "object",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "Inline_5AF576089183",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": true,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "send-null",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Method",
+          "jsonName": "method",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "method",
+              "direction": "request"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "method",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "method",
+              "direction": "request",
+              "normalizedSchema": "Inline_2550899E2A7E",
+              "normalizedKind": "enum",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "method",
+              "direction": "response",
+              "normalizedSchema": "Inline_2550899E2A7E",
+              "normalizedKind": "enum",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Path",
+          "jsonName": "path",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "path",
+              "direction": "request"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "path",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "path",
+              "direction": "request",
+              "normalizedSchema": "Inline_414A70E28113",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "path",
+              "direction": "response",
+              "normalizedSchema": "Inline_414A70E28113",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Port",
+          "jsonName": "port",
+          "type": "int?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "port",
+              "direction": "request"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "port",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_http_config",
+              "property": "port",
+              "direction": "request",
+              "normalizedSchema": "Inline_2F4482619440",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "integer",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            },
+            {
+              "schema": "healthchecks_http_config",
+              "property": "port",
+              "direction": "response",
+              "normalizedSchema": "Inline_2F4482619440",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "integer",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_http_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        }
+      ],
+      "provenance": {
+        "kind": "normalized-schema-binding",
+        "sourcePath": "fixtures/p3.3/healthchecks/document.json",
+        "modelClass": "CfHealthCheckHttpConfig"
+      }
+    },
+    {
+      "className": "CfHealthCheckTcpConfig",
+      "path": "src/Cloudflare.PowerShell/Generated/Models/CfHealthCheckTcpConfig.cs",
+      "directions": [
+        "request",
+        "response"
+      ],
+      "schemaSources": [
+        {
+          "schema": "healthchecks_tcp_config",
+          "direction": "request",
+          "sourceRef": "#/components/schemas/healthchecks_tcp_config",
+          "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+        },
+        {
+          "schema": "healthchecks_tcp_config",
+          "direction": "response",
+          "sourceRef": "#/components/schemas/healthchecks_tcp_config",
+          "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+        }
+      ],
+      "properties": [
+        {
+          "name": "Method",
+          "jsonName": "method",
+          "type": "string?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_tcp_config",
+              "property": "method",
+              "direction": "request"
+            },
+            {
+              "schema": "healthchecks_tcp_config",
+              "property": "method",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_tcp_config",
+              "property": "method",
+              "direction": "request",
+              "normalizedSchema": "Inline_E10CB0ECA2FD",
+              "normalizedKind": "enum",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_tcp_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            },
+            {
+              "schema": "healthchecks_tcp_config",
+              "property": "method",
+              "direction": "response",
+              "normalizedSchema": "Inline_E10CB0ECA2FD",
+              "normalizedKind": "enum",
+              "normalizedPrimitiveType": "string",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_tcp_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        },
+        {
+          "name": "Port",
+          "jsonName": "port",
+          "type": "int?",
+          "nullable": true,
+          "presence": "optional",
+          "schemaSources": [
+            {
+              "schema": "healthchecks_tcp_config",
+              "property": "port",
+              "direction": "request"
+            },
+            {
+              "schema": "healthchecks_tcp_config",
+              "property": "port",
+              "direction": "response"
+            }
+          ],
+          "sourceContracts": [
+            {
+              "schema": "healthchecks_tcp_config",
+              "property": "port",
+              "direction": "request",
+              "normalizedSchema": "Inline_FDB1D8CE9480",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "integer",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_tcp_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            },
+            {
+              "schema": "healthchecks_tcp_config",
+              "property": "port",
+              "direction": "response",
+              "normalizedSchema": "Inline_FDB1D8CE9480",
+              "normalizedKind": "primitive",
+              "normalizedPrimitiveType": "integer",
+              "normalizedItemsSchema": "",
+              "normalizedAdditionalPropertiesAllowed": null,
+              "normalizedAdditionalPropertiesSchema": "",
+              "normalizedSourceRef": "",
+              "sourceRef": "#/components/schemas/healthchecks_tcp_config",
+              "required": false,
+              "allowsNull": false,
+              "presence": "optional",
+              "nullable": true,
+              "nullPolicy": "omit",
+              "normalizedSourcePath": "fixtures/p3.3/healthchecks/document.json"
+            }
+          ]
+        }
+      ],
+      "provenance": {
+        "kind": "normalized-schema-binding",
+        "sourcePath": "fixtures/p3.3/healthchecks/document.json",
+        "modelClass": "CfHealthCheckTcpConfig"
+      }
+    }
+  ],
+  "commonInfrastructureParameters": [
+    "BaseUrl",
+    "Token",
+    "Handler"
+  ],
+  "canonicalDigest": "fff961d141066a09b717e0df5c18b66f5bc6e0f59e8d5bddfbf2d5913d77a865"
+}

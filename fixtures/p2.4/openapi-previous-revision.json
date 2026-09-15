@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "previousRevision": "0b726721291ca19bfcc3add9e3c2b3f57b9d94e6",
+  "currentRevision": "28bfb054e5fa106464e9fbbf0ffbf362bc85234d",
+  "operations": [
+    {
+      "op": "remove",
+      "path": "/components/schemas/abuse-reports_MitigatedEntityType/enum/3"
+    }
+  ]
+}

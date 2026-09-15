@@ -127,12 +127,18 @@
     }
   ],
   "pagination": {
-    "strategy": "SinglePage",
-    "requestFields": [],
-    "responseFields": [],
-    "nextPageRule": "",
-    "stopRule": "single response",
-    "evidence": "no recognized page-array pattern"
+    "strategy": "V4PagePaginationArray",
+    "requestFields": [
+      "page",
+      "per_page"
+    ],
+    "responseFields": [
+      "result",
+      "result_info"
+    ],
+    "nextPageRule": "page \u002B 1",
+    "stopRule": "empty result page",
+    "evidence": "query page/per_page plus result collection schema"
   },
   "sourceLocation": "#/paths/~1accounts~1{account_id}~1d1~1database/get",
   "correctionTrace": []

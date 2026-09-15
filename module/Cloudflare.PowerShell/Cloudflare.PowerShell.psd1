@@ -7,7 +7,7 @@
     PowerShellVersion = '7.6'
     RequiredAssemblies = @('Cloudflare.PowerShell.dll')
     FunctionsToExport = @()
-    CmdletsToExport = @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord')
+    CmdletsToExport = @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord', 'Get-CfD1Database', 'New-CfD1Database', 'Remove-CfD1Database', 'Set-CfD1Database', 'Get-CfHealthCheck', 'New-CfHealthCheck', 'Remove-CfHealthCheck', 'Set-CfHealthCheck')
     VariablesToExport = @()
     AliasesToExport = @()
 }

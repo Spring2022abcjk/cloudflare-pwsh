@@ -1,0 +1,77 @@
+{
+  "stage": "P3.3-projection",
+  "oldSourceRevision": "P3.2-public-surface",
+  "newSourceRevision": "P3.3-d2-healthchecks",
+  "changes": [
+    {
+      "kind": "CmdletAdded",
+      "resourcePath": "",
+      "operationId": "Get-CfHealthCheck",
+      "path": "cmdlets[Get-CfHealthCheck]",
+      "oldValue": "missing",
+      "newValue": "present",
+      "evidence": "projection cmdlet added",
+      "apiImpact": "None",
+      "sdkImpact": "None",
+      "powerShellImpact": "NonBreaking"
+    },
+    {
+      "kind": "CmdletAdded",
+      "resourcePath": "",
+      "operationId": "New-CfHealthCheck",
+      "path": "cmdlets[New-CfHealthCheck]",
+      "oldValue": "missing",
+      "newValue": "present",
+      "evidence": "projection cmdlet added",
+      "apiImpact": "None",
+      "sdkImpact": "None",
+      "powerShellImpact": "NonBreaking"
+    },
+    {
+      "kind": "CmdletAdded",
+      "resourcePath": "",
+      "operationId": "Remove-CfHealthCheck",
+      "path": "cmdlets[Remove-CfHealthCheck]",
+      "oldValue": "missing",
+      "newValue": "present",
+      "evidence": "projection cmdlet added",
+      "apiImpact": "None",
+      "sdkImpact": "None",
+      "powerShellImpact": "NonBreaking"
+    },
+    {
+      "kind": "CmdletAdded",
+      "resourcePath": "",
+      "operationId": "Set-CfHealthCheck",
+      "path": "cmdlets[Set-CfHealthCheck]",
+      "oldValue": "missing",
+      "newValue": "present",
+      "evidence": "projection cmdlet added",
+      "apiImpact": "None",
+      "sdkImpact": "None",
+      "powerShellImpact": "NonBreaking"
+    }
+  ],
+  "severitySummary": {
+    "Api:None": 4,
+    "Api:NonBreaking": 0,
+    "Api:Behavioral": 0,
+    "Api:PotentiallyBreaking": 0,
+    "Api:Breaking": 0,
+    "Api:Unknown": 0,
+    "Sdk:None": 4,
+    "Sdk:NonBreaking": 0,
+    "Sdk:Behavioral": 0,
+    "Sdk:PotentiallyBreaking": 0,
+    "Sdk:Breaking": 0,
+    "Sdk:Unknown": 0,
+    "PowerShell:None": 0,
+    "PowerShell:NonBreaking": 4,
+    "PowerShell:Behavioral": 0,
+    "PowerShell:PotentiallyBreaking": 0,
+    "PowerShell:Breaking": 0,
+    "PowerShell:Unknown": 0,
+    "Changes": 4
+  },
+  "fullyCompatible": false
+}

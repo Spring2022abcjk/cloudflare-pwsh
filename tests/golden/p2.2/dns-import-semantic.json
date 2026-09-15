@@ -418,6 +418,7 @@
       "kind": "array",
       "sourceRef": "#/components/schemas/dns-records_messages",
       "primitiveType": "array",
+      "items": "Inline_DF6B3B92656A",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -460,6 +461,122 @@
       "enum": [
         "true"
       ]
+    },
+    "Inline_DF6B3B92656A": {
+      "name": "Inline_DF6B3B92656A",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "name": "code",
+          "schema": "Inline_15CAC7959DB6",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "documentation_url": {
+          "name": "documentation_url",
+          "schema": "Inline_7F3891A8E3F2",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "message": {
+          "name": "message",
+          "schema": "Inline_C575794613B0",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "source": {
+          "name": "source",
+          "schema": "Inline_6AF117736BD0",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_15CAC7959DB6": {
+      "name": "Inline_15CAC7959DB6",
+      "kind": "primitive",
+      "primitiveType": "integer",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_6AF117736BD0": {
+      "name": "Inline_6AF117736BD0",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {
+        "pointer": {
+          "name": "pointer",
+          "schema": "Inline_73F0880BCF72",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_7F3891A8E3F2": {
+      "name": "Inline_7F3891A8E3F2",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_C575794613B0": {
+      "name": "Inline_C575794613B0",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_73F0880BCF72": {
+      "name": "Inline_73F0880BCF72",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
     }
   }
 }

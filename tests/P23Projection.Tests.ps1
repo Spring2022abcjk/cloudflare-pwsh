@@ -12,7 +12,6 @@ $sourcePath = Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/Generated/Experi
 $modelPath = Join-Path $ProjectRoot 'artifacts/p2.3/projection/zones.json'
 $reportPath = Join-Path $ProjectRoot 'artifacts/p2.3/comparison.json'
 $experimentProject = Join-Path $ProjectRoot 'experiments/p2.3/Cloudflare.P23.GeneratedCmdlet/Cloudflare.P23.GeneratedCmdlet.csproj'
-$powershellHome = Split-Path -Parent (Get-Command pwsh).Source
 $experimentDll = Join-Path $ProjectRoot 'experiments/p2.3/Cloudflare.P23.GeneratedCmdlet/bin/Release/net10.0/Cloudflare.P23.GeneratedCmdlet.dll'
 
 if (-not (Test-Path -LiteralPath $sourcePath)) { throw 'Generated P2.3 source is missing.' }
@@ -32,7 +31,7 @@ if ($accountId.Count -ne 1 -or $accountId[0].binding -ne 'query') { throw 'Accou
 if ($generated.help.source -ne 'Override' -or [string]::IsNullOrWhiteSpace($generated.help.synopsis)) { throw 'Get-CfZone help metadata is missing.' }
 
 if (-not $SkipBuild) {
-    dotnet build $experimentProject --configuration Release -p:PowerShellHome=$powershellHome | Out-Host
+    dotnet build $experimentProject --configuration Release | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'Generated P2.3 cmdlet build failed.' }
 }
 if (-not (Test-Path -LiteralPath $experimentDll)) { throw 'Generated P2.3 cmdlet assembly is missing.' }

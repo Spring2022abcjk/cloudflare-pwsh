@@ -210,7 +210,7 @@ public static class CompatibilityEngine
     private static void CompareSchema(NormalizedDocument oldDocument, NormalizedDocument newDocument, NormalizedSchema oldSchema, NormalizedSchema newSchema, string context, List<ApiChange> changes)
     {
         var prefix = $"{oldSchema.Name}[{context}]";
-        if (!Equal(oldSchema.Kind, newSchema.Kind) || !Equal(oldSchema.PrimitiveType, newSchema.PrimitiveType) || !Equal(oldSchema.Format, newSchema.Format)) AddSchema(changes, ApiChangeKind.SchemaTypeChanged, oldSchema, prefix, SchemaSignature(oldDocument, oldSchema.Name), SchemaSignature(newDocument, newSchema.Name), "normalized schema kind/type/format", CompatibilityImpact.Breaking, CompatibilityImpact.Breaking, CompatibilityImpact.Breaking);
+        if (!Equal(oldSchema.Kind, newSchema.Kind) || !Equal(oldSchema.PrimitiveType, newSchema.PrimitiveType) || !Equal(oldSchema.Format, newSchema.Format) || oldSchema.AdditionalPropertiesAllowed != newSchema.AdditionalPropertiesAllowed || !Equal(oldSchema.AdditionalPropertiesSchema, newSchema.AdditionalPropertiesSchema)) AddSchema(changes, ApiChangeKind.SchemaTypeChanged, oldSchema, prefix, SchemaSignature(oldDocument, oldSchema.Name), SchemaSignature(newDocument, newSchema.Name), "normalized schema kind/type/format/additional-properties", CompatibilityImpact.Breaking, CompatibilityImpact.Breaking, CompatibilityImpact.Breaking);
         if (!SequenceEqual(oldSchema.AllOf, newSchema.AllOf)) AddSchema(changes, ApiChangeKind.SchemaCompositionChanged, oldSchema, $"{prefix}.allOf", Join(oldSchema.AllOf), Join(newSchema.AllOf), "normalized schema allOf composition", CompatibilityImpact.Breaking, CompatibilityImpact.Breaking, CompatibilityImpact.Breaking);
         var propertyNames = oldSchema.Properties.Keys.Union(newSchema.Properties.Keys, StringComparer.Ordinal).OrderBy(x => x, StringComparer.Ordinal);
         foreach (var propertyName in propertyNames)
@@ -270,7 +270,7 @@ public static class CompatibilityEngine
         if (!result.TryGetValue(name, out var contexts)) result[name] = contexts = new HashSet<string>(StringComparer.Ordinal);
         if (!contexts.Add(context)) return;
         var schema = document.Schemas[name];
-        foreach (var child in schema.Properties.Values.Select(x => x.Schema).Concat(schema.OneOf).Concat(schema.AnyOf).Concat(schema.AllOf)) Walk(child, context, result, document);
+        foreach (var child in schema.Properties.Values.Select(x => x.Schema).Concat(schema.Items is null ? [] : [schema.Items]).Concat(schema.AdditionalPropertiesSchema is null ? [] : [schema.AdditionalPropertiesSchema]).Concat(schema.OneOf).Concat(schema.AnyOf).Concat(schema.AllOf)) Walk(child, context, result, document);
     }
 
     private static void Add(List<ApiChange> changes, ApiChangeKind kind, NormalizedOperation operation, string? schemaName, string path, string oldValue, string newValue, string evidence, CompatibilityImpact api, CompatibilityImpact sdk, CompatibilityImpact powerShell)
@@ -287,7 +287,7 @@ public static class CompatibilityEngine
     private static string Signature(NormalizedParameter parameter) => $"{parameter.Location}:{parameter.Schema}:{parameter.Required}:{parameter.AllowsNull}";
     private static string Serialization(SerializationModel model) => $"{model.Style}:{model.Explode}:{model.AllowReserved}:{model.ArrayNotation}:{model.ObjectNotation}:{model.CustomSerializerId}";
     private static string PropertySignature(NormalizedDocument document, NormalizedProperty property) => $"{SchemaSignature(document, property.Schema)}:required={property.Required}:nullable={property.AllowsNull}";
-    private static string SchemaSignature(NormalizedDocument document, string name) => document.Schemas.TryGetValue(name, out var schema) ? $"{schema.Name}:{schema.Kind}:{schema.PrimitiveType}:{schema.Format}:enum={Join(schema.Enum)}:oneOf={Join(schema.OneOf)}:anyOf={Join(schema.AnyOf)}" : $"missing:{name}";
+    private static string SchemaSignature(NormalizedDocument document, string name) => document.Schemas.TryGetValue(name, out var schema) ? $"{schema.Name}:{schema.Kind}:{schema.PrimitiveType}:{schema.Items}:additionalAllowed={schema.AdditionalPropertiesAllowed}:additionalSchema={schema.AdditionalPropertiesSchema}:{schema.Format}:enum={Join(schema.Enum)}:oneOf={Join(schema.OneOf)}:anyOf={Join(schema.AnyOf)}" : $"missing:{name}";
     private static string Json(JsonNode? value) => value?.ToJsonString() ?? "<none>";
     private static string Join(IEnumerable<string> values) => string.Join(';', values.OrderBy(x => x, StringComparer.Ordinal));
     private static bool Equal(string? left, string? right) => string.Equals(left, right, StringComparison.Ordinal);

@@ -10,7 +10,7 @@ The production module is a PowerShell module with a .NET runtime assembly, and t
 
 All production, normalization, test, and binary-cmdlet experiment projects target `net10.0`. The supported PowerShell baseline is PowerShell 7.6+ on the Windows-first development host. Build/test scripts derive output paths from project target-framework metadata instead of hard-coding a framework moniker.
 
-The production assembly does not add a direct `System.Management.Automation` reference because the current public UX is still a script module. The isolated binary-cmdlet project keeps its explicit host assembly reference and remains an experiment.
+The production assembly and the isolated binary-cmdlet experiment use `System.Management.Automation` 7.6.0 as a private, build-only NuGet reference with runtime assets excluded. The module does not carry SMA or the PowerShell engine; a supported `pwsh` host supplies SMA when the module is imported. `PowerShellHome`/`HintPath` is not part of the build contract.
 
 ## Alternatives considered
 
@@ -22,7 +22,7 @@ The production assembly does not add a direct `System.Management.Automation` ref
 
 - The full project and test chain now uses the same .NET target as the PowerShell host.
 - Existing users on older PowerShell/.NET combinations are no longer implicitly claimed as compatible.
-- The production module still does not become a generated binary-cmdlet module; P2.3 runtime migration remains a separate decision.
+- The production module remains a binary-cmdlet module with a script-module manifest; P2.3 runtime migration remains a separate decision.
 - Existing `CS1705` evidence is retained as the historical reason for migration.
 
 ## Compatibility impact

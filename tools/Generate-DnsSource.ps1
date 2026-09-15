@@ -2,7 +2,8 @@
 param(
     [string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot),
     [int]$ExpectedOperationCount = 6,
-    [string]$FixtureRoot
+    [string]$FixtureRoot,
+    [string]$NormalizedPath = (Join-Path $ProjectRoot 'artifacts/generated-normalized/document.json')
 )
 
 Set-StrictMode -Version Latest
@@ -228,15 +229,28 @@ function ConvertTo-CSharpPaginationMetadata {
 
 $correctionDocument = Get-Content -Raw -LiteralPath $correctionPath | ConvertFrom-Json
 $projectionDocument = Get-Content -Raw -LiteralPath $projectionPath | ConvertFrom-Json
-$operations = @(Get-ChildItem -LiteralPath $fixtureRoot -Filter '*.json' -File |
-    Where-Object { $_.Name -ne 'schemas.json' } |
-    Sort-Object Name |
-    ForEach-Object {
-        $source = Get-Content -Raw -LiteralPath $_.FullName | ConvertFrom-Json
-        $corrected = Apply-ApiCorrections $source $correctionDocument
-        $override = Get-ProjectionOverride $projectionDocument $corrected
-        [pscustomobject]@{ Fixture = $_.Name; Operation = $corrected; Override = $override }
+
+$sourceOperations = if (Test-Path -LiteralPath $NormalizedPath -PathType Leaf) {
+    $normalizedDocument = Get-Content -Raw -LiteralPath $NormalizedPath | ConvertFrom-Json
+    @($normalizedDocument.operations | Sort-Object operationId | ForEach-Object {
+        [pscustomobject]@{ Fixture = "$($_.operationId).json"; Operation = $_ }
     })
+}
+else {
+    $fixtureFiles = @(Get-ChildItem -LiteralPath $fixtureRoot -Filter '*.json' -File |
+        Where-Object { $_.Name -ne 'schemas.json' } |
+        Sort-Object Name)
+    @($fixtureFiles | ForEach-Object {
+        [pscustomobject]@{ Fixture = $_.Name; Operation = (Get-Content -Raw -LiteralPath $_.FullName | ConvertFrom-Json) }
+    })
+}
+
+$operations = @($sourceOperations | ForEach-Object {
+    $source = $_.Operation
+    $corrected = Apply-ApiCorrections $source $correctionDocument
+    $override = Get-ProjectionOverride $projectionDocument $corrected
+    [pscustomobject]@{ Fixture = $_.Fixture; Operation = $corrected; Override = $override }
+})
 
 if ($operations.Count -ne $ExpectedOperationCount) { throw "Expected $ExpectedOperationCount operation fixtures, found $($operations.Count)." }
 

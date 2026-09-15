@@ -11,6 +11,11 @@ $temporaryRoot = Join-Path ([IO.Path]::GetTempPath()) ('cloudflare-p32-readonly-
 $initialStatus = $null
 $failure = $null
 
+$stagingLibrary = Join-Path $PSScriptRoot 'ReadOnlyStaging.ps1'
+if (-not (Test-Path -LiteralPath $stagingLibrary -PathType Leaf)) { throw "Read-only staging helper is missing: $stagingLibrary" }
+. $stagingLibrary -Library
+. (Join-Path $PSScriptRoot 'P32Hash.ps1')
+
 function Get-WorktreeStatus {
     $lines = @(& git -C $projectRoot status --short)
     if ($LASTEXITCODE -ne 0) { throw 'Could not read the repository worktree status.' }
@@ -40,39 +45,117 @@ function Invoke-PwshChecked {
     if ($LASTEXITCODE -ne 0) { throw "$Label failed with exit code $LASTEXITCODE." }
 }
 
+function Get-RequiredSourceFiles {
+    param([Parameter(Mandatory)][string]$RelativeRoot)
+    $sourceRoot = Join-Path $projectRoot $RelativeRoot
+    if (-not (Test-Path -LiteralPath $sourceRoot -PathType Container)) { throw "Required source root is missing: $sourceRoot" }
+    foreach ($file in @(Get-ChildItem -LiteralPath $sourceRoot -File -Recurse -Force)) {
+        $relative = ([IO.Path]::GetRelativePath($sourceRoot, $file.FullName)).Replace('\', '/')
+        $parts = $relative -split '/'
+        if (@($parts | Where-Object { $_ -in @('bin', 'obj', '.git', '.svn', '.hg', '.bzr', 'cache', 'caches', 'logs', 'log', 'temp', 'tmp') }).Count -gt 0) { continue }
+        if ($file.Extension -in @('.cs', '.csproj')) { Join-Path $RelativeRoot $relative }
+    }
+}
+
+function Get-P32RequiredInputPaths {
+    $paths = [Collections.Generic.List[string]]::new()
+    foreach ($path in @(
+        'Cloudflare.P1.sln',
+        'artifacts/generated-normalized/document.json',
+        'artifacts/p2.3/projection/zones.json',
+        'experiments/p2.3/Cloudflare.P23.GeneratedCmdlet/Cloudflare.P23.GeneratedCmdlet.csproj',
+        'fixtures/dns-records/create.json',
+        'fixtures/dns-records/delete.json',
+        'fixtures/dns-records/edit.json',
+        'fixtures/dns-records/get.json',
+        'fixtures/dns-records/list.json',
+        'fixtures/dns-records/schemas.json',
+        'fixtures/dns-records/update.json',
+        'fixtures/p2.1/ai-search-jobs/document.json',
+        'fixtures/p2.1/ai-search-jobs/operations/ai-search-namespace-instance-change-job-status.json',
+        'fixtures/p2.1/ai-search-jobs/operations/ai-search-namespace-instance-create-job.json',
+        'fixtures/p2.1/ai-search-jobs/operations/ai-search-namespace-instance-get-job.json',
+        'fixtures/p2.1/ai-search-jobs/operations/ai-search-namespace-instance-list-jobs.json',
+        'fixtures/p2.1/d1-database/document.json',
+        'fixtures/p2.1/d1-database/operations/d1-create-database.json',
+        'fixtures/p2.1/d1-database/operations/d1-delete-database.json',
+        'fixtures/p2.1/d1-database/operations/d1-get-database.json',
+        'fixtures/p2.1/d1-database/operations/d1-list-databases.json',
+        'fixtures/p2.1/d1-database/operations/d1-update-database.json',
+        'fixtures/p2.1/zones/document.json',
+        'fixtures/p2.1/zones/operations/zones-0-delete.json',
+        'fixtures/p2.1/zones/operations/zones-0-get.json',
+        'fixtures/p2.1/zones/operations/zones-0-patch.json',
+        'fixtures/p2.1/zones/operations/zones-get.json',
+        'fixtures/p2.1/zones/operations/zones-post.json',
+        'fixtures/p2.2/ai-search-download/document.json',
+        'fixtures/p2.2/ai-search-download/operations/ai-search-namespace-instance-get-item-content.json',
+        'fixtures/p2.2/ai-search-upload/document.json',
+        'fixtures/p2.2/ai-search-upload/operations/ai-search-namespace-instance-upload-item.json',
+        'fixtures/p2.2/dns-export/document.json',
+        'fixtures/p2.2/dns-export/operations/dns-records-for-a-zone-export-dns-records.json',
+        'fixtures/p2.2/dns-import/document.json',
+        'fixtures/p2.2/dns-import/operations/dns-records-for-a-zone-import-dns-records.json',
+        'fixtures/p2.4/openapi-previous-revision.json',
+        'module/Cloudflare.PowerShell/Cloudflare.PowerShell-help.xml',
+        'module/Cloudflare.PowerShell/Cloudflare.PowerShell.psd1',
+        'module/Cloudflare.PowerShell/Cloudflare.PowerShell.psm1',
+        'overrides/api-corrections.json',
+        'overrides/powershell-projection.json',
+        'overrides/powershell-p23-projection.json',
+        'overrides/powershell-p32-projection.json',
+        'tests/fixtures/openapi-mini.json',
+        'tests/golden/CfDnsRecordModels.cs',
+        'tests/golden/CfDnsRecordOperations.cs',
+        'tests/golden/Projection_Get_CfDnsRecord.cs',
+        'tests/golden/Projection_New_CfDnsRecord.cs',
+        'tests/golden/Projection_Remove_CfDnsRecord.cs',
+        'tests/golden/Projection_Set_CfDnsRecord.cs',
+        'tests/golden/p2.1/ai-search-jobs-semantic.json',
+        'tests/golden/p2.1/ai-search-jobs.json',
+        'tests/golden/p2.1/d1-database-semantic.json',
+        'tests/golden/p2.1/d1-database.json',
+        'tests/golden/p2.1/P21_ai_search_jobsProjection.cs',
+        'tests/golden/p2.1/P21_d1_databaseProjection.cs',
+        'tests/golden/p2.1/P21_zonesProjection.cs',
+        'tests/golden/p2.1/zones-semantic.json',
+        'tests/golden/p2.1/zones.json',
+        'tests/golden/p2.2/ai-search-download-semantic.json',
+        'tests/golden/p2.2/ai-search-upload-semantic.json',
+        'tests/golden/p2.2/dns-export-semantic.json',
+        'tests/golden/p2.2/dns-import-semantic.json',
+        'tests/ModuleSmoke.ps1',
+        'tests/P23Projection.Tests.ps1',
+        'tests/P32Projection.Tests.ps1',
+        'tests/P32Smoke.ps1',
+        'tests/ProjectionModel.Tests.ps1',
+        'tools/Generate-DnsSource.ps1',
+        'tools/Generate-P32Source.ps1',
+        'tools/Invoke-P1Tests.ps1',
+        'tools/Invoke-P22Tests.ps1',
+        'tools/Invoke-P23Tests.ps1',
+        'tools/Invoke-P24Tests.ps1',
+        'tools/Invoke-P2Tests.ps1',
+        'tools/P32Hash.ps1',
+        'tools/Project-P21Normalized.ps1',
+        'tools/Project-P23Projection.ps1',
+        'tools/Project-P32Projection.ps1',
+        'tools/ReadOnlyStaging.ps1',
+        'tools/templates/P32RepresentativeCmdlets.cs.tmpl'
+    )) { $paths.Add($path) }
+    foreach ($root in @('src', 'tests')) {
+        foreach ($path in @(Get-RequiredSourceFiles -RelativeRoot $root)) { $paths.Add($path) }
+    }
+    $paths.Add('ref/api-schemas/openapi.json')
+    return @($paths | Sort-Object -Unique)
+}
+
 function Copy-IsolatedProject {
     param([Parameter(Mandatory)][string]$Destination)
-    $null = New-Item -ItemType Directory -Path $Destination -Force
-    $entries = @(
-        'Cloudflare.P1.sln',
-        'README.md',
-        '.gitattributes',
-        '.gitignore',
-        'artifacts',
-        'experiments',
-        'fixtures',
-        'module',
-        'overrides',
-        'src',
-        'tests',
-        'tools'
-    )
-    foreach ($entry in $entries) {
-        $source = Join-Path $projectRoot $entry
-        if (-not (Test-Path -LiteralPath $source)) { throw "Required project entry is missing: $source" }
-        Copy-Item -LiteralPath $source -Destination (Join-Path $Destination $entry) -Recurse -Force
-    }
-
-    $schemaSource = Join-Path $projectRoot 'ref/api-schemas'
-    if (-not (Test-Path -LiteralPath $schemaSource -PathType Container)) { throw "P2.4 schema repository is missing: $schemaSource" }
-    $schemaDestination = Join-Path $Destination 'ref/api-schemas'
-    $null = New-Item -ItemType Directory -Path (Split-Path -Parent $schemaDestination) -Force
-    Copy-Item -LiteralPath $schemaSource -Destination $schemaDestination -Recurse -Force
-
-    $generatedDirectories = @(Get-ChildItem -LiteralPath $Destination -Directory -Recurse -Force | Where-Object Name -in @('bin', 'obj') | Sort-Object FullName -Descending)
-    foreach ($directory in $generatedDirectories) {
-        Remove-Item -LiteralPath $directory.FullName -Recurse -Force
-    }
+    $requiredPaths = @(Get-P32RequiredInputPaths)
+    Copy-ReadOnlyStagingFiles -SourceRoot $projectRoot -DestinationRoot $Destination -RelativePaths $requiredPaths
+    $inventory = @(Assert-ReadOnlyStagingInputContract -Root $Destination -ExpectedRelativePaths $requiredPaths)
+    Write-Evidence 'staging' "PASS explicit P3.2 input allowlist; files=$($inventory.Count), bytes=$(($inventory | Measure-Object -Property Length -Sum).Sum); no VCS/build/cache/log/temp inputs."
 }
 
 function Assert-IsolatedHashParity {
@@ -82,8 +165,8 @@ function Assert-IsolatedHashParity {
         $actualPath = Join-Path $temporaryRoot $relativePath
         if (-not (Test-Path -LiteralPath $expectedPath -PathType Leaf)) { throw "Expected reproducible file is missing: $expectedPath" }
         if (-not (Test-Path -LiteralPath $actualPath -PathType Leaf)) { throw "Isolated reproducible file is missing: $actualPath" }
-        $expectedHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $expectedPath).Hash
-        $actualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $actualPath).Hash
+        $expectedHash = Get-P32PortableFileHash -Path $expectedPath
+        $actualHash = Get-P32PortableFileHash -Path $actualPath
         if ($expectedHash -cne $actualHash) { throw "Isolated reproduction hash drifted for '$relativePath'. Expected '$expectedHash', actual '$actualHash'." }
     }
 }
@@ -108,7 +191,7 @@ try {
 
     Invoke-PwshChecked $dnsGenerator @{
         ProjectRoot = $temporaryRoot
-        FixtureRoot = (Join-Path $temporaryRoot 'fixtures/dns-records')
+        NormalizedPath = (Join-Path $temporaryRoot 'artifacts/generated-normalized/document.json')
     } 'Isolated DNS source generation'
 
     Invoke-PwshChecked $projector @{
@@ -156,10 +239,9 @@ try {
     Invoke-PwshChecked $projectionTests @{ ProjectRoot = $temporaryRoot } 'P3.2 projection and negative contract tests'
     Write-Evidence 'static/generation' 'PASS stale, semantic, parameter-consumption, renderer-exact, and DNS/Zone runtime negative checks.'
 
-    $powershellHome = Split-Path -Parent (Get-Command pwsh).Source
     Push-Location $temporaryRoot
     try {
-        dotnet build .\Cloudflare.P1.sln --configuration Release --nologo "-p:PowerShellHome=$powershellHome" | Out-Host
+        dotnet build .\Cloudflare.P1.sln --configuration Release --nologo | Out-Host
         if ($LASTEXITCODE -ne 0) { throw "Isolated Release build failed with exit code $LASTEXITCODE." }
     }
     finally { Pop-Location }
@@ -172,6 +254,7 @@ try {
         ProjectRoot = $temporaryRoot
         SchemaRoot = (Join-Path $temporaryRoot 'ref/api-schemas')
         ArtifactRoot = (Join-Path $temporaryRoot 'artifacts/compatibility')
+        SchemaRevisionManifestPath = (Join-Path $temporaryRoot 'fixtures/p2.4/openapi-previous-revision.json')
     } 'P1-P2.4 isolated regression suite'
     Write-Evidence 'static/generation' 'PASS isolated P1-P2.4 regression suite; its generated artifacts and build outputs stayed under the temporary project.'
 

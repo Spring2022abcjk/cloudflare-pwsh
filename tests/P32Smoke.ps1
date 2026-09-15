@@ -7,6 +7,14 @@ $ErrorActionPreference = 'Stop'
 $modulePath = Join-Path $ProjectRoot 'module/Cloudflare.PowerShell'
 $dllPath = Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/bin/Release/net10.0/Cloudflare.PowerShell.dll'
 Copy-Item -LiteralPath $dllPath -Destination $modulePath -Force
+$bundledRuntimeFiles = @(Get-ChildItem -LiteralPath $modulePath -Recurse -File | Where-Object {
+    $_.Name -in @('System.Management.Automation.dll', 'Microsoft.PowerShell.SDK.dll') -or
+    $_.Name -like 'Microsoft.PowerShell*.dll' -or
+    $_.FullName -match '[\\/]runtimes[\\/]'
+})
+if ($bundledRuntimeFiles.Count -ne 0) {
+    throw "Module staging contains bundled PowerShell runtime files: $($bundledRuntimeFiles.FullName -join ', ')"
+}
 
 Add-Type -TypeDefinition @'
 using System;
@@ -78,6 +86,11 @@ public sealed class P32MockHandler : HttpMessageHandler
 '@
 
 Import-Module (Join-Path $modulePath 'Cloudflare.PowerShell.psd1') -Force
+$hostSmaPath = [System.Management.Automation.PSCmdlet].Assembly.Location
+$expectedHostSmaPath = Join-Path $PSHOME 'System.Management.Automation.dll'
+if ([IO.Path]::GetFullPath($hostSmaPath) -ne [IO.Path]::GetFullPath($expectedHostSmaPath)) {
+    throw "PowerShell runtime SMA was not loaded from the current host: $hostSmaPath"
+}
 
 function Assert-True {
     param([bool]$Condition, [string]$Message)

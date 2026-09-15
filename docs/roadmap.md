@@ -52,7 +52,10 @@ The engine compares old/new normalized revisions semantically and classifies end
 
 ## P3 — Productionization
 
-Status: active. The goal is to move from architecture validation to a runnable, extensible, and controllably releasable generated SDK. P3.1 is complete and P3.2 is the current priority; broader public cmdlet expansion remains outside this phase.
+Status: active. P3.1, P3.2, and the bounded P3.3 coverage phase are complete in
+this workspace. The remaining P3 work is packaging/CI/update workflow and
+real-account validation; broader public admission and release readiness remain
+separate decisions.
 
 ### P3.1 — Production Runtime
 
@@ -64,13 +67,26 @@ The first delivery slices are runtime abstraction, generic dispatch, raw text, b
 
 ### P3.2 — Generated Public Surface
 
-Status: active in this workspace; see [P3.2 progress](./P3.2-progress.md).
+Status: completed in this workspace; see [P3.2 progress](./P3.2-progress.md)
+and [P3.2 summary](./P3.2-summary.md).
 
-Validate the generated public PowerShell surface against the corrected normalized model and projection. The first representative cmdlets are `Get-CfZone`, `Get-CfDnsRecord`, `New-CfDnsRecord`, and `Remove-CfDnsRecord`. Generated commands must bind PowerShell parameters and delegate execution through generated operation metadata and the shared runtime. They must prove parameter-set metadata, pipeline binding, typed output, shared pagination, `ShouldProcess`, presence/null semantics, stable errors, and handwritten-versus-generated behavioral parity. The handwritten module remains the authoritative behavior reference until parity evidence is complete. `Set-CfDnsRecord` PUT/PATCH parity is conditional on the first four cmdlets passing.
+The validated representative surface is `Get-CfZone`, `Get-CfDnsRecord`,
+`New-CfDnsRecord`, `Remove-CfDnsRecord`, and `Set-CfDnsRecord` (PUT/PATCH).
+Generated commands bind PowerShell parameters and delegate execution through
+generated operation metadata and the shared runtime. The slice proves
+parameter-set metadata, pipeline binding, typed output, shared pagination,
+`ShouldProcess`, presence/null semantics, stable errors, and
+handwritten-versus-generated behavioral parity. Broader generated public
+migration remains deferred.
 
 ### P3.3 — API Coverage Expansion
 
-Expand coverage through the normalized pipeline rather than hand-adding endpoint-specific cmdlets. Produce coverage, unsupported-operation, unknown-normalization, and projection-conflict reports.
+Status: completed in this workspace for the bounded discovery/D1/D2 scope; see
+[P3.3 plan](./P3.3-plan.md), [P3.3 progress](./P3.3-progress.md), and
+[P3.3 summary](./P3.3-summary.md). The six-operation `d1/database` and
+`healthchecks` extensions passed their slice gates. Global public admission is
+unchanged: every scanned operation remains classified, and the six D2
+operations remain `ExcludedByPolicy`.
 
 ### P3.4 — Packaging, CI, and Update Workflow
 

@@ -1,0 +1,185 @@
+{
+  "version": 1,
+  "stage": "P3.3",
+  "slice": "d1/database",
+  "operations": {
+    "d1-update-partial-database": { "verb": "Set", "noun": "CfD1Database", "parameterSet": "PartialUpdate", "supportsShouldProcess": true, "confirmImpact": "Medium" }
+  },
+  "objectTypeAllowlist": [],
+  "commands": [
+    {
+      "cmdletName": "Get-CfD1Database",
+      "className": "GetCfD1DatabaseCommand",
+      "resource": "d1/database",
+      "runtimeMetadataType": "CfD1DatabaseRuntimeMetadata",
+      "outputType": "Cloudflare.PowerShell.CfD1Database",
+      "defaultParameterSetName": "List",
+      "outputPolicy": "item",
+      "generated": {
+        "operationMetadataType": "CfD1DatabaseOperationMetadata",
+        "operationMetadataPath": "src/Cloudflare.PowerShell/Generated/Metadata/CfD1DatabaseOperationMetadata.cs",
+        "runtimeMetadataPath": "src/Cloudflare.PowerShell/Generated/Metadata/CfD1DatabaseRuntimeMetadata.cs"
+      },
+      "execution": { "strategy": "parameter-set", "shouldProcess": false },
+      "operations": {
+        "d1-get-database": { "parameterSet": "Get", "invokeKind": "single", "errorTarget": "DatabaseId", "constantName": "Operation_d1_Get_d1_get_database", "typeOverrides": { "database_id": "string?" } },
+        "d1-list-databases": { "parameterSet": "List", "invokeKind": "paged", "errorTarget": "AccountId", "constantName": "Operation_d1_List_d1_list_databases" }
+      },
+      "help": {
+        "synopsis": "Gets Cloudflare D1 databases.",
+        "description": "Gets one or more typed D1 database records through the shared runtime.",
+        "source": "P3.3ProjectionPolicy"
+      },
+      "model": {
+        "className": "CfD1Database",
+        "path": "src/Cloudflare.PowerShell/Generated/Models/CfD1Database.cs",
+        "directions": [ "response" ],
+        "schemaSources": [
+          { "schema": "d1_database-details-response", "direction": "response" },
+          { "schema": "d1_database-response", "direction": "response" }
+        ],
+        "properties": [
+          { "name": "CreatedAt", "jsonName": "created_at", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "d1_database-details-response", "property": "created_at", "direction": "response" }, { "schema": "d1_database-response", "property": "created_at", "direction": "response" } ] },
+          { "name": "FileSize", "jsonName": "file_size", "type": "decimal?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "d1_database-details-response", "property": "file_size", "direction": "response" } ] },
+          { "name": "Jurisdiction", "jsonName": "jurisdiction", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "d1_database-details-response", "property": "jurisdiction", "direction": "response" }, { "schema": "d1_database-response", "property": "jurisdiction", "direction": "response" } ] },
+          { "name": "Name", "jsonName": "name", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "d1_database-details-response", "property": "name", "direction": "response" }, { "schema": "d1_database-response", "property": "name", "direction": "response" } ] },
+          { "name": "NumTables", "jsonName": "num_tables", "type": "decimal?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "d1_database-details-response", "property": "num_tables", "direction": "response" } ] },
+          { "name": "ReadReplication", "jsonName": "read_replication", "type": "CfD1ReadReplicationDetails?", "nullable": true, "presence": "optional", "nestedModel": "CfD1ReadReplicationDetails", "schemaSources": [ { "schema": "d1_database-details-response", "property": "read_replication", "direction": "response" } ] },
+          { "name": "Uuid", "jsonName": "uuid", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "d1_database-details-response", "property": "uuid", "direction": "response" }, { "schema": "d1_database-response", "property": "uuid", "direction": "response" } ] },
+          { "name": "Version", "jsonName": "version", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "d1_database-details-response", "property": "version", "direction": "response" }, { "schema": "d1_database-response", "property": "version", "direction": "response" } ] }
+        ]
+      }
+    },
+    {
+      "cmdletName": "New-CfD1Database",
+      "className": "NewCfD1DatabaseCommand",
+      "resource": "d1/database",
+      "runtimeMetadataType": "CfD1DatabaseRuntimeMetadata",
+      "outputType": "Cloudflare.PowerShell.CfD1Database",
+      "defaultParameterSetName": "Create",
+      "outputPolicy": "single",
+      "execution": { "strategy": "parameter-set", "shouldProcess": true, "shouldProcessTarget": "AccountId", "shouldProcessAction": "Create D1 database" },
+      "operations": {
+        "d1-create-database": {
+          "parameterSet": "Create",
+          "invokeKind": "single",
+          "errorTarget": "AccountId",
+          "bodyParameterName": "Database",
+          "bodyParameterType": "CfD1DatabaseCreateRequest",
+          "bodySerialization": "Value",
+          "constantName": "Operation_d1_Create_d1_create_database",
+          "typeOverrides": { "account_id": "string?" }
+        }
+      },
+      "help": {
+        "synopsis": "Creates a Cloudflare D1 database.",
+        "description": "Creates a typed D1 database using the generated request model.",
+        "source": "P3.3ProjectionPolicy"
+      },
+      "model": {
+        "className": "CfD1DatabaseCreateRequest",
+        "path": "src/Cloudflare.PowerShell/Generated/Models/CfD1DatabaseCreateRequest.cs",
+        "directions": [ "request" ],
+        "schemaSources": [
+          { "schema": "Inline_FA2961F0C454", "direction": "request" }
+        ],
+        "properties": [
+          { "name": "Jurisdiction", "jsonName": "jurisdiction", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "Inline_FA2961F0C454", "property": "jurisdiction", "direction": "request" } ] },
+          { "name": "Name", "jsonName": "name", "type": "string", "nullable": false, "presence": "required", "schemaSources": [ { "schema": "Inline_FA2961F0C454", "property": "name", "direction": "request" } ] },
+          { "name": "PrimaryLocationHint", "jsonName": "primary_location_hint", "type": "string?", "nullable": true, "presence": "optional", "schemaSources": [ { "schema": "Inline_FA2961F0C454", "property": "primary_location_hint", "direction": "request" } ] },
+          { "name": "ReadReplication", "jsonName": "read_replication", "type": "CfD1ReadReplicationDetails?", "nullable": true, "presence": "optional", "nestedModel": "CfD1ReadReplicationDetails", "schemaSources": [ { "schema": "Inline_FA2961F0C454", "property": "read_replication", "direction": "request" } ] }
+        ]
+      }
+    },
+    {
+      "cmdletName": "Remove-CfD1Database",
+      "className": "RemoveCfD1DatabaseCommand",
+      "resource": "d1/database",
+      "runtimeMetadataType": "CfD1DatabaseRuntimeMetadata",
+      "defaultParameterSetName": "Delete",
+      "outputPolicy": "none",
+      "execution": { "strategy": "parameter-set", "shouldProcess": true, "shouldProcessTarget": "DatabaseId", "shouldProcessAction": "Delete D1 database" },
+      "operations": {
+        "d1-delete-database": { "parameterSet": "Delete", "invokeKind": "single", "outputPolicy": "none", "errorTarget": "DatabaseId", "constantName": "Operation_d1_Delete_d1_delete_database", "typeOverrides": { "database_id": "string?" } }
+      },
+      "help": {
+        "synopsis": "Removes a Cloudflare D1 database.",
+        "description": "Removes one D1 database by account and database identifier.",
+        "source": "P3.3ProjectionPolicy"
+      }
+    },
+    {
+      "cmdletName": "Set-CfD1Database",
+      "className": "SetCfD1DatabaseCommand",
+      "resource": "d1/database",
+      "runtimeMetadataType": "CfD1DatabaseRuntimeMetadata",
+      "outputType": "Cloudflare.PowerShell.CfD1Database",
+      "defaultParameterSetName": "Update",
+      "outputPolicy": "single",
+      "execution": { "strategy": "parameter-set", "shouldProcess": true, "shouldProcessTarget": "DatabaseId", "shouldProcessAction": "{ParameterSetName} D1 database" },
+      "operations": {
+        "d1-update-database": {
+          "parameterSet": "Update",
+          "invokeKind": "single",
+          "errorTarget": "DatabaseId",
+          "bodyParameterName": "Database",
+          "bodyParameterType": "CfD1DatabaseUpdateRequest",
+          "bodySerialization": "Value",
+          "constantName": "Operation_d1_Update_d1_update_database",
+          "typeOverrides": { "database_id": "string?" }
+        },
+        "d1-update-partial-database": {
+          "parameterSet": "PartialUpdate",
+          "invokeKind": "single",
+          "errorTarget": "DatabaseId",
+          "bodyParameterName": "PartialDatabase",
+          "bodyParameterType": "CfD1DatabasePartialUpdateRequest",
+          "bodySerialization": "Value",
+          "constantName": "Operation_d1_PartialUpdate_d1_update_partial_database",
+          "typeOverrides": { "database_id": "string?" }
+        }
+      },
+      "help": {
+        "synopsis": "Updates a Cloudflare D1 database.",
+        "description": "Replaces or partially updates one D1 database through the shared runtime.",
+        "source": "P3.3ProjectionPolicy"
+      },
+      "model": {
+        "className": "CfD1DatabaseUpdateRequest",
+        "path": "src/Cloudflare.PowerShell/Generated/Models/CfD1DatabaseUpdateRequest.cs",
+        "directions": [ "request" ],
+        "schemaSources": [
+          { "schema": "d1_database-update-request-body", "direction": "request" }
+        ],
+        "properties": [
+          { "name": "ReadReplication", "jsonName": "read_replication", "type": "CfD1ReadReplicationDetails", "nullable": false, "presence": "required", "nestedModel": "CfD1ReadReplicationDetails", "schemaSources": [ { "schema": "d1_database-update-request-body", "property": "read_replication", "direction": "request" } ] }
+        ]
+      }
+    }
+  ],
+  "additionalModels": [
+    {
+      "className": "CfD1DatabasePartialUpdateRequest",
+      "path": "src/Cloudflare.PowerShell/Generated/Models/CfD1DatabasePartialUpdateRequest.cs",
+      "directions": [ "request" ],
+      "schemaSources": [
+        { "schema": "d1_database-update-partial-request-body", "direction": "request" }
+      ],
+      "properties": [
+        { "name": "ReadReplication", "jsonName": "read_replication", "type": "CfD1ReadReplicationDetails?", "nullable": true, "presence": "optional", "nestedModel": "CfD1ReadReplicationDetails", "schemaSources": [ { "schema": "d1_database-update-partial-request-body", "property": "read_replication", "direction": "request" } ] }
+      ]
+    },
+    {
+      "className": "CfD1ReadReplicationDetails",
+      "path": "src/Cloudflare.PowerShell/Generated/Models/CfD1ReadReplicationDetails.cs",
+      "directions": [ "request", "response" ],
+      "schemaSources": [
+        { "schema": "d1_read-replication-details-for-request", "direction": "request" },
+        { "schema": "d1_read-replication-details-for-response", "direction": "response" }
+      ],
+      "properties": [
+        { "name": "Mode", "jsonName": "mode", "type": "string", "nullable": false, "presence": "required", "schemaSources": [ { "schema": "d1_read-replication-details-for-request", "property": "mode", "direction": "request" }, { "schema": "d1_read-replication-details-for-response", "property": "mode", "direction": "response" } ] }
+      ]
+    }
+  ]
+}

@@ -39,7 +39,7 @@ API corrections and PowerShell projection overrides are separate:
 - `overrides/api-corrections.json` changes the interpreted API contract and retains a correction trace.
 - `overrides/powershell-projection.json` chooses the public verb/noun, parameter names, confirmation policy, output policy, and help-oriented metadata.
 
-Generated C# currently includes typed models and operation/projection metadata under `src/Cloudflare.PowerShell/Generated`. P3.2 is now validating a generated `PSCmdlet` public surface for four representative commands; the public handwritten module remains the authoritative behavior reference until behavioral parity is evidenced. Generated files are never hand-edited. The shared runtime is a production runtime foundation, but the repository is not release-ready merely because that foundation is complete.
+Generated C# currently includes typed models and operation/projection metadata under `src/Cloudflare.PowerShell/Generated`. P3.2 has validated a generated `PSCmdlet` public surface for five representative commands; the public handwritten module remains the behavior reference for comparison while broader migration is deferred. Generated files are never hand-edited. The shared runtime is a production runtime foundation, but the repository is not release-ready merely because that foundation is complete.
 
 ## Confirmed Architecture Facts
 
@@ -49,7 +49,7 @@ The six DNS operations `create`, `list`, `get`, `update`, `edit`, and `delete` p
 
 ### Typed unions
 
-DNS `anyOf`/`oneOf`/`allOf` composition is retained by the normalized model. Representative typed request inputs include `A`, `MX`, `CAA`, `HTTPS`, and `SVCB`. Union schemas must not silently become `object`, `Dictionary<string, object>`, or `PSCustomObject`-only models.
+DNS `anyOf`/`oneOf`/`allOf` composition is retained by the normalized model. Representative typed request inputs include `A`, `MX`, `CAA`, `HTTPS`, and `SVCB`. Union schemas must not silently become `object`, `Dictionary<string, object>`, or `PSCustomObject`-only models. When `additionalProperties` has a known normalized schema, the schema reference is retained and the capability-driven model projection may emit a typed `Dictionary<string, T>`; unknown map values remain a capability gap.
 
 ### Presence semantics
 
@@ -94,7 +94,7 @@ The normalizer records these facts in request/response representations, content 
 
 P2.3 adds a separate projection overlay for PowerShell-only policy. The overlay can select deterministic PowerShell parameter names, pipeline binding, output type, output policy, confirmation, and help metadata without changing the normalized API fixtures or the P2.1 compatibility projection.
 
-The generated `Get-CfZone` `PSCmdlet` was initially isolated as a net10 experiment because the current host's `System.Management.Automation` assembly is net10 while the production module was net8; that `CS1705` evidence drove the repository-wide net10 migration. It proves command metadata loading, not HTTP dispatch. The handwritten module remains the runtime reference until generated dispatch has equivalent mock coverage. The supported baseline is PowerShell 7.6+ and .NET 10 on the Windows-first host; see [ADR 0001](./adr/0001-net10-powershell76-baseline.md).
+The generated `Get-CfZone` `PSCmdlet` was initially isolated as a net10 experiment because the current host's `System.Management.Automation` assembly is net10 while the production module was net8; that `CS1705` evidence drove the repository-wide net10 migration. It proves command metadata loading, not HTTP dispatch. The handwritten module remains the runtime reference until generated dispatch has equivalent mock coverage. Both binary-cmdlet projects compile against the private, build-only `System.Management.Automation` 7.6.0 package and rely on the importing `pwsh` host for runtime SMA. The supported baseline is PowerShell 7.6+ and .NET 10 on the Windows-first host; see [ADR 0001](./adr/0001-net10-powershell76-baseline.md).
 
 ## P2.4 Compatibility Facts
 
@@ -135,12 +135,45 @@ Transport owns the HTTP request/response and serialized `HttpContent` disposal b
 
 Retry is separate from idempotency. A request may be retryable only when its body is replayable and the retry policy permits the status/exception; a mutation is not automatically retry-safe. Authentication is supplied through an `AuthenticationContext`, and secrets never enter generated metadata.
 
+## P3.3 Coverage Direction
+
+P3.3 adds a discovery/reporting boundary before public expansion:
+
+```text
+Full pinned OpenAPI
+        ↓
+Normalizer → API correction trace
+        ↓
+Projection diagnostics → runtime capability diagnostics
+        ↓
+Deterministic operation classification/report
+        ↓
+Bounded canonical public projection
+        ↓
+Generated PSCmdlet → shared runtime
+```
+
+Normalization success, projection construction, and generated C# are separate
+stage results. An operation is not `Supported` until public eligibility and the
+same request/output/error/safety evidence used by P3.2 are present. Operations
+that are not admitted to the current bounded public policy remain explicitly
+classified rather than silently omitted. The discovery baseline and schema are
+defined in [P3.3 plan](./P3.3-plan.md) and emitted by
+`tools/Invoke-P33CoverageDiscovery.ps1`.
+
+The D1 `d1/database` bounded slice is complete. D2 `healthchecks` adds six
+zone-scoped operations through the same chain, including typed nested models,
+known map values, page-array pagination, and a generic PowerShell parameter-set
+discriminator for identical PUT/PATCH public bindings. Its evidence remains
+separate from real-account, device/manual, packaging, publishing, and release
+evidence.
+
 ## Deferred Boundaries
 
 Mutation idempotency policy, legacy authentication, full PowerShell binary UX,
 full generated public-cmdlet migration, module publishing, real-account
 integration, and the final handwritten-vs-generated-cmdlet decision remain
-unresolved. P3.2 is limited to its four representative cmdlets until parity
-evidence supports expansion. The P3.1 runtime has deterministic mock coverage
+unresolved. P3.2 is limited to its five validated representative cmdlets until
+broader parity evidence supports expansion. The P3.1 runtime has deterministic mock coverage
 for multipart, binary streams, and all six recognized pagination strategies;
 HTTP 2xx with `success=false` remains intentionally unresolved.

@@ -3446,6 +3446,123 @@
       "kind": "array",
       "sourceRef": "#/components/schemas/dns-records_messages",
       "primitiveType": "array",
+      "items": "Inline_DF6B3B92656A",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_DF6B3B92656A": {
+      "name": "Inline_DF6B3B92656A",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "name": "code",
+          "schema": "Inline_15CAC7959DB6",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "documentation_url": {
+          "name": "documentation_url",
+          "schema": "Inline_7F3891A8E3F2",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "message": {
+          "name": "message",
+          "schema": "Inline_C575794613B0",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "source": {
+          "name": "source",
+          "schema": "Inline_6AF117736BD0",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_15CAC7959DB6": {
+      "name": "Inline_15CAC7959DB6",
+      "kind": "primitive",
+      "primitiveType": "integer",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_7F3891A8E3F2": {
+      "name": "Inline_7F3891A8E3F2",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_C575794613B0": {
+      "name": "Inline_C575794613B0",
+      "kind": "primitive",
+      "primitiveType": "string",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_6AF117736BD0": {
+      "name": "Inline_6AF117736BD0",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {
+        "pointer": {
+          "name": "pointer",
+          "schema": "Inline_73F0880BCF72",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_73F0880BCF72": {
+      "name": "Inline_73F0880BCF72",
+      "kind": "primitive",
+      "primitiveType": "string",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -3625,6 +3742,7 @@
       "name": "Inline_2A4D3556D820",
       "kind": "array",
       "primitiveType": "array",
+      "items": "dns-records_dns-record-response",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -3632,140 +3750,35 @@
       "allOf": [],
       "enum": []
     },
-    "Inline_C101411989D0": {
-      "name": "Inline_C101411989D0",
+    "dns-records_dns-record-response": {
+      "name": "dns-records_dns-record-response",
       "kind": "object",
-      "primitiveType": "object",
-      "requiredProperties": [],
-      "properties": {},
-      "oneOf": [],
-      "anyOf": [],
-      "allOf": [
-        "dns-records_dns_response_collection",
-        "dns-records_api-response-common-failure"
-      ],
-      "enum": []
-    },
-    "dns-records_api-response-common-failure": {
-      "name": "dns-records_api-response-common-failure",
-      "kind": "object",
-      "sourceRef": "#/components/schemas/dns-records_api-response-common-failure",
+      "sourceRef": "#/components/schemas/dns-records_dns-record-response",
       "primitiveType": "object",
       "requiredProperties": [
-        "errors",
-        "messages",
-        "result",
-        "success"
+        "comment",
+        "content",
+        "data",
+        "name",
+        "proxied",
+        "settings",
+        "tags",
+        "ttl",
+        "type"
       ],
-      "properties": {
-        "errors": {
-          "name": "errors",
-          "schema": "Inline_42C38D900A82",
-          "required": true,
-          "allowsNull": false,
-          "nullPolicy": "reject-null",
-          "readOnly": false,
-          "writeOnly": false
-        },
-        "messages": {
-          "name": "messages",
-          "schema": "Inline_A7BBBBD7E320",
-          "required": true,
-          "allowsNull": false,
-          "nullPolicy": "reject-null",
-          "readOnly": false,
-          "writeOnly": false
-        },
-        "result": {
-          "name": "result",
-          "schema": "Inline_3773E619B449",
-          "required": true,
-          "allowsNull": true,
-          "nullPolicy": "send-null",
-          "readOnly": false,
-          "writeOnly": false
-        },
-        "success": {
-          "name": "success",
-          "schema": "Inline_E8E75A190E9A",
-          "required": true,
-          "allowsNull": false,
-          "nullPolicy": "reject-null",
-          "readOnly": false,
-          "writeOnly": false
-        }
-      },
-      "oneOf": [],
-      "anyOf": [],
-      "allOf": [],
-      "enum": []
-    },
-    "Inline_42C38D900A82": {
-      "name": "Inline_42C38D900A82",
-      "kind": "reference",
-      "requiredProperties": [],
       "properties": {},
       "oneOf": [],
       "anyOf": [],
       "allOf": [
-        "dns-records_messages"
+        "Inline_C4DD3791DFA0",
+        "Inline_9619E2136A91"
       ],
+      "singleValue": "A",
       "enum": []
     },
-    "Inline_A7BBBBD7E320": {
-      "name": "Inline_A7BBBBD7E320",
-      "kind": "reference",
-      "requiredProperties": [],
-      "properties": {},
-      "oneOf": [],
-      "anyOf": [],
-      "allOf": [
-        "dns-records_messages"
-      ],
-      "enum": []
-    },
-    "Inline_3773E619B449": {
-      "name": "Inline_3773E619B449",
-      "kind": "object",
-      "primitiveType": "object",
-      "requiredProperties": [],
-      "properties": {},
-      "oneOf": [],
-      "anyOf": [],
-      "allOf": [],
-      "enum": [
-        ""
-      ]
-    },
-    "Inline_E8E75A190E9A": {
-      "name": "Inline_E8E75A190E9A",
-      "kind": "primitive",
-      "primitiveType": "boolean",
-      "requiredProperties": [],
-      "properties": {},
-      "oneOf": [],
-      "anyOf": [],
-      "allOf": [],
-      "singleValue": false,
-      "enum": [
-        "false"
-      ]
-    },
-    "Inline_B69738F93588": {
-      "name": "Inline_B69738F93588",
-      "kind": "primitive",
-      "primitiveType": "boolean",
-      "requiredProperties": [],
-      "properties": {},
-      "oneOf": [],
-      "anyOf": [],
-      "allOf": [],
-      "enum": []
-    },
-    "dns-records_dns-record-post": {
-      "name": "dns-records_dns-record-post",
+    "Inline_C4DD3791DFA0": {
+      "name": "Inline_C4DD3791DFA0",
       "kind": "union",
-      "sourceRef": "#/components/schemas/dns-records_dns-record-post",
       "primitiveType": "object",
       "requiredProperties": [],
       "properties": {},
@@ -4098,6 +4111,18 @@
       "kind": "array",
       "sourceRef": "#/components/schemas/dns-records_tags",
       "primitiveType": "array",
+      "items": "Inline_4E1BCC84BC47",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_4E1BCC84BC47": {
+      "name": "Inline_4E1BCC84BC47",
+      "kind": "primitive",
+      "primitiveType": "string",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -7232,187 +7257,6 @@
         "URI"
       ]
     },
-    "dns-records_dns_response_single": {
-      "name": "dns-records_dns_response_single",
-      "kind": "object",
-      "sourceRef": "#/components/schemas/dns-records_dns_response_single",
-      "primitiveType": "object",
-      "requiredProperties": [],
-      "properties": {},
-      "oneOf": [],
-      "anyOf": [],
-      "allOf": [
-        "dns-records_api-response-single",
-        "Inline_187252429995"
-      ],
-      "enum": []
-    },
-    "dns-records_api-response-single": {
-      "name": "dns-records_api-response-single",
-      "kind": "object",
-      "sourceRef": "#/components/schemas/dns-records_api-response-single",
-      "primitiveType": "object",
-      "requiredProperties": [],
-      "properties": {},
-      "oneOf": [],
-      "anyOf": [],
-      "allOf": [
-        "dns-records_api-response-common"
-      ],
-      "enum": []
-    },
-    "Inline_187252429995": {
-      "name": "Inline_187252429995",
-      "kind": "object",
-      "primitiveType": "object",
-      "requiredProperties": [],
-      "properties": {
-        "result": {
-          "name": "result",
-          "schema": "dns-records_dns-record-response",
-          "required": false,
-          "allowsNull": false,
-          "nullPolicy": "omit",
-          "readOnly": false,
-          "writeOnly": false
-        }
-      },
-      "oneOf": [],
-      "anyOf": [],
-      "allOf": [],
-      "enum": []
-    },
-    "dns-records_dns-record-response": {
-      "name": "dns-records_dns-record-response",
-      "kind": "object",
-      "sourceRef": "#/components/schemas/dns-records_dns-record-response",
-      "primitiveType": "object",
-      "requiredProperties": [
-        "comment",
-        "content",
-        "data",
-        "name",
-        "proxied",
-        "settings",
-        "tags",
-        "ttl",
-        "type"
-      ],
-      "properties": {},
-      "oneOf": [],
-      "anyOf": [],
-      "allOf": [
-        "Inline_C4DD3791DFA0",
-        "Inline_9619E2136A91"
-      ],
-      "singleValue": "A",
-      "enum": []
-    },
-    "Inline_C4DD3791DFA0": {
-      "name": "Inline_C4DD3791DFA0",
-      "kind": "union",
-      "primitiveType": "object",
-      "requiredProperties": [],
-      "properties": {},
-      "oneOf": [],
-      "anyOf": [
-        "dns-records_dns-record-without-data",
-        "dns-records_dns-record-with-data"
-      ],
-      "allOf": [],
-      "discriminator": {
-        "property": "type",
-        "singleValue": true,
-        "variants": [
-          {
-            "schema": "dns-records_dns-record-without-data",
-            "value": "A"
-          },
-          {
-            "schema": "dns-records_dns-record-without-data",
-            "value": "AAAA"
-          },
-          {
-            "schema": "dns-records_dns-record-with-data",
-            "value": "CAA"
-          },
-          {
-            "schema": "dns-records_dns-record-with-data",
-            "value": "CERT"
-          },
-          {
-            "schema": "dns-records_dns-record-without-data",
-            "value": "CNAME"
-          },
-          {
-            "schema": "dns-records_dns-record-with-data",
-            "value": "DNSKEY"
-          },
-          {
-            "schema": "dns-records_dns-record-with-data",
-            "value": "DS"
-          },
-          {
-            "schema": "dns-records_dns-record-with-data",
-            "value": "HTTPS"
-          },
-          {
-            "schema": "dns-records_dns-record-with-data",
-            "value": "LOC"
-          },
-          {
-            "schema": "dns-records_dns-record-without-data",
-            "value": "MX"
-          },
-          {
-            "schema": "dns-records_dns-record-with-data",
-            "value": "NAPTR"
-          },
-          {
-            "schema": "dns-records_dns-record-without-data",
-            "value": "NS"
-          },
-          {
-            "schema": "dns-records_dns-record-without-data",
-            "value": "OPENPGPKEY"
-          },
-          {
-            "schema": "dns-records_dns-record-without-data",
-            "value": "PTR"
-          },
-          {
-            "schema": "dns-records_dns-record-with-data",
-            "value": "SMIMEA"
-          },
-          {
-            "schema": "dns-records_dns-record-with-data",
-            "value": "SRV"
-          },
-          {
-            "schema": "dns-records_dns-record-with-data",
-            "value": "SSHFP"
-          },
-          {
-            "schema": "dns-records_dns-record-with-data",
-            "value": "SVCB"
-          },
-          {
-            "schema": "dns-records_dns-record-with-data",
-            "value": "TLSA"
-          },
-          {
-            "schema": "dns-records_dns-record-without-data",
-            "value": "TXT"
-          },
-          {
-            "schema": "dns-records_dns-record-with-data",
-            "value": "URI"
-          }
-        ]
-      },
-      "singleValue": "A",
-      "enum": []
-    },
     "Inline_9619E2136A91": {
       "name": "Inline_9619E2136A91",
       "kind": "object",
@@ -7592,6 +7436,18 @@
       "name": "Inline_A9F3B5AF2558",
       "kind": "array",
       "primitiveType": "array",
+      "items": "Inline_760E78CB1AC1",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_760E78CB1AC1": {
+      "name": "Inline_760E78CB1AC1",
+      "kind": "primitive",
+      "primitiveType": "string",
       "requiredProperties": [],
       "properties": {},
       "oneOf": [],
@@ -7640,6 +7496,292 @@
       "format": "date-time",
       "requiredProperties": [],
       "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_C101411989D0": {
+      "name": "Inline_C101411989D0",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [
+        "dns-records_dns_response_collection",
+        "dns-records_api-response-common-failure"
+      ],
+      "enum": []
+    },
+    "dns-records_api-response-common-failure": {
+      "name": "dns-records_api-response-common-failure",
+      "kind": "object",
+      "sourceRef": "#/components/schemas/dns-records_api-response-common-failure",
+      "primitiveType": "object",
+      "requiredProperties": [
+        "errors",
+        "messages",
+        "result",
+        "success"
+      ],
+      "properties": {
+        "errors": {
+          "name": "errors",
+          "schema": "Inline_42C38D900A82",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "messages": {
+          "name": "messages",
+          "schema": "Inline_A7BBBBD7E320",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "result": {
+          "name": "result",
+          "schema": "Inline_3773E619B449",
+          "required": true,
+          "allowsNull": true,
+          "nullPolicy": "send-null",
+          "readOnly": false,
+          "writeOnly": false
+        },
+        "success": {
+          "name": "success",
+          "schema": "Inline_E8E75A190E9A",
+          "required": true,
+          "allowsNull": false,
+          "nullPolicy": "reject-null",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "Inline_42C38D900A82": {
+      "name": "Inline_42C38D900A82",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [
+        "dns-records_messages"
+      ],
+      "enum": []
+    },
+    "Inline_A7BBBBD7E320": {
+      "name": "Inline_A7BBBBD7E320",
+      "kind": "reference",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [
+        "dns-records_messages"
+      ],
+      "enum": []
+    },
+    "Inline_3773E619B449": {
+      "name": "Inline_3773E619B449",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": [
+        ""
+      ]
+    },
+    "Inline_E8E75A190E9A": {
+      "name": "Inline_E8E75A190E9A",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "singleValue": false,
+      "enum": [
+        "false"
+      ]
+    },
+    "Inline_B69738F93588": {
+      "name": "Inline_B69738F93588",
+      "kind": "primitive",
+      "primitiveType": "boolean",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [],
+      "enum": []
+    },
+    "dns-records_dns-record-post": {
+      "name": "dns-records_dns-record-post",
+      "kind": "union",
+      "sourceRef": "#/components/schemas/dns-records_dns-record-post",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [
+        "dns-records_dns-record-without-data",
+        "dns-records_dns-record-with-data"
+      ],
+      "allOf": [],
+      "discriminator": {
+        "property": "type",
+        "singleValue": true,
+        "variants": [
+          {
+            "schema": "dns-records_dns-record-without-data",
+            "value": "A"
+          },
+          {
+            "schema": "dns-records_dns-record-without-data",
+            "value": "AAAA"
+          },
+          {
+            "schema": "dns-records_dns-record-with-data",
+            "value": "CAA"
+          },
+          {
+            "schema": "dns-records_dns-record-with-data",
+            "value": "CERT"
+          },
+          {
+            "schema": "dns-records_dns-record-without-data",
+            "value": "CNAME"
+          },
+          {
+            "schema": "dns-records_dns-record-with-data",
+            "value": "DNSKEY"
+          },
+          {
+            "schema": "dns-records_dns-record-with-data",
+            "value": "DS"
+          },
+          {
+            "schema": "dns-records_dns-record-with-data",
+            "value": "HTTPS"
+          },
+          {
+            "schema": "dns-records_dns-record-with-data",
+            "value": "LOC"
+          },
+          {
+            "schema": "dns-records_dns-record-without-data",
+            "value": "MX"
+          },
+          {
+            "schema": "dns-records_dns-record-with-data",
+            "value": "NAPTR"
+          },
+          {
+            "schema": "dns-records_dns-record-without-data",
+            "value": "NS"
+          },
+          {
+            "schema": "dns-records_dns-record-without-data",
+            "value": "OPENPGPKEY"
+          },
+          {
+            "schema": "dns-records_dns-record-without-data",
+            "value": "PTR"
+          },
+          {
+            "schema": "dns-records_dns-record-with-data",
+            "value": "SMIMEA"
+          },
+          {
+            "schema": "dns-records_dns-record-with-data",
+            "value": "SRV"
+          },
+          {
+            "schema": "dns-records_dns-record-with-data",
+            "value": "SSHFP"
+          },
+          {
+            "schema": "dns-records_dns-record-with-data",
+            "value": "SVCB"
+          },
+          {
+            "schema": "dns-records_dns-record-with-data",
+            "value": "TLSA"
+          },
+          {
+            "schema": "dns-records_dns-record-without-data",
+            "value": "TXT"
+          },
+          {
+            "schema": "dns-records_dns-record-with-data",
+            "value": "URI"
+          }
+        ]
+      },
+      "singleValue": "A",
+      "enum": []
+    },
+    "dns-records_dns_response_single": {
+      "name": "dns-records_dns_response_single",
+      "kind": "object",
+      "sourceRef": "#/components/schemas/dns-records_dns_response_single",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [
+        "dns-records_api-response-single",
+        "Inline_187252429995"
+      ],
+      "enum": []
+    },
+    "dns-records_api-response-single": {
+      "name": "dns-records_api-response-single",
+      "kind": "object",
+      "sourceRef": "#/components/schemas/dns-records_api-response-single",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {},
+      "oneOf": [],
+      "anyOf": [],
+      "allOf": [
+        "dns-records_api-response-common"
+      ],
+      "enum": []
+    },
+    "Inline_187252429995": {
+      "name": "Inline_187252429995",
+      "kind": "object",
+      "primitiveType": "object",
+      "requiredProperties": [],
+      "properties": {
+        "result": {
+          "name": "result",
+          "schema": "dns-records_dns-record-response",
+          "required": false,
+          "allowsNull": false,
+          "nullPolicy": "omit",
+          "readOnly": false,
+          "writeOnly": false
+        }
+      },
       "oneOf": [],
       "anyOf": [],
       "allOf": [],

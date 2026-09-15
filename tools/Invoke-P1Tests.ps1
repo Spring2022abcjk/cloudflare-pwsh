@@ -3,13 +3,12 @@ param([string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot))
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
-$powershellHome = Split-Path -Parent (Get-Command pwsh).Source
 Push-Location $ProjectRoot
 try {
     & pwsh -NoLogo -NoProfile -File .\tools\Generate-DnsSource.ps1 | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'Generator failed.' }
 
-    dotnet build .\Cloudflare.P1.sln --configuration Release --no-restore "-p:PowerShellHome=$powershellHome" | Out-Host
+    dotnet build .\Cloudflare.P1.sln --configuration Release --no-restore | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'dotnet build failed.' }
     dotnet run --project .\tests\Cloudflare.PowerShell.Tests\Cloudflare.PowerShell.Tests.csproj --configuration Release --no-build | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'runtime contract tests failed.' }

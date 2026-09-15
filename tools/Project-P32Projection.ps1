@@ -14,6 +14,10 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+$p32HashHelper = Join-Path $PSScriptRoot 'P32Hash.ps1'
+if (-not (Test-Path -LiteralPath $p32HashHelper -PathType Leaf)) { throw "P3.2 hash helper is missing: $p32HashHelper" }
+. $p32HashHelper
+
 function Get-JsonValue {
     param([AllowNull()][object]$Object, [Parameter(Mandatory)][string]$Name)
     if ($null -eq $Object) { return $null }
@@ -171,7 +175,7 @@ function Get-P32SourceFiles {
         if (-not (Test-Path -LiteralPath $_ -PathType Leaf)) { throw "P3.2 projection input is missing: $_" }
         [ordered]@{
             path = [IO.Path]::GetRelativePath($ProjectRoot, $_).Replace('\', '/')
-            sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $_).Hash.ToLowerInvariant()
+            sha256 = Get-P32PortableFileHash -Path $_
         }
     })
 }
@@ -388,6 +392,134 @@ function Merge-ParameterVariants {
     }
 }
 
+function Test-P32JsonObject {
+    param([AllowNull()][object]$Object)
+    return $null -ne $Object -and $Object -isnot [string] -and $Object -isnot [System.Array] -and ($Object -is [pscustomobject] -or $Object -is [System.Collections.IDictionary])
+}
+
+function Get-P32PublicParameterSignature {
+    param(
+        [Parameter(Mandatory)][object]$Operation,
+        [Parameter(Mandatory)][object[]]$Parameters,
+        [AllowNull()][object[]]$Selectors
+    )
+    $setName = [string]$Operation.parameterSet
+    $parts = [System.Collections.Generic.List[string]]::new()
+    foreach ($parameter in @($Parameters | Where-Object { -not [bool](Get-JsonValue $_ 'isSelector') -and @((Get-JsonValue $_ 'appliesTo')) -contains $setName })) {
+        $required = [bool](@((Get-JsonValue $parameter 'requiredIn')) -contains $setName)
+        $parts.Add("$((Get-JsonValue $parameter 'name'))|$((Get-JsonValue $parameter 'type'))|$required")
+    }
+    foreach ($selector in @($Selectors | Where-Object { $null -ne $_ -and @((Get-JsonValue $_ 'appliesTo')) -contains $setName })) {
+        $parts.Add("$((Get-JsonValue $selector 'name'))|$((Get-JsonValue $selector 'type'))|False")
+    }
+    return ($parts | Sort-Object) -join ';'
+}
+
+function Assert-P32ParameterSetDiscriminatorPolicy {
+    param(
+        [Parameter(Mandatory)][object]$CommandPolicy,
+        [Parameter(Mandatory)][object[]]$Operations,
+        [Parameter(Mandatory)][object[]]$Parameters,
+        [Parameter(Mandatory)][object[]]$ParameterSets
+    )
+    $cmdletName = [string]$CommandPolicy.cmdletName
+    $setNames = @($ParameterSets | ForEach-Object { [string]$_.name })
+    if ($setNames.Count -eq 0 -or @($setNames | Sort-Object -Unique).Count -ne $setNames.Count) { throw "Cmdlet '$cmdletName' has no unique declared parameter sets." }
+
+    $rawSelectors = Get-P32PolicyValue $CommandPolicy 'parameterSetDiscriminators'
+    $selectorInputs = if ($null -eq $rawSelectors) { @() } else { @($rawSelectors) }
+    $selectorNames = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    $ordinaryNames = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach ($parameter in @($Parameters | Where-Object { -not [bool](Get-JsonValue $_ 'isSelector') })) {
+        foreach ($name in @([string](Get-JsonValue $parameter 'name'), [string](Get-JsonValue $parameter 'sourceName'))) {
+            if (-not [string]::IsNullOrWhiteSpace($name)) { [void]$ordinaryNames.Add($name) }
+        }
+    }
+
+    $validated = [System.Collections.Generic.List[object]]::new()
+    foreach ($selector in $selectorInputs) {
+        if (-not (Test-P32JsonObject $selector)) { throw "Cmdlet '$cmdletName' has a parameter-set discriminator with an invalid object type." }
+        $unexpected = @($selector.PSObject.Properties.Name | Where-Object { $_ -notin @('name', 'parameterSet', 'type', 'operationId') })
+        if (@($unexpected).Count -ne 0) { throw "Cmdlet '$cmdletName' discriminator has non-PowerShell binding fields: $($unexpected -join ', ')." }
+        $nameValue = Get-P32PolicyValue $selector 'name'
+        $setValue = Get-P32PolicyValue $selector 'parameterSet'
+        $typeValue = Get-P32PolicyValue $selector 'type'
+        $operationIdValue = Get-P32PolicyValue $selector 'operationId'
+        if ($nameValue -is [System.Array] -or $setValue -is [System.Array] -or $typeValue -is [System.Array] -or $operationIdValue -is [System.Array]) { throw "Cmdlet '$cmdletName' has a discriminator with an invalid field type." }
+        $name = [string]$nameValue
+        $setName = [string]$setValue
+        $type = [string]$typeValue
+        $operationId = if ([string]::IsNullOrWhiteSpace([string]$operationIdValue)) { $null } else { [string]$operationIdValue }
+        if ([string]::IsNullOrWhiteSpace($name) -or $name -notmatch '^[A-Za-z_][A-Za-z0-9_]*$') { throw "Cmdlet '$cmdletName' has an invalid parameter-set discriminator name." }
+        if ([string]::IsNullOrWhiteSpace($setName) -or $setNames -notcontains $setName) { throw "Cmdlet '$cmdletName' discriminator '$name' references an unknown parameter set '$setName'." }
+        if ($type -cne 'SwitchParameter') { throw "Cmdlet '$cmdletName' discriminator '$name' must have type 'SwitchParameter'." }
+        if ($null -ne $operationId) {
+            $operationMatches = @($Operations | Where-Object { [string]$_.operationId -ceq $operationId })
+            if ($operationMatches.Count -ne 1) { throw "Cmdlet '$cmdletName' discriminator '$name' references operation '$operationId' zero or multiple times." }
+            if ([string]$operationMatches[0].parameterSet -cne $setName) { throw "Cmdlet '$cmdletName' discriminator '$name' operation '$operationId' does not map to parameter set '$setName'." }
+        }
+        if (-not $selectorNames.Add($name)) { throw "Cmdlet '$cmdletName' has duplicate parameter-set discriminator '$name'." }
+        if ($ordinaryNames.Contains($name)) { throw "Cmdlet '$cmdletName' discriminator '$name' collides with an API parameter." }
+        $validated.Add([ordered]@{ name = $name; parameterSet = $setName; type = $type; operationId = $operationId; appliesTo = @($setName) })
+    }
+
+    $signatureGroups = @($Operations | ForEach-Object {
+        [pscustomobject]@{
+            parameterSet = [string]$_.parameterSet
+            signature = Get-P32PublicParameterSignature $_ $Parameters @($validated)
+        }
+    } | Group-Object signature | Where-Object Count -gt 1)
+    foreach ($group in $signatureGroups) {
+        $ambiguousSets = @($group.Group | ForEach-Object parameterSet | Sort-Object -Unique)
+        throw "Cmdlet '$cmdletName' has indistinguishable public parameter signatures for parameter sets '$($ambiguousSets -join ', ')'; add a unique parameter-set discriminator."
+    }
+    return @($validated)
+}
+
+function Assert-P32ArtifactParameterSetDiscriminators {
+    param([Parameter(Mandatory)][object]$Cmdlet)
+    $cmdletName = [string]$Cmdlet.cmdletName
+    $setNames = @($Cmdlet.parameterSets | ForEach-Object { [string]$_.name })
+    if ($setNames.Count -eq 0 -or @($setNames | Sort-Object -Unique).Count -ne $setNames.Count) { throw "Cmdlet '$cmdletName' has no unique declared parameter sets." }
+    $selectors = @($Cmdlet.parameters | Where-Object { [bool](Get-JsonValue $_ 'isSelector') })
+    $selectorNames = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    $ordinaryNames = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach ($parameter in @($Cmdlet.parameters | Where-Object { -not [bool](Get-JsonValue $_ 'isSelector') })) {
+        foreach ($name in @([string](Get-JsonValue $parameter 'name'), [string](Get-JsonValue $parameter 'sourceName'))) {
+            if (-not [string]::IsNullOrWhiteSpace($name)) { [void]$ordinaryNames.Add($name) }
+        }
+    }
+    foreach ($selector in $selectors) {
+        $name = [string](Get-JsonValue $selector 'name')
+        $appliesTo = @((Get-JsonValue $selector 'appliesTo'))
+        if ([string]::IsNullOrWhiteSpace($name) -or $name -notmatch '^[A-Za-z_][A-Za-z0-9_]*$') { throw "Cmdlet '$cmdletName' has an invalid artifact discriminator name." }
+        if (-not $selectorNames.Add($name)) { throw "Cmdlet '$cmdletName' has duplicate artifact discriminator '$name'." }
+        if (@($appliesTo).Count -ne 1 -or $setNames -notcontains [string](@($appliesTo)[0])) { throw "Cmdlet '$cmdletName' discriminator '$name' references an unknown or non-unique parameter set." }
+        if ([string](Get-JsonValue $selector 'type') -cne 'SwitchParameter') { throw "Cmdlet '$cmdletName' discriminator '$name' has an invalid type." }
+        if ($ordinaryNames.Contains($name)) { throw "Cmdlet '$cmdletName' discriminator '$name' collides with an API parameter." }
+        $operationId = Get-JsonValue $selector 'operationId'
+        if ($operationId -is [System.Array]) { throw "Cmdlet '$cmdletName' discriminator '$name' has an invalid operationId type." }
+        if (-not [string]::IsNullOrWhiteSpace([string]$operationId)) {
+            $operationMatches = @($Cmdlet.operations | Where-Object { [string](Get-JsonValue $_ 'operationId') -ceq [string]$operationId })
+            if ($operationMatches.Count -ne 1) { throw "Cmdlet '$cmdletName' discriminator '$name' references operation '$operationId' zero or multiple times." }
+            if ([string](Get-JsonValue $operationMatches[0] 'parameterSet') -cne [string]@($appliesTo)[0]) { throw "Cmdlet '$cmdletName' discriminator '$name' operation '$operationId' does not map to its applied parameter set." }
+        }
+        if ([string](Get-JsonValue $selector 'binding') -cne 'parameter-set-selector' -or -not [string]::IsNullOrWhiteSpace([string](Get-JsonValue $selector 'sourceName')) -or @((Get-JsonValue $selector 'apiBindings')).Count -ne 0 -or [bool](Get-JsonValue $selector 'isBody') -or [bool](Get-JsonValue $selector 'valueFromPipeline') -or [bool](Get-JsonValue $selector 'valueFromPipelineByPropertyName')) {
+            throw "Cmdlet '$cmdletName' discriminator '$name' is not PowerShell-only." }
+        if (@((Get-JsonValue $selector 'requiredIn')).Count -ne 0 -or [string](Get-JsonValue $selector 'nullPolicy') -cne 'omit') { throw "Cmdlet '$cmdletName' discriminator '$name' has invalid presence metadata." }
+    }
+    $signatureGroups = @($Cmdlet.operations | ForEach-Object {
+        [pscustomobject]@{
+            parameterSet = [string]$_.parameterSet
+            signature = Get-P32PublicParameterSignature $_ @($Cmdlet.parameters) $selectors
+        }
+    } | Group-Object signature | Where-Object Count -gt 1)
+    foreach ($group in $signatureGroups) {
+        $ambiguousSets = @($group.Group | ForEach-Object parameterSet | Sort-Object -Unique)
+        throw "Cmdlet '$cmdletName' has indistinguishable public parameter signatures for parameter sets '$($ambiguousSets -join ', ')'."
+    }
+}
+
 function ConvertTo-CmdletProjection {
     param([Parameter(Mandatory)][object]$CommandPolicy, [Parameter(Mandatory)][object[]]$Operations, [Parameter(Mandatory)][string]$Resource)
     $cmdletName = [string]$CommandPolicy.cmdletName
@@ -426,6 +558,32 @@ function ConvertTo-CmdletProjection {
             optionalParameters = @($operation.parameters | Where-Object { @($_.requiredIn) -notcontains $_.appliesTo[0] } | ForEach-Object name)
         }
     })
+    # A selector is a generic projection capability for otherwise identical
+    # PowerShell parameter sets (for example PUT versus PATCH). It is not an
+    # API/runtime parameter and is therefore excluded from transport binding.
+    $selectors = @(Assert-P32ParameterSetDiscriminatorPolicy $CommandPolicy $bindings $parameters $parameterSets)
+    foreach ($selector in $selectors) {
+        $parameters += [ordered]@{
+            name = [string]$selector.name
+            sourceName = $null
+            type = [string]$selector.type
+            operationId = $selector.operationId
+            binding = 'parameter-set-selector'
+            position = $null
+            appliesTo = @([string]$selector.parameterSet)
+            requiredIn = @()
+            valueFromPipeline = $false
+            valueFromPipelineByPropertyName = $false
+            nullPolicy = 'omit'
+            defaultValue = $null
+            initializerPolicy = ''
+            aliases = @()
+            apiBindings = @()
+            isBody = $false
+            isSelector = $true
+            scopeRole = $null
+        }
+    }
     $first = $bindings[0]
     $outputPolicy = if (@($bindings | Where-Object outputPolicy -eq 'item').Count -gt 0) { 'item' } elseif (@($bindings | Where-Object outputPolicy -eq 'none').Count -eq $bindings.Count) { 'none' } else { 'single' }
     $paging = @($bindings | Where-Object { $null -ne $_.runtime.pagination -and [string]$_.runtime.pagination.strategy -ne 'SinglePage' } | Select-Object -First 1)

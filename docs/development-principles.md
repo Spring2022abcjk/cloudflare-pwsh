@@ -47,3 +47,9 @@
     canonical identity. Extra or missing public identities fail the gate.
 42. A generic discriminator is safe only after final PowerShell canonicalization
     and uniqueness validation in the public cmdlet/parameter-set namespace.
+43. CI must compose verified validation entry points; do not create a parallel generator/runtime implementation for release engineering.
+44. Pin external schema inputs by revision and content hash; never use an unpinned latest schema as deterministic CI input.
+45. Keep compatibility policy decisions explicit and typed across API, SDK, and PowerShell impacts; unknown and unapproved breaking changes cannot pass unattended CI.
+46. Coverage gates use operation identity, classification semantics, no-drop checks, and configurable thresholds; do not hard-code a fixed supported-operation count.
+47. Package candidates must be self-contained module artifacts; package smoke must load the staged candidate itself and must not rely on repository-relative source/build paths.
+48. Keep package assembly deterministic, keep PowerShell runtime assemblies out of the package, and do not publish automatically from validation CI.

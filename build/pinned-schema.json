@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "repository": "https://github.com/cloudflare/api-schemas.git",
+  "revision": "28bfb054e5fa106464e9fbbf0ffbf362bc85234d",
+  "sourcePath": "openapi.json",
+  "sourceRevision": "4.0.0",
+  "sha256": "f71c82b532b284e41a0e9de41ac1ee398e1b7b658f521e7f8ee478ce922fbf45"
+}

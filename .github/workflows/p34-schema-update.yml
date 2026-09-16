@@ -1,0 +1,27 @@
+name: P3.4 schema update validation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  validate-pinned-schema:
+    name: Validate pinned schema update
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/p34-windows-baseline
+      - name: Validate pinned schema and isolated update chain
+        run: ./tools/Invoke-P34SchemaUpdateValidation.ps1
+      - name: Upload schema-update reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: p34-schema-update-validation
+          path: ./artifacts/p34-schema-update-validation
+          if-no-files-found: error

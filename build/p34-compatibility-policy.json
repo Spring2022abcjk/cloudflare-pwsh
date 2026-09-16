@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "stage": "P3.4",
+  "description": "Only these exact baseline changes are approved. New breaking or potentially breaking changes require an explicit policy update and review.",
+  "rules": {
+    "unknownImpact": "fail",
+    "unexpectedBreaking": "fail",
+    "unexpectedPotentiallyBreaking": "manual-review"
+  },
+  "approvedChanges": [
+    {
+      "kind": "EnumValueAdded",
+      "schemaName": "abuse-reports_MitigatedEntityType",
+      "path": "abuse-reports_MitigatedEntityType[Request].enum",
+      "oldValue": "missing",
+      "newValue": "custom_expression",
+      "apiImpact": "NonBreaking",
+      "sdkImpact": "PotentiallyBreaking",
+      "powerShellImpact": "PotentiallyBreaking",
+      "reason": "Pinned P2.4 baseline enum addition is retained as an explicit review item."
+    },
+    {
+      "kind": "EnumValueAdded",
+      "schemaName": "abuse-reports_MitigatedEntityType",
+      "path": "abuse-reports_MitigatedEntityType[Response].enum",
+      "oldValue": "missing",
+      "newValue": "custom_expression",
+      "apiImpact": "NonBreaking",
+      "sdkImpact": "PotentiallyBreaking",
+      "powerShellImpact": "PotentiallyBreaking",
+      "reason": "Pinned P2.4 baseline enum addition is retained as an explicit review item."
+    },
+    {
+      "kind": "PropertyTypeChanged",
+      "schemaName": "abuse-reports_MitigationListItem",
+      "path": "abuse-reports_MitigationListItem[Response].properties[entity_type].schema",
+      "oldValue": "abuse-reports_MitigatedEntityType:enum:string::additionalAllowed=:additionalSchema=::enum=account;url_pattern;zone:oneOf=:anyOf=",
+      "newValue": "abuse-reports_MitigatedEntityType:enum:string::additionalAllowed=:additionalSchema=::enum=account;custom_expression;url_pattern;zone:oneOf=:anyOf=",
+      "apiImpact": "Breaking",
+      "sdkImpact": "Breaking",
+      "powerShellImpact": "Breaking",
+      "reason": "Pinned P2.4 baseline reflects the known normalized schema transition."
+    },
+    {
+      "kind": "ParameterTypeChanged",
+      "resourcePath": "abuse/reports/mitigations",
+      "operationId": "ListMitigations",
+      "path": "ListMitigations.parameters[entity_type].schema",
+      "oldValue": "abuse-reports_MitigatedEntityType:enum:string::additionalAllowed=:additionalSchema=::enum=account;url_pattern;zone:oneOf=:anyOf=",
+      "newValue": "abuse-reports_MitigatedEntityType:enum:string::additionalAllowed=:additionalSchema=::enum=account;custom_expression;url_pattern;zone:oneOf=:anyOf=",
+      "apiImpact": "Breaking",
+      "sdkImpact": "Breaking",
+      "powerShellImpact": "Breaking",
+      "reason": "Pinned P2.4 baseline reflects the known normalized schema transition."
+    }
+  ]
+}

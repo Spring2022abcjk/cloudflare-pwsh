@@ -208,6 +208,40 @@ The before/after global reports and deterministic blocker taxonomy are under
 but keeps the eight-operation public surface and all low-confidence semantic
 rows outside automatic admission.
 
+## P3.4 CI and package-candidate direction
+
+P3.4 composes the existing evidence boundaries rather than adding a second
+generator or runtime path:
+
+```text
+Pinned schema manifest + verified external checkout
+        ↓
+Existing P1–P3.3 read-only/golden/regression gates
+        ↓
+P2.4 compatibility policy + P3.3 coverage policy
+        ↓
+Release build → exact module staging → candidate-only package smoke
+        ↓
+Non-published release-candidate artifact
+```
+
+The pinned schema manifest records the upstream Git revision, normalized source
+revision, source path, and SHA-256. The checkout is ignored external evidence;
+CI does not treat an unpinned latest schema as deterministic input. CI jobs use
+the Windows PowerShell 7.6+ / .NET 10 baseline and require no real Cloudflare
+token for normal acceptance.
+
+`Directory.Build.props:VersionPrefix` is the version source of truth. The
+module manifest must match it, and the package builder checks the resulting
+assembly version and `net10.0` output. Candidate module import consumes only
+the staged manifest, module script, help XML, and assembly; reports and build
+metadata are adjacent evidence, not runtime dependencies. Candidate smoke is
+run in a clean child PowerShell process with local mock HTTP.
+
+Compatibility decisions remain typed API/SDK/PowerShell impact decisions from
+P2.4. Coverage decisions remain operation-row and semantic-transition checks
+from P3.3; no final coverage count is hardcoded as a release criterion.
+
 ## Deferred Boundaries
 
 Mutation idempotency policy, legacy authentication, full PowerShell binary UX,

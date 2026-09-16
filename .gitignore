@@ -21,6 +21,8 @@ artifacts/
 !artifacts/generated-normalized/dns-records/
 !artifacts/generated-normalized/dns-records/*.json
 /artifacts/p2.1/
+/artifacts/p34-candidate/
+/artifacts/p34-schema-update-validation/
 
 # Local module build copy (recreated by the test runner)
 module/**/*.dll

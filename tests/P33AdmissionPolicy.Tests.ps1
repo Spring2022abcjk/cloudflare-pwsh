@@ -16,11 +16,18 @@ $requiredGateIds = @(
     'normalization.valid', 'correction.unambiguous', 'projection.deterministic',
     'projection.no-name-collision', 'projection.parameter-sets-distinguishable',
     'runtime.capability', 'model.typed-supported', 'compatibility.visible',
-    'public.naming.accepted', 'mutation.safety-resolved', 'policy.explicit-admission'
+    'public.naming.accepted', 'mutation.safety-resolved', 'policy.explicit-admission', 'public.surface.parity'
 )
 Assert-True ($policy.automaticAdmission -eq $false) 'public admission must remain explicit-only.'
 Assert-True (($gateIds -join '|') -ceq ($requiredGateIds -join '|')) 'public admission gate order or membership drifted.'
 Assert-True (@($policy.nonAdmissionRules).Count -ge 3) 'public admission non-admission rules are incomplete.'
+Assert-True ([string]$policy.canonicalSurface.publicCmdletModelPath -eq 'artifacts/p3.2/CmdletModel.json') 'canonical public CmdletModel path drifted.'
+Assert-True (@($policy.canonicalSurface.generatedPublicSourcePaths).Count -eq 1) 'generated public source contract is not explicit.'
+
+$admissionGate = Join-Path $ProjectRoot 'tools/Invoke-P33AdmissionParity.ps1'
+$assemblyPath = Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/bin/Release/net10.0/Cloudflare.PowerShell.dll'
+& pwsh -NoLogo -NoProfile -File $admissionGate -ProjectRoot $ProjectRoot -AssemblyPath $assemblyPath | Out-Host
+if ($LASTEXITCODE -ne 0) { throw 'canonical admission parity gate failed.' }
 
 $publicRows = @($report.operations | Where-Object currentPublicSurface)
 Assert-True ($publicRows.Count -eq 8) 'public surface count drifted.'
@@ -33,5 +40,12 @@ foreach ($row in $publicRows) {
 $candidateRows = @($report.operations | Where-Object { -not $_.currentPublicSurface })
 Assert-True (@($candidateRows | Where-Object classification -in @('Supported', 'SupportedWithOverride')).Count -eq 0) 'non-public operations were auto-admitted.'
 Assert-True (@($report.operations | Where-Object projectionResolution -in @('ScopeKey', 'HttpMethod') | Where-Object currentPublicSurface).Count -eq 0) 'generic projection resolution crossed the public admission boundary.'
+$deterministicCandidates = @($report.operations | Where-Object {
+        [string]$_.projectionResolution -in @('ScopeKey', 'HttpMethod') -and
+        [string]$_.runtimeStatus -eq 'Ready' -and
+        [string]$_.classification -eq 'ExcludedByPolicy' -and
+        -not [bool]$_.currentPublicSurface
+    })
+Assert-True ($deterministicCandidates.Count -gt 0) 'no deterministic, runtime-ready, non-admitted candidate remains to enforce the admission boundary.'
 
 Write-Output 'PASS P3.3 explicit public admission gates and non-admission boundary'

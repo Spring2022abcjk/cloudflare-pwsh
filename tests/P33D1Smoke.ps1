@@ -91,7 +91,14 @@ public sealed class P33D1MockHandler : HttpMessageHandler
 }
 '@
 
-Import-Module (Join-Path $modulePath 'Cloudflare.PowerShell.psd1') -Force
+$formalModule = Import-Module (Join-Path $modulePath 'Cloudflare.PowerShell.psd1') -Force -PassThru
+foreach ($name in @('Get-CfD1Database','New-CfD1Database','Remove-CfD1Database','Set-CfD1Database')) {
+    if (@(Get-Command $name -Module $formalModule.Name -ErrorAction SilentlyContinue).Count -ne 0) { throw "D1 bounded command '$name' leaked into the formal module export surface." }
+}
+Remove-Module -ModuleInfo $formalModule -Force
+# D1 remains testable as a bounded generated binary surface, but is not a
+# formally exported module command until an explicit admission decision exists.
+Import-Module (Join-Path $modulePath 'Cloudflare.PowerShell.dll') -Force
 $hostSmaPath = [System.Management.Automation.PSCmdlet].Assembly.Location
 $expectedHostSmaPath = Join-Path $PSHOME 'System.Management.Automation.dll'
 if ([IO.Path]::GetFullPath($hostSmaPath) -ne [IO.Path]::GetFullPath($expectedHostSmaPath)) {
@@ -105,7 +112,7 @@ function Assert-True {
 
 foreach ($name in @('Get-CfD1Database','New-CfD1Database','Remove-CfD1Database','Set-CfD1Database')) {
     $command = Get-Command $name -ErrorAction Stop
-    Assert-True ($command.CommandType -eq 'Cmdlet') "D1 public command '$name' is not a cmdlet."
+    Assert-True ($command.CommandType -eq 'Cmdlet') "D1 bounded test command '$name' is not a cmdlet."
     Assert-True (@(Get-Command $name -All | Where-Object CommandType -eq 'Function').Count -eq 0) "D1 command '$name' is shadowed by a function."
 }
 $getCommand = Get-Command Get-CfD1Database

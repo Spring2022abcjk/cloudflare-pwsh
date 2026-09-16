@@ -4,6 +4,23 @@
   "name": "public-cmdlet-admission",
   "automaticAdmission": false,
   "decisionRule": "Only operations explicitly present in the current public CmdletModel may be public cmdlets.",
+  "canonicalSurface": {
+    "publicCmdletModelPath": "artifacts/p3.2/CmdletModel.json",
+    "coverageReportPath": "artifacts/p3.3/coverage-baseline.json",
+    "p24CompatibilitySurfacePath": "artifacts/p3.2/CmdletModel.json",
+    "generatedPublicSourcePaths": [
+      "src/Cloudflare.PowerShell/Generated/Cmdlets/P32RepresentativeCmdlets.cs"
+    ],
+    "moduleManifestPath": "module/Cloudflare.PowerShell/Cloudflare.PowerShell.psd1",
+    "moduleScriptPath": "module/Cloudflare.PowerShell/Cloudflare.PowerShell.psm1",
+    "generatedHelpPath": "module/Cloudflare.PowerShell/Cloudflare.PowerShell-help.xml"
+  },
+  "enforcement": {
+    "entrypoint": "tools/Invoke-P33AdmissionParity.ps1",
+    "acceptanceConsumer": "tests/ModuleSmoke.ps1",
+    "comparisonGranularity": "canonical-cmdlet-identity",
+    "failOnExtraOrMissing": true
+  },
   "gates": [
     { "id": "normalization.valid", "required": true, "evidence": "corrected normalized operation with method, path, provenance, parameters, responses, and representations" },
     { "id": "correction.unambiguous", "required": true, "evidence": "zero or fully evidenced API correction ambiguity" },
@@ -15,7 +32,8 @@
     { "id": "compatibility.visible", "required": true, "evidence": "candidate public CmdletModel is visible to P2.4 projection compatibility" },
     { "id": "public.naming.accepted", "required": true, "evidence": "verb/noun and help surface are explicit policy, not heuristic-only inference" },
     { "id": "mutation.safety-resolved", "required": true, "evidence": "ShouldProcess, confirmation, body/presence, retry/idempotency, and destructive semantics are not unresolved" },
-    { "id": "policy.explicit-admission", "required": true, "evidence": "operation is in the bounded public policy and its complete artifact/source/mock gates pass" }
+    { "id": "policy.explicit-admission", "required": true, "evidence": "operation is in the bounded public policy and its complete artifact/source/mock gates pass" },
+    { "id": "public.surface.parity", "required": true, "evidence": "canonical admitted cmdlets exactly equal generated public source, module manifest/script, generated help, runtime module exports, coverage, and P2.4 surface" }
   ],
   "nonAdmissionRules": [
     "Projection construction, normalization success, runtime readiness, or generated C# alone never imply public admission.",

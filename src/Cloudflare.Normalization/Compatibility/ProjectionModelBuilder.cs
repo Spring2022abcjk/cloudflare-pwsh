@@ -112,15 +112,17 @@ public static class ProjectionModelBuilder
             if (members.Any(x => x.HasExplicitParameterSet)) continue;
 
             var scopeKeys = members.Select(x => ScopeKey(x.Operation)).ToArray();
-            if (scopeKeys.Distinct(StringComparer.Ordinal).Count() == members.Length)
+            var scopeParameterSets = scopeKeys
+                .Select(scopeKey => $"{members[0].BaseParameterSet}By{PowerShellNameCanonicalizer.ToPowerShellName(ScopeSuffix(scopeKey))}")
+                .ToArray();
+            if (scopeKeys.Distinct(StringComparer.Ordinal).Count() == members.Length && HasUniqueFinalIdentities(members, scopeParameterSets))
             {
                 for (var index = 0; index < members.Length; index++)
                 {
                     var member = members[index];
-                    var suffix = ScopeSuffix(scopeKeys[index]);
                     assignments[member.Operation.OperationId] = assignments[member.Operation.OperationId] with
                     {
-                        ParameterSet = $"{member.BaseParameterSet}By{suffix}",
+                        ParameterSet = scopeParameterSets[index],
                         ResolutionRule = "ScopeKey"
                     };
                 }
@@ -128,14 +130,17 @@ public static class ProjectionModelBuilder
             }
 
             var methods = members.Select(x => x.Operation.Method).ToArray();
-            if (methods.Distinct(StringComparer.Ordinal).Count() == members.Length)
+            var methodParameterSets = methods
+                .Select(method => $"{members[0].BaseParameterSet}ByHttp{PowerShellNameCanonicalizer.ToPowerShellName(method.ToLowerInvariant())}")
+                .ToArray();
+            if (methods.Distinct(StringComparer.Ordinal).Count() == members.Length && HasUniqueFinalIdentities(members, methodParameterSets))
             {
                 for (var index = 0; index < members.Length; index++)
                 {
                     var member = members[index];
                     assignments[member.Operation.OperationId] = assignments[member.Operation.OperationId] with
                     {
-                        ParameterSet = $"{member.BaseParameterSet}ByHttp{ToTitle(member.Operation.Method.ToLowerInvariant())}",
+                        ParameterSet = methodParameterSets[index],
                         ResolutionRule = "HttpMethod"
                     };
                 }
@@ -159,9 +164,6 @@ public static class ProjectionModelBuilder
 
     private static string Noun(NormalizedOperation operation)
         => string.Concat(operation.ResourcePath.Select(ToTitle));
-
-    private static string ToTitle(string value)
-        => string.Concat(value.Split(['-', '_'], StringSplitOptions.RemoveEmptyEntries).Select(x => x.Length == 0 ? string.Empty : char.ToUpperInvariant(x[0]) + x[1..]));
 
     private static string? Rename(JsonObject? policy, string apiName)
         => (policy?["parameterRenames"] as JsonObject)?[apiName] is JsonValue value && value.TryGetValue<string>(out var name) ? name : null;
@@ -190,6 +192,12 @@ public static class ProjectionModelBuilder
             .ToArray();
         return values.Length == 0 ? "Unscoped" : string.Join("And", values);
     }
+
+    private static string ToTitle(string value)
+        => string.Concat(value.Split(['-', '_'], StringSplitOptions.RemoveEmptyEntries).Select(x => x.Length == 0 ? string.Empty : char.ToUpperInvariant(x[0]) + x[1..]));
+
+    private static bool HasUniqueFinalIdentities(IReadOnlyList<Candidate> members, IReadOnlyList<string> parameterSets)
+        => PowerShellNameCanonicalizer.AreUnique(members.Select((member, index) => $"{member.Verb}-{member.Noun}\u001f{parameterSets[index]}"));
 
     private sealed record Candidate(
         NormalizedOperation Operation,

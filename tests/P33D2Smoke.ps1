@@ -76,13 +76,20 @@ public sealed class P33D2MockHandler : HttpMessageHandler
 }
 '@
 
-Import-Module (Join-Path $modulePath 'Cloudflare.PowerShell.psd1') -Force
+$formalModule = Import-Module (Join-Path $modulePath 'Cloudflare.PowerShell.psd1') -Force -PassThru
+foreach ($name in @('Get-CfHealthCheck','New-CfHealthCheck','Remove-CfHealthCheck','Set-CfHealthCheck')) {
+    if (@(Get-Command $name -Module $formalModule.Name -ErrorAction SilentlyContinue).Count -ne 0) { throw "D2 bounded command '$name' leaked into the formal module export surface." }
+}
+Remove-Module -ModuleInfo $formalModule -Force
+# D2 remains testable as a bounded generated binary surface, but is not a
+# formally exported module command until an explicit admission decision exists.
+Import-Module (Join-Path $modulePath 'Cloudflare.PowerShell.dll') -Force
 $hostSmaPath = [System.Management.Automation.PSCmdlet].Assembly.Location
 if ([IO.Path]::GetFullPath($hostSmaPath) -ne [IO.Path]::GetFullPath((Join-Path $PSHOME 'System.Management.Automation.dll'))) { throw "PowerShell runtime SMA was not loaded from the current host: $hostSmaPath" }
 function Assert-True { param([bool]$Condition,[string]$Message); if (-not $Condition) { throw $Message } }
 foreach ($name in @('Get-CfHealthCheck','New-CfHealthCheck','Remove-CfHealthCheck','Set-CfHealthCheck')) {
     $command = Get-Command $name -ErrorAction Stop
-    Assert-True ($command.CommandType -eq 'Cmdlet') "D2 public command '$name' is not a cmdlet."
+    Assert-True ($command.CommandType -eq 'Cmdlet') "D2 bounded test command '$name' is not a cmdlet."
     Assert-True (@(Get-Command $name -All | Where-Object CommandType -eq 'Function').Count -eq 0) "D2 command '$name' is shadowed by a function."
 }
 $get = Get-Command Get-CfHealthCheck; $new = Get-Command New-CfHealthCheck; $remove = Get-Command Remove-CfHealthCheck; $set = Get-Command Set-CfHealthCheck

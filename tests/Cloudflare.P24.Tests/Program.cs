@@ -114,8 +114,9 @@ var reductionOptions = new ProjectionModelBuilder.ProjectionBuildOptions { Resol
 var scopeDocument = new NormalizedDocument();
 scopeDocument.Operations.Add(ScopedOperation("account-list", "GET", "AccountId", "account_id"));
 scopeDocument.Operations.Add(ScopedOperation("zone-list", "GET", "ZoneId", "zone_id"));
+scopeDocument.Operations.Add(ScopedOperation("namespace-list", "GET", "Namespace", "namespace_id"));
 var scopeAssignments = ProjectionModelBuilder.GetParameterSetAssignments(scopeDocument, null, reductionOptions);
-if (scopeAssignments.Count != 2 || scopeAssignments.Any(x => x.ResolutionRule != "ScopeKey") || scopeAssignments.Select(x => x.ParameterSet).Distinct(StringComparer.Ordinal).Count() != 2) failures.Add("projection reduction: scope-key disambiguation failed"); else Console.WriteLine("PASS projection scope-key disambiguation");
+if (scopeAssignments.Count != 3 || scopeAssignments.Any(x => x.ResolutionRule != "ScopeKey") || !PowerShellNameCanonicalizer.AreUnique(scopeAssignments.Select(x => $"{x.CmdletName}:{x.ParameterSet}"))) failures.Add("projection reduction: scope-key disambiguation failed"); else Console.WriteLine("PASS projection scope-key disambiguation");
 var methodDocument = new NormalizedDocument();
 methodDocument.Operations.Add(ScopedOperation("patch-list", "PATCH", "ZoneId", "zone_id"));
 methodDocument.Operations.Add(ScopedOperation("put-list", "PUT", "ZoneId", "zone_id"));
@@ -126,9 +127,14 @@ unresolvedDocument.Operations.Add(ScopedOperation("same-a", "GET", "ZoneId", "zo
 unresolvedDocument.Operations.Add(ScopedOperation("same-b", "GET", "ZoneId", "zone_id"));
 var unresolvedAssignments = ProjectionModelBuilder.GetParameterSetAssignments(unresolvedDocument, null, reductionOptions);
 if (unresolvedAssignments.Any(x => x.ResolutionRule != "None") || unresolvedAssignments.Select(x => x.ParameterSet).Distinct(StringComparer.Ordinal).Count() != 1) failures.Add("projection reduction: indistinguishable operations were auto-resolved"); else Console.WriteLine("PASS projection unresolved ambiguity boundary");
+var canonicalCollisionDocument = new NormalizedDocument();
+canonicalCollisionDocument.Operations.Add(ScopedOperation("canonical-a", "GET", "Foo-Bar", "foo-bar"));
+canonicalCollisionDocument.Operations.Add(ScopedOperation("canonical-b", "GET", "Foo_Bar", "foo_bar"));
+var canonicalCollisionAssignments = ProjectionModelBuilder.GetParameterSetAssignments(canonicalCollisionDocument, null, reductionOptions);
+if (canonicalCollisionAssignments.Any(x => x.ResolutionRule != "None") || canonicalCollisionAssignments.Select(x => PowerShellNameCanonicalizer.ToIdentityKey($"{x.CmdletName}:{x.ParameterSet}")).Distinct(StringComparer.Ordinal).Count() != 1) failures.Add("projection reduction: final PowerShell scope-name collision was incorrectly resolved"); else Console.WriteLine("PASS projection final-name collision guard");
 var reducedProjection = ProjectionModelBuilder.Build(scopeDocument, null, reductionOptions);
 if (!ProjectionCompatibility.Compare(builtProjection, reducedProjection).Any(x => x.Kind == ApiChangeKind.PowerShellParameterSetChanged)) failures.Add("projection reduction: compatibility did not see generated parameter-set change"); else Console.WriteLine("PASS projection reduction compatibility visibility");
-var collisions = ProjectionCompatibility.FindPowerShellNameCollisions(["foo-bar", "foo_bar", "foo.bar"]);
+var collisions = ProjectionCompatibility.FindPowerShellNameCollisions(["foo-bar", "foo_bar", "foo.bar", "foo bar", "FooBar", "FOO_BAR"]);
 if (collisions.Count != 1 || collisions[0].NewValue != "FooBar" || collisions[0].PowerShellImpact != CompatibilityImpact.Breaking) failures.Add("name collision: expected FooBar collision"); else Console.WriteLine("PASS PowerShell name collision");
 var collisionDocument = Base();
 collisionDocument.Operations[0].Parameters.Add(new NormalizedParameter { Name = "foo-bar", Location = "query", Schema = "String" });

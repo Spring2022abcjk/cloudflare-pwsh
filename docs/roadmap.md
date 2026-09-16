@@ -94,7 +94,11 @@ scope-key and HTTP-method rules reduce projection conflicts while leaving
 same-scope/same-method ambiguity and low-confidence semantics unresolved.
 Public admission remains explicit-only under
 `overrides/public-admission-policy.json`; no newly projection-ready row is
-automatically exported.
+automatically exported. The formal module surface remains the five admitted
+P3.2 cmdlets; D1/D2 generated binaries are test-only bounded surfaces and are
+not module exports. The admission parity gate reconciles canonical artifact,
+coverage, compatibility, generated source, manifest/runtime, and help by
+identity.
 
 ### P3.4 — Packaging, CI, and Update Workflow
 

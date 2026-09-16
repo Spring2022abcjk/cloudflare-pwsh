@@ -42,6 +42,7 @@ function Get-P33RequiredInputPaths {
         'src/Cloudflare.Normalization/Compatibility/ApiChange.cs',
         'src/Cloudflare.Normalization/Compatibility/CompatibilityEngine.cs',
         'src/Cloudflare.Normalization/Compatibility/CompatibilityReportFormatter.cs',
+        'src/Cloudflare.Normalization/Compatibility/PowerShellNameCanonicalizer.cs',
         'src/Cloudflare.Normalization/Compatibility/ProjectionCompatibility.cs',
         'src/Cloudflare.Normalization/Compatibility/ProjectionModelBuilder.cs',
         'src/Cloudflare.Normalization/HandwrittenFixtureLoader.cs',

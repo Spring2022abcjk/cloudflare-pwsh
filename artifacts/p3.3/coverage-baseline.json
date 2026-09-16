@@ -77885,11 +77885,11 @@
       "projectionResolution": "ScopeKey",
       "projectionOverride": false,
       "projectedCmdletName": "Get-CloudforceOneEventsRaw",
-      "projectedParameterSet": "GetByAccountParentAccountIdAndRawNestedDatasetIdAnd{datasetId}PrimaryEventId",
+      "projectedParameterSet": "GetByAccountParentAccountIdAndRawNestedDatasetIdAndDatasetIdPrimaryEventId",
       "projectionMappings": [
         {
           "cmdletName": "Get-CloudforceOneEventsRaw",
-          "parameterSet": "GetByAccountParentAccountIdAndRawNestedDatasetIdAnd{datasetId}PrimaryEventId"
+          "parameterSet": "GetByAccountParentAccountIdAndRawNestedDatasetIdAndDatasetIdPrimaryEventId"
         }
       ],
       "runtimeStatus": "Ready",

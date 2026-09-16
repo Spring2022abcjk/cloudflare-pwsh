@@ -27,6 +27,7 @@ P2.4 compatibility work is under `src/Cloudflare.Normalization/Compatibility` an
 - [P3 plan](./docs/P3-plan.md): the current runtime-first implementation slices and acceptance criteria.
 - [P3.3 plan](./docs/P3.3-plan.md): deterministic coverage discovery and the bounded D1 extension slice.
 - [P3.3 projection-reduction plan](./docs/P3.3-projection-reduction-plan.md): blocker taxonomy, generic projection disambiguation, and public admission gates.
+- [P3.3 projection-reduction summary](./docs/P3.3-projection-reduction-summary.md): admission/export parity repair and final PowerShell identity guard.
 - [P3.3 public admission policy](./docs/P3.3-public-admission-policy.md): explicit gates separating technical readiness from public cmdlet admission.
 - [Development principles](./docs/development-principles.md): durable rules for model, generator, runtime, and evidence work.
 

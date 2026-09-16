@@ -225,6 +225,30 @@ Release build → exact module staging → candidate-only package smoke
 Non-published release-candidate artifact
 ```
 
+The compatibility and coverage gates each emit one machine-readable receipt.
+It records the gate schema/name/type, `Passed` status, policy identity and
+SHA-256, input-report identity and SHA-256, and the pinned upstream schema
+identity. The package builder independently verifies those receipts and
+recomputes the current policy/report hashes before it creates candidate
+output; a receipt copied from another candidate or a `Failed` receipt is not
+trusted. Compatibility matching uses an exact canonical key: the change
+family determines required identity fields, all impact dimensions and old/new
+values are included, missing fields do not become wildcards, and duplicate
+report/allowlist keys fail.
+
+Coverage does not trust a report header histogram. It recomputes
+`classificationCounts` from every unique `operations[]` row, rejects unknown
+classifications and count keys, then applies the P3.3 semantic thresholds.
+
+The Release assembly carries a single source provenance value in
+`AssemblyInformationalVersion`, `0.1.0+source.<Git revision>`, plus its
+target-framework metadata. The package builder compares these with the
+current checkout, so `-SkipBuild` is safe only for an assembly proven to come
+from that checkout; AssemblyVersion alone is insufficient. Candidate smoke is
+run in a fresh child `pwsh` with a temporary working directory and repository
+paths removed from `PSModulePath`, then verifies the loaded assembly location
+is the staged candidate.
+
 The pinned schema manifest records the upstream Git revision, normalized source
 revision, source path, and SHA-256. The checkout is ignored external evidence;
 CI does not treat an unpinned latest schema as deterministic input. CI jobs use
@@ -238,6 +262,11 @@ the staged manifest, module script, help XML, and assembly; reports and build
 metadata are adjacent evidence, not runtime dependencies. Candidate smoke is
 run in a clean child PowerShell process with local mock HTTP.
 
+ZIP entries are sorted and use fixed timestamps. This proves byte-identical
+archives for equal inputs on the same supported host/runtime only; it does not
+claim Level-2 cross-host or cross-.NET-patch reproducibility. Local/static CI
+validation remains separate from remote GitHub Actions execution evidence.
+
 Compatibility decisions remain typed API/SDK/PowerShell impact decisions from
 P2.4. Coverage decisions remain operation-row and semantic-transition checks
 from P3.3; no final coverage count is hardcoded as a release criterion.
@@ -250,4 +279,7 @@ integration, and the final handwritten-vs-generated-cmdlet decision remain
 unresolved. P3.2 is limited to its five validated representative cmdlets until
 broader parity evidence supports expansion. The P3.1 runtime has deterministic mock coverage
 for multipart, binary streams, and all six recognized pagination strategies;
-HTTP 2xx with `success=false` remains intentionally unresolved.
+HTTP 2xx with `success=false` remains intentionally unresolved. Remote CI
+execution, PowerShell Gallery publishing, real-account acceptance, and
+full-SHA action pinning remain outside this fix pass; the latter is future
+supply-chain hardening.

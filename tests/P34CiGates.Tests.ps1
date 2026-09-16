@@ -29,6 +29,34 @@ function Assert-P34ScriptParses {
     [System.Management.Automation.Language.Parser]::ParseFile($Path, [ref]$tokens, [ref]$errors) | Out-Null
     if (@($errors).Count -ne 0) { throw "PowerShell parse errors in '$Path': $(@($errors | ForEach-Object Message) -join '; ')" }
 }
+function Invoke-P34ProvenanceBuild {
+    param([Parameter(Mandatory)][string]$SourceRevision)
+    & dotnet build (Join-Path $root 'src/Cloudflare.PowerShell/Cloudflare.PowerShell.csproj') --configuration Release --no-incremental --nologo "/p:P34SourceRevision=$SourceRevision" | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw "P3.4 provenance build failed with exit code $LASTEXITCODE." }
+}
+function Assert-P34PackageRejects {
+    param([Parameter(Mandatory)][string]$Label, [Parameter(Mandatory)][string]$CompatibilityGate, [Parameter(Mandatory)][string]$CoverageGate)
+    $arguments = [object[]]$packageArguments.Clone()
+    $arguments[3] = Join-Path $temporary ('reject-' + $Label)
+    $arguments[7] = $CompatibilityGate
+    $arguments[13] = $CoverageGate
+    Assert-P34TestChildFails $packageScript ([string[]]$arguments) $Label
+}
+function Assert-P34CompatibilityRejects {
+    param([Parameter(Mandatory)][string]$Label, [Parameter(Mandatory)]$Value, [string]$PolicyPath)
+    $path = Join-Path $temporary ('compat-' + $Label + '.json')
+    Write-P34TestJson $path $Value
+    $output = Join-Path $temporary ('compat-' + $Label + '-gate.json')
+    $arguments = @('-ProjectRoot', $root, '-ReportPath', $path, '-OutputPath', $output)
+    if (-not [string]::IsNullOrWhiteSpace($PolicyPath)) { $arguments += @('-PolicyPath', $PolicyPath) }
+    Assert-P34TestChildFails (Join-Path $root 'tools/Invoke-P34CompatibilityGate.ps1') $arguments $Label
+}
+function Assert-P34CoverageRejects {
+    param([Parameter(Mandatory)][string]$Label, [Parameter(Mandatory)]$Value)
+    $path = Join-Path $temporary ('coverage-' + $Label + '.json')
+    Write-P34TestJson $path $Value
+    Assert-P34TestChildFails (Join-Path $root 'tools/Invoke-P34CoverageGate.ps1') @('-ProjectRoot', $root, '-ReportPath', $path, '-BaselinePath', $coverageReport, '-OutputPath', (Join-Path $temporary ('coverage-' + $Label + '-gate.json'))) $Label
+}
 
 try {
     New-Item -ItemType Directory -Force -Path $temporary | Out-Null
@@ -52,6 +80,10 @@ try {
     $coverageMarkdown = Join-Path $root 'artifacts/p3.3/coverage-baseline.md'
     Invoke-P34TestChild (Join-Path $root 'tools/Invoke-P34CompatibilityGate.ps1') @('-ProjectRoot', $root, '-ReportPath', $compatibilityReport, '-OutputPath', $compatibilityGate) 'compatibility gate'
     Invoke-P34TestChild (Join-Path $root 'tools/Invoke-P34CoverageGate.ps1') @('-ProjectRoot', $root, '-ReportPath', $coverageReport, '-BaselinePath', $coverageReport, '-OutputPath', $coverageGate) 'coverage gate'
+
+    $sourceRevision = ((& git -C $root rev-parse HEAD 2>$null) -join "`n").Trim()
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($sourceRevision)) { throw 'P3.4 CI tests could not resolve the current source revision.' }
+    Invoke-P34ProvenanceBuild $sourceRevision
 
     $firstCandidate = Join-Path $temporary 'candidate-one'
     $secondCandidate = Join-Path $temporary 'candidate-two'
@@ -77,11 +109,89 @@ try {
     if ($firstManifest -cne $secondManifest) { throw 'Repeated package assembly produced different candidate manifests.' }
     Invoke-P34TestChild (Join-Path $root 'tests/P34PackageSmoke.ps1') @('-ModulePath', (Join-Path $firstCandidate 'package/Cloudflare.PowerShell')) 'candidate package smoke'
 
+    $failedCompatibilityGate = Join-Path $temporary 'failed-compatibility-gate.json'
+    $failedCompatibilityValue = Get-Content -Raw -LiteralPath $compatibilityGate | ConvertFrom-Json
+    $failedCompatibilityValue.status = 'Failed'
+    Write-P34TestJson $failedCompatibilityGate $failedCompatibilityValue
+    Assert-P34PackageRejects 'failed-compatibility-gate' $failedCompatibilityGate $coverageGate
+
+    $failedCoverageGate = Join-Path $temporary 'failed-coverage-gate.json'
+    $failedCoverageValue = Get-Content -Raw -LiteralPath $coverageGate | ConvertFrom-Json
+    $failedCoverageValue.status = 'Failed'
+    Write-P34TestJson $failedCoverageGate $failedCoverageValue
+    Assert-P34PackageRejects 'failed-coverage-gate' $compatibilityGate $failedCoverageGate
+
+    $mismatchedReportHashGate = Join-Path $temporary 'mismatched-report-hash-gate.json'
+    $mismatchedReportHashValue = Get-Content -Raw -LiteralPath $compatibilityGate | ConvertFrom-Json
+    $mismatchedReportHashValue.inputReportIdentity.sha256 = ('0' * 64)
+    Write-P34TestJson $mismatchedReportHashGate $mismatchedReportHashValue
+    Assert-P34PackageRejects 'mismatched-report-hash' $mismatchedReportHashGate $coverageGate
+
+    $mismatchedPolicyGate = Join-Path $temporary 'mismatched-policy-gate.json'
+    $mismatchedPolicyValue = Get-Content -Raw -LiteralPath $compatibilityGate | ConvertFrom-Json
+    $mismatchedPolicyValue.policyIdentity.sha256 = ('1' * 64)
+    Write-P34TestJson $mismatchedPolicyGate $mismatchedPolicyValue
+    Assert-P34PackageRejects 'mismatched-policy-identity' $mismatchedPolicyGate $coverageGate
+
+    $mismatchedSchemaGate = Join-Path $temporary 'mismatched-schema-gate.json'
+    $mismatchedSchemaValue = Get-Content -Raw -LiteralPath $compatibilityGate | ConvertFrom-Json
+    $mismatchedSchemaValue.schemaIdentity.revision = ('2' * 40)
+    Write-P34TestJson $mismatchedSchemaGate $mismatchedSchemaValue
+    Assert-P34PackageRejects 'mismatched-schema-revision' $mismatchedSchemaGate $coverageGate
+
+    $staleRevision = 'a' * 40
+    Invoke-P34ProvenanceBuild $staleRevision
+    Assert-P34PackageRejects 'stale-assembly-provenance' $compatibilityGate $coverageGate
+    Invoke-P34ProvenanceBuild $sourceRevision
+
     $mutatedCompatibility = Join-Path $temporary 'mutated-compatibility.json'
     $compatibilityValue = Get-Content -Raw -LiteralPath $compatibilityReport | ConvertFrom-Json
     $compatibilityValue.changes[0].newValue = 'unexpected-value'
     Write-P34TestJson $mutatedCompatibility $compatibilityValue
     Assert-P34TestChildFails (Join-Path $root 'tools/Invoke-P34CompatibilityGate.ps1') @('-ProjectRoot', $root, '-ReportPath', $mutatedCompatibility, '-OutputPath', (Join-Path $temporary 'mutated-compatibility-gate.json')) 'unexpected compatibility change rejection'
+
+    $identityRemoved = Get-Content -Raw -LiteralPath $compatibilityReport | ConvertFrom-Json
+    $identityRemoved.changes[0].PSObject.Properties.Remove('schemaName')
+    Assert-P34CompatibilityRejects 'missing-identity-field' $identityRemoved
+
+    $operationIdChanged = Get-Content -Raw -LiteralPath $compatibilityReport | ConvertFrom-Json
+    (@($operationIdChanged.changes | Where-Object kind -eq 'ParameterTypeChanged')[0]).operationId = 'ChangedOperation'
+    Assert-P34CompatibilityRejects 'changed-operation-id' $operationIdChanged
+
+    $resourcePathChanged = Get-Content -Raw -LiteralPath $compatibilityReport | ConvertFrom-Json
+    (@($resourcePathChanged.changes | Where-Object kind -eq 'ParameterTypeChanged')[0]).resourcePath = 'other/resource'
+    Assert-P34CompatibilityRejects 'changed-resource-path' $resourcePathChanged
+
+    $schemaNameChanged = Get-Content -Raw -LiteralPath $compatibilityReport | ConvertFrom-Json
+    (@($schemaNameChanged.changes | Where-Object kind -eq 'EnumValueAdded')[0]).schemaName = 'OtherSchema'
+    Assert-P34CompatibilityRejects 'changed-schema-name' $schemaNameChanged
+
+    $impactChanged = Get-Content -Raw -LiteralPath $compatibilityReport | ConvertFrom-Json
+    $impactChanged.changes[0].apiImpact = 'Behavioral'
+    Assert-P34CompatibilityRejects 'changed-impact-dimension' $impactChanged
+
+    $duplicateCompatibility = Get-Content -Raw -LiteralPath $compatibilityReport | ConvertFrom-Json
+    $duplicateCompatibility.changes = @($duplicateCompatibility.changes) + $duplicateCompatibility.changes[0]
+    Assert-P34CompatibilityRejects 'duplicate-report-change' $duplicateCompatibility
+
+    $duplicatePolicy = Get-Content -Raw -LiteralPath (Join-Path $root 'build/p34-compatibility-policy.json') | ConvertFrom-Json
+    $duplicatePolicy.approvedChanges = @($duplicatePolicy.approvedChanges) + $duplicatePolicy.approvedChanges[0]
+    $duplicatePolicyPath = Join-Path $temporary 'duplicate-compatibility-policy.json'
+    Write-P34TestJson $duplicatePolicyPath $duplicatePolicy
+    Assert-P34CompatibilityRejects 'duplicate-allowlist-entry' (Get-Content -Raw -LiteralPath $compatibilityReport | ConvertFrom-Json) $duplicatePolicyPath
+
+    $similarBreaking = Get-Content -Raw -LiteralPath $compatibilityReport | ConvertFrom-Json
+    $similarBreakingChange = @($similarBreaking.changes | Where-Object kind -eq 'ParameterTypeChanged')[0]
+    $similarBreakingChange.path = "$($similarBreakingChange.path).unexpected"
+    Assert-P34CompatibilityRejects 'similar-nonidentical-breaking-change' $similarBreaking
+
+    $staleAllowlist = Get-Content -Raw -LiteralPath $compatibilityReport | ConvertFrom-Json
+    $staleAllowlist.changes = @($staleAllowlist.changes | Select-Object -Skip 1)
+    Assert-P34CompatibilityRejects 'stale-allowlist-entry' $staleAllowlist
+
+    $unknownImpact = Get-Content -Raw -LiteralPath $compatibilityReport | ConvertFrom-Json
+    $unknownImpact.changes[0].apiImpact = 'Unknown'
+    Assert-P34CompatibilityRejects 'unknown-impact' $unknownImpact
 
     $mutatedCoverage = Join-Path $temporary 'mutated-coverage.json'
     $coverageValue = Get-Content -Raw -LiteralPath $coverageReport | ConvertFrom-Json
@@ -90,6 +200,15 @@ try {
     $supportedRow[0].classification = 'NeedsManualReview'
     Write-P34TestJson $mutatedCoverage $coverageValue
     Assert-P34TestChildFails (Join-Path $root 'tools/Invoke-P34CoverageGate.ps1') @('-ProjectRoot', $root, '-ReportPath', $mutatedCoverage, '-BaselinePath', $coverageReport, '-OutputPath', (Join-Path $temporary 'mutated-coverage-gate.json')) 'supported-to-manual coverage regression rejection'
+
+    $tamperedHistogram = Get-Content -Raw -LiteralPath $coverageReport | ConvertFrom-Json
+    $tamperedHistogram.classificationCounts.UnsupportedProjectionCapability--
+    $tamperedHistogram.classificationCounts.ExcludedByPolicy++
+    Assert-P34CoverageRejects 'tampered-classification-histogram' $tamperedHistogram
+
+    $unknownClassification = Get-Content -Raw -LiteralPath $coverageReport | ConvertFrom-Json
+    $unknownClassification.operations[0].classification = 'FutureClassification'
+    Assert-P34CoverageRejects 'unknown-classification' $unknownClassification
 
     $final = @(& git -C $root status --short) -join "`n"
     if ($final -cne $initial) { throw "P3.4 gate tests changed the worktree unexpectedly. Before:`n$initial`nAfter:`n$final" }

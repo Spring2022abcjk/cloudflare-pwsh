@@ -7,13 +7,42 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $modulePath = [IO.Path]::GetFullPath((Resolve-Path -LiteralPath $ModulePath).Path)
+$repoRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+$repoPrefix = $repoRoot.TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
 
 if (-not $Child) {
-    & pwsh -NoLogo -NoProfile -File $PSCommandPath -ModulePath $modulePath -Child | Out-Host
-    if ($LASTEXITCODE -ne 0) { throw "P3.4 package smoke child process failed with exit code $LASTEXITCODE." }
-    Write-Output 'PASS P3.4 package smoke isolated child process'
+    $workingDirectory = Join-Path ([IO.Path]::GetTempPath()) ('cloudflare-p34-smoke-' + [guid]::NewGuid().ToString('N'))
+    New-Item -ItemType Directory -Force -Path $workingDirectory | Out-Null
+    try {
+        & pwsh -NoLogo -NoProfile -WorkingDirectory $workingDirectory -File $PSCommandPath -ModulePath $modulePath -Child | Out-Host
+        if ($LASTEXITCODE -ne 0) { throw "P3.4 package smoke child process failed with exit code $LASTEXITCODE." }
+        Write-Output 'PASS P3.4 package smoke isolated child process'
+    } finally {
+        if (Test-Path -LiteralPath $workingDirectory) { Remove-Item -LiteralPath $workingDirectory -Recurse -Force -ErrorAction SilentlyContinue }
+    }
     return
 }
+
+$currentDirectory = [IO.Path]::GetFullPath((Get-Location).Path)
+if ($currentDirectory.StartsWith($repoPrefix, [StringComparison]::OrdinalIgnoreCase)) { throw "Package smoke child working directory is inside the repository: $currentDirectory" }
+$modulePathEntries = @($env:PSModulePath -split [IO.Path]::PathSeparator | Where-Object {
+    if ([string]::IsNullOrWhiteSpace($_)) { return $false }
+    $candidate = [IO.Path]::GetFullPath($_)
+    return -not $candidate.StartsWith($repoPrefix, [StringComparison]::OrdinalIgnoreCase)
+})
+$env:PSModulePath = [string]::Join([IO.Path]::PathSeparator, $modulePathEntries)
+if (@(Get-Module -Name Cloudflare.PowerShell).Count -ne 0) { throw 'Package smoke child already has Cloudflare.PowerShell loaded.' }
+$sourcePayloadRoots = @(
+    [IO.Path]::GetFullPath((Join-Path $repoRoot 'src')),
+    [IO.Path]::GetFullPath((Join-Path $repoRoot 'module')),
+    [IO.Path]::GetFullPath((Join-Path $repoRoot 'bin'))
+) | ForEach-Object { $_.TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar }
+$preloadedSourceAssemblies = @([AppDomain]::CurrentDomain.GetAssemblies() | Where-Object {
+    if ([string]::IsNullOrWhiteSpace($_.Location)) { return $false }
+    $location = [IO.Path]::GetFullPath($_.Location)
+    @($sourcePayloadRoots | Where-Object { $location.StartsWith($_, [StringComparison]::OrdinalIgnoreCase) }).Count -gt 0
+})
+if ($preloadedSourceAssemblies.Count -ne 0) { throw 'Package smoke child preloaded an assembly from the repository source payload.' }
 
 $manifestPath = Join-Path $modulePath 'Cloudflare.PowerShell.psd1'
 if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Package module manifest is missing: $manifestPath" }

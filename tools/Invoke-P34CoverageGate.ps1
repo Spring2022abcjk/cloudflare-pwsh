@@ -33,6 +33,12 @@ $baseline = Read-P34CoverageJson $baselinePath
 if (-not (Test-Path -LiteralPath $policyPath -PathType Leaf)) { throw "P3.4 coverage policy is missing: $policyPath" }
 $policy = Get-Content -Raw -LiteralPath $policyPath | ConvertFrom-Json
 if ([int]$policy.version -ne 1 -or [string]$policy.stage -cne 'P3.4') { throw 'P3.4 coverage policy version/stage is unsupported.' }
+$schemaManifestPath = Resolve-P34CoveragePath 'build/pinned-schema.json'
+if (-not (Test-Path -LiteralPath $schemaManifestPath -PathType Leaf)) { throw "P3.4 pinned schema manifest is missing: $schemaManifestPath" }
+$schemaManifest = Get-Content -Raw -LiteralPath $schemaManifestPath | ConvertFrom-Json
+foreach ($field in @('revision', 'sourceRevision', 'sourcePath', 'sha256')) {
+    if ([string]::IsNullOrWhiteSpace([string]$schemaManifest.$field)) { throw "P3.4 pinned schema manifest is missing '$field'." }
+}
 
 $allowed = @($policy.requiredClassifications | ForEach-Object { [string]$_ })
 if ($allowed.Count -eq 0 -or @($allowed | Sort-Object -Unique).Count -ne $allowed.Count) { throw 'P3.4 coverage policy classifications must be present and unique.' }
@@ -44,7 +50,31 @@ function Assert-P34CoverageShape {
     if (@($rows.operationKey | Sort-Object -Unique).Count -ne $rows.Count) { throw "$Label operation keys are not unique." }
     if (@($rows | Where-Object { $allowed -notcontains [string]$_.classification }).Count -ne 0) { throw "$Label contains an unsupported final classification." }
     if (@($rows | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.operationId) -or [string]::IsNullOrWhiteSpace([string]$_.operationKey) }).Count -ne 0) { throw "$Label contains an incomplete operation row." }
-    $classSum = @($Value.classificationCounts.PSObject.Properties | Measure-Object -Property Value -Sum).Sum
+    if ($null -eq $Value.classificationCounts) { throw "$Label is missing classificationCounts." }
+    $reportedClassCounts = @{}
+    foreach ($property in @($Value.classificationCounts.PSObject.Properties)) {
+        if ($allowed -notcontains [string]$property.Name) { throw "$Label contains an unsupported classification count key '$($property.Name)'." }
+        if ($property.Value -is [bool] -or $property.Value -isnot [byte] -and
+            $property.Value -isnot [sbyte] -and $property.Value -isnot [int16] -and
+            $property.Value -isnot [uint16] -and $property.Value -isnot [int32] -and
+            $property.Value -isnot [uint32] -and $property.Value -isnot [int64] -and
+            $property.Value -isnot [uint64]) {
+            throw "$Label classification count '$($property.Name)' is not an integer."
+        }
+        try { $reportedCount = [int64]$property.Value } catch { throw "$Label classification count '$($property.Name)' is out of range." }
+        if ($reportedCount -lt 0) { throw "$Label classification count '$($property.Name)' is negative." }
+        $reportedClassCounts[[string]$property.Name] = $reportedCount
+    }
+    $recomputedClassCounts = @{}
+    foreach ($classification in $allowed) { $recomputedClassCounts[$classification] = 0 }
+    foreach ($row in $rows) { $recomputedClassCounts[[string]$row.classification]++ }
+    foreach ($classification in $allowed) {
+        $reportedCount = if ($reportedClassCounts.ContainsKey($classification)) { $reportedClassCounts[$classification] } else { 0 }
+        if ($reportedCount -ne $recomputedClassCounts[$classification]) {
+            throw "$Label classification histogram does not reconcile for '$classification': reported=$reportedCount recomputed=$($recomputedClassCounts[$classification])."
+        }
+    }
+    $classSum = ($reportedClassCounts.Values | Measure-Object -Sum).Sum
     if ([int]$classSum -ne $rows.Count) { throw "$Label classification counts do not reconcile." }
     if ([int]$Value.countSemantics.normalizedSchemaCount -ne [int]$Value.normalizedSchemaCount -or
         [int]$Value.countSemantics.runtimeReadyStageCount -ne [int]$Value.stageCounts.runtimeReady -or
@@ -56,6 +86,16 @@ function Assert-P34CoverageShape {
 $rows = @(Assert-P34CoverageShape $report 'candidate coverage report')
 $baselineRows = @(Assert-P34CoverageShape $baseline 'baseline coverage report')
 if ([string]$report.sourceRevision -cne [string]$baseline.sourceRevision -or [string]$report.sourcePath -cne [string]$baseline.sourcePath) { throw 'Candidate coverage source identity differs from the baseline; update the pinned baseline explicitly.' }
+if ([string]$report.sourceRevision -cne [string]$schemaManifest.sourceRevision -or [string]$report.sourcePath -cne ('ref/api-schemas/' + [string]$schemaManifest.sourcePath)) {
+    throw 'Candidate coverage source identity differs from the pinned schema manifest.'
+}
+$reportSourceIdentity = $report.inputIdentity.source
+if ($null -eq $reportSourceIdentity) { throw 'Candidate coverage report is missing inputIdentity.source.' }
+if ([string]$reportSourceIdentity.path -cne [string]$report.sourcePath -or
+    [string]$reportSourceIdentity.revision -cne [string]$schemaManifest.sourceRevision -or
+    [string]$reportSourceIdentity.sha256 -cne [string]$schemaManifest.sha256) {
+    throw 'Candidate coverage report inputIdentity.source does not match the pinned schema manifest.'
+}
 $reportIdentity = $report.inputIdentity | ConvertTo-Json -Depth 20 -Compress
 $baselineIdentity = $baseline.inputIdentity | ConvertTo-Json -Depth 20 -Compress
 if ($reportIdentity -cne $baselineIdentity) { throw 'Candidate coverage input identity differs from the baseline; update the pinned baseline explicitly.' }
@@ -99,7 +139,23 @@ if ($manualIncrease -gt (Get-P34NonNegativeRule 'maxManualReviewIncrease')) { $v
 $summary = [ordered]@{
     schemaVersion = 1
     stage = 'P3.4'
+    gateName = 'P3.4.CoverageGate'
+    gateType = 'Coverage'
     status = if ($violations.Count -eq 0) { 'Passed' } else { 'Failed' }
+    policyIdentity = [ordered]@{
+        path = [IO.Path]::GetRelativePath($root, $policyPath).Replace('\', '/')
+        sha256 = Get-P34CoverageHash $policyPath
+    }
+    inputReportIdentity = [ordered]@{
+        fileName = [IO.Path]::GetFileName($reportPath)
+        sha256 = Get-P34CoverageHash $reportPath
+    }
+    schemaIdentity = [ordered]@{
+        revision = [string]$schemaManifest.revision
+        sourceRevision = [string]$schemaManifest.sourceRevision
+        sourcePath = [string]$schemaManifest.sourcePath
+        sha256 = [string]$schemaManifest.sha256
+    }
     reportPath = [IO.Path]::GetRelativePath($root, $reportPath).Replace('\', '/')
     baselinePath = [IO.Path]::GetRelativePath($root, $baselinePath).Replace('\', '/')
     reportSha256 = Get-P34CoverageHash $reportPath

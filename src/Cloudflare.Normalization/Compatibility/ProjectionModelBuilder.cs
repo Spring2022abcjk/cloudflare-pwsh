@@ -4,6 +4,18 @@ namespace Cloudflare.Normalization.Compatibility;
 
 public static class ProjectionModelBuilder
 {
+    public sealed class ProjectionBuildOptions
+    {
+        public bool ResolveDeterministicParameterSetCollisions { get; init; }
+    }
+
+    public sealed record ProjectionParameterSetAssignment(
+        string OperationId,
+        string CmdletName,
+        string BaseParameterSet,
+        string ParameterSet,
+        string ResolutionRule);
+
     public static IReadOnlyList<ApiChange> FindNameCollisions(NormalizedDocument document, JsonObject? projectionPolicy = null)
     {
         var changes = new List<ApiChange>();
@@ -35,14 +47,19 @@ public static class ProjectionModelBuilder
         return changes;
     }
 
-    public static JsonObject Build(NormalizedDocument document, JsonObject? projectionPolicy = null)
+    public static JsonObject Build(
+        NormalizedDocument document,
+        JsonObject? projectionPolicy = null,
+        ProjectionBuildOptions? options = null)
     {
+        var assignments = GetParameterSetAssignments(document, projectionPolicy, options);
         var cmdlets = new Dictionary<string, CmdletAccumulator>(StringComparer.Ordinal);
         foreach (var operation in document.Operations.OrderBy(x => x.OperationId, StringComparer.Ordinal))
         {
             var policy = OperationPolicy(projectionPolicy, operation.OperationId);
-            var parameterSet = String(policy?["parameterSet"]) ?? operation.OperationSemantic.Kind;
-            var cmdletName = $"{String(policy?["verb"]) ?? Verb(operation)}-{String(policy?["noun"]) ?? Noun(operation)}";
+            var assignment = assignments.Single(x => x.OperationId == operation.OperationId);
+            var parameterSet = assignment.ParameterSet;
+            var cmdletName = assignment.CmdletName;
             if (!cmdlets.TryGetValue(cmdletName, out var cmdlet)) cmdlets[cmdletName] = cmdlet = new CmdletAccumulator(cmdletName);
             cmdlet.Add(operation, parameterSet, policy);
         }
@@ -50,6 +67,82 @@ public static class ProjectionModelBuilder
         var result = new JsonArray();
         foreach (var cmdlet in cmdlets.Values.OrderBy(x => x.Name, StringComparer.Ordinal)) result.Add(cmdlet.ToJson());
         return new JsonObject { ["cmdlets"] = result };
+    }
+
+    public static IReadOnlyList<ProjectionParameterSetAssignment> GetParameterSetAssignments(
+        NormalizedDocument document,
+        JsonObject? projectionPolicy = null,
+        ProjectionBuildOptions? options = null)
+    {
+        var candidates = document.Operations
+            .OrderBy(x => x.OperationId, StringComparer.Ordinal)
+            .Select(operation =>
+            {
+                var policy = OperationPolicy(projectionPolicy, operation.OperationId);
+                var explicitParameterSet = String(policy?["parameterSet"]);
+                return new Candidate(
+                    operation,
+                    String(policy?["verb"]) ?? Verb(operation),
+                    String(policy?["noun"]) ?? Noun(operation),
+                    explicitParameterSet ?? operation.OperationSemantic.Kind,
+                    explicitParameterSet is not null);
+            })
+            .ToList();
+
+        var assignments = candidates.ToDictionary(
+            x => x.Operation.OperationId,
+            x => new ProjectionParameterSetAssignment(
+                x.Operation.OperationId,
+                $"{x.Verb}-{x.Noun}",
+                x.BaseParameterSet,
+                x.BaseParameterSet,
+                "None"),
+            StringComparer.Ordinal);
+
+        if (options?.ResolveDeterministicParameterSetCollisions != true) return assignments.Values.OrderBy(x => x.OperationId, StringComparer.Ordinal).ToArray();
+
+        foreach (var group in candidates
+                     .GroupBy(x => $"{x.Verb}-{x.Noun}\u001f{x.BaseParameterSet}", StringComparer.Ordinal)
+                     .Where(x => x.Count() > 1)
+                     .OrderBy(x => x.Key, StringComparer.Ordinal))
+        {
+            var members = group.OrderBy(x => x.Operation.OperationId, StringComparer.Ordinal).ToArray();
+            // Explicit public policy is authoritative. A generic rule may not
+            // silently rename an explicitly declared parameter set.
+            if (members.Any(x => x.HasExplicitParameterSet)) continue;
+
+            var scopeKeys = members.Select(x => ScopeKey(x.Operation)).ToArray();
+            if (scopeKeys.Distinct(StringComparer.Ordinal).Count() == members.Length)
+            {
+                for (var index = 0; index < members.Length; index++)
+                {
+                    var member = members[index];
+                    var suffix = ScopeSuffix(scopeKeys[index]);
+                    assignments[member.Operation.OperationId] = assignments[member.Operation.OperationId] with
+                    {
+                        ParameterSet = $"{member.BaseParameterSet}By{suffix}",
+                        ResolutionRule = "ScopeKey"
+                    };
+                }
+                continue;
+            }
+
+            var methods = members.Select(x => x.Operation.Method).ToArray();
+            if (methods.Distinct(StringComparer.Ordinal).Count() == members.Length)
+            {
+                for (var index = 0; index < members.Length; index++)
+                {
+                    var member = members[index];
+                    assignments[member.Operation.OperationId] = assignments[member.Operation.OperationId] with
+                    {
+                        ParameterSet = $"{member.BaseParameterSet}ByHttp{ToTitle(member.Operation.Method.ToLowerInvariant())}",
+                        ResolutionRule = "HttpMethod"
+                    };
+                }
+            }
+        }
+
+        return assignments.Values.OrderBy(x => x.OperationId, StringComparer.Ordinal).ToArray();
     }
 
     private static JsonObject? OperationPolicy(JsonObject? policy, string operationId)
@@ -78,6 +171,32 @@ public static class ProjectionModelBuilder
 
     private static string? String(JsonNode? node)
         => node is JsonValue value && value.TryGetValue<string>(out var text) ? text : null;
+
+    private static string ScopeKey(NormalizedOperation operation)
+    {
+        var scopes = operation.ScopeBindings
+            .OrderBy(x => x.ScopeType, StringComparer.Ordinal)
+            .ThenBy(x => x.Role, StringComparer.Ordinal)
+            .ThenBy(x => x.ParameterName, StringComparer.Ordinal)
+            .Select(x => $"{x.ScopeType}:{x.Role}:{x.ParameterName}")
+            .ToArray();
+        return scopes.Length == 0 ? "Unscoped" : string.Join('+', scopes);
+    }
+
+    private static string ScopeSuffix(string scopeKey)
+    {
+        var values = scopeKey.Split('+', StringSplitOptions.RemoveEmptyEntries)
+            .Select(value => string.Join("", value.Split(':', StringSplitOptions.RemoveEmptyEntries).Select(ToTitle)))
+            .ToArray();
+        return values.Length == 0 ? "Unscoped" : string.Join("And", values);
+    }
+
+    private sealed record Candidate(
+        NormalizedOperation Operation,
+        string Verb,
+        string Noun,
+        string BaseParameterSet,
+        bool HasExplicitParameterSet);
 
     private sealed class CmdletAccumulator(string name)
     {

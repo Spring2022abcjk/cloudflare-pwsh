@@ -31,7 +31,7 @@ $requiredRowFields = @(
     'resource', 'resourcePath', 'resourceFamily', 'operationId', 'method', 'pathTemplate',
     'semanticKind', 'semanticSource', 'semanticConfidence', 'classification', 'reasonCodes',
     'evidence', 'missingCapabilities', 'normalizedStatus', 'correctionStatus', 'correctionRules',
-    'projectionStatus', 'projectionOverride', 'projectedCmdletName', 'projectedParameterSet',
+    'projectionStatus', 'projectionResolution', 'projectionOverride', 'projectedCmdletName', 'projectedParameterSet',
     'projectionMappings', 'runtimeStatus', 'runtimeGaps', 'currentPublicCmdlet',
     'currentPublicSurface', 'sourceLocation'
 )
@@ -77,6 +77,9 @@ foreach ($row in $rows) {
         Assert-True ($evidence -contains 'projection.collision') "projection-conflict operation '$($row.operationId)' lacks collision evidence."
     } else {
         Assert-True ($evidence -contains 'projection.constructed') "projection-ready operation '$($row.operationId)' lacks projection evidence."
+    }
+    if ([string]$row.projectionResolution -in @('ScopeKey', 'HttpMethod')) {
+        Assert-True ([string]$row.projectionStatus -eq 'ResolvedByGenericRule' -and $evidence -contains 'projection.generic-disambiguation') "generic projection resolution contract failed for '$($row.operationId)'."
     }
     if ([string]$row.runtimeStatus -eq 'Ready') {
         Assert-True ($evidence -contains 'runtime.shared-capabilities') "runtime-ready operation '$($row.operationId)' lacks shared-capability evidence."

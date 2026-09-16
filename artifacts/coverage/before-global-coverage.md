@@ -18,8 +18,8 @@
 | --- | ---: |
 | normalizedSucceeded | 3407 |
 | correctionApplied | 2 |
-| projectionReady | 3350 |
-| projectionConflicts | 57 |
+| projectionReady | 2839 |
+| projectionConflicts | 568 |
 | runtimeReady | 3382 |
 | runtimeGaps | 25 |
 | currentPublicSurface | 8 |
@@ -29,10 +29,10 @@
 
 | Classification | Count |
 | --- | ---: |
-| ExcludedByPolicy | 2719 |
+| ExcludedByPolicy | 2281 |
 | NeedsManualReview | 617 |
 | SupportedWithOverride | 8 |
-| UnsupportedProjectionCapability | 53 |
+| UnsupportedProjectionCapability | 491 |
 | UnsupportedRuntimeCapability | 10 |
 
 ## Capability gaps and review reasons
@@ -42,9 +42,9 @@
 | `CurrentPublicSurface` | 8 |
 | `ExplicitPolicyOrCorrection` | 8 |
 | `LowSemanticConfidence` | 617 |
-| `NoPublicProjectionPolicy` | 2709 |
-| `OutsideCurrentPublicSurface` | 2719 |
-| `ProjectionParameterSetCollision` | 53 |
+| `NoPublicProjectionPolicy` | 2271 |
+| `OutsideCurrentPublicSurface` | 2281 |
+| `ProjectionParameterSetCollision` | 491 |
 | `ProjectionPolicyPresent` | 10 |
 | `UnsupportedRequestContentType:application/merge-patch+json` | 4 |
 | `UnsupportedRequestContentType:application/scim+json` | 4 |
@@ -59,8 +59,8 @@
 | `abuse/reports/emails` | 1 | ExcludedByPolicy=1 |
 | `abuse/reports/mitigations` | 1 | ExcludedByPolicy=1 |
 | `abuse/reports/mitigations/appeal` | 1 | NeedsManualReview=1 |
-| `access` | 5 | ExcludedByPolicy=5 |
-| `access/active/sessions` | 2 | ExcludedByPolicy=2 |
+| `access` | 5 | ExcludedByPolicy=3; UnsupportedProjectionCapability=2 |
+| `access/active/sessions` | 2 | UnsupportedProjectionCapability=2 |
 | `access/ai/controls/mcp/analytics/portals/tool/calls/timeseries` | 1 | NeedsManualReview=1 |
 | `access/ai/controls/mcp/analytics/servers/tool/calls/timeseries` | 1 | NeedsManualReview=1 |
 | `access/ai/controls/mcp/analytics/tool/calls/timeseries` | 1 | NeedsManualReview=1 |
@@ -68,23 +68,23 @@
 | `access/ai/controls/mcp/portals/servers/effective/redirect/uri` | 1 | NeedsManualReview=1 |
 | `access/ai/controls/mcp/servers` | 5 | ExcludedByPolicy=4; NeedsManualReview=1 |
 | `access/ai/controls/mcp/servers/sync` | 1 | NeedsManualReview=1 |
-| `access/apps` | 10 | ExcludedByPolicy=8; NeedsManualReview=2 |
-| `access/apps/ca` | 8 | ExcludedByPolicy=8 |
-| `access/apps/policies` | 10 | ExcludedByPolicy=10 |
+| `access/apps` | 10 | NeedsManualReview=2; UnsupportedProjectionCapability=8 |
+| `access/apps/ca` | 8 | UnsupportedProjectionCapability=8 |
+| `access/apps/policies` | 10 | UnsupportedProjectionCapability=10 |
 | `access/apps/policies/make/reusable` | 1 | NeedsManualReview=1 |
 | `access/apps/revoke/tokens` | 2 | NeedsManualReview=2 |
 | `access/apps/settings` | 4 | UnsupportedProjectionCapability=4 |
 | `access/apps/user/policy/checks` | 2 | NeedsManualReview=2 |
 | `access/authenticator/device/aaguids` | 1 | ExcludedByPolicy=1 |
 | `access/bookmarks` | 5 | ExcludedByPolicy=5 |
-| `access/certificates` | 10 | ExcludedByPolicy=8; NeedsManualReview=2 |
-| `access/certificates/settings` | 4 | ExcludedByPolicy=4 |
+| `access/certificates` | 10 | NeedsManualReview=2; UnsupportedProjectionCapability=8 |
+| `access/certificates/settings` | 4 | UnsupportedProjectionCapability=4 |
 | `access/custom/pages` | 5 | ExcludedByPolicy=5 |
 | `access/custom/pages/validate` | 1 | NeedsManualReview=1 |
 | `access/failed/logins` | 1 | ExcludedByPolicy=1 |
 | `access/gateway/ca` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
-| `access/groups` | 10 | ExcludedByPolicy=10 |
-| `access/identity/providers` | 10 | ExcludedByPolicy=8; NeedsManualReview=2 |
+| `access/groups` | 10 | UnsupportedProjectionCapability=10 |
+| `access/identity/providers` | 10 | NeedsManualReview=2; UnsupportedProjectionCapability=8 |
 | `access/identity/providers/saml/certificate` | 1 | ExcludedByPolicy=1 |
 | `access/identity/providers/scim` | 1 | ExcludedByPolicy=1 |
 | `access/identity/providers/scim/groups` | 1 | ExcludedByPolicy=1 |
@@ -96,16 +96,16 @@
 | `access/logs/jit/requests` | 2 | ExcludedByPolicy=2 |
 | `access/logs/scim/updates` | 1 | ExcludedByPolicy=1 |
 | `access/mfa/authenticators` | 1 | ExcludedByPolicy=1 |
-| `access/organizations` | 6 | ExcludedByPolicy=6 |
+| `access/organizations` | 6 | UnsupportedProjectionCapability=6 |
 | `access/organizations/doh` | 2 | ExcludedByPolicy=2 |
 | `access/organizations/revoke/user` | 2 | NeedsManualReview=2 |
 | `access/policies` | 5 | ExcludedByPolicy=5 |
-| `access/policy/tests` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
+| `access/policy/tests` | 3 | NeedsManualReview=1; UnsupportedProjectionCapability=2 |
 | `access/saml/certificates` | 2 | ExcludedByPolicy=2 |
 | `access/saml/certificates/pem` | 1 | ExcludedByPolicy=1 |
 | `access/saml/certificates/rotate` | 1 | NeedsManualReview=1 |
 | `access/seats` | 1 | ExcludedByPolicy=1 |
-| `access/service/tokens` | 10 | ExcludedByPolicy=10 |
+| `access/service/tokens` | 10 | UnsupportedProjectionCapability=10 |
 | `access/service/tokens/refresh` | 1 | NeedsManualReview=1 |
 | `access/service/tokens/rotate` | 1 | NeedsManualReview=1 |
 | `access/tags` | 5 | ExcludedByPolicy=5 |
@@ -180,7 +180,7 @@
 | `ai/search/namespaces/chat/completions` | 1 | NeedsManualReview=1 |
 | `ai/search/namespaces/instances` | 6 | ExcludedByPolicy=4; NeedsManualReview=2 |
 | `ai/search/namespaces/instances/chat/completions` | 1 | NeedsManualReview=1 |
-| `ai/search/namespaces/instances/items` | 6 | ExcludedByPolicy=4; NeedsManualReview=2 |
+| `ai/search/namespaces/instances/items` | 6 | ExcludedByPolicy=3; NeedsManualReview=2; UnsupportedProjectionCapability=1 |
 | `ai/search/namespaces/instances/items/chunks` | 1 | ExcludedByPolicy=1 |
 | `ai/search/namespaces/instances/items/download` | 1 | ExcludedByPolicy=1 |
 | `ai/search/namespaces/instances/items/logs` | 1 | NeedsManualReview=1 |
@@ -219,17 +219,17 @@
 | `analytics/query/top/n` | 1 | NeedsManualReview=1 |
 | `api/gateway/configuration` | 2 | NeedsManualReview=2 |
 | `api/gateway/discovery` | 1 | NeedsManualReview=1 |
-| `api/gateway/discovery/operations` | 4 | ExcludedByPolicy=2; NeedsManualReview=2 |
+| `api/gateway/discovery/operations` | 4 | NeedsManualReview=2; UnsupportedProjectionCapability=2 |
 | `api/gateway/expression/template/fallthrough` | 1 | NeedsManualReview=1 |
 | `api/gateway/labels` | 1 | ExcludedByPolicy=1 |
 | `api/gateway/labels/managed` | 1 | ExcludedByPolicy=1 |
 | `api/gateway/labels/managed/resources/operation` | 1 | NeedsManualReview=1 |
-| `api/gateway/labels/user` | 6 | ExcludedByPolicy=5; NeedsManualReview=1 |
+| `api/gateway/labels/user` | 6 | ExcludedByPolicy=3; NeedsManualReview=1; UnsupportedProjectionCapability=2 |
 | `api/gateway/labels/user/resources/operation` | 1 | NeedsManualReview=1 |
-| `api/gateway/operations` | 5 | ExcludedByPolicy=2; NeedsManualReview=3 |
+| `api/gateway/operations` | 5 | NeedsManualReview=3; UnsupportedProjectionCapability=2 |
 | `api/gateway/operations/item` | 1 | NeedsManualReview=1 |
-| `api/gateway/operations/labels` | 6 | ExcludedByPolicy=2; NeedsManualReview=4 |
-| `api/gateway/operations/schema/validation` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
+| `api/gateway/operations/labels` | 6 | NeedsManualReview=4; UnsupportedProjectionCapability=2 |
+| `api/gateway/operations/schema/validation` | 3 | NeedsManualReview=1; UnsupportedProjectionCapability=2 |
 | `api/gateway/schemas` | 1 | NeedsManualReview=1 |
 | `api/gateway/settings/schema/validation` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
 | `api/gateway/user/schemas` | 5 | ExcludedByPolicy=1; NeedsManualReview=4 |
@@ -265,7 +265,7 @@
 | `billing/bad/debt` | 1 | ExcludedByPolicy=1 |
 | `billing/credits` | 1 | ExcludedByPolicy=1 |
 | `billing/history` | 1 | ExcludedByPolicy=1 |
-| `billing/profile` | 5 | ExcludedByPolicy=5 |
+| `billing/profile` | 5 | ExcludedByPolicy=3; UnsupportedProjectionCapability=2 |
 | `billing/profile/payment/method` | 1 | ExcludedByPolicy=1 |
 | `billing/rate/plans` | 1 | ExcludedByPolicy=1 |
 | `billing/unpaid/invoice` | 1 | ExcludedByPolicy=1 |
@@ -285,7 +285,7 @@
 | `brand/protection/domain/info` | 1 | ExcludedByPolicy=1 |
 | `brand/protection/logo/matches` | 1 | ExcludedByPolicy=1 |
 | `brand/protection/logo/matches/download` | 1 | ExcludedByPolicy=1 |
-| `brand/protection/logos` | 4 | ExcludedByPolicy=3; NeedsManualReview=1 |
+| `brand/protection/logos` | 4 | ExcludedByPolicy=1; NeedsManualReview=1; UnsupportedProjectionCapability=2 |
 | `brand/protection/matches` | 1 | ExcludedByPolicy=1 |
 | `brand/protection/matches/download` | 1 | ExcludedByPolicy=1 |
 | `brand/protection/queries` | 4 | ExcludedByPolicy=3; NeedsManualReview=1 |
@@ -307,7 +307,7 @@
 | `browser/rendering/accessibilityTree` | 1 | NeedsManualReview=1 |
 | `browser/rendering/content` | 1 | NeedsManualReview=1 |
 | `browser/rendering/crawl` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
-| `browser/rendering/devtools/browser` | 4 | ExcludedByPolicy=3; NeedsManualReview=1 |
+| `browser/rendering/devtools/browser` | 4 | ExcludedByPolicy=1; NeedsManualReview=1; UnsupportedProjectionCapability=2 |
 | `browser/rendering/devtools/browser/json` | 1 | ExcludedByPolicy=1 |
 | `browser/rendering/devtools/browser/json/activate` | 1 | ExcludedByPolicy=1 |
 | `browser/rendering/devtools/browser/json/close` | 1 | ExcludedByPolicy=1 |
@@ -326,7 +326,7 @@
 | `browser/rendering/screenshot` | 1 | NeedsManualReview=1 |
 | `browser/rendering/snapshot` | 1 | NeedsManualReview=1 |
 | `builds/account/limits` | 1 | ExcludedByPolicy=1 |
-| `builds/builds` | 2 | ExcludedByPolicy=2 |
+| `builds/builds` | 2 | UnsupportedProjectionCapability=2 |
 | `builds/builds/cancel` | 1 | NeedsManualReview=1 |
 | `builds/builds/latest` | 1 | ExcludedByPolicy=1 |
 | `builds/builds/logs` | 1 | ExcludedByPolicy=1 |
@@ -351,7 +351,7 @@
 | `cache/regional/tiered/cache` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
 | `cache/tiered/cache/smart/topology/enable` | 4 | ExcludedByPolicy=4 |
 | `cache/variants` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
-| `calls/apps` | 5 | ExcludedByPolicy=5 |
+| `calls/apps` | 5 | ExcludedByPolicy=3; UnsupportedProjectionCapability=2 |
 | `calls/turn/keys` | 5 | ExcludedByPolicy=5 |
 | `certificate/authorities/hostname/associations` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
 | `certificates` | 4 | ExcludedByPolicy=3; NeedsManualReview=1 |
@@ -361,23 +361,23 @@
 | `cfd/tunnel/connectors` | 1 | ExcludedByPolicy=1 |
 | `cfd/tunnel/management` | 1 | ExcludedByPolicy=1 |
 | `cfd/tunnel/token` | 1 | ExcludedByPolicy=1 |
-| `challenges/widgets` | 5 | ExcludedByPolicy=5 |
+| `challenges/widgets` | 5 | ExcludedByPolicy=1; UnsupportedProjectionCapability=4 |
 | `challenges/widgets/rotate/secret` | 1 | ExcludedByPolicy=1 |
 | `client/certificates` | 5 | ExcludedByPolicy=5 |
 | `client/secret` | 1 | ExcludedByPolicy=1 |
 | `cloud/connector/rules` | 2 | NeedsManualReview=2 |
 | `cloudforce/one/binary` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
-| `cloudforce/one/events` | 4 | ExcludedByPolicy=4 |
+| `cloudforce/one/events` | 4 | ExcludedByPolicy=2; UnsupportedProjectionCapability=2 |
 | `cloudforce/one/events/aggregate` | 1 | ExcludedByPolicy=1 |
 | `cloudforce/one/events/attackers` | 1 | ExcludedByPolicy=1 |
-| `cloudforce/one/events/categories` | 5 | ExcludedByPolicy=5 |
+| `cloudforce/one/events/categories` | 5 | ExcludedByPolicy=3; UnsupportedProjectionCapability=2 |
 | `cloudforce/one/events/categories/catalog` | 1 | ExcludedByPolicy=1 |
 | `cloudforce/one/events/categories/create` | 1 | ExcludedByPolicy=1 |
 | `cloudforce/one/events/countries` | 1 | ExcludedByPolicy=1 |
 | `cloudforce/one/events/create` | 1 | ExcludedByPolicy=1 |
 | `cloudforce/one/events/create/bulk` | 1 | ExcludedByPolicy=1 |
 | `cloudforce/one/events/create/bulk/relationships` | 1 | ExcludedByPolicy=1 |
-| `cloudforce/one/events/dataset` | 5 | ExcludedByPolicy=5 |
+| `cloudforce/one/events/dataset` | 5 | ExcludedByPolicy=3; UnsupportedProjectionCapability=2 |
 | `cloudforce/one/events/dataset/-/groups` | 5 | ExcludedByPolicy=5 |
 | `cloudforce/one/events/dataset/-/groups/members` | 3 | ExcludedByPolicy=3 |
 | `cloudforce/one/events/dataset/copy` | 1 | NeedsManualReview=1 |
@@ -403,9 +403,9 @@
 | `cloudforce/one/events/indicators` | 1 | ExcludedByPolicy=1 |
 | `cloudforce/one/events/indicators/aggregate` | 1 | ExcludedByPolicy=1 |
 | `cloudforce/one/events/indicatorTypes` | 1 | UnsupportedProjectionCapability=1 |
-| `cloudforce/one/events/queries` | 5 | ExcludedByPolicy=5 |
+| `cloudforce/one/events/queries` | 5 | ExcludedByPolicy=3; UnsupportedProjectionCapability=2 |
 | `cloudforce/one/events/queries/create` | 1 | ExcludedByPolicy=1 |
-| `cloudforce/one/events/raw` | 4 | ExcludedByPolicy=4 |
+| `cloudforce/one/events/raw` | 4 | UnsupportedProjectionCapability=4 |
 | `cloudforce/one/events/relate` | 1 | ExcludedByPolicy=1 |
 | `cloudforce/one/events/relate/create` | 1 | ExcludedByPolicy=1 |
 | `cloudforce/one/events/relationships` | 1 | ExcludedByPolicy=1 |
@@ -431,7 +431,7 @@
 | `cloudforce/one/requests/priority/quota` | 1 | NeedsManualReview=1 |
 | `cloudforce/one/requests/quota` | 1 | NeedsManualReview=1 |
 | `cloudforce/one/requests/types` | 1 | NeedsManualReview=1 |
-| `cloudforce/one/rules` | 6 | ExcludedByPolicy=6 |
+| `cloudforce/one/rules` | 6 | ExcludedByPolicy=4; UnsupportedProjectionCapability=2 |
 | `cloudforce/one/rules/approvals` | 2 | ExcludedByPolicy=2 |
 | `cloudforce/one/rules/approvals/cancel` | 1 | NeedsManualReview=1 |
 | `cloudforce/one/rules/approvals/resubmit` | 1 | NeedsManualReview=1 |
@@ -465,7 +465,7 @@
 | `cloudforce/one/v2/collections` | 5 | ExcludedByPolicy=5 |
 | `cloudforce/one/v2/collections/columns` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
 | `cloudforce/one/v2/collections/export` | 1 | ExcludedByPolicy=1 |
-| `cloudforce/one/v2/collections/items` | 5 | ExcludedByPolicy=5 |
+| `cloudforce/one/v2/collections/items` | 5 | ExcludedByPolicy=3; UnsupportedProjectionCapability=2 |
 | `cloudforce/one/v2/collections/search` | 1 | NeedsManualReview=1 |
 | `cloudforce/one/v2/events/graphql` | 1 | NeedsManualReview=1 |
 | `cni/cnis` | 5 | ExcludedByPolicy=5 |
@@ -490,15 +490,15 @@
 | `ct/alerting` | 2 | ExcludedByPolicy=2 |
 | `custom/certificates` | 5 | ExcludedByPolicy=5 |
 | `custom/certificates/prioritize` | 1 | NeedsManualReview=1 |
-| `custom/csrs` | 8 | ExcludedByPolicy=8 |
+| `custom/csrs` | 8 | UnsupportedProjectionCapability=8 |
 | `custom/hostnames` | 5 | ExcludedByPolicy=5 |
 | `custom/hostnames/certificate/pack/certificates` | 2 | ExcludedByPolicy=2 |
 | `custom/hostnames/fallback/origin` | 3 | ExcludedByPolicy=3 |
 | `custom/hostnames/quota` | 1 | ExcludedByPolicy=1 |
 | `custom/ns` | 5 | ExcludedByPolicy=3; NeedsManualReview=2 |
-| `custom/pages` | 6 | ExcludedByPolicy=6 |
-| `custom/pages/assets` | 10 | ExcludedByPolicy=10 |
-| `custom/pages/preview/tokens` | 2 | ExcludedByPolicy=2 |
+| `custom/pages` | 6 | UnsupportedProjectionCapability=6 |
+| `custom/pages/assets` | 10 | UnsupportedProjectionCapability=10 |
+| `custom/pages/preview/tokens` | 2 | UnsupportedProjectionCapability=2 |
 | `d1/database` | 6 | ExcludedByPolicy=6 |
 | `d1/database/export` | 1 | ExcludedByPolicy=1 |
 | `d1/database/import` | 1 | ExcludedByPolicy=1 |
@@ -539,14 +539,14 @@
 | `devices/physical/devices` | 3 | ExcludedByPolicy=3 |
 | `devices/physical/devices/revoke` | 1 | NeedsManualReview=1 |
 | `devices/policies` | 1 | ExcludedByPolicy=1 |
-| `devices/policy` | 6 | ExcludedByPolicy=6 |
+| `devices/policy` | 6 | ExcludedByPolicy=2; UnsupportedProjectionCapability=4 |
 | `devices/policy/certificates` | 2 | ExcludedByPolicy=2 |
 | `devices/policy/exclude` | 4 | UnsupportedProjectionCapability=4 |
 | `devices/policy/fallback/domains` | 4 | UnsupportedProjectionCapability=4 |
 | `devices/policy/include` | 4 | UnsupportedProjectionCapability=4 |
 | `devices/posture` | 5 | ExcludedByPolicy=5 |
 | `devices/posture/integration` | 5 | ExcludedByPolicy=5 |
-| `devices/registrations` | 4 | ExcludedByPolicy=4 |
+| `devices/registrations` | 4 | ExcludedByPolicy=2; UnsupportedProjectionCapability=2 |
 | `devices/registrations/override/codes` | 1 | ExcludedByPolicy=1 |
 | `devices/registrations/revoke` | 1 | NeedsManualReview=1 |
 | `devices/registrations/unrevoke` | 1 | NeedsManualReview=1 |
@@ -559,7 +559,7 @@
 | `dex/commands/devices` | 1 | ExcludedByPolicy=1 |
 | `dex/commands/downloads` | 1 | ExcludedByPolicy=1 |
 | `dex/commands/quota` | 1 | ExcludedByPolicy=1 |
-| `dex/devices/dex/tests` | 5 | ExcludedByPolicy=5 |
+| `dex/devices/dex/tests` | 5 | ExcludedByPolicy=3; UnsupportedProjectionCapability=2 |
 | `dex/devices/fleet/status/live` | 1 | NeedsManualReview=1 |
 | `dex/devices/fleet/status/over/time` | 1 | NeedsManualReview=1 |
 | `dex/devices/isps` | 1 | ExcludedByPolicy=1 |
@@ -584,12 +584,12 @@
 | `dlp/data/tag/categories/data/tags` | 5 | ExcludedByPolicy=4; NeedsManualReview=1 |
 | `dlp/data/tag/category/templates` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
 | `dlp/datasets` | 5 | ExcludedByPolicy=3; NeedsManualReview=2 |
-| `dlp/datasets/upload` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
+| `dlp/datasets/upload` | 2 | NeedsManualReview=1; UnsupportedProjectionCapability=1 |
 | `dlp/datasets/versions` | 1 | NeedsManualReview=1 |
 | `dlp/datasets/versions/entries` | 1 | NeedsManualReview=1 |
-| `dlp/document/fingerprints` | 6 | ExcludedByPolicy=3; NeedsManualReview=3 |
+| `dlp/document/fingerprints` | 6 | ExcludedByPolicy=2; NeedsManualReview=3; UnsupportedProjectionCapability=1 |
 | `dlp/email/account/mapping` | 2 | ExcludedByPolicy=2 |
-| `dlp/email/rules` | 6 | ExcludedByPolicy=6 |
+| `dlp/email/rules` | 6 | ExcludedByPolicy=4; UnsupportedProjectionCapability=2 |
 | `dlp/entries` | 5 | ExcludedByPolicy=5 |
 | `dlp/entries/custom` | 1 | ExcludedByPolicy=1 |
 | `dlp/entries/integration` | 3 | ExcludedByPolicy=3 |
@@ -621,26 +621,26 @@
 | `dns/records/scan` | 1 | NeedsManualReview=1 |
 | `dns/records/scan/review` | 2 | NeedsManualReview=2 |
 | `dns/records/scan/trigger` | 1 | NeedsManualReview=1 |
-| `dns/records/usage` | 2 | ExcludedByPolicy=2 |
-| `dns/settings` | 4 | ExcludedByPolicy=4 |
+| `dns/records/usage` | 2 | UnsupportedProjectionCapability=2 |
+| `dns/settings` | 4 | UnsupportedProjectionCapability=4 |
 | `dns/settings/views` | 5 | ExcludedByPolicy=5 |
 | `dnssec` | 3 | ExcludedByPolicy=3 |
 | `dnssec/zsk` | 1 | ExcludedByPolicy=1 |
 | `email/auth/dmarc/reports` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
 | `email/auth/spf/inspect` | 1 | NeedsManualReview=1 |
-| `email/routing` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
+| `email/routing` | 3 | ExcludedByPolicy=1; NeedsManualReview=1; UnsupportedProjectionCapability=1 |
 | `email/routing/addresses` | 5 | ExcludedByPolicy=5 |
 | `email/routing/disable` | 1 | NeedsManualReview=1 |
 | `email/routing/dns` | 4 | NeedsManualReview=4 |
 | `email/routing/enable` | 1 | NeedsManualReview=1 |
-| `email/routing/rules` | 6 | ExcludedByPolicy=6 |
+| `email/routing/rules` | 6 | ExcludedByPolicy=4; UnsupportedProjectionCapability=2 |
 | `email/routing/rules/catch/all` | 2 | ExcludedByPolicy=2 |
 | `email/routing/rules/plan` | 1 | NeedsManualReview=1 |
-| `email/routing/suppression` | 8 | ExcludedByPolicy=6; NeedsManualReview=2 |
+| `email/routing/suppression` | 8 | NeedsManualReview=2; UnsupportedProjectionCapability=6 |
 | `email/routing/unlock` | 1 | NeedsManualReview=1 |
-| `email/security/investigate` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
+| `email/security/investigate` | 2 | NeedsManualReview=1; UnsupportedProjectionCapability=1 |
 | `email/security/investigate/action/log` | 1 | ExcludedByPolicy=1 |
-| `email/security/investigate/bulk` | 4 | ExcludedByPolicy=4 |
+| `email/security/investigate/bulk` | 4 | ExcludedByPolicy=2; UnsupportedProjectionCapability=2 |
 | `email/security/investigate/bulk/cancel` | 1 | NeedsManualReview=1 |
 | `email/security/investigate/bulk/messages` | 1 | ExcludedByPolicy=1 |
 | `email/security/investigate/detections` | 1 | ExcludedByPolicy=1 |
@@ -651,19 +651,19 @@
 | `email/security/investigate/release` | 1 | NeedsManualReview=1 |
 | `email/security/investigate/trace` | 1 | ExcludedByPolicy=1 |
 | `email/security/phishguard/reports` | 1 | ExcludedByPolicy=1 |
-| `email/security/settings/allow/policies` | 6 | ExcludedByPolicy=5; NeedsManualReview=1 |
+| `email/security/settings/allow/policies` | 6 | ExcludedByPolicy=4; NeedsManualReview=1; UnsupportedProjectionCapability=1 |
 | `email/security/settings/allow/policies/batch` | 1 | NeedsManualReview=1 |
-| `email/security/settings/block/senders` | 6 | ExcludedByPolicy=5; NeedsManualReview=1 |
+| `email/security/settings/block/senders` | 6 | ExcludedByPolicy=4; NeedsManualReview=1; UnsupportedProjectionCapability=1 |
 | `email/security/settings/block/senders/batch` | 1 | NeedsManualReview=1 |
 | `email/security/settings/content/policies` | 5 | ExcludedByPolicy=5 |
 | `email/security/settings/content/policies/batch` | 1 | NeedsManualReview=1 |
-| `email/security/settings/domains` | 7 | ExcludedByPolicy=6; NeedsManualReview=1 |
+| `email/security/settings/domains` | 7 | ExcludedByPolicy=3; NeedsManualReview=1; UnsupportedProjectionCapability=3 |
 | `email/security/settings/domains/batch` | 1 | NeedsManualReview=1 |
 | `email/security/settings/domains/verification` | 1 | ExcludedByPolicy=1 |
 | `email/security/settings/impersonation/registry` | 5 | ExcludedByPolicy=5 |
 | `email/security/settings/sending/domain/restrictions` | 5 | ExcludedByPolicy=5 |
 | `email/security/settings/sending/domain/restrictions/batch` | 1 | NeedsManualReview=1 |
-| `email/security/settings/trusted/domains` | 6 | ExcludedByPolicy=5; NeedsManualReview=1 |
+| `email/security/settings/trusted/domains` | 6 | ExcludedByPolicy=4; NeedsManualReview=1; UnsupportedProjectionCapability=1 |
 | `email/security/settings/trusted/domains/batch` | 1 | NeedsManualReview=1 |
 | `email/security/settings/url/ignore/patterns` | 5 | ExcludedByPolicy=5 |
 | `email/security/settings/url/ignore/patterns/batch` | 1 | NeedsManualReview=1 |
@@ -677,20 +677,20 @@
 | `email/sending/subdomains/dns/status` | 1 | ExcludedByPolicy=1 |
 | `email/sending/subdomains/preview` | 1 | NeedsManualReview=1 |
 | `email/sending/subdomains/reputation/complaints` | 1 | ExcludedByPolicy=1 |
-| `email/sending/suppression` | 8 | ExcludedByPolicy=6; NeedsManualReview=2 |
+| `email/sending/suppression` | 8 | NeedsManualReview=2; UnsupportedProjectionCapability=6 |
 | `email/sending/suppressions` | 5 | ExcludedByPolicy=5 |
 | `email/sending/suppressions/bulk` | 1 | ExcludedByPolicy=1 |
-| `entitlements` | 2 | ExcludedByPolicy=2 |
+| `entitlements` | 2 | UnsupportedProjectionCapability=2 |
 | `environments` | 5 | ExcludedByPolicy=5 |
 | `environments/purge/cache` | 1 | NeedsManualReview=1 |
 | `environments/rollback` | 1 | NeedsManualReview=1 |
 | `event/notifications/r2/configuration` | 1 | ExcludedByPolicy=1 |
 | `event/notifications/r2/configuration/queues` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
 | `event/subscriptions/subscriptions` | 5 | ExcludedByPolicy=5 |
-| `filters` | 7 | ExcludedByPolicy=7 |
-| `firewall/access/rules/rules` | 9 | ExcludedByPolicy=9 |
+| `filters` | 7 | ExcludedByPolicy=3; UnsupportedProjectionCapability=4 |
+| `firewall/access/rules/rules` | 9 | ExcludedByPolicy=1; UnsupportedProjectionCapability=8 |
 | `firewall/lockdowns` | 5 | ExcludedByPolicy=5 |
-| `firewall/rules` | 9 | ExcludedByPolicy=5; UnsupportedProjectionCapability=4 |
+| `firewall/rules` | 9 | ExcludedByPolicy=3; UnsupportedProjectionCapability=6 |
 | `firewall/ua/rules` | 5 | ExcludedByPolicy=5 |
 | `firewall/waf/overrides` | 5 | ExcludedByPolicy=5 |
 | `firewall/waf/packages` | 3 | ExcludedByPolicy=3 |
@@ -723,7 +723,7 @@
 | `gateway/operations` | 2 | ExcludedByPolicy=2 |
 | `gateway/pacfiles` | 5 | ExcludedByPolicy=5 |
 | `gateway/proxy/endpoints` | 5 | ExcludedByPolicy=5 |
-| `gateway/rules` | 7 | ExcludedByPolicy=7 |
+| `gateway/rules` | 7 | ExcludedByPolicy=5; UnsupportedProjectionCapability=2 |
 | `gateway/rules/reset/expiration` | 1 | NeedsManualReview=1 |
 | `gateway/rules/tenant` | 1 | ExcludedByPolicy=1 |
 | `healthchecks` | 6 | ExcludedByPolicy=6 |
@@ -754,8 +754,8 @@
 | `images/v2/sourcingkit/sources` | 5 | ExcludedByPolicy=5 |
 | `images/v2/sourcingkit/sources/connectivity` | 1 | ExcludedByPolicy=1 |
 | `images/v2/sourcingkit/sources/connectivity/precheck` | 1 | NeedsManualReview=1 |
-| `infrastructure/targets` | 5 | ExcludedByPolicy=5 |
-| `infrastructure/targets/batch` | 2 | ExcludedByPolicy=2 |
+| `infrastructure/targets` | 5 | ExcludedByPolicy=1; UnsupportedProjectionCapability=4 |
+| `infrastructure/targets/batch` | 2 | UnsupportedProjectionCapability=2 |
 | `infrastructure/targets/batch/delete` | 1 | ExcludedByPolicy=1 |
 | `intel/asn` | 1 | ExcludedByPolicy=1 |
 | `intel/asn/subnets` | 1 | ExcludedByPolicy=1 |
@@ -769,7 +769,7 @@
 | `intel/domain` | 1 | ExcludedByPolicy=1 |
 | `intel/domain/bulk` | 1 | ExcludedByPolicy=1 |
 | `intel/domain/history` | 1 | ExcludedByPolicy=1 |
-| `intel/indicator/feeds` | 4 | ExcludedByPolicy=4 |
+| `intel/indicator/feeds` | 4 | ExcludedByPolicy=2; UnsupportedProjectionCapability=2 |
 | `intel/indicator/feeds/data` | 1 | ExcludedByPolicy=1 |
 | `intel/indicator/feeds/download` | 1 | NeedsManualReview=1 |
 | `intel/indicator/feeds/permissions/add` | 1 | NeedsManualReview=1 |
@@ -792,13 +792,13 @@
 | `leaked/credential/checks` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
 | `leaked/credential/checks/detections` | 5 | ExcludedByPolicy=5 |
 | `live` | 1 | ExcludedByPolicy=1 |
-| `load/balancers` | 12 | ExcludedByPolicy=12 |
+| `load/balancers` | 12 | UnsupportedProjectionCapability=12 |
 | `load/balancers/monitor/groups` | 6 | ExcludedByPolicy=6 |
 | `load/balancers/monitor/groups/references` | 1 | ExcludedByPolicy=1 |
 | `load/balancers/monitors` | 6 | ExcludedByPolicy=6 |
 | `load/balancers/monitors/preview` | 1 | NeedsManualReview=1 |
 | `load/balancers/monitors/references` | 1 | ExcludedByPolicy=1 |
-| `load/balancers/pools` | 7 | ExcludedByPolicy=7 |
+| `load/balancers/pools` | 7 | ExcludedByPolicy=5; UnsupportedProjectionCapability=2 |
 | `load/balancers/pools/health` | 1 | ExcludedByPolicy=1 |
 | `load/balancers/pools/preview` | 1 | NeedsManualReview=1 |
 | `load/balancers/pools/references` | 1 | ExcludedByPolicy=1 |
@@ -806,13 +806,13 @@
 | `load/balancers/regions` | 2 | ExcludedByPolicy=2 |
 | `load/balancers/search` | 1 | NeedsManualReview=1 |
 | `load/balancers/usage` | 1 | ExcludedByPolicy=1 |
-| `logpush/datasets/fields` | 2 | ExcludedByPolicy=2 |
-| `logpush/datasets/jobs` | 2 | ExcludedByPolicy=2 |
+| `logpush/datasets/fields` | 2 | UnsupportedProjectionCapability=2 |
+| `logpush/datasets/jobs` | 2 | UnsupportedProjectionCapability=2 |
 | `logpush/edge/jobs` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
-| `logpush/jobs` | 10 | ExcludedByPolicy=6; NeedsManualReview=4 |
+| `logpush/jobs` | 10 | NeedsManualReview=4; UnsupportedProjectionCapability=6 |
 | `logpush/ownership` | 2 | NeedsManualReview=2 |
 | `logpush/ownership/validate` | 2 | NeedsManualReview=2 |
-| `logpush/transformers` | 5 | ExcludedByPolicy=3; NeedsManualReview=2 |
+| `logpush/transformers` | 5 | ExcludedByPolicy=1; NeedsManualReview=2; UnsupportedProjectionCapability=2 |
 | `logpush/transformers/content` | 1 | ExcludedByPolicy=1 |
 | `logpush/transformers/preview` | 1 | NeedsManualReview=1 |
 | `logpush/transformers/versions` | 1 | ExcludedByPolicy=1 |
@@ -824,27 +824,27 @@
 | `logs/audit/product/categories` | 1 | ExcludedByPolicy=1 |
 | `logs/control/cmb/config` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
 | `logs/control/retention/flag` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
-| `logs/explorer/datasets` | 10 | ExcludedByPolicy=10 |
-| `logs/explorer/datasets/available` | 2 | ExcludedByPolicy=2 |
-| `logs/explorer/query/sql` | 4 | ExcludedByPolicy=2; NeedsManualReview=2 |
+| `logs/explorer/datasets` | 10 | UnsupportedProjectionCapability=10 |
+| `logs/explorer/datasets/available` | 2 | UnsupportedProjectionCapability=2 |
+| `logs/explorer/query/sql` | 4 | NeedsManualReview=2; UnsupportedProjectionCapability=2 |
 | `logs/list` | 1 | ExcludedByPolicy=1 |
 | `logs/rayids` | 1 | ExcludedByPolicy=1 |
 | `logs/received` | 1 | ExcludedByPolicy=1 |
 | `logs/received/fields` | 1 | ExcludedByPolicy=1 |
 | `logs/retrieve` | 1 | NeedsManualReview=1 |
-| `magic/advanced/dns/protection/configs/dns/protection/rules` | 6 | ExcludedByPolicy=6 |
+| `magic/advanced/dns/protection/configs/dns/protection/rules` | 6 | ExcludedByPolicy=4; UnsupportedProjectionCapability=2 |
 | `magic/advanced/tcp/protection/configs/allowlist` | 6 | UnsupportedProjectionCapability=6 |
-| `magic/advanced/tcp/protection/configs/prefixes` | 6 | ExcludedByPolicy=6 |
+| `magic/advanced/tcp/protection/configs/prefixes` | 6 | ExcludedByPolicy=4; UnsupportedProjectionCapability=2 |
 | `magic/advanced/tcp/protection/configs/prefixes/bulk` | 1 | ExcludedByPolicy=1 |
-| `magic/advanced/tcp/protection/configs/syn/protection/filters` | 6 | ExcludedByPolicy=6 |
-| `magic/advanced/tcp/protection/configs/syn/protection/rules` | 6 | ExcludedByPolicy=6 |
-| `magic/advanced/tcp/protection/configs/tcp/flow/protection/filters` | 6 | ExcludedByPolicy=6 |
-| `magic/advanced/tcp/protection/configs/tcp/flow/protection/rules` | 6 | ExcludedByPolicy=6 |
+| `magic/advanced/tcp/protection/configs/syn/protection/filters` | 6 | ExcludedByPolicy=4; UnsupportedProjectionCapability=2 |
+| `magic/advanced/tcp/protection/configs/syn/protection/rules` | 6 | ExcludedByPolicy=4; UnsupportedProjectionCapability=2 |
+| `magic/advanced/tcp/protection/configs/tcp/flow/protection/filters` | 6 | ExcludedByPolicy=4; UnsupportedProjectionCapability=2 |
+| `magic/advanced/tcp/protection/configs/tcp/flow/protection/rules` | 6 | ExcludedByPolicy=4; UnsupportedProjectionCapability=2 |
 | `magic/advanced/tcp/protection/configs/tcp/protection/status` | 2 | ExcludedByPolicy=2 |
 | `magic/apps` | 5 | ExcludedByPolicy=4; NeedsManualReview=1 |
 | `magic/bgp/filter/profiles` | 5 | ExcludedByPolicy=5 |
 | `magic/bgp/settings` | 2 | ExcludedByPolicy=2 |
-| `magic/cf/interconnects` | 4 | ExcludedByPolicy=4 |
+| `magic/cf/interconnects` | 4 | UnsupportedProjectionCapability=4 |
 | `magic/cf1/sites` | 5 | ExcludedByPolicy=5 |
 | `magic/cf1/sites/ramps` | 4 | ExcludedByPolicy=4 |
 | `magic/cloud/catalog/syncs` | 6 | ExcludedByPolicy=5; NeedsManualReview=1 |
@@ -867,12 +867,12 @@
 | `magic/connectors/telemetry/events/latest` | 1 | ExcludedByPolicy=1 |
 | `magic/connectors/telemetry/snapshots` | 2 | ExcludedByPolicy=2 |
 | `magic/connectors/telemetry/snapshots/latest` | 1 | ExcludedByPolicy=1 |
-| `magic/gre/tunnels` | 6 | ExcludedByPolicy=6 |
-| `magic/ipsec/tunnels` | 6 | ExcludedByPolicy=6 |
+| `magic/gre/tunnels` | 6 | ExcludedByPolicy=2; UnsupportedProjectionCapability=4 |
+| `magic/ipsec/tunnels` | 6 | ExcludedByPolicy=2; UnsupportedProjectionCapability=4 |
 | `magic/ipsec/tunnels/psk` | 1 | NeedsManualReview=1 |
 | `magic/ipsec/tunnels/psk/generate` | 1 | NeedsManualReview=1 |
 | `magic/redundancy/groups` | 5 | ExcludedByPolicy=5 |
-| `magic/routes` | 7 | ExcludedByPolicy=7 |
+| `magic/routes` | 7 | ExcludedByPolicy=3; UnsupportedProjectionCapability=4 |
 | `magic/sites` | 6 | ExcludedByPolicy=6 |
 | `magic/sites/acls` | 6 | ExcludedByPolicy=6 |
 | `magic/sites/app/configs` | 5 | ExcludedByPolicy=4; NeedsManualReview=1 |
@@ -880,12 +880,12 @@
 | `magic/sites/netflow/config` | 5 | ExcludedByPolicy=5 |
 | `magic/sites/wans` | 6 | ExcludedByPolicy=6 |
 | `managed/headers` | 3 | ExcludedByPolicy=3 |
-| `media/usage` | 2 | ExcludedByPolicy=2 |
+| `media/usage` | 2 | UnsupportedProjectionCapability=2 |
 | `members` | 5 | ExcludedByPolicy=3; NeedsManualReview=2 |
 | `memberships` | 4 | ExcludedByPolicy=4 |
-| `mnm/config` | 5 | ExcludedByPolicy=5 |
+| `mnm/config` | 5 | ExcludedByPolicy=3; UnsupportedProjectionCapability=2 |
 | `mnm/config/full` | 1 | ExcludedByPolicy=1 |
-| `mnm/rules` | 6 | ExcludedByPolicy=6 |
+| `mnm/rules` | 6 | ExcludedByPolicy=4; UnsupportedProjectionCapability=2 |
 | `mnm/rules/advertisement` | 1 | ExcludedByPolicy=1 |
 | `mnm/rules/bulk` | 2 | ExcludedByPolicy=2 |
 | `mnm/vpc/flows/token` | 1 | NeedsManualReview=1 |
@@ -903,7 +903,7 @@
 | `one/integrations` | 5 | ExcludedByPolicy=3; UnsupportedRuntimeCapability=2 |
 | `one/integrations/pause` | 1 | NeedsManualReview=1 |
 | `one/integrations/resume` | 1 | NeedsManualReview=1 |
-| `organizations` | 7 | ExcludedByPolicy=5; NeedsManualReview=2 |
+| `organizations` | 7 | ExcludedByPolicy=2; NeedsManualReview=2; UnsupportedProjectionCapability=3 |
 | `organizations/billable/usage` | 1 | ExcludedByPolicy=1 |
 | `organizations/logs/audit` | 1 | ExcludedByPolicy=1 |
 | `organizations/logs/audit/history` | 1 | ExcludedByPolicy=1 |
@@ -928,13 +928,13 @@
 | `pages/assets/check/missing` | 1 | NeedsManualReview=1 |
 | `pages/assets/upload` | 1 | NeedsManualReview=1 |
 | `pages/assets/upsert/hashes` | 1 | NeedsManualReview=1 |
-| `pages/projects` | 5 | ExcludedByPolicy=5 |
-| `pages/projects/deployments` | 4 | ExcludedByPolicy=4 |
+| `pages/projects` | 5 | ExcludedByPolicy=3; UnsupportedProjectionCapability=2 |
+| `pages/projects/deployments` | 4 | ExcludedByPolicy=2; UnsupportedProjectionCapability=2 |
 | `pages/projects/deployments/history/logs` | 1 | ExcludedByPolicy=1 |
 | `pages/projects/deployments/retry` | 1 | NeedsManualReview=1 |
 | `pages/projects/deployments/rollback` | 1 | NeedsManualReview=1 |
 | `pages/projects/deployments/tails` | 2 | ExcludedByPolicy=2 |
-| `pages/projects/domains` | 5 | ExcludedByPolicy=4; NeedsManualReview=1 |
+| `pages/projects/domains` | 5 | ExcludedByPolicy=2; NeedsManualReview=1; UnsupportedProjectionCapability=2 |
 | `pages/projects/purge/build/cache` | 1 | NeedsManualReview=1 |
 | `pages/projects/source` | 2 | NeedsManualReview=2 |
 | `pages/projects/upload/token` | 1 | ExcludedByPolicy=1 |
@@ -957,15 +957,15 @@
 | `pcaps/ownership` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
 | `pcaps/ownership/validate` | 1 | NeedsManualReview=1 |
 | `pcaps/stop` | 1 | NeedsManualReview=1 |
-| `pipelines` | 5 | ExcludedByPolicy=3; NeedsManualReview=2 |
-| `pipelines/v1/pipelines` | 4 | ExcludedByPolicy=3; NeedsManualReview=1 |
-| `pipelines/v1/sinks` | 4 | ExcludedByPolicy=3; NeedsManualReview=1 |
-| `pipelines/v1/streams` | 5 | ExcludedByPolicy=4; NeedsManualReview=1 |
+| `pipelines` | 5 | ExcludedByPolicy=1; NeedsManualReview=2; UnsupportedProjectionCapability=2 |
+| `pipelines/v1/pipelines` | 4 | ExcludedByPolicy=1; NeedsManualReview=1; UnsupportedProjectionCapability=2 |
+| `pipelines/v1/sinks` | 4 | ExcludedByPolicy=1; NeedsManualReview=1; UnsupportedProjectionCapability=2 |
+| `pipelines/v1/streams` | 5 | ExcludedByPolicy=2; NeedsManualReview=1; UnsupportedProjectionCapability=2 |
 | `pipelines/v1/validate/sql` | 1 | NeedsManualReview=1 |
 | `precursor` | 2 | ExcludedByPolicy=2 |
 | `profile` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
 | `purge/cache` | 1 | NeedsManualReview=1 |
-| `queues` | 6 | ExcludedByPolicy=6 |
+| `queues` | 6 | ExcludedByPolicy=4; UnsupportedProjectionCapability=2 |
 | `queues/consumers` | 5 | ExcludedByPolicy=5 |
 | `queues/messages` | 1 | NeedsManualReview=1 |
 | `queues/messages/ack` | 1 | NeedsManualReview=1 |
@@ -978,7 +978,7 @@
 | `queues/messages/purge` | 1 | NeedsManualReview=1 |
 | `queues/metrics` | 1 | ExcludedByPolicy=1 |
 | `queues/purge` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
-| `r2/buckets` | 6 | ExcludedByPolicy=6 |
+| `r2/buckets` | 6 | ExcludedByPolicy=4; UnsupportedProjectionCapability=2 |
 | `r2/buckets/cors` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
 | `r2/buckets/domains/custom` | 5 | ExcludedByPolicy=4; NeedsManualReview=1 |
 | `r2/buckets/domains/managed` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
@@ -986,7 +986,7 @@
 | `r2/buckets/lifecycle` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
 | `r2/buckets/local/uploads` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
 | `r2/buckets/lock` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
-| `r2/buckets/objects` | 5 | ExcludedByPolicy=4; NeedsManualReview=1 |
+| `r2/buckets/objects` | 5 | ExcludedByPolicy=2; NeedsManualReview=1; UnsupportedProjectionCapability=2 |
 | `r2/buckets/sippy` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
 | `r2/catalog` | 2 | ExcludedByPolicy=2 |
 | `r2/catalog/credential` | 1 | NeedsManualReview=1 |
@@ -1099,18 +1099,18 @@
 | `radar/bgp/top/ases` | 1 | ExcludedByPolicy=1 |
 | `radar/bgp/top/ases/prefixes` | 1 | ExcludedByPolicy=1 |
 | `radar/bgp/top/prefixes` | 1 | ExcludedByPolicy=1 |
-| `radar/bots` | 2 | ExcludedByPolicy=2 |
+| `radar/bots` | 2 | UnsupportedProjectionCapability=2 |
 | `radar/bots/crawlers/summary` | 1 | ExcludedByPolicy=1 |
 | `radar/bots/crawlers/timeseries/groups` | 1 | ExcludedByPolicy=1 |
 | `radar/bots/summary` | 1 | ExcludedByPolicy=1 |
 | `radar/bots/timeseries` | 1 | ExcludedByPolicy=1 |
 | `radar/bots/timeseries/groups` | 1 | ExcludedByPolicy=1 |
-| `radar/ct/authorities` | 2 | ExcludedByPolicy=2 |
-| `radar/ct/logs` | 2 | ExcludedByPolicy=2 |
+| `radar/ct/authorities` | 2 | UnsupportedProjectionCapability=2 |
+| `radar/ct/logs` | 2 | UnsupportedProjectionCapability=2 |
 | `radar/ct/summary` | 1 | ExcludedByPolicy=1 |
 | `radar/ct/timeseries` | 1 | ExcludedByPolicy=1 |
 | `radar/ct/timeseries/groups` | 1 | ExcludedByPolicy=1 |
-| `radar/datasets` | 2 | ExcludedByPolicy=2 |
+| `radar/datasets` | 2 | UnsupportedProjectionCapability=2 |
 | `radar/datasets/download` | 1 | NeedsManualReview=1 |
 | `radar/dns/summary` | 1 | ExcludedByPolicy=1 |
 | `radar/dns/summary/cache/hit` | 1 | ExcludedByPolicy=1 |
@@ -1181,8 +1181,8 @@
 | `radar/entities/asns/ip` | 1 | ExcludedByPolicy=1 |
 | `radar/entities/asns/rel` | 1 | ExcludedByPolicy=1 |
 | `radar/entities/ip` | 1 | ExcludedByPolicy=1 |
-| `radar/entities/locations` | 2 | ExcludedByPolicy=2 |
-| `radar/geolocations` | 2 | ExcludedByPolicy=2 |
+| `radar/entities/locations` | 2 | UnsupportedProjectionCapability=2 |
+| `radar/geolocations` | 2 | UnsupportedProjectionCapability=2 |
 | `radar/http/summary` | 1 | ExcludedByPolicy=1 |
 | `radar/http/summary/bot/class` | 1 | ExcludedByPolicy=1 |
 | `radar/http/summary/device/type` | 1 | ExcludedByPolicy=1 |
@@ -1230,12 +1230,12 @@
 | `radar/leaked/credential/checks/timeseries/groups` | 1 | ExcludedByPolicy=1 |
 | `radar/leaked/credential/checks/timeseries/groups/bot/class` | 1 | ExcludedByPolicy=1 |
 | `radar/leaked/credential/checks/timeseries/groups/compromised` | 1 | ExcludedByPolicy=1 |
-| `radar/netflows/summary` | 2 | ExcludedByPolicy=2 |
+| `radar/netflows/summary` | 2 | UnsupportedProjectionCapability=2 |
 | `radar/netflows/timeseries` | 1 | ExcludedByPolicy=1 |
 | `radar/netflows/timeseries/groups` | 1 | ExcludedByPolicy=1 |
 | `radar/netflows/top/ases` | 1 | ExcludedByPolicy=1 |
 | `radar/netflows/top/locations` | 1 | ExcludedByPolicy=1 |
-| `radar/origins` | 2 | ExcludedByPolicy=2 |
+| `radar/origins` | 2 | UnsupportedProjectionCapability=2 |
 | `radar/origins/summary` | 1 | ExcludedByPolicy=1 |
 | `radar/origins/timeseries` | 1 | ExcludedByPolicy=1 |
 | `radar/origins/timeseries/groups` | 1 | ExcludedByPolicy=1 |
@@ -1259,7 +1259,7 @@
 | `radar/search/global` | 1 | ExcludedByPolicy=1 |
 | `radar/tcp/resets/timeouts/summary` | 1 | ExcludedByPolicy=1 |
 | `radar/tcp/resets/timeouts/timeseries/groups` | 1 | ExcludedByPolicy=1 |
-| `radar/tlds` | 2 | ExcludedByPolicy=2 |
+| `radar/tlds` | 2 | UnsupportedProjectionCapability=2 |
 | `radar/tlds/performance/summary` | 1 | ExcludedByPolicy=1 |
 | `radar/tlds/performance/timeseries/groups` | 1 | ExcludedByPolicy=1 |
 | `radar/traffic/anomalies` | 1 | ExcludedByPolicy=1 |
@@ -1272,11 +1272,11 @@
 | `realtime/kit/analytics/daywise` | 1 | ExcludedByPolicy=1 |
 | `realtime/kit/analytics/livestreams/daywise` | 1 | ExcludedByPolicy=1 |
 | `realtime/kit/analytics/livestreams/overall` | 1 | ExcludedByPolicy=1 |
-| `realtime/kit/apps` | 3 | ExcludedByPolicy=3 |
-| `realtime/kit/livestreams` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
+| `realtime/kit/apps` | 3 | ExcludedByPolicy=1; UnsupportedProjectionCapability=2 |
+| `realtime/kit/livestreams` | 3 | ExcludedByPolicy=1; NeedsManualReview=1; UnsupportedProjectionCapability=1 |
 | `realtime/kit/livestreams/active/livestream/session` | 1 | ExcludedByPolicy=1 |
 | `realtime/kit/livestreams/sessions` | 1 | ExcludedByPolicy=1 |
-| `realtime/kit/meetings` | 5 | ExcludedByPolicy=4; NeedsManualReview=1 |
+| `realtime/kit/meetings` | 5 | ExcludedByPolicy=1; NeedsManualReview=1; UnsupportedProjectionCapability=3 |
 | `realtime/kit/meetings/active/livestream` | 1 | ExcludedByPolicy=1 |
 | `realtime/kit/meetings/active/livestream/stop` | 1 | NeedsManualReview=1 |
 | `realtime/kit/meetings/active/session` | 1 | ExcludedByPolicy=1 |
@@ -1287,20 +1287,20 @@
 | `realtime/kit/meetings/active/session/poll` | 1 | ExcludedByPolicy=1 |
 | `realtime/kit/meetings/livestream` | 1 | ExcludedByPolicy=1 |
 | `realtime/kit/meetings/livestreams` | 1 | NeedsManualReview=1 |
-| `realtime/kit/meetings/participants` | 6 | ExcludedByPolicy=4; NeedsManualReview=2 |
+| `realtime/kit/meetings/participants` | 6 | ExcludedByPolicy=2; NeedsManualReview=2; UnsupportedProjectionCapability=2 |
 | `realtime/kit/meetings/participants/token` | 1 | NeedsManualReview=1 |
-| `realtime/kit/presets` | 6 | ExcludedByPolicy=4; NeedsManualReview=2 |
-| `realtime/kit/recordings` | 4 | ExcludedByPolicy=2; NeedsManualReview=2 |
+| `realtime/kit/presets` | 6 | ExcludedByPolicy=2; NeedsManualReview=2; UnsupportedProjectionCapability=2 |
+| `realtime/kit/recordings` | 4 | NeedsManualReview=2; UnsupportedProjectionCapability=2 |
 | `realtime/kit/recordings/active/recording` | 1 | ExcludedByPolicy=1 |
 | `realtime/kit/recordings/track` | 1 | NeedsManualReview=1 |
-| `realtime/kit/sessions` | 2 | ExcludedByPolicy=2 |
+| `realtime/kit/sessions` | 2 | UnsupportedProjectionCapability=2 |
 | `realtime/kit/sessions/chat` | 1 | ExcludedByPolicy=1 |
 | `realtime/kit/sessions/livestream/sessions` | 1 | ExcludedByPolicy=1 |
-| `realtime/kit/sessions/participants` | 2 | ExcludedByPolicy=2 |
+| `realtime/kit/sessions/participants` | 2 | UnsupportedProjectionCapability=2 |
 | `realtime/kit/sessions/peer/report` | 1 | ExcludedByPolicy=1 |
 | `realtime/kit/sessions/summary` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
 | `realtime/kit/sessions/transcript` | 1 | ExcludedByPolicy=1 |
-| `realtime/kit/webhooks` | 6 | ExcludedByPolicy=4; NeedsManualReview=2 |
+| `realtime/kit/webhooks` | 6 | ExcludedByPolicy=2; NeedsManualReview=2; UnsupportedProjectionCapability=2 |
 | `realtime/kit/webhooks/all` | 1 | ExcludedByPolicy=1 |
 | `receipts/pdf` | 1 | ExcludedByPolicy=1 |
 | `registrar/domain/check` | 1 | NeedsManualReview=1 |
@@ -1320,18 +1320,18 @@
 | `reporting/policies` | 2 | ExcludedByPolicy=2 |
 | `reporting/reports` | 2 | ExcludedByPolicy=2 |
 | `request/tracer/trace` | 1 | NeedsManualReview=1 |
-| `resource/library/applications` | 5 | ExcludedByPolicy=5 |
-| `resource/library/categories` | 2 | ExcludedByPolicy=2 |
+| `resource/library/applications` | 5 | ExcludedByPolicy=3; UnsupportedProjectionCapability=2 |
+| `resource/library/categories` | 2 | UnsupportedProjectionCapability=2 |
 | `roles` | 2 | ExcludedByPolicy=2 |
 | `rules/lists` | 5 | UnsupportedProjectionCapability=5 |
 | `rules/lists/bulk/operations` | 1 | ExcludedByPolicy=1 |
 | `rules/lists/items` | 5 | UnsupportedProjectionCapability=5 |
-| `rulesets` | 10 | ExcludedByPolicy=10 |
-| `rulesets/phases/entrypoint` | 4 | ExcludedByPolicy=4 |
-| `rulesets/phases/entrypoint/versions` | 4 | ExcludedByPolicy=4 |
-| `rulesets/rules` | 6 | ExcludedByPolicy=6 |
-| `rulesets/versions` | 6 | ExcludedByPolicy=6 |
-| `rulesets/versions/by/tag` | 2 | ExcludedByPolicy=2 |
+| `rulesets` | 10 | UnsupportedProjectionCapability=10 |
+| `rulesets/phases/entrypoint` | 4 | UnsupportedProjectionCapability=4 |
+| `rulesets/phases/entrypoint/versions` | 4 | UnsupportedProjectionCapability=4 |
+| `rulesets/rules` | 6 | UnsupportedProjectionCapability=6 |
+| `rulesets/versions` | 6 | UnsupportedProjectionCapability=6 |
+| `rulesets/versions/by/tag` | 2 | UnsupportedProjectionCapability=2 |
 | `rum/site/info` | 4 | ExcludedByPolicy=4 |
 | `rum/site/info/list` | 1 | ExcludedByPolicy=1 |
 | `rum/site/info/site/tag/list` | 1 | ExcludedByPolicy=1 |
@@ -1361,20 +1361,20 @@
 | `secondary/dns/tsigs` | 5 | ExcludedByPolicy=5 |
 | `secrets/store/quota` | 1 | NeedsManualReview=1 |
 | `secrets/store/stores` | 4 | ExcludedByPolicy=4 |
-| `secrets/store/stores/secrets` | 6 | ExcludedByPolicy=6 |
+| `secrets/store/stores/secrets` | 6 | ExcludedByPolicy=4; UnsupportedProjectionCapability=2 |
 | `secrets/store/stores/secrets/duplicate` | 1 | NeedsManualReview=1 |
-| `security/center/insights` | 2 | ExcludedByPolicy=2 |
-| `security/center/insights/audit/log` | 4 | ExcludedByPolicy=4 |
-| `security/center/insights/class` | 2 | ExcludedByPolicy=2 |
-| `security/center/insights/classification` | 2 | ExcludedByPolicy=2 |
+| `security/center/insights` | 2 | UnsupportedProjectionCapability=2 |
+| `security/center/insights/audit/log` | 4 | UnsupportedProjectionCapability=4 |
+| `security/center/insights/class` | 2 | UnsupportedProjectionCapability=2 |
+| `security/center/insights/classification` | 2 | UnsupportedProjectionCapability=2 |
 | `security/center/insights/context` | 1 | ExcludedByPolicy=1 |
 | `security/center/insights/dismiss` | 2 | NeedsManualReview=2 |
-| `security/center/insights/scans` | 4 | ExcludedByPolicy=2; NeedsManualReview=2 |
-| `security/center/insights/severity` | 2 | ExcludedByPolicy=2 |
-| `security/center/insights/type` | 2 | ExcludedByPolicy=2 |
+| `security/center/insights/scans` | 4 | NeedsManualReview=2; UnsupportedProjectionCapability=2 |
+| `security/center/insights/severity` | 2 | UnsupportedProjectionCapability=2 |
+| `security/center/insights/type` | 2 | UnsupportedProjectionCapability=2 |
 | `security/center/securitytxt` | 3 | ExcludedByPolicy=3 |
 | `security/center/state` | 2 | ExcludedByPolicy=2 |
-| `settings` | 4 | ExcludedByPolicy=4 |
+| `settings` | 4 | UnsupportedProjectionCapability=4 |
 | `settings/aegis` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
 | `settings/auto/origin/tls/kex` | 2 | ExcludedByPolicy=2 |
 | `settings/automatic/platform/optimization` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
@@ -1440,7 +1440,7 @@
 | `ssl/recommendation` | 1 | NeedsManualReview=1 |
 | `ssl/universal/settings` | 2 | ExcludedByPolicy=2 |
 | `ssl/verification` | 2 | ExcludedByPolicy=2 |
-| `sso/connectors` | 5 | ExcludedByPolicy=4; NeedsManualReview=1 |
+| `sso/connectors` | 5 | ExcludedByPolicy=2; NeedsManualReview=1; UnsupportedProjectionCapability=2 |
 | `sso/connectors/begin/verification` | 1 | NeedsManualReview=1 |
 | `storage/kv/namespaces` | 5 | ExcludedByPolicy=3; NeedsManualReview=2 |
 | `storage/kv/namespaces/bulk` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
@@ -1449,7 +1449,7 @@
 | `storage/kv/namespaces/keys` | 1 | ExcludedByPolicy=1 |
 | `storage/kv/namespaces/metadata` | 1 | NeedsManualReview=1 |
 | `storage/kv/namespaces/values` | 3 | ExcludedByPolicy=1; NeedsManualReview=2 |
-| `stream` | 5 | ExcludedByPolicy=4; NeedsManualReview=1 |
+| `stream` | 5 | ExcludedByPolicy=2; NeedsManualReview=1; UnsupportedProjectionCapability=2 |
 | `stream/audio` | 3 | ExcludedByPolicy=3 |
 | `stream/audio/copy` | 1 | NeedsManualReview=1 |
 | `stream/captions` | 4 | ExcludedByPolicy=3; NeedsManualReview=1 |
@@ -1458,7 +1458,7 @@
 | `stream/clip` | 1 | NeedsManualReview=1 |
 | `stream/copy` | 1 | NeedsManualReview=1 |
 | `stream/direct/upload` | 1 | NeedsManualReview=1 |
-| `stream/downloads` | 5 | ExcludedByPolicy=5 |
+| `stream/downloads` | 5 | ExcludedByPolicy=1; UnsupportedProjectionCapability=4 |
 | `stream/embed` | 1 | NeedsManualReview=1 |
 | `stream/keys` | 3 | ExcludedByPolicy=3 |
 | `stream/live/inputs` | 5 | ExcludedByPolicy=4; NeedsManualReview=1 |
@@ -1468,15 +1468,15 @@
 | `stream/live/inputs/rotate/keys` | 1 | NeedsManualReview=1 |
 | `stream/storage/usage` | 1 | NeedsManualReview=1 |
 | `stream/token` | 1 | ExcludedByPolicy=1 |
-| `stream/usage` | 2 | ExcludedByPolicy=2 |
+| `stream/usage` | 2 | UnsupportedProjectionCapability=2 |
 | `stream/watermarks` | 4 | ExcludedByPolicy=4 |
 | `stream/webhook` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
 | `subscription` | 4 | ExcludedByPolicy=4 |
-| `subscriptions` | 8 | ExcludedByPolicy=8 |
+| `subscriptions` | 8 | ExcludedByPolicy=2; UnsupportedProjectionCapability=6 |
 | `subscriptions/action/append` | 1 | NeedsManualReview=1 |
 | `subscriptions/cancel/downgrade` | 1 | NeedsManualReview=1 |
 | `subscriptions/cancel/reason` | 2 | ExcludedByPolicy=2 |
-| `tags` | 6 | ExcludedByPolicy=4; NeedsManualReview=2 |
+| `tags` | 6 | NeedsManualReview=2; UnsupportedProjectionCapability=4 |
 | `tags/keys` | 1 | ExcludedByPolicy=1 |
 | `tags/resources` | 1 | ExcludedByPolicy=1 |
 | `tags/summary` | 1 | ExcludedByPolicy=1 |
@@ -1503,7 +1503,7 @@
 | `tunnels` | 1 | ExcludedByPolicy=1 |
 | `url/normalization` | 3 | ExcludedByPolicy=3 |
 | `urlscanner/response` | 1 | ExcludedByPolicy=1 |
-| `urlscanner/scan` | 3 | ExcludedByPolicy=2; NeedsManualReview=1 |
+| `urlscanner/scan` | 3 | ExcludedByPolicy=1; NeedsManualReview=1; UnsupportedProjectionCapability=1 |
 | `urlscanner/scan/har` | 1 | ExcludedByPolicy=1 |
 | `urlscanner/scan/screenshot` | 1 | ExcludedByPolicy=1 |
 | `urlscanner/v2/bulk` | 1 | ExcludedByPolicy=1 |
@@ -1525,7 +1525,7 @@
 | `user/load/balancers/monitors` | 6 | ExcludedByPolicy=6 |
 | `user/load/balancers/monitors/preview` | 1 | NeedsManualReview=1 |
 | `user/load/balancers/monitors/references` | 1 | ExcludedByPolicy=1 |
-| `user/load/balancers/pools` | 7 | ExcludedByPolicy=7 |
+| `user/load/balancers/pools` | 7 | ExcludedByPolicy=5; UnsupportedProjectionCapability=2 |
 | `user/load/balancers/pools/health` | 1 | ExcludedByPolicy=1 |
 | `user/load/balancers/pools/preview` | 1 | NeedsManualReview=1 |
 | `user/load/balancers/pools/references` | 1 | ExcludedByPolicy=1 |
@@ -1566,8 +1566,8 @@
 | `vuln/scanner/credential/sets` | 6 | ExcludedByPolicy=6 |
 | `vuln/scanner/credential/sets/credentials` | 6 | ExcludedByPolicy=6 |
 | `vuln/scanner/scans` | 4 | ExcludedByPolicy=4 |
-| `vuln/scanner/target/environments` | 6 | ExcludedByPolicy=6 |
-| `waiting/rooms` | 7 | ExcludedByPolicy=7 |
+| `vuln/scanner/target/environments` | 6 | ExcludedByPolicy=1; UnsupportedProjectionCapability=5 |
+| `waiting/rooms` | 7 | ExcludedByPolicy=5; UnsupportedProjectionCapability=2 |
 | `waiting/rooms/events` | 6 | ExcludedByPolicy=6 |
 | `waiting/rooms/events/details` | 1 | ExcludedByPolicy=1 |
 | `waiting/rooms/preview` | 1 | ExcludedByPolicy=1 |
@@ -1581,13 +1581,13 @@
 | `warp/connector/failover` | 1 | NeedsManualReview=1 |
 | `warp/connector/token` | 1 | ExcludedByPolicy=1 |
 | `web3/hostnames` | 5 | ExcludedByPolicy=5 |
-| `web3/hostnames/ipfs/universal/path/content/list` | 2 | ExcludedByPolicy=2 |
+| `web3/hostnames/ipfs/universal/path/content/list` | 2 | UnsupportedProjectionCapability=2 |
 | `web3/hostnames/ipfs/universal/path/content/list/entries` | 5 | UnsupportedProjectionCapability=5 |
 | `workers/account/settings` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
 | `workers/assets/upload` | 1 | NeedsManualReview=1 |
 | `workers/builds/deploy/hooks` | 1 | NeedsManualReview=1 |
 | `workers/dispatch/namespaces` | 6 | ExcludedByPolicy=5; NeedsManualReview=1 |
-| `workers/dispatch/namespaces/scripts` | 5 | ExcludedByPolicy=4; NeedsManualReview=1 |
+| `workers/dispatch/namespaces/scripts` | 5 | ExcludedByPolicy=2; NeedsManualReview=1; UnsupportedProjectionCapability=2 |
 | `workers/dispatch/namespaces/scripts/assets/upload/session` | 1 | ExcludedByPolicy=1 |
 | `workers/dispatch/namespaces/scripts/bindings` | 1 | ExcludedByPolicy=1 |
 | `workers/dispatch/namespaces/scripts/content` | 2 | ExcludedByPolicy=1; NeedsManualReview=1 |
@@ -1710,59 +1710,106 @@ The JSON report contains every affected operation. The table below shows the fir
 
 | Operation | Resource family | Reason |
 | --- | --- | --- |
+| `access-applications-delete-an-access-application` | `access/apps` | ProjectionParameterSetCollision |
+| `access-applications-get-an-access-application` | `access/apps` | ProjectionParameterSetCollision |
+| `access-applications-list-access-applications` | `access/apps` | ProjectionParameterSetCollision |
 | `access-applications-patch-update-access-application-settings` | `access/apps/settings` | ProjectionParameterSetCollision |
 | `access-applications-put-update-access-application-settings` | `access/apps/settings` | ProjectionParameterSetCollision |
+| `access-applications-update-an-access-application` | `access/apps` | ProjectionParameterSetCollision |
+| `access-groups-create-an-access-group` | `access/groups` | ProjectionParameterSetCollision |
+| `access-groups-delete-an-access-group` | `access/groups` | ProjectionParameterSetCollision |
+| `access-groups-get-an-access-group` | `access/groups` | ProjectionParameterSetCollision |
+| `access-groups-list-access-groups` | `access/groups` | ProjectionParameterSetCollision |
+| `access-groups-update-an-access-group` | `access/groups` | ProjectionParameterSetCollision |
+| `access-identity-providers-delete-an-access-identity-provider` | `access/identity/providers` | ProjectionParameterSetCollision |
+| `access-identity-providers-get-an-access-identity-provider` | `access/identity/providers` | ProjectionParameterSetCollision |
+| `access-identity-providers-list-access-identity-providers` | `access/identity/providers` | ProjectionParameterSetCollision |
+| `access-identity-providers-update-an-access-identity-provider` | `access/identity/providers` | ProjectionParameterSetCollision |
+| `access-mtls-authentication-delete-an-mtls-certificate` | `access/certificates` | ProjectionParameterSetCollision |
+| `access-mtls-authentication-get-an-mtls-certificate` | `access/certificates` | ProjectionParameterSetCollision |
+| `access-mtls-authentication-list-mtls-certificates-hostname-settings` | `access/certificates/settings` | ProjectionParameterSetCollision |
+| `access-mtls-authentication-list-mtls-certificates` | `access/certificates` | ProjectionParameterSetCollision |
+| `access-mtls-authentication-update-an-mtls-certificate-settings` | `access/certificates/settings` | ProjectionParameterSetCollision |
+| `access-mtls-authentication-update-an-mtls-certificate` | `access/certificates` | ProjectionParameterSetCollision |
+| `access-policies-create-an-access-policy` | `access/apps/policies` | ProjectionParameterSetCollision |
+| `access-policies-delete-an-access-policy` | `access/apps/policies` | ProjectionParameterSetCollision |
+| `access-policies-get-an-access-policy` | `access/apps/policies` | ProjectionParameterSetCollision |
+| `access-policies-list-access-app-policies` | `access/apps/policies` | ProjectionParameterSetCollision |
+| `access-policies-update-an-access-policy` | `access/apps/policies` | ProjectionParameterSetCollision |
+| `access-policy-tests-get-a-user-page` | `access/policy/tests` | ProjectionParameterSetCollision |
+| `access-policy-tests-get-an-update` | `access/policy/tests` | ProjectionParameterSetCollision |
+| `access-service-tokens-create-a-service-token` | `access/service/tokens` | ProjectionParameterSetCollision |
+| `access-service-tokens-delete-a-service-token` | `access/service/tokens` | ProjectionParameterSetCollision |
+| `access-service-tokens-get-a-service-token` | `access/service/tokens` | ProjectionParameterSetCollision |
+| `access-service-tokens-list-service-tokens` | `access/service/tokens` | ProjectionParameterSetCollision |
+| `access-service-tokens-update-a-service-token` | `access/service/tokens` | ProjectionParameterSetCollision |
+| `access-short-lived-certificate-c-as-create-a-short-lived-certificate-ca` | `access/apps/ca` | ProjectionParameterSetCollision |
+| `access-short-lived-certificate-c-as-delete-a-short-lived-certificate-ca` | `access/apps/ca` | ProjectionParameterSetCollision |
+| `access-short-lived-certificate-c-as-get-a-short-lived-certificate-ca` | `access/apps/ca` | ProjectionParameterSetCollision |
+| `access-short-lived-certificate-c-as-list-short-lived-certificate-c-as` | `access/apps/ca` | ProjectionParameterSetCollision |
+| `account-billing-profile-update-billing-email` | `billing/profile` | ProjectionParameterSetCollision |
+| `account-billing-profile-update-billing-profile` | `billing/profile` | ProjectionParameterSetCollision |
+| `account-load-balancer-pools-patch-pool` | `load/balancers/pools` | ProjectionParameterSetCollision |
+| `account-load-balancer-pools-patch-pools` | `load/balancers/pools` | ProjectionParameterSetCollision |
+| `account-load-balancers-account-load-balancer-details` | `load/balancers` | ProjectionParameterSetCollision |
+| `account-load-balancers-create-account-load-balancer` | `load/balancers` | ProjectionParameterSetCollision |
+| `account-load-balancers-delete-account-load-balancer` | `load/balancers` | ProjectionParameterSetCollision |
+| `account-load-balancers-list-account-load-balancers` | `load/balancers` | ProjectionParameterSetCollision |
+| `account-load-balancers-patch-account-load-balancer` | `load/balancers` | ProjectionParameterSetCollision |
+| `account-load-balancers-update-account-load-balancer` | `load/balancers` | ProjectionParameterSetCollision |
+| `account-subscriptions-create-subscription` | `subscriptions` | ProjectionParameterSetCollision |
+| `account-subscriptions-delete-subscription` | `subscriptions` | ProjectionParameterSetCollision |
+| `account-subscriptions-update-subscription` | `subscriptions` | ProjectionParameterSetCollision |
+| `Accounts_listAccountOrganizations` | `organizations` | ProjectionParameterSetCollision |
+| `accounts-logs-explorer-datasets-available-list` | `logs/explorer/datasets/available` | ProjectionParameterSetCollision |
+| `accounts-logs-explorer-datasets-create` | `logs/explorer/datasets` | ProjectionParameterSetCollision |
+| `accounts-logs-explorer-datasets-delete` | `logs/explorer/datasets` | ProjectionParameterSetCollision |
+| `accounts-logs-explorer-datasets-get` | `logs/explorer/datasets` | ProjectionParameterSetCollision |
+| `accounts-logs-explorer-datasets-list` | `logs/explorer/datasets` | ProjectionParameterSetCollision |
+| `accounts-logs-explorer-datasets-update` | `logs/explorer/datasets` | ProjectionParameterSetCollision |
+| `accounts-logs-explorer-query-get` | `logs/explorer/query/sql` | ProjectionParameterSetCollision |
+| `accounts-turnstile-widget-create` | `challenges/widgets` | ProjectionParameterSetCollision |
+| `accounts-turnstile-widget-delete` | `challenges/widgets` | ProjectionParameterSetCollision |
+| `accounts-turnstile-widget-get` | `challenges/widgets` | ProjectionParameterSetCollision |
+| `accounts-turnstile-widget-update` | `challenges/widgets` | ProjectionParameterSetCollision |
+| `ai-search-namespace-instance-create-or-update-item` | `ai/search/namespaces/instances/items` | ProjectionParameterSetCollision |
+| `api-shield-api-patch-discovered-operation` | `api/gateway/discovery/operations` | ProjectionParameterSetCollision |
+| `api-shield-api-patch-discovered-operations` | `api/gateway/discovery/operations` | ProjectionParameterSetCollision |
+| `api-shield-delete-user-label` | `api/gateway/labels/user` | ProjectionParameterSetCollision |
+| `api-shield-endpoint-management-delete-an-operation` | `api/gateway/operations` | ProjectionParameterSetCollision |
+| `api-shield-endpoint-management-delete-multiple-operations` | `api/gateway/operations` | ProjectionParameterSetCollision |
+| `api-shield-labels-delete-user-labels` | `api/gateway/labels/user` | ProjectionParameterSetCollision |
+| `api-shield-operations-bulk-delete-labels-to-operations` | `api/gateway/operations/labels` | ProjectionParameterSetCollision |
+| `api-shield-operations-delete-labels-from-operation` | `api/gateway/operations/labels` | ProjectionParameterSetCollision |
+| `api-shield-schema-validation-update-multiple-operation-level-settings` | `api/gateway/operations/schema/validation` | ProjectionParameterSetCollision |
+| `api-shield-schema-validation-update-operation-level-settings` | `api/gateway/operations/schema/validation` | ProjectionParameterSetCollision |
 | `billable-usage-get-v1-account-usage` | `billable/usage` | ProjectionParameterSetCollision |
 | `billable-usage-v2-get-account-usage` | `billable/usage` | ProjectionParameterSetCollision |
+| `brapi-get_DevtoolsBrowser` | `browser/rendering/devtools/browser` | ProjectionParameterSetCollision |
+| `brapi-get_DevtoolsBrowserAcquire` | `browser/rendering/devtools/browser` | ProjectionParameterSetCollision |
+| `calls-apps-retrieve-app-details` | `calls/apps` | ProjectionParameterSetCollision |
+| `calls-apps-update-app-details` | `calls/apps` | ProjectionParameterSetCollision |
+| `cloudforce-one-delete-all-rules` | `cloudforce/one/rules` | ProjectionParameterSetCollision |
+| `cloudforce-one-delete-rule` | `cloudforce/one/rules` | ProjectionParameterSetCollision |
+| `create-target-environment` | `vuln/scanner/target/environments` | ProjectionParameterSetCollision |
+| `createAccountRuleset` | `rulesets` | ProjectionParameterSetCollision |
+| `createAccountRulesetRule` | `rulesets/rules` | ProjectionParameterSetCollision |
 | `createAllowlistedPrefix` | `magic/advanced/tcp/protection/configs/allowlist` | ProjectionParameterSetCollision |
-| `deleteAllowlistPrefix` | `magic/advanced/tcp/protection/configs/allowlist` | ProjectionParameterSetCollision |
-| `deleteAllowlistPrefixesForAccount` | `magic/advanced/tcp/protection/configs/allowlist` | ProjectionParameterSetCollision |
-| `devices-get-local-domain-fallback-list-for-a-device-settings-policy` | `devices/policy/fallback/domains` | ProjectionParameterSetCollision |
-| `devices-get-local-domain-fallback-list` | `devices/policy/fallback/domains` | ProjectionParameterSetCollision |
-| `devices-get-split-tunnel-exclude-list-for-a-device-settings-policy` | `devices/policy/exclude` | ProjectionParameterSetCollision |
-| `devices-get-split-tunnel-exclude-list` | `devices/policy/exclude` | ProjectionParameterSetCollision |
-| `devices-get-split-tunnel-include-list-for-a-device-settings-policy` | `devices/policy/include` | ProjectionParameterSetCollision |
-| `devices-get-split-tunnel-include-list` | `devices/policy/include` | ProjectionParameterSetCollision |
-| `devices-set-local-domain-fallback-list-for-a-device-settings-policy` | `devices/policy/fallback/domains` | ProjectionParameterSetCollision |
-| `devices-set-local-domain-fallback-list` | `devices/policy/fallback/domains` | ProjectionParameterSetCollision |
-| `devices-set-split-tunnel-exclude-list-for-a-device-settings-policy` | `devices/policy/exclude` | ProjectionParameterSetCollision |
-| `devices-set-split-tunnel-exclude-list` | `devices/policy/exclude` | ProjectionParameterSetCollision |
-| `devices-set-split-tunnel-include-list-for-a-device-settings-policy` | `devices/policy/include` | ProjectionParameterSetCollision |
-| `devices-set-split-tunnel-include-list` | `devices/policy/include` | ProjectionParameterSetCollision |
-| `firewall-rules-update-a-firewall-rule` | `firewall/rules` | ProjectionParameterSetCollision |
-| `firewall-rules-update-firewall-rules` | `firewall/rules` | ProjectionParameterSetCollision |
-| `firewall-rules-update-priority-of-a-firewall-rule` | `firewall/rules` | ProjectionParameterSetCollision |
-| `firewall-rules-update-priority-of-firewall-rules` | `firewall/rules` | ProjectionParameterSetCollision |
-| `get_IndicatorTypesList` | `cloudforce/one/events/indicator/types` | ProjectionParameterSetCollision |
-| `get_LegacyIndicatorTypesList` | `cloudforce/one/events/indicatorTypes` | ProjectionParameterSetCollision |
-| `getAllowlistPrefix` | `magic/advanced/tcp/protection/configs/allowlist` | ProjectionParameterSetCollision |
-| `ip-address-management-address-maps-delete-address-map` | `addressing/address/maps` | ProjectionParameterSetCollision |
-| `ip-address-management-address-maps-update-address-map` | `addressing/address/maps` | ProjectionParameterSetCollision |
-| `listAllowlistPrefixesForAccount` | `magic/advanced/tcp/protection/configs/allowlist` | ProjectionParameterSetCollision |
-| `lists-create-a-list` | `rules/lists` | ProjectionParameterSetCollision |
-| `lists-create-list-items` | `rules/lists/items` | ProjectionParameterSetCollision |
-| `lists-delete-a-list` | `rules/lists` | ProjectionParameterSetCollision |
-| `lists-delete-list-items` | `rules/lists/items` | ProjectionParameterSetCollision |
-| `lists-get-a-list-item` | `rules/lists/items` | ProjectionParameterSetCollision |
-| `lists-get-a-list` | `rules/lists` | ProjectionParameterSetCollision |
-| `lists-get-list-items` | `rules/lists/items` | ProjectionParameterSetCollision |
-| `lists-get-lists` | `rules/lists` | ProjectionParameterSetCollision |
-| `lists-update-a-list` | `rules/lists` | ProjectionParameterSetCollision |
-| `lists-update-all-list-items` | `rules/lists/items` | ProjectionParameterSetCollision |
-| `updateAllowlistPrefix` | `magic/advanced/tcp/protection/configs/allowlist` | ProjectionParameterSetCollision |
-| `web3-hostname-create-ipfs-universal-path-gateway-content-list-entry` | `web3/hostnames/ipfs/universal/path/content/list/entries` | ProjectionParameterSetCollision |
-| `web3-hostname-delete-ipfs-universal-path-gateway-content-list-entry` | `web3/hostnames/ipfs/universal/path/content/list/entries` | ProjectionParameterSetCollision |
-| `web3-hostname-edit-ipfs-universal-path-gateway-content-list-entry` | `web3/hostnames/ipfs/universal/path/content/list/entries` | ProjectionParameterSetCollision |
-| `web3-hostname-ipfs-universal-path-gateway-content-list-entry-details` | `web3/hostnames/ipfs/universal/path/content/list/entries` | ProjectionParameterSetCollision |
-| `web3-hostname-list-ipfs-universal-path-gateway-content-list-entries` | `web3/hostnames/ipfs/universal/path/content/list/entries` | ProjectionParameterSetCollision |
-| `zero-trust-lists-create-zero-trust-list` | `gateway/lists` | ProjectionParameterSetCollision |
-| `zero-trust-lists-delete-zero-trust-list` | `gateway/lists` | ProjectionParameterSetCollision |
-| `zero-trust-lists-list-zero-trust-lists` | `gateway/lists` | ProjectionParameterSetCollision |
-| `zero-trust-lists-patch-zero-trust-list` | `gateway/lists` | ProjectionParameterSetCollision |
-| `zero-trust-lists-update-zero-trust-list` | `gateway/lists` | ProjectionParameterSetCollision |
-| `zero-trust-lists-zero-trust-list-details` | `gateway/lists` | ProjectionParameterSetCollision |
-| `zone-level-access-applications-patch-update-access-application-settings` | `access/apps/settings` | ProjectionParameterSetCollision |
-| `zone-level-access-applications-put-update-access-application-settings` | `access/apps/settings` | ProjectionParameterSetCollision |
+| `createZoneRuleset` | `rulesets` | ProjectionParameterSetCollision |
+| `createZoneRulesetRule` | `rulesets/rules` | ProjectionParameterSetCollision |
+| `custom-assets-for-a-zone-create-a-custom-asset` | `custom/pages/assets` | ProjectionParameterSetCollision |
+| `custom-assets-for-a-zone-delete-a-custom-asset` | `custom/pages/assets` | ProjectionParameterSetCollision |
+| `custom-assets-for-a-zone-get-a-custom-asset` | `custom/pages/assets` | ProjectionParameterSetCollision |
+| `custom-assets-for-a-zone-list-custom-assets` | `custom/pages/assets` | ProjectionParameterSetCollision |
+| `custom-assets-for-a-zone-update-a-custom-asset` | `custom/pages/assets` | ProjectionParameterSetCollision |
+| `custom-assets-for-an-account-create-a-custom-asset` | `custom/pages/assets` | ProjectionParameterSetCollision |
+| `custom-assets-for-an-account-delete-a-custom-asset` | `custom/pages/assets` | ProjectionParameterSetCollision |
+| `custom-assets-for-an-account-get-a-custom-asset` | `custom/pages/assets` | ProjectionParameterSetCollision |
+| `custom-assets-for-an-account-list-custom-assets` | `custom/pages/assets` | ProjectionParameterSetCollision |
+| `custom-assets-for-an-account-update-a-custom-asset` | `custom/pages/assets` | ProjectionParameterSetCollision |
+| `custom-csrs-for-a-zone-create-custom-csr` | `custom/csrs` | ProjectionParameterSetCollision |
+| `custom-csrs-for-a-zone-custom-csr-details` | `custom/csrs` | ProjectionParameterSetCollision |
+| `custom-csrs-for-a-zone-delete-custom-csr` | `custom/csrs` | ProjectionParameterSetCollision |
 
 ## Normalization gaps
 

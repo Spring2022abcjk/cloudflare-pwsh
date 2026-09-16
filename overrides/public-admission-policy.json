@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "stage": "P3.3",
+  "name": "public-cmdlet-admission",
+  "automaticAdmission": false,
+  "decisionRule": "Only operations explicitly present in the current public CmdletModel may be public cmdlets.",
+  "gates": [
+    { "id": "normalization.valid", "required": true, "evidence": "corrected normalized operation with method, path, provenance, parameters, responses, and representations" },
+    { "id": "correction.unambiguous", "required": true, "evidence": "zero or fully evidenced API correction ambiguity" },
+    { "id": "projection.deterministic", "required": true, "evidence": "one canonical public mapping and deterministic parameter-set identities" },
+    { "id": "projection.no-name-collision", "required": true, "evidence": "no unresolved PowerShell parameter-name collision" },
+    { "id": "projection.parameter-sets-distinguishable", "required": true, "evidence": "parameter sets have distinct signatures or an explicit PowerShell-only discriminator" },
+    { "id": "runtime.capability", "required": true, "evidence": "shared runtime supports method, request/response representations, envelope/error policy, pagination, and cancellation contract" },
+    { "id": "model.typed-supported", "required": true, "evidence": "request/response models retain schema provenance, type, nullability, presence, and union/map semantics" },
+    { "id": "compatibility.visible", "required": true, "evidence": "candidate public CmdletModel is visible to P2.4 projection compatibility" },
+    { "id": "public.naming.accepted", "required": true, "evidence": "verb/noun and help surface are explicit policy, not heuristic-only inference" },
+    { "id": "mutation.safety-resolved", "required": true, "evidence": "ShouldProcess, confirmation, body/presence, retry/idempotency, and destructive semantics are not unresolved" },
+    { "id": "policy.explicit-admission", "required": true, "evidence": "operation is in the bounded public policy and its complete artifact/source/mock gates pass" }
+  ],
+  "nonAdmissionRules": [
+    "Projection construction, normalization success, runtime readiness, or generated C# alone never imply public admission.",
+    "Generic scope or HTTP-method parameter-set disambiguation resolves a projection identity only; it does not grant public admission.",
+    "Low-confidence semantic inference remains NeedsManualReview until evidence-backed semantic policy exists.",
+    "Unresolved HTTP 2xx with success=false, legacy authentication, automatic idempotency, complete mutation retry safety, real-account behavior, and release evidence remain outside this policy unless separately proven."
+  ]
+}

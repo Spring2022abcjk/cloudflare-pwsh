@@ -292,3 +292,19 @@ HTTP 2xx with `success=false` remains intentionally unresolved. Remote CI
 execution, PowerShell Gallery publishing, real-account acceptance, and
 full-SHA action pinning remain outside this fix pass; the latter is future
 supply-chain hardening.
+
+## P3.4 integration closure
+
+The merged P3.3/P3.4 mainline has one public-admission boundary and one
+release-engineering chain. P3.3 decides which canonical cmdlet identities are
+formally admitted; P3.4 validates the pinned schema, semantic compatibility,
+coverage thresholds, provenance, deterministic package assembly, and isolated
+candidate smoke. P3.4 does not widen the admission policy or convert a
+projection-ready operation into a public command.
+
+The integrated formal module surface is exactly the five admitted P3.2
+cmdlets. D1/D2 generated slices remain independently testable bounded surfaces
+and are intentionally excluded from package exports. A local gate or package
+candidate is not evidence of remote GitHub Actions execution, live-account
+behavior, device/manual UX, publishing, or release readiness. Those evidence
+types must remain separately named and separately accepted.

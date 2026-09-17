@@ -30,14 +30,16 @@ P2.4 compatibility work is under `src/Cloudflare.Normalization/Compatibility` an
 - [P3.3 projection-reduction summary](./docs/P3.3-projection-reduction-summary.md): admission/export parity repair and final PowerShell identity guard.
 - [P3.3 public admission policy](./docs/P3.3-public-admission-policy.md): explicit gates separating technical readiness from public cmdlet admission.
 - [P3.4 CI/package plan](./docs/P3.4-ci-packaging-plan.md): Windows-first validation, candidate packaging, and schema-update gates.
-- [P3.4 CI/package plan](./docs/P3.4-ci-packaging-plan.md): Windows-first validation, candidate packaging, and schema-update gates.
+- [P3.4 integration summary](./docs/P3.4-integration-summary.md): merged P3.3/P3.4 evidence, package provenance, and release boundaries.
 - [Development principles](./docs/development-principles.md): durable rules for model, generator, runtime, and evidence work.
 
 The current authoritative PowerShell surface is handwritten. Generated metadata must remain transport-neutral, and unresolved behavior—such as HTTP `2xx` with `success=false`—is not silently defined by the runtime.
 
-The P3.4 CI foundation is available through `.github/workflows/p34-ci.yml`.
-It produces a non-published module candidate after the existing deterministic,
-regression, compatibility, and coverage gates pass. For local validation after
+The integrated P3.4 CI foundation is available through
+`.github/workflows/p34-ci.yml`. It produces a non-published module candidate
+after the existing deterministic, regression, compatibility, and coverage gates
+pass. The formal public module surface remains the five explicitly admitted
+P3.2 cmdlets; bounded D1/D2 slices remain test-only. For local validation after
 the Release build, run:
 
 ```powershell

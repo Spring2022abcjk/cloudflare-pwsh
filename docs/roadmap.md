@@ -114,6 +114,19 @@ through a manual workflow-dispatch entry in an isolated temporary checkout.
 PowerShell Gallery publication, real-account validation, and broader public
 admission remain later decisions.
 
+#### P3.4 integration closure
+
+Status: complete for the local/static release-engineering foundation. The P3.3
+projection-reduction and explicit-admission result is merged with the P3.4
+Windows-first CI, compatibility/coverage gates, deterministic candidate
+packaging, and candidate smoke contract. The formal module surface remains the
+five admitted P3.2 cmdlets; D1/D2 are bounded test-only slices and are not
+package exports. See [P3.4 integration summary](./P3.4-integration-summary.md).
+
+This closure does not claim remote GitHub Actions execution, real-account or
+device/manual acceptance, publishing, or release readiness. Those evidence
+boundaries remain part of P3.5/P4 and the deferred decisions below.
+
 ### P3.5 — Real Integration Validation
 
 Only after mock contract coverage is sufficient, validate authentication, CRUD, pagination, retry/rate limits, multipart, binary, streaming, and error behavior against a constrained real Cloudflare account. Real-account tests supplement, and do not replace, mock tests.

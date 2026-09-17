@@ -53,3 +53,5 @@
 46. Coverage gates use operation identity, classification semantics, no-drop checks, and configurable thresholds; do not hard-code a fixed supported-operation count.
 47. Package candidates must be self-contained module artifacts; package smoke must load the staged candidate itself and must not rely on repository-relative source/build paths.
 48. Keep package assembly deterministic, keep PowerShell runtime assemblies out of the package, and do not publish automatically from validation CI.
+49. Reconcile package smoke and candidate contents with the explicit public-admission policy; bounded test slices must not become package exports by implication.
+50. Treat local/static CI, remote CI, host, package, real-account, device/manual, publishing, and release evidence as distinct acceptance boundaries; a local pass does not close the others.

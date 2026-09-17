@@ -116,14 +116,18 @@ jobs:
           New-Item -ItemType Directory -Force -Path $first,$second | Out-Null
           ./tools/Invoke-P33CoverageDiscovery.ps1 -OutputRoot $first -SkipBuild
           ./tools/Invoke-P33CoverageDiscovery.ps1 -OutputRoot $second -SkipBuild
-          ./tests/P33Coverage.Tests.ps1 -ReportPath (Join-Path $first 'coverage-baseline.json')
-          ./tools/Invoke-P34CoverageGate.ps1 -ReportPath (Join-Path $first 'coverage-baseline.json') -BaselinePath ./artifacts/p3.3/coverage-baseline.json -SecondReportPath (Join-Path $second 'coverage-baseline.json') -OutputPath (Join-Path $root 'coverage-gate.json')
-          Copy-Item -LiteralPath (Join-Path $first 'coverage-baseline.json') -Destination (Join-Path $root 'coverage-report.json') -Force
+          $canonicalJson = Join-Path $root 'coverage-report.json'
+          Copy-Item -LiteralPath (Join-Path $first 'coverage-baseline.json') -Destination $canonicalJson -Force
           Copy-Item -LiteralPath (Join-Path $first 'coverage-baseline.md') -Destination (Join-Path $root 'coverage-report.md') -Force
+          ./tests/P33Coverage.Tests.ps1 -ReportPath $canonicalJson
+          ./tools/Invoke-P34CoverageGate.ps1 -ReportPath $canonicalJson -BaselinePath ./artifacts/p3.3/coverage-baseline.json -SecondReportPath (Join-Path $second 'coverage-baseline.json') -OutputPath (Join-Path $root 'coverage-gate.json')
       - uses: actions/upload-artifact@v4
         with:
           name: p34-coverage-reports
-          path: ${{ runner.temp }}/p34-coverage
+          path: |
+            ${{ runner.temp }}/p34-coverage/coverage-report.json
+            ${{ runner.temp }}/p34-coverage/coverage-report.md
+            ${{ runner.temp }}/p34-coverage/coverage-gate.json
           if-no-files-found: error
 
   package:

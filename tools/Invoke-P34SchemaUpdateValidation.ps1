@@ -58,18 +58,21 @@ try {
     $coverageTwo = Join-Path $coverageRoot 'second'
     Invoke-P34SchemaChecked 'pwsh' @('-NoLogo', '-NoProfile', '-File', (Join-Path $temporary 'tools/Invoke-P33CoverageDiscovery.ps1'), '-ProjectRoot', $temporary, '-OutputRoot', $coverageOne, '-SkipBuild') 'first schema-update coverage discovery'
     Invoke-P34SchemaChecked 'pwsh' @('-NoLogo', '-NoProfile', '-File', (Join-Path $temporary 'tools/Invoke-P33CoverageDiscovery.ps1'), '-ProjectRoot', $temporary, '-OutputRoot', $coverageTwo, '-SkipBuild') 'second schema-update coverage discovery'
-    Invoke-P34SchemaChecked 'pwsh' @('-NoLogo', '-NoProfile', '-File', (Join-Path $temporary 'tests/P33Coverage.Tests.ps1'), '-ProjectRoot', $temporary, '-ReportPath', (Join-Path $coverageOne 'coverage-baseline.json')) 'schema-update coverage schema validation'
+    $coverageCanonical = Join-Path $coverageRoot 'coverage-report.json'
+    Copy-Item -LiteralPath (Join-Path $coverageOne 'coverage-baseline.json') -Destination $coverageCanonical -Force
+    Copy-Item -LiteralPath (Join-Path $coverageOne 'coverage-baseline.md') -Destination (Join-Path $coverageRoot 'coverage-report.md') -Force
+    Invoke-P34SchemaChecked 'pwsh' @('-NoLogo', '-NoProfile', '-File', (Join-Path $temporary 'tests/P33Coverage.Tests.ps1'), '-ProjectRoot', $temporary, '-ReportPath', $coverageCanonical) 'schema-update coverage schema validation'
     $compatibilityGate = Join-Path $temporary 'artifacts/p34-schema-update/compatibility-gate.json'
     $coverageGate = Join-Path $temporary 'artifacts/p34-schema-update/coverage-gate.json'
     Invoke-P34SchemaChecked 'pwsh' @('-NoLogo', '-NoProfile', '-File', (Join-Path $temporary 'tools/Invoke-P34CompatibilityGate.ps1'), '-ProjectRoot', $temporary, '-ReportPath', $compatibilityReport, '-OutputPath', $compatibilityGate) 'schema-update compatibility gate'
-    Invoke-P34SchemaChecked 'pwsh' @('-NoLogo', '-NoProfile', '-File', (Join-Path $temporary 'tools/Invoke-P34CoverageGate.ps1'), '-ProjectRoot', $temporary, '-ReportPath', (Join-Path $coverageOne 'coverage-baseline.json'), '-BaselinePath', (Join-Path $temporary 'artifacts/p3.3/coverage-baseline.json'), '-SecondReportPath', (Join-Path $coverageTwo 'coverage-baseline.json'), '-OutputPath', $coverageGate) 'schema-update coverage gate'
+    Invoke-P34SchemaChecked 'pwsh' @('-NoLogo', '-NoProfile', '-File', (Join-Path $temporary 'tools/Invoke-P34CoverageGate.ps1'), '-ProjectRoot', $temporary, '-ReportPath', $coverageCanonical, '-BaselinePath', (Join-Path $temporary 'artifacts/p3.3/coverage-baseline.json'), '-SecondReportPath', (Join-Path $coverageTwo 'coverage-baseline.json'), '-OutputPath', $coverageGate) 'schema-update coverage gate'
     New-Item -ItemType Directory -Force -Path $output | Out-Null
     Copy-Item -LiteralPath $compatibilityReport -Destination (Join-Path $output 'compatibility-report.json') -Force
     Copy-Item -LiteralPath $compatibilityGate -Destination (Join-Path $output 'compatibility-gate.json') -Force
-    Copy-Item -LiteralPath (Join-Path $coverageOne 'coverage-baseline.json') -Destination (Join-Path $output 'coverage-baseline.json') -Force
-    Copy-Item -LiteralPath (Join-Path $coverageOne 'coverage-baseline.md') -Destination (Join-Path $output 'coverage-baseline.md') -Force
+    Copy-Item -LiteralPath $coverageCanonical -Destination (Join-Path $output 'coverage-report.json') -Force
+    Copy-Item -LiteralPath (Join-Path $coverageRoot 'coverage-report.md') -Destination (Join-Path $output 'coverage-report.md') -Force
     Copy-Item -LiteralPath $coverageGate -Destination (Join-Path $output 'coverage-gate.json') -Force
-    $summary = [ordered]@{ schemaVersion = 1; stage = 'P3.4'; status = 'Passed'; mode = 'workflow-dispatch'; source = 'build/pinned-schema.json'; compatibilityReport = 'compatibility-report.json'; coverageReport = 'coverage-baseline.json'; gates = @('P1-P2.4 regression', 'coverage schema', 'compatibility policy', 'coverage policy', 'deterministic repeated discovery') }
+    $summary = [ordered]@{ schemaVersion = 1; stage = 'P3.4'; status = 'Passed'; mode = 'workflow-dispatch'; source = 'build/pinned-schema.json'; compatibilityReport = 'compatibility-report.json'; coverageReport = 'coverage-report.json'; gates = @('P1-P2.4 regression', 'coverage schema', 'compatibility policy', 'coverage policy', 'deterministic repeated discovery') }
     Write-P34SchemaJson (Join-Path $output 'summary.json') $summary
     $finalLines = @(& git -C $root status --short)
     if ($allowOutputStatus) {

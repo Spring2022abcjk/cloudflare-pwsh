@@ -33,17 +33,34 @@ function Assert-P34ScriptParses {
     [System.Management.Automation.Language.Parser]::ParseFile($Path, [ref]$tokens, [ref]$errors) | Out-Null
     if (@($errors).Count -ne 0) { throw "PowerShell parse errors in '$Path': $(@($errors | ForEach-Object Message) -join '; ')" }
 }
+function Assert-P34CoverageWorkflowCanonicalContract {
+    $workflowPath = Join-Path $root '.github/workflows/p34-ci.yml'
+    $workflow = Get-Content -Raw -LiteralPath $workflowPath
+    foreach ($fragment in @(
+        "`$canonicalJson = Join-Path `$root 'coverage-report.json'",
+        "Copy-Item -LiteralPath (Join-Path `$first 'coverage-baseline.json') -Destination `$canonicalJson -Force",
+        "P33Coverage.Tests.ps1 -ReportPath `$canonicalJson",
+        "Invoke-P34CoverageGate.ps1 -ReportPath `$canonicalJson",
+        '${{ runner.temp }}/p34-coverage/coverage-report.json',
+        '${{ runner.temp }}/p34-coverage/coverage-gate.json',
+        "CoverageJsonPath (Join-Path `$env:RUNNER_TEMP 'p34-coverage/coverage-report.json')"
+    )) {
+        if ($workflow.IndexOf($fragment, [StringComparison]::Ordinal) -lt 0) { throw "P3.4 CI workflow is missing canonical coverage contract fragment: $fragment" }
+    }
+    Write-Output 'PASS P3.4 CI workflow binds coverage validation, gate, upload, and package to coverage-report.json'
+}
 function Invoke-P34ProvenanceBuild {
     param([Parameter(Mandatory)][string]$SourceRevision)
     & dotnet build (Join-Path $root 'src/Cloudflare.PowerShell/Cloudflare.PowerShell.csproj') --configuration Release --no-incremental --nologo "/p:P34SourceRevision=$SourceRevision" | Out-Host
     if ($LASTEXITCODE -ne 0) { throw "P3.4 provenance build failed with exit code $LASTEXITCODE." }
 }
 function Assert-P34PackageRejects {
-    param([Parameter(Mandatory)][string]$Label, [Parameter(Mandatory)][string]$CompatibilityGate, [Parameter(Mandatory)][string]$CoverageGate, [string]$CompatibilityReport)
+    param([Parameter(Mandatory)][string]$Label, [Parameter(Mandatory)][string]$CompatibilityGate, [Parameter(Mandatory)][string]$CoverageGate, [string]$CompatibilityReport, [string]$CoverageReport)
     $arguments = [object[]]$packageArguments.Clone()
     $arguments[3] = Join-Path $temporary ('reject-' + $Label)
     if (-not [string]::IsNullOrWhiteSpace($CompatibilityReport)) { $arguments[5] = $CompatibilityReport }
     $arguments[7] = $CompatibilityGate
+    if (-not [string]::IsNullOrWhiteSpace($CoverageReport)) { $arguments[9] = $CoverageReport }
     $arguments[13] = $CoverageGate
     Assert-P34TestChildFails $packageScript ([string[]]$arguments) $Label
 }
@@ -75,16 +92,25 @@ try {
         'tools/Invoke-P34SchemaUpdateValidation.ps1',
         'tests/P34PackageSmoke.ps1'
     )) { Assert-P34ScriptParses (Join-Path $root $script) }
+    Assert-P34CoverageWorkflowCanonicalContract
     Invoke-P34TestChild (Join-Path $root 'tools/Initialize-P34Schema.ps1') @('-ProjectRoot', $root, '-VerifyOnly') 'pinned schema verification'
     Invoke-P34TestChild (Join-Path $root 'tools/Test-P34Host.ps1') @() 'formal host baseline verification'
 
     $compatibilityGate = Join-Path $temporary 'compatibility-gate.json'
     $coverageGate = Join-Path $temporary 'coverage-gate.json'
     $compatibilityReport = Join-Path $root 'artifacts/compatibility/0b726721291ca19bfcc3add9e3c2b3f57b9d94e6-to-28bfb054e5fa106464e9fbbf0ffbf362bc85234d.json'
-    $coverageReport = Join-Path $root 'artifacts/p3.3/coverage-baseline.json'
-    $coverageMarkdown = Join-Path $root 'artifacts/p3.3/coverage-baseline.md'
+    $coverageBaseline = Join-Path $root 'artifacts/p3.3/coverage-baseline.json'
+    $coverageBaselineMarkdown = Join-Path $root 'artifacts/p3.3/coverage-baseline.md'
+    $coverageDiscoveryFirst = Join-Path $temporary 'coverage-discovery/first'
+    New-Item -ItemType Directory -Force -Path $coverageDiscoveryFirst | Out-Null
+    Copy-Item -LiteralPath $coverageBaseline -Destination (Join-Path $coverageDiscoveryFirst 'coverage-baseline.json') -Force
+    Copy-Item -LiteralPath $coverageBaselineMarkdown -Destination (Join-Path $coverageDiscoveryFirst 'coverage-baseline.md') -Force
+    $coverageReport = Join-Path $temporary 'coverage-report.json'
+    $coverageMarkdown = Join-Path $temporary 'coverage-report.md'
+    Copy-Item -LiteralPath (Join-Path $coverageDiscoveryFirst 'coverage-baseline.json') -Destination $coverageReport -Force
+    Copy-Item -LiteralPath (Join-Path $coverageDiscoveryFirst 'coverage-baseline.md') -Destination $coverageMarkdown -Force
     Invoke-P34TestChild (Join-Path $root 'tools/Invoke-P34CompatibilityGate.ps1') @('-ProjectRoot', $root, '-ReportPath', $compatibilityReport, '-OutputPath', $compatibilityGate) 'compatibility gate'
-    Invoke-P34TestChild (Join-Path $root 'tools/Invoke-P34CoverageGate.ps1') @('-ProjectRoot', $root, '-ReportPath', $coverageReport, '-BaselinePath', $coverageReport, '-OutputPath', $coverageGate) 'coverage gate'
+    Invoke-P34TestChild (Join-Path $root 'tools/Invoke-P34CoverageGate.ps1') @('-ProjectRoot', $root, '-ReportPath', $coverageReport, '-BaselinePath', $coverageBaseline, '-OutputPath', $coverageGate) 'coverage gate'
 
     $sourceRevision = ((& git -C $root rev-parse HEAD 2>$null) -join "`n").Trim()
     if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($sourceRevision)) { throw 'P3.4 CI tests could not resolve the current source revision.' }
@@ -112,6 +138,12 @@ try {
     $firstManifest = Get-Content -Raw -LiteralPath (Join-Path $firstCandidate 'candidate-manifest.json')
     $secondManifest = Get-Content -Raw -LiteralPath (Join-Path $secondCandidate 'candidate-manifest.json')
     if ($firstManifest -cne $secondManifest) { throw 'Repeated package assembly produced different candidate manifests.' }
+    $coverageReceipt = Get-Content -Raw -LiteralPath $coverageGate | ConvertFrom-Json
+    if ([string]$coverageReceipt.inputReportIdentity.fileName -cne 'coverage-report.json') { throw 'Coverage receipt did not bind the canonical coverage-report.json filename.' }
+    if ((Get-P34TestSha256 $coverageReport) -cne [string]$coverageReceipt.inputReportIdentity.sha256) { throw 'Coverage receipt hash does not match the canonical gated report.' }
+    $candidateCoverage = Join-Path $firstCandidate 'reports/coverage-report.json'
+    if ((Get-P34TestSha256 $candidateCoverage) -cne [string]$coverageReceipt.inputReportIdentity.sha256) { throw 'Candidate coverage report does not match the gated canonical report.' }
+    if (Test-Path -LiteralPath (Join-Path $firstCandidate 'reports/coverage-baseline.json')) { throw 'Candidate retained the discovery-internal coverage-baseline.json name.' }
     Invoke-P34TestChild (Join-Path $root 'tests/P34PackageSmoke.ps1') @('-ModulePath', (Join-Path $firstCandidate 'package/Cloudflare.PowerShell')) 'candidate package smoke'
 
     $failedCompatibilityGate = Join-Path $temporary 'failed-compatibility-gate.json'
@@ -149,6 +181,21 @@ try {
     $mismatchedFilenameValue.inputReportIdentity.fileName = 'unrelated-report.json'
     Write-P34TestJson $mismatchedFilenameGate $mismatchedFilenameValue
     Assert-P34PackageRejects 'mismatched-report-filename' $mismatchedFilenameGate $coverageGate
+
+    $mismatchedCoverageFilenameGate = Join-Path $temporary 'mismatched-coverage-report-filename-gate.json'
+    $mismatchedCoverageFilenameValue = Get-Content -Raw -LiteralPath $coverageGate | ConvertFrom-Json
+    $mismatchedCoverageFilenameValue.inputReportIdentity.fileName = 'coverage-baseline.json'
+    Write-P34TestJson $mismatchedCoverageFilenameGate $mismatchedCoverageFilenameValue
+    Assert-P34PackageRejects 'mismatched-coverage-report-filename' $compatibilityGate $mismatchedCoverageFilenameGate
+
+    $legacyCoverageReport = Join-Path $temporary 'coverage-baseline.json'
+    Copy-Item -LiteralPath $coverageReport -Destination $legacyCoverageReport -Force
+    $legacyCoverageGate = Join-Path $temporary 'legacy-coverage-report-gate.json'
+    $legacyCoverageGateValue = Get-Content -Raw -LiteralPath $coverageGate | ConvertFrom-Json
+    $legacyCoverageGateValue.inputReportIdentity.fileName = 'coverage-baseline.json'
+    $legacyCoverageGateValue.inputReportIdentity.sha256 = Get-P34TestSha256 $legacyCoverageReport
+    Write-P34TestJson $legacyCoverageGate $legacyCoverageGateValue
+    Assert-P34PackageRejects 'noncanonical-coverage-input' $compatibilityGate $legacyCoverageGate '' $legacyCoverageReport
 
     $mismatchedReceiptOldGate = Join-Path $temporary 'mismatched-receipt-old-revision-gate.json'
     $mismatchedReceiptOldValue = Get-Content -Raw -LiteralPath $compatibilityGate | ConvertFrom-Json
@@ -248,7 +295,7 @@ try {
     if ($supportedRow.Count -ne 1) { throw 'Coverage test could not find a supported baseline operation.' }
     $supportedRow[0].classification = 'NeedsManualReview'
     Write-P34TestJson $mutatedCoverage $coverageValue
-    Assert-P34TestChildFails (Join-Path $root 'tools/Invoke-P34CoverageGate.ps1') @('-ProjectRoot', $root, '-ReportPath', $mutatedCoverage, '-BaselinePath', $coverageReport, '-OutputPath', (Join-Path $temporary 'mutated-coverage-gate.json')) 'supported-to-manual coverage regression rejection'
+    Assert-P34TestChildFails (Join-Path $root 'tools/Invoke-P34CoverageGate.ps1') @('-ProjectRoot', $root, '-ReportPath', $mutatedCoverage, '-BaselinePath', $coverageBaseline, '-OutputPath', (Join-Path $temporary 'mutated-coverage-gate.json')) 'supported-to-manual coverage regression rejection'
 
     $tamperedHistogram = Get-Content -Raw -LiteralPath $coverageReport | ConvertFrom-Json
     $tamperedHistogram.classificationCounts.UnsupportedProjectionCapability--

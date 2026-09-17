@@ -85,6 +85,9 @@ function Assert-P34GateReceipt {
     $inputIdentity = Get-P34ObjectProperty $gate 'inputReportIdentity' "$ExpectedGateType gate receipt"
     $expectedReportHash = Get-P34Sha256 $ReportPath
     $expectedReportFileName = [IO.Path]::GetFileName($ReportPath)
+    if ($ExpectedGateType -ceq 'Coverage' -and $expectedReportFileName -cne 'coverage-report.json') {
+        throw 'Coverage package input report must use the canonical filename coverage-report.json.'
+    }
     if ([string](Get-P34ObjectProperty $inputIdentity 'fileName' "$ExpectedGateType input report identity") -cne $expectedReportFileName -or
         [string](Get-P34ObjectProperty $inputIdentity 'sha256' "$ExpectedGateType input report identity") -cne $expectedReportHash) {
         throw "$ExpectedGateType gate input report identity does not match the report being packaged."
@@ -212,7 +215,7 @@ if (($actualModuleFiles -join '|') -cne ($expectedModuleFiles -join '|')) { thro
 $reportInputs = @(
     @{ Source = $compatibilityReport; Name = 'compatibility-report.json' },
     @{ Source = $compatibilityGate; Name = 'compatibility-gate.json' },
-    @{ Source = $coverageReport; Name = 'coverage-baseline.json' },
+    @{ Source = $coverageReport; Name = 'coverage-report.json' },
     @{ Source = (Resolve-P34PackagePath $CoverageMarkdownPath); Name = 'coverage-baseline.md' },
     @{ Source = $coverageGate; Name = 'coverage-gate.json' }
 )
@@ -292,7 +295,7 @@ $manifestOutput = [ordered]@{
         coverage = [ordered]@{
             path = 'reports/coverage-gate.json'
             sha256 = Get-P34Sha256 (Join-Path $reportStage 'coverage-gate.json')
-            inputReportSha256 = Get-P34Sha256 (Join-Path $reportStage 'coverage-baseline.json')
+            inputReportSha256 = Get-P34Sha256 (Join-Path $reportStage 'coverage-report.json')
         }
     }
     reportsPath = 'reports'

@@ -28,16 +28,20 @@ public static class ProjectionCompatibility
 
     public static IReadOnlyList<ApiChange> FindPowerShellNameCollisions(IEnumerable<string> apiNames, string resourcePath = "", string? operationId = null)
     {
-        var groups = apiNames.GroupBy(ToPowerShellName, StringComparer.Ordinal).Where(x => x.Select(v => v).Distinct(StringComparer.Ordinal).Count() > 1).OrderBy(x => x.Key, StringComparer.Ordinal);
+        var groups = apiNames
+            .Select(name => new { Original = name, Canonical = PowerShellNameCanonicalizer.ToPowerShellName(name) })
+            .GroupBy(x => PowerShellNameCanonicalizer.ToIdentityKey(x.Canonical), StringComparer.Ordinal)
+            .Where(x => x.Select(v => v.Original).Distinct(StringComparer.Ordinal).Count() > 1)
+            .OrderBy(x => x.Key, StringComparer.Ordinal);
         return groups.Select(group => new ApiChange
         {
             Kind = ApiChangeKind.PowerShellNameCollision,
             ResourcePath = resourcePath,
             OperationId = operationId,
             Path = "parameters",
-            OldValue = string.Join(';', group.OrderBy(x => x, StringComparer.Ordinal)),
-            NewValue = group.Key,
-            Evidence = "distinct normalized API names collapse to one PowerShell parameter name",
+            OldValue = string.Join(';', group.Select(x => x.Original).OrderBy(x => x, StringComparer.Ordinal)),
+            NewValue = group.Select(x => x.Canonical).OrderBy(x => x, StringComparer.Ordinal).First(),
+            Evidence = "distinct normalized API names collapse to one final PowerShell parameter name",
             ApiImpact = CompatibilityImpact.None,
             SdkImpact = CompatibilityImpact.None,
             PowerShellImpact = CompatibilityImpact.Breaking
@@ -82,5 +86,4 @@ public static class ProjectionCompatibility
     private static string String(JsonNode? node) => node is JsonValue value && value.TryGetValue<string>(out var text) ? text : Value(node);
     private static string Bool(JsonNode? node) => node is JsonValue value && value.TryGetValue<bool>(out var flag) ? flag.ToString() : Value(node);
     private static string Join(IEnumerable<string> values) => string.Join(';', values);
-    private static string ToPowerShellName(string value) => string.Concat(value.Split(['.', '-', '_'], StringSplitOptions.RemoveEmptyEntries).Select(x => x.Length == 0 ? string.Empty : char.ToUpperInvariant(x[0]) + x[1..]));
 }

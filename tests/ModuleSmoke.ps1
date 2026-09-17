@@ -19,6 +19,10 @@ if ($bundledRuntimeFiles.Count -ne 0) {
     throw "Module staging contains bundled PowerShell runtime files: $($bundledRuntimeFiles.FullName -join ', ')"
 }
 
+$admissionParity = Join-Path $ProjectRoot 'tools/Invoke-P33AdmissionParity.ps1'
+& pwsh -NoLogo -NoProfile -File $admissionParity -ProjectRoot $ProjectRoot -AssemblyPath $dllPath | Out-Host
+if ($LASTEXITCODE -ne 0) { throw "P3.3 admission parity gate failed with exit code $LASTEXITCODE." }
+
 Add-Type -TypeDefinition @'
 using System;
 using System.Collections.Generic;

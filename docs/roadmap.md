@@ -88,6 +88,18 @@ Status: completed in this workspace for the bounded discovery/D1/D2 scope; see
 unchanged: every scanned operation remains classified, and the six D2
 operations remain `ExcludedByPolicy`.
 
+The projection-reduction follow-on is also evidenced in this workspace. Its
+taxonomy and before/after reports are under `artifacts/coverage`; generic
+scope-key and HTTP-method rules reduce projection conflicts while leaving
+same-scope/same-method ambiguity and low-confidence semantics unresolved.
+Public admission remains explicit-only under
+`overrides/public-admission-policy.json`; no newly projection-ready row is
+automatically exported. The formal module surface remains the five admitted
+P3.2 cmdlets; D1/D2 generated binaries are test-only bounded surfaces and are
+not module exports. The admission parity gate reconciles canonical artifact,
+coverage, compatibility, generated source, manifest/runtime, and help by
+identity.
+
 ### P3.4 — Packaging, CI, and Update Workflow
 
 Add module packaging, CI, schema-update detection, compatibility gates, deterministic generated diffs, release artifacts, versioning, and publishing workflow. P2.4 deterministic compatibility JSON/Markdown is the input to the schema-update gate.

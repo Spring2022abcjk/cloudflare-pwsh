@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "stage": "P3.3-projection-reduction",
+  "deterministic": true,
+  "generatedAt": null,
+  "sourceRevision": "4.0.0",
+  "population": {
+    "totalOperations": 3407,
+    "projectionConflictsBefore": 568,
+    "needsManualReviewBefore": 617,
+    "projectionConflictManualOverlapBefore": 77,
+    "projectionConflictsAfter": 57,
+    "needsManualReviewAfter": 617
+  },
+  "categories": [
+    {
+      "category": "ScopeProjectionAmbiguity",
+      "count": 458,
+      "denominator": 568,
+      "percentage": 80.63,
+      "representativeOperations": [
+        "access-applications-add-an-application",
+        "access-applications-delete-an-access-application",
+        "access-applications-get-an-access-application",
+        "access-applications-list-access-applications",
+        "access-applications-revoke-service-tokens"
+      ],
+      "resourceFamilies": [
+        {
+          "resourceFamily": "load/balancers",
+          "count": 12
+        },
+        {
+          "resourceFamily": "access/apps",
+          "count": 10
+        },
+        {
+          "resourceFamily": "access/apps/policies",
+          "count": 10
+        },
+        {
+          "resourceFamily": "access/certificates",
+          "count": 10
+        },
+        {
+          "resourceFamily": "access/groups",
+          "count": 10
+        },
+        {
+          "resourceFamily": "access/identity/providers",
+          "count": 10
+        },
+        {
+          "resourceFamily": "access/service/tokens",
+          "count": 10
+        },
+        {
+          "resourceFamily": "custom/pages/assets",
+          "count": 10
+        },
+        {
+          "resourceFamily": "logpush/jobs",
+          "count": 10
+        },
+        {
+          "resourceFamily": "logs/explorer/datasets",
+          "count": 10
+        }
+      ],
+      "currentClassification": {
+        "before": {
+          "NeedsManualReview": 65,
+          "UnsupportedProjectionCapability": 393
+        },
+        "after": {
+          "NeedsManualReview": 65,
+          "ExcludedByPolicy": 393
+        }
+      },
+      "reason": "Operations sharing a projected cmdlet and semantic parameter-set name have distinct normalized scope-binding signatures; the generic scope-key rule gives each binding a deterministic parameter-set identity.",
+      "evidence": {
+        "primary": "normalized scope bindings are distinct within the projected cmdlet/parameter-set collision group",
+        "reportReasons": [
+          "LowSemanticConfidence",
+          "ProjectionParameterSetCollision"
+        ],
+        "reportEvidence": [
+          "classification.manual-review",
+          "classification.projection-conflict",
+          "correction.none",
+          "normalized.operation",
+          "normalized.source-location",
+          "projection.collision",
+          "runtime.capability-gap",
+          "runtime.shared-capabilities"
+        ]
+      },
+      "possibleResolutionClass": "Projection capability rule: scope-key parameter-set disambiguation"
+    },
+    {
+      "category": "MethodVariantParameterSetCollision",
+      "count": 53,
+      "denominator": 568,
+      "percentage": 9.33,
+      "representativeOperations": [
+        "account-billing-profile-update-billing-email",
+        "account-billing-profile-update-billing-profile",
+        "accounts-turnstile-widget-create",
+        "accounts-turnstile-widget-delete",
+        "accounts-turnstile-widget-get"
+      ],
+      "resourceFamilies": [
+        {
+          "resourceFamily": "vuln/scanner/target/environments",
+          "count": 5
+        },
+        {
+          "resourceFamily": "challenges/widgets",
+          "count": 4
+        },
+        {
+          "resourceFamily": "infrastructure/targets",
+          "count": 4
+        },
+        {
+          "resourceFamily": "ai/search/namespaces/instances/items",
+          "count": 2
+        },
+        {
+          "resourceFamily": "billing/profile",
+          "count": 2
+        },
+        {
+          "resourceFamily": "calls/apps",
+          "count": 2
+        },
+        {
+          "resourceFamily": "cloudforce/one/events",
+          "count": 2
+        },
+        {
+          "resourceFamily": "cloudforce/one/events/categories",
+          "count": 2
+        },
+        {
+          "resourceFamily": "cloudforce/one/events/dataset",
+          "count": 2
+        },
+        {
+          "resourceFamily": "cloudforce/one/events/queries",
+          "count": 2
+        }
+      ],
+      "currentClassification": {
+        "before": {
+          "UnsupportedProjectionCapability": 45,
+          "NeedsManualReview": 8
+        },
+        "after": {
+          "ExcludedByPolicy": 45,
+          "NeedsManualReview": 8
+        }
+      },
+      "reason": "Operations sharing a projected cmdlet and semantic parameter-set name have distinct HTTP methods; the generic method rule gives each method a deterministic parameter-set identity.",
+      "evidence": {
+        "primary": "normalized HTTP methods are distinct within the remaining collision group after scope-key resolution",
+        "reportReasons": [
+          "LowSemanticConfidence",
+          "ProjectionParameterSetCollision"
+        ],
+        "reportEvidence": [
+          "classification.manual-review",
+          "classification.projection-conflict",
+          "correction.none",
+          "normalized.operation",
+          "normalized.source-location",
+          "projection.collision",
+          "runtime.shared-capabilities"
+        ]
+      },
+      "possibleResolutionClass": "Projection capability rule: HTTP-method parameter-set disambiguation"
+    },
+    {
+      "category": "ParameterSetIndistinguishability",
+      "count": 57,
+      "denominator": 568,
+      "percentage": 10.04,
+      "representativeOperations": [
+        "access-applications-patch-update-access-application-settings",
+        "access-applications-put-update-access-application-settings",
+        "billable-usage-get-v1-account-usage",
+        "billable-usage-v2-get-account-usage",
+        "createAllowlistedPrefix"
+      ],
+      "resourceFamilies": [
+        {
+          "resourceFamily": "addressing/address/maps",
+          "count": 6
+        },
+        {
+          "resourceFamily": "gateway/lists",
+          "count": 6
+        },
+        {
+          "resourceFamily": "magic/advanced/tcp/protection/configs/allowlist",
+          "count": 6
+        },
+        {
+          "resourceFamily": "rules/lists",
+          "count": 5
+        },
+        {
+          "resourceFamily": "rules/lists/items",
+          "count": 5
+        },
+        {
+          "resourceFamily": "web3/hostnames/ipfs/universal/path/content/list/entries",
+          "count": 5
+        },
+        {
+          "resourceFamily": "access/apps/settings",
+          "count": 4
+        },
+        {
+          "resourceFamily": "devices/policy/exclude",
+          "count": 4
+        },
+        {
+          "resourceFamily": "devices/policy/fallback/domains",
+          "count": 4
+        },
+        {
+          "resourceFamily": "devices/policy/include",
+          "count": 4
+        }
+      ],
+      "currentClassification": {
+        "before": {
+          "UnsupportedProjectionCapability": 53,
+          "NeedsManualReview": 4
+        },
+        "after": {
+          "UnsupportedProjectionCapability": 53,
+          "NeedsManualReview": 4
+        }
+      },
+      "reason": "The remaining operations share the same projected cmdlet, semantic parameter-set name, and no unique generic scope or method discriminator; a public selector or noun decision would require product/UX evidence.",
+      "evidence": {
+        "primary": "projection remains Conflict after deterministic scope-key and HTTP-method rules",
+        "reportReasons": [
+          "LowSemanticConfidence",
+          "ProjectionParameterSetCollision"
+        ],
+        "reportEvidence": [
+          "classification.manual-review",
+          "classification.projection-conflict",
+          "correction.none",
+          "normalized.operation",
+          "normalized.source-location",
+          "projection.collision",
+          "runtime.shared-capabilities"
+        ]
+      },
+      "possibleResolutionClass": "Manual product/UX decision; retain UnsupportedProjectionCapability until an explicit policy is evidenced"
+    },
+    {
+      "category": "LowConfidenceSemanticInference",
+      "count": 617,
+      "denominator": 617,
+      "percentage": 100.0,
+      "representativeOperations": [
+        "access-applications-add-an-application",
+        "access-applications-revoke-service-tokens",
+        "access-applications-test-access-policies",
+        "access-custom-pages-validate-a-custom-page-template",
+        "access-gateway-ca-add-an-SSH-ca"
+      ],
+      "resourceFamilies": [
+        {
+          "resourceFamily": "addressing/address/maps",
+          "count": 4
+        },
+        {
+          "resourceFamily": "api/gateway/operations/labels",
+          "count": 4
+        },
+        {
+          "resourceFamily": "api/gateway/user/schemas",
+          "count": 4
+        },
+        {
+          "resourceFamily": "email/routing/dns",
+          "count": 4
+        },
+        {
+          "resourceFamily": "logpush/jobs",
+          "count": 4
+        },
+        {
+          "resourceFamily": "api/gateway/operations",
+          "count": 3
+        },
+        {
+          "resourceFamily": "dlp/document/fingerprints",
+          "count": 3
+        },
+        {
+          "resourceFamily": "access/apps",
+          "count": 2
+        },
+        {
+          "resourceFamily": "access/apps/revoke/tokens",
+          "count": 2
+        },
+        {
+          "resourceFamily": "access/apps/user/policy/checks",
+          "count": 2
+        }
+      ],
+      "currentClassification": {
+        "before": {
+          "NeedsManualReview": 617
+        },
+        "after": {
+          "NeedsManualReview": 617
+        }
+      },
+      "reason": "The normalizer used only a method heuristic for semantic kind; automatic public verb/noun admission would guess action versus CRUD meaning.",
+      "evidence": {
+        "primary": "semanticConfidence=Low and semanticSource=MethodHeuristic",
+        "reportReasons": [
+          "LowSemanticConfidence"
+        ],
+        "reportEvidence": [
+          "classification.manual-review",
+          "correction.none",
+          "normalized.operation",
+          "normalized.source-location",
+          "projection.collision",
+          "projection.constructed",
+          "runtime.capability-gap",
+          "runtime.shared-capabilities"
+        ]
+      },
+      "possibleResolutionClass": "Manual semantic/product decision or evidence-backed correction; do not resolve by projection override alone"
+    }
+  ],
+  "resolutionSummary": {
+    "scopeKeyRows": 458,
+    "httpMethodRows": 53,
+    "unresolvedProjectionRows": 57,
+    "manualSemanticRows": 617
+  },
+  "inputIdentity": {
+    "beforeJson": "artifacts/coverage/before-global-coverage.json",
+    "beforeMarkdown": "artifacts/coverage/before-global-coverage.md",
+    "afterJson": "artifacts/p3.3/coverage-baseline.json",
+    "afterMarkdown": "artifacts/p3.3/coverage-baseline.md"
+  }
+}

@@ -35,3 +35,15 @@
 33. Coverage reports and derived family summaries must be deterministic; do not include wall-clock timestamps in semantic artifacts.
 34. Use corrections for API-contract evidence, projection overrides for PowerShell UX policy, and shared model/runtime changes for general capability gaps; do not use overrides to conceal a structural IR deficiency.
 35. A coverage percentage or generated-cmdlet count is not an acceptance gate without typed output, runtime, safety, parity, compatibility, and regression evidence.
+36. Classify projection blockers by normalized semantics and stable evidence; do not group them only by emitted error text.
+37. Generic projection disambiguation may use normalized scope and HTTP method facts, but it must not rename explicit policy or auto-admit a public cmdlet.
+38. Keep unresolved same-scope/same-method parameter-set collisions and low-confidence semantic inference as manual/product decisions; do not manufacture UX from coverage pressure.
+39. Public admission is an explicit gate independent of normalization success, projection construction, runtime readiness, or generated-source availability.
+40. An admission policy is an enforceable production contract only when the
+    generation or acceptance path consumes it; documentation and tests alone
+    are insufficient.
+41. Reconcile admitted canonical commands against generated source, module
+    manifest/runtime exports, generated help, coverage, and compatibility by
+    canonical identity. Extra or missing public identities fail the gate.
+42. A generic discriminator is safe only after final PowerShell canonicalization
+    and uniqueness validation in the public cmdlet/parameter-set namespace.

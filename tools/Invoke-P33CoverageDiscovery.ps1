@@ -152,7 +152,12 @@ $corrected = [Cloudflare.Normalization.ApiCorrectionEngine]::new($correctionPath
 $policyNode = [Text.Json.Nodes.JsonNode]::Parse((Get-Content -Raw -LiteralPath $projectionPolicyPath)).AsObject()
 $publicArtifact = Get-Content -Raw -LiteralPath $publicArtifactPath | ConvertFrom-Json
 
-$projectionNode = [Cloudflare.Normalization.Compatibility.ProjectionModelBuilder]::Build($corrected, $policyNode)
+$projectionOptions = [Cloudflare.Normalization.Compatibility.ProjectionModelBuilder+ProjectionBuildOptions]::new()
+$projectionOptions.ResolveDeterministicParameterSetCollisions = $true
+$projectionAssignments = @([Cloudflare.Normalization.Compatibility.ProjectionModelBuilder]::GetParameterSetAssignments($corrected, $policyNode, $projectionOptions))
+$assignmentByOperation = @{}
+foreach ($assignment in $projectionAssignments) { $assignmentByOperation[[string]$assignment.OperationId] = $assignment }
+$projectionNode = [Cloudflare.Normalization.Compatibility.ProjectionModelBuilder]::Build($corrected, $policyNode, $projectionOptions)
 $projectionModel = $projectionNode.ToJsonString() | ConvertFrom-Json
 $projectionRows = @($projectionModel.cmdlets | ForEach-Object {
         $cmdlet = $_
@@ -203,6 +208,9 @@ foreach ($operation in @($corrected.Operations | Sort-Object OperationId)) {
     $normalizationStatus = 'Succeeded'
     $correctionStatus = if (@($operation.CorrectionTrace).Count -gt 0) { 'Applied' } else { 'None' }
     $projectionStatus = if ($parameterCollisionByOperation.Contains($operationId) -or $parameterSetCollisionByOperation.Contains($operationId)) { 'Conflict' } elseif ($null -ne $operationPolicy) { 'PolicyAvailable' } else { 'DefaultAvailable' }
+    $assignment = $assignmentByOperation[$operationId]
+    $projectionResolution = if ($null -ne $operationPolicy) { 'ExplicitPolicy' } elseif ($null -ne $assignment) { [string]$assignment.ResolutionRule } else { 'None' }
+    if ($projectionStatus -ne 'Conflict' -and $projectionResolution -in @('ScopeKey', 'HttpMethod')) { $projectionStatus = 'ResolvedByGenericRule' }
     $runtimeStatus = if ($runtimeGaps.Count -eq 0) { 'Ready' } else { 'Gap' }
     $publicCmdlet = if ($publicByOperation.ContainsKey($operationId)) { [string]$publicByOperation[$operationId] } else { $null }
     $projectionCmdlet = if ($projection.Count -gt 0) { [string]$projection[0].cmdletName } else { $null }
@@ -215,6 +223,7 @@ foreach ($operation in @($corrected.Operations | Sort-Object OperationId)) {
     $evidence.Add('normalized.source-location')
     if ($correctionStatus -eq 'Applied') { $evidence.Add('correction.trace') } else { $evidence.Add('correction.none') }
     if ($projectionStatus -eq 'Conflict') { $evidence.Add('projection.collision') } else { $evidence.Add('projection.constructed') }
+    if ($projectionResolution -in @('ScopeKey', 'HttpMethod')) { $evidence.Add('projection.generic-disambiguation') }
     if ($runtimeStatus -eq 'Ready') { $evidence.Add('runtime.shared-capabilities') } else { $evidence.Add('runtime.capability-gap') }
 
     if ($operation.OperationSemantic.Kind -eq 'Unknown') {
@@ -279,6 +288,7 @@ foreach ($operation in @($corrected.Operations | Sort-Object OperationId)) {
             correctionStatus = $correctionStatus
             correctionRules = @($operation.CorrectionTrace | ForEach-Object RuleId | Sort-Object -Unique)
             projectionStatus = $projectionStatus
+            projectionResolution = $projectionResolution
             projectionOverride = ($null -ne $operationPolicy)
             projectedCmdletName = $projectionCmdlet
             projectedParameterSet = $parameterSet
@@ -302,6 +312,8 @@ $resourceFamilyCounts = @($sortedRows | Group-Object resourceFamily | Sort-Objec
     })
 $capabilityGapCounts = [ordered]@{}
 foreach ($group in @($sortedRows | ForEach-Object { $_.reasonCodes } | Group-Object | Sort-Object Name)) { $capabilityGapCounts[[string]$group.Name] = $group.Count }
+$projectionResolutionCounts = [ordered]@{}
+foreach ($group in @($sortedRows | Group-Object projectionResolution | Sort-Object Name)) { $projectionResolutionCounts[[string]$group.Name] = $group.Count }
 
 $stageCounts = [ordered]@{
     normalizedSucceeded = @($sortedRows | Where-Object normalizedStatus -eq 'Succeeded').Count
@@ -352,6 +364,7 @@ $report = [pscustomobject][ordered]@{
     stageCounts = [pscustomobject]$stageCounts
     classificationCounts = [pscustomobject]$classificationCounts
     capabilityGapCounts = [pscustomobject]$capabilityGapCounts
+    projectionResolutionCounts = [pscustomobject]$projectionResolutionCounts
     resourceFamilyCounts = $resourceFamilyCounts
     operations = $sortedRows
 }

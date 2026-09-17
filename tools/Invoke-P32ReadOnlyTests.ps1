@@ -62,6 +62,8 @@ function Get-P32RequiredInputPaths {
     foreach ($path in @(
         'Cloudflare.P1.sln',
         'artifacts/generated-normalized/document.json',
+        'artifacts/p3.3/coverage-baseline.json',
+        'overrides/public-admission-policy.json',
         'artifacts/p2.3/projection/zones.json',
         'experiments/p2.3/Cloudflare.P23.GeneratedCmdlet/Cloudflare.P23.GeneratedCmdlet.csproj',
         'fixtures/dns-records/create.json',
@@ -131,6 +133,7 @@ function Get-P32RequiredInputPaths {
         'tests/ProjectionModel.Tests.ps1',
         'tools/Generate-DnsSource.ps1',
         'tools/Generate-P32Source.ps1',
+        'tools/Invoke-P33AdmissionParity.ps1',
         'tools/Invoke-P1Tests.ps1',
         'tools/Invoke-P22Tests.ps1',
         'tools/Invoke-P23Tests.ps1',

@@ -110,7 +110,31 @@ var parameterSchemaChanges = CompatibilityEngine.Compare(Base(), parameterSchema
 if (!parameterSchemaChanges.Any(x => x.Kind == ApiChangeKind.EnumValueAdded && x.Path.Contains("ThingKind[Request]", StringComparison.Ordinal))) failures.Add("parameter schema context: expected Request context"); else Console.WriteLine("PASS parameter schema request context");
 var builtProjection = ProjectionModelBuilder.Build(Base());
 if (ProjectionCompatibility.Compare(builtProjection, builtProjection).Count != 0) failures.Add("projection builder identity: unexpected changes"); else Console.WriteLine("PASS projection builder identity");
-var collisions = ProjectionCompatibility.FindPowerShellNameCollisions(["foo-bar", "foo_bar", "foo.bar"]);
+var reductionOptions = new ProjectionModelBuilder.ProjectionBuildOptions { ResolveDeterministicParameterSetCollisions = true };
+var scopeDocument = new NormalizedDocument();
+scopeDocument.Operations.Add(ScopedOperation("account-list", "GET", "AccountId", "account_id"));
+scopeDocument.Operations.Add(ScopedOperation("zone-list", "GET", "ZoneId", "zone_id"));
+scopeDocument.Operations.Add(ScopedOperation("namespace-list", "GET", "Namespace", "namespace_id"));
+var scopeAssignments = ProjectionModelBuilder.GetParameterSetAssignments(scopeDocument, null, reductionOptions);
+if (scopeAssignments.Count != 3 || scopeAssignments.Any(x => x.ResolutionRule != "ScopeKey") || !PowerShellNameCanonicalizer.AreUnique(scopeAssignments.Select(x => $"{x.CmdletName}:{x.ParameterSet}"))) failures.Add("projection reduction: scope-key disambiguation failed"); else Console.WriteLine("PASS projection scope-key disambiguation");
+var methodDocument = new NormalizedDocument();
+methodDocument.Operations.Add(ScopedOperation("patch-list", "PATCH", "ZoneId", "zone_id"));
+methodDocument.Operations.Add(ScopedOperation("put-list", "PUT", "ZoneId", "zone_id"));
+var methodAssignments = ProjectionModelBuilder.GetParameterSetAssignments(methodDocument, null, reductionOptions);
+if (methodAssignments.Count != 2 || methodAssignments.Any(x => x.ResolutionRule != "HttpMethod") || methodAssignments.Select(x => x.ParameterSet).Distinct(StringComparer.Ordinal).Count() != 2) failures.Add("projection reduction: HTTP-method disambiguation failed"); else Console.WriteLine("PASS projection HTTP-method disambiguation");
+var unresolvedDocument = new NormalizedDocument();
+unresolvedDocument.Operations.Add(ScopedOperation("same-a", "GET", "ZoneId", "zone_id"));
+unresolvedDocument.Operations.Add(ScopedOperation("same-b", "GET", "ZoneId", "zone_id"));
+var unresolvedAssignments = ProjectionModelBuilder.GetParameterSetAssignments(unresolvedDocument, null, reductionOptions);
+if (unresolvedAssignments.Any(x => x.ResolutionRule != "None") || unresolvedAssignments.Select(x => x.ParameterSet).Distinct(StringComparer.Ordinal).Count() != 1) failures.Add("projection reduction: indistinguishable operations were auto-resolved"); else Console.WriteLine("PASS projection unresolved ambiguity boundary");
+var canonicalCollisionDocument = new NormalizedDocument();
+canonicalCollisionDocument.Operations.Add(ScopedOperation("canonical-a", "GET", "Foo-Bar", "foo-bar"));
+canonicalCollisionDocument.Operations.Add(ScopedOperation("canonical-b", "GET", "Foo_Bar", "foo_bar"));
+var canonicalCollisionAssignments = ProjectionModelBuilder.GetParameterSetAssignments(canonicalCollisionDocument, null, reductionOptions);
+if (canonicalCollisionAssignments.Any(x => x.ResolutionRule != "None") || canonicalCollisionAssignments.Select(x => PowerShellNameCanonicalizer.ToIdentityKey($"{x.CmdletName}:{x.ParameterSet}")).Distinct(StringComparer.Ordinal).Count() != 1) failures.Add("projection reduction: final PowerShell scope-name collision was incorrectly resolved"); else Console.WriteLine("PASS projection final-name collision guard");
+var reducedProjection = ProjectionModelBuilder.Build(scopeDocument, null, reductionOptions);
+if (!ProjectionCompatibility.Compare(builtProjection, reducedProjection).Any(x => x.Kind == ApiChangeKind.PowerShellParameterSetChanged)) failures.Add("projection reduction: compatibility did not see generated parameter-set change"); else Console.WriteLine("PASS projection reduction compatibility visibility");
+var collisions = ProjectionCompatibility.FindPowerShellNameCollisions(["foo-bar", "foo_bar", "foo.bar", "foo bar", "FooBar", "FOO_BAR"]);
 if (collisions.Count != 1 || collisions[0].NewValue != "FooBar" || collisions[0].PowerShellImpact != CompatibilityImpact.Breaking) failures.Add("name collision: expected FooBar collision"); else Console.WriteLine("PASS PowerShell name collision");
 var collisionDocument = Base();
 collisionDocument.Operations[0].Parameters.Add(new NormalizedParameter { Name = "foo-bar", Location = "query", Schema = "String" });
@@ -210,6 +234,14 @@ static NormalizedOperation Operation(string id, string method)
         ],
         Pagination = new PaginationModel { Strategy = "PageArray", RequestFields = ["page"], ResponseFields = ["result_info.page"], StopRule = "page >= total_pages" }
     };
+}
+
+static NormalizedOperation ScopedOperation(string id, string method, string scopeType, string parameterName)
+{
+    var operation = Operation(id, method);
+    operation.ScopeBindings = [new ScopeBinding { ParameterName = parameterName, ScopeType = scopeType, Role = "Parent" }];
+    operation.Parameters[0].Name = parameterName;
+    return operation;
 }
 
 static string Revision(string path) => Path.GetFileNameWithoutExtension(path).Replace("openapi", "revision", StringComparison.OrdinalIgnoreCase);

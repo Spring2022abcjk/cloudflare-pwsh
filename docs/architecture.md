@@ -168,6 +168,46 @@ discriminator for identical PUT/PATCH public bindings. Its evidence remains
 separate from real-account, device/manual, packaging, publishing, and release
 evidence.
 
+## P3.3 projection-reduction boundary
+
+Global discovery now records projection conflicts as semantic blocker
+categories rather than treating every duplicate parameter-set name as the
+same problem. The shared `ProjectionModelBuilder` has two opt-in,
+capability-driven disambiguation rules:
+
+- a normalized scope-binding key can suffix a parameter set when the colliding
+  operations have distinct scope signatures;
+- a normalized HTTP method can suffix a parameter set when the remaining
+  operations have distinct methods.
+
+These rules use no resource or operation identifiers and never rename an
+explicitly declared policy parameter set. Operations that remain identical on
+scope and method stay projection blockers. A resolved projection identity is
+not public admission: the explicit policy in
+`overrides/public-admission-policy.json` still requires typed model, runtime,
+compatibility, safety, parity, and policy evidence.
+
+The current formal public surface is the five-cmdlet P3.2
+`artifacts/p3.2/CmdletModel.json` surface: `Get-CfZone`, `Get-CfDnsRecord`,
+`New-CfDnsRecord`, `Remove-CfDnsRecord`, and `Set-CfDnsRecord`. The D1/D2
+artifacts and generated bounded slices remain available through a direct binary
+test surface, but are not formal module exports. The admission parity gate
+`tools/Invoke-P33AdmissionParity.ps1` reconciles the canonical model, coverage,
+P2.4 compatibility surface, generated public source, manifest, module runtime,
+and generated help by canonical cmdlet identity; an extra or missing identity
+fails acceptance.
+
+Scope disambiguation is accepted only after the candidate has been transformed
+through the shared final PowerShell name canonicalizer and the resulting
+cmdlet-plus-parameter-set identities are unique. Raw scope keys that converge
+after PowerShell naming remain unresolved. A composite scope-plus-method
+discriminator is a future architectural opportunity, not part of this phase.
+
+The before/after global reports and deterministic blocker taxonomy are under
+`artifacts/coverage`. The current reduction changes projection-stage counts,
+but keeps the eight-operation public surface and all low-confidence semantic
+rows outside automatic admission.
+
 ## Deferred Boundaries
 
 Mutation idempotency policy, legacy authentication, full PowerShell binary UX,

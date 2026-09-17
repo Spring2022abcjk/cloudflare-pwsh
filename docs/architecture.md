@@ -208,6 +208,78 @@ The before/after global reports and deterministic blocker taxonomy are under
 but keeps the eight-operation public surface and all low-confidence semantic
 rows outside automatic admission.
 
+## P3.4 CI and package-candidate direction
+
+P3.4 composes the existing evidence boundaries rather than adding a second
+generator or runtime path:
+
+```text
+Pinned schema manifest + verified external checkout
+        ↓
+Existing P1–P3.3 read-only/golden/regression gates
+        ↓
+P2.4 compatibility policy + P3.3 coverage policy
+        ↓
+Release build → exact module staging → candidate-only package smoke
+        ↓
+Non-published release-candidate artifact
+```
+
+The compatibility and coverage gates each emit one machine-readable receipt.
+It records the gate schema/name/type, `Passed` status, policy identity and
+SHA-256, input-report identity and SHA-256, and the pinned upstream schema
+identity. The package builder independently verifies those receipts and
+recomputes the current policy/report hashes before it creates candidate
+output; a receipt copied from another candidate or a `Failed` receipt is not
+trusted. Compatibility matching uses an exact canonical key: the change
+family determines required identity fields, all impact dimensions and old/new
+values are included, missing fields do not become wildcards, and duplicate
+report/allowlist keys fail.
+
+For compatibility, the package verifier also requires the receipt's input
+filename to equal the actual report filename and binds receipt
+`comparisonIdentity.oldRevision/newRevision` to the report's old/new source
+revisions. The old side is checked against
+`fixtures/p2.4/openapi-previous-revision.json.previousRevision`; the new side
+is checked against that fixture's `currentRevision` and the pinned schema
+revision. Revisions are canonical lowercase Git SHA-1 values and missing or
+self-equal old/new identities fail closed.
+
+Coverage does not trust a report header histogram. It recomputes
+`classificationCounts` from every unique `operations[]` row, rejects unknown
+classifications and count keys, then applies the P3.3 semantic thresholds.
+
+The Release assembly carries a single source provenance value in
+`AssemblyInformationalVersion`, `0.1.0+source.<Git revision>`, plus its
+target-framework metadata. The package builder compares these with the
+current checkout, so `-SkipBuild` is safe only for an assembly proven to come
+from that checkout; AssemblyVersion alone is insufficient. Candidate smoke is
+run in a fresh child `pwsh` with a temporary working directory and repository
+paths removed from `PSModulePath`, then verifies the loaded assembly location
+is the staged candidate.
+
+The pinned schema manifest records the upstream Git revision, normalized source
+revision, source path, and SHA-256. The checkout is ignored external evidence;
+CI does not treat an unpinned latest schema as deterministic input. CI jobs use
+the Windows PowerShell 7.6+ / .NET 10 baseline and require no real Cloudflare
+token for normal acceptance.
+
+`Directory.Build.props:VersionPrefix` is the version source of truth. The
+module manifest must match it, and the package builder checks the resulting
+assembly version and `net10.0` output. Candidate module import consumes only
+the staged manifest, module script, help XML, and assembly; reports and build
+metadata are adjacent evidence, not runtime dependencies. Candidate smoke is
+run in a clean child PowerShell process with local mock HTTP.
+
+ZIP entries are sorted and use fixed timestamps. This proves byte-identical
+archives for equal inputs on the same supported host/runtime only; it does not
+claim Level-2 cross-host or cross-.NET-patch reproducibility. Local/static CI
+validation remains separate from remote GitHub Actions execution evidence.
+
+Compatibility decisions remain typed API/SDK/PowerShell impact decisions from
+P2.4. Coverage decisions remain operation-row and semantic-transition checks
+from P3.3; no final coverage count is hardcoded as a release criterion.
+
 ## Deferred Boundaries
 
 Mutation idempotency policy, legacy authentication, full PowerShell binary UX,
@@ -216,4 +288,7 @@ integration, and the final handwritten-vs-generated-cmdlet decision remain
 unresolved. P3.2 is limited to its five validated representative cmdlets until
 broader parity evidence supports expansion. The P3.1 runtime has deterministic mock coverage
 for multipart, binary streams, and all six recognized pagination strategies;
-HTTP 2xx with `success=false` remains intentionally unresolved.
+HTTP 2xx with `success=false` remains intentionally unresolved. Remote CI
+execution, PowerShell Gallery publishing, real-account acceptance, and
+full-SHA action pinning remain outside this fix pass; the latter is future
+supply-chain hardening.

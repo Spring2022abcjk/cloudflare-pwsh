@@ -1,0 +1,165 @@
+name: P3.4 CI validation and package candidate
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/p34-windows-baseline
+      - name: Bootstrap pinned schema
+        run: ./tools/Initialize-P34Schema.ps1
+      - name: Restore
+        run: dotnet restore ./Cloudflare.P1.sln --nologo
+      - name: Release build
+        run: dotnet build ./Cloudflare.P1.sln --configuration Release --no-restore --nologo
+
+  deterministic-generation:
+    name: Deterministic generation
+    needs: build
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/p34-windows-baseline
+      - run: ./tools/Initialize-P34Schema.ps1
+      - name: Run isolated deterministic gates
+        run: ./tools/Invoke-P34DeterministicValidation.ps1
+
+  unit-runtime:
+    name: Unit and runtime smoke
+    needs: build
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/p34-windows-baseline
+      - run: ./tools/Initialize-P34Schema.ps1
+      - name: Restore and build
+        run: |
+          dotnet restore ./Cloudflare.P1.sln --nologo
+          dotnet build ./Cloudflare.P1.sln --configuration Release --no-restore --nologo
+      - name: Runtime contract tests
+        run: dotnet run --project ./tests/Cloudflare.PowerShell.Tests/Cloudflare.PowerShell.Tests.csproj --configuration Release --no-build --nologo
+      - name: Module host smoke
+        run: ./tests/ModuleSmoke.ps1
+
+  regression:
+    name: P1-P2.4 regression
+    needs: build
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/p34-windows-baseline
+      - run: ./tools/Initialize-P34Schema.ps1
+      - name: Full regression chain
+        run: ./tools/Invoke-P24Tests.ps1 -SchemaRevisionManifestPath ./fixtures/p2.4/openapi-previous-revision.json
+
+  compatibility:
+    name: Compatibility gate
+    needs: regression
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/p34-windows-baseline
+      - run: ./tools/Initialize-P34Schema.ps1
+      - name: Restore and build compatibility engine
+        run: |
+          dotnet restore ./Cloudflare.P1.sln --nologo
+          dotnet build ./Cloudflare.P1.sln --configuration Release --no-restore --nologo
+      - name: Produce and evaluate compatibility report
+        run: |
+          $root = Join-Path $env:RUNNER_TEMP 'p34-compatibility'
+          New-Item -ItemType Directory -Force -Path $root | Out-Null
+          ./tools/Invoke-P24Tests.ps1 -ArtifactRoot (Join-Path $root 'reports') -SchemaRevisionManifestPath ./fixtures/p2.4/openapi-previous-revision.json
+          $report = @(Get-ChildItem -LiteralPath (Join-Path $root 'reports') -Filter '*.json' -File | ForEach-Object {
+            try { $value = Get-Content -Raw -LiteralPath $_.FullName | ConvertFrom-Json } catch { return }
+            if ([string]$value.stage -ceq 'P2.4') { $_.FullName }
+          }) | Select-Object -First 1
+          if ([string]::IsNullOrWhiteSpace([string]$report)) { throw 'Compatibility report was not produced.' }
+          $canonicalReport = Join-Path $root 'compatibility-report.json'
+          Copy-Item -LiteralPath $report -Destination $canonicalReport -Force
+          ./tools/Invoke-P34CompatibilityGate.ps1 -ReportPath $canonicalReport -OutputPath (Join-Path $root 'compatibility-gate.json')
+      - uses: actions/upload-artifact@v4
+        with:
+          name: p34-compatibility-reports
+          path: ${{ runner.temp }}/p34-compatibility
+          if-no-files-found: error
+
+  coverage:
+    name: Coverage gate
+    needs: build
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/p34-windows-baseline
+      - run: ./tools/Initialize-P34Schema.ps1
+      - name: Restore and build discovery engine
+        run: |
+          dotnet restore ./Cloudflare.P1.sln --nologo
+          dotnet build ./Cloudflare.P1.sln --configuration Release --no-restore --nologo
+      - name: Produce repeated coverage reports and evaluate policy
+        run: |
+          $root = Join-Path $env:RUNNER_TEMP 'p34-coverage'
+          $first = Join-Path $root 'first'
+          $second = Join-Path $root 'second'
+          New-Item -ItemType Directory -Force -Path $first,$second | Out-Null
+          ./tools/Invoke-P33CoverageDiscovery.ps1 -OutputRoot $first -SkipBuild
+          ./tools/Invoke-P33CoverageDiscovery.ps1 -OutputRoot $second -SkipBuild
+          $canonicalJson = Join-Path $root 'coverage-report.json'
+          Copy-Item -LiteralPath (Join-Path $first 'coverage-baseline.json') -Destination $canonicalJson -Force
+          Copy-Item -LiteralPath (Join-Path $first 'coverage-baseline.md') -Destination (Join-Path $root 'coverage-report.md') -Force
+          ./tests/P33Coverage.Tests.ps1 -ReportPath $canonicalJson
+          ./tools/Invoke-P34CoverageGate.ps1 -ReportPath $canonicalJson -BaselinePath ./artifacts/p3.3/coverage-baseline.json -SecondReportPath (Join-Path $second 'coverage-baseline.json') -OutputPath (Join-Path $root 'coverage-gate.json')
+      - uses: actions/upload-artifact@v4
+        with:
+          name: p34-coverage-reports
+          path: |
+            ${{ runner.temp }}/p34-coverage/coverage-report.json
+            ${{ runner.temp }}/p34-coverage/coverage-report.md
+            ${{ runner.temp }}/p34-coverage/coverage-gate.json
+          if-no-files-found: error
+
+  package:
+    name: Package candidate and smoke
+    needs: [deterministic-generation, unit-runtime, regression, compatibility, coverage]
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/p34-windows-baseline
+      - run: ./tools/Initialize-P34Schema.ps1
+      - uses: actions/download-artifact@v4
+        with:
+          name: p34-compatibility-reports
+          path: ${{ runner.temp }}/p34-compatibility
+      - uses: actions/download-artifact@v4
+        with:
+          name: p34-coverage-reports
+          path: ${{ runner.temp }}/p34-coverage
+      - name: Restore and build package input
+        run: |
+          dotnet restore ./Cloudflare.P1.sln --nologo
+          $sourceRevision = ((git rev-parse HEAD 2>$null) -join "`n").Trim()
+          if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($sourceRevision)) { throw 'Could not resolve the package source revision.' }
+          dotnet build ./Cloudflare.P1.sln --configuration Release --no-restore --nologo "/p:P34SourceRevision=$sourceRevision"
+      - name: Assemble package candidate
+        run: |
+          ./tools/New-P34Package.ps1 -OutputRoot ./artifacts/p34-candidate -CompatibilityReportPath (Join-Path $env:RUNNER_TEMP 'p34-compatibility/compatibility-report.json') -CompatibilityGatePath (Join-Path $env:RUNNER_TEMP 'p34-compatibility/compatibility-gate.json') -CoverageJsonPath (Join-Path $env:RUNNER_TEMP 'p34-coverage/coverage-report.json') -CoverageMarkdownPath (Join-Path $env:RUNNER_TEMP 'p34-coverage/coverage-report.md') -CoverageGatePath (Join-Path $env:RUNNER_TEMP 'p34-coverage/coverage-gate.json') -SkipBuild
+      - name: Smoke staged module
+        run: ./tests/P34PackageSmoke.ps1 -ModulePath ./artifacts/p34-candidate/package/Cloudflare.PowerShell
+      - name: Publish candidate artifact for inspection only
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudflare-powershell-p34-candidate
+          path: ./artifacts/p34-candidate
+          if-no-files-found: error

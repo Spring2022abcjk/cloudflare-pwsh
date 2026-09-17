@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "stage": "P3.4",
+  "baselinePath": "artifacts/p3.3/coverage-baseline.json",
+  "rules": {
+    "maxDroppedBaselineOperations": 0,
+    "maxSupportedOperationRegressions": 0,
+    "maxNewAmbiguousSemantics": 0,
+    "maxNewManualReview": 0,
+    "maxManualReviewIncrease": 0
+  },
+  "requiredClassifications": [
+    "Supported",
+    "SupportedWithOverride",
+    "UnsupportedRuntimeCapability",
+    "UnsupportedProjectionCapability",
+    "UnsupportedNormalizationCapability",
+    "AmbiguousSemantics",
+    "ExcludedByPolicy",
+    "NeedsManualReview"
+  ]
+}

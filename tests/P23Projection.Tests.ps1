@@ -36,15 +36,33 @@ if (-not $SkipBuild) {
 }
 if (-not (Test-Path -LiteralPath $experimentDll)) { throw 'Generated P2.3 cmdlet assembly is missing.' }
 
+$publicModuleSourceRoot = Join-Path $ProjectRoot 'module/Cloudflare.PowerShell'
+$publicModuleSourceFiles = @(
+    (Join-Path $publicModuleSourceRoot 'Cloudflare.PowerShell.psd1'),
+    (Join-Path $publicModuleSourceRoot 'Cloudflare.PowerShell.psm1'),
+    (Join-Path $publicModuleSourceRoot 'Cloudflare.PowerShell-help.xml')
+)
+foreach ($sourceFile in $publicModuleSourceFiles) {
+    if (-not (Test-Path -LiteralPath $sourceFile)) { throw "Public module source file is missing: $sourceFile" }
+}
+$releaseAssembly = Join-Path $ProjectRoot 'src/Cloudflare.PowerShell/bin/Release/net10.0/Cloudflare.PowerShell.dll'
+if (-not (Test-Path -LiteralPath $releaseAssembly)) { throw 'Release module assembly is missing.' }
+$publicModuleRoot = Join-Path ([IO.Path]::GetTempPath()) ("cf-p23-module-" + [Guid]::NewGuid().ToString('N'))
+$publicModule = Join-Path $publicModuleRoot 'Cloudflare.PowerShell.psd1'
+New-Item -ItemType Directory -Force -Path $publicModuleRoot | Out-Null
+foreach ($sourceFile in $publicModuleSourceFiles) {
+    Copy-Item -LiteralPath $sourceFile -Destination $publicModuleRoot -Force
+}
+Copy-Item -LiteralPath $releaseAssembly -Destination (Join-Path $publicModuleRoot 'Cloudflare.PowerShell.dll') -Force
+
 $probe = @'
-param([string]$AssemblyPath, [string]$ProjectRoot)
+param([string]$AssemblyPath, [string]$ProjectRoot, [string]$PublicModulePath)
 $ErrorActionPreference = 'Stop'
 Import-Module -Name $AssemblyPath -Force
 $generatedCommand = Get-Command Get-CfZone -ErrorAction Stop
 $zoneParameter = $generatedCommand.Parameters['ZoneId']
 $zoneParameterAttribute = @($zoneParameter.Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] })[0]
-$publicModule = Join-Path $ProjectRoot 'module/Cloudflare.PowerShell/Cloudflare.PowerShell.psd1'
-Import-Module -Name $publicModule -Force
+Import-Module -Name $PublicModulePath -Force
 $publicModuleInfo = Get-Module Cloudflare.PowerShell -ErrorAction Stop
 $handwrittenCommand = & $publicModuleInfo { Get-Command Invoke-CfDnsRecordHandwritten -CommandType Function -ErrorAction Stop }
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
@@ -89,7 +107,7 @@ $handwrittenLines = if ($start.Count -eq 1 -and $end.Count -eq 1) { @($moduleLin
 $probePath = Join-Path ([IO.Path]::GetTempPath()) ("cf-p23-probe-" + [Guid]::NewGuid().ToString('N') + '.ps1')
 try {
     [IO.File]::WriteAllText($probePath, $probe, [Text.UTF8Encoding]::new($false))
-    $probeJson = & pwsh -NoLogo -NoProfile -File $probePath -AssemblyPath $experimentDll -ProjectRoot $ProjectRoot
+    $probeJson = & pwsh -NoLogo -NoProfile -File $probePath -AssemblyPath $experimentDll -ProjectRoot $ProjectRoot -PublicModulePath $publicModule
     if ($LASTEXITCODE -ne 0) { throw 'PowerShell generated-cmdlet loading probe failed.' }
     $comparison = $probeJson | ConvertFrom-Json
     if (-not $comparison.generated.loading -or $comparison.generated.command -ne 'Get-CfZone') { throw 'Generated cmdlet did not load.' }
@@ -106,4 +124,5 @@ try {
 }
 finally {
     if (Test-Path -LiteralPath $probePath) { Remove-Item -LiteralPath $probePath -Force }
+    if (Test-Path -LiteralPath $publicModuleRoot) { Remove-Item -LiteralPath $publicModuleRoot -Recurse -Force }
 }

@@ -102,7 +102,17 @@ identity.
 
 ### P3.4 — Packaging, CI, and Update Workflow
 
-Add module packaging, CI, schema-update detection, compatibility gates, deterministic generated diffs, release artifacts, versioning, and publishing workflow. P2.4 deterministic compatibility JSON/Markdown is the input to the schema-update gate.
+Status: completed in this workspace for the non-publishing release-engineering foundation; see [P3.4 plan](./P3.4-ci-packaging-plan.md) and [P3.4 summary](./P3.4-ci-packaging-summary.md).
+
+The Windows-first CI workflow now separates build, deterministic generation,
+unit/runtime, P1–P2.4 regression, compatibility, coverage, package assembly,
+and package smoke jobs. It verifies an exact pinned schema, uses explicit P2.4
+and P3.3 semantic policies, aligns assembly/manifest/package versioning from
+`Directory.Build.props`, and uploads a non-published candidate containing the
+module, reports, summary, and deterministic ZIP. Schema updates are validated
+through a manual workflow-dispatch entry in an isolated temporary checkout.
+PowerShell Gallery publication, real-account validation, and broader public
+admission remain later decisions.
 
 ### P3.5 — Real Integration Validation
 

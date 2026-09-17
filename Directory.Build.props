@@ -1,0 +1,17 @@
+<Project>
+  <!-- Single version source for assemblies and package candidates. The module
+       manifest is checked against VersionPrefix by the P3.4 package builder. -->
+  <PropertyGroup>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <Version>$(VersionPrefix)</Version>
+    <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
+    <FileVersion>$(VersionPrefix).0</FileVersion>
+    <!-- Package validation supplies the current Git revision. A build that
+         omits it remains visibly unproven and cannot be used with -SkipBuild. -->
+    <P34SourceRevision Condition="'$(P34SourceRevision)' == ''">unproven</P34SourceRevision>
+    <!-- The SDK can append its own RepositoryCommit to InformationalVersion.
+         P3.4 owns this field so the package verifier has one stable format. -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <InformationalVersion>$(VersionPrefix)+source.$(P34SourceRevision)</InformationalVersion>
+  </PropertyGroup>
+</Project>

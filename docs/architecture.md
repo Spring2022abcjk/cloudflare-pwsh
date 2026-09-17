@@ -308,3 +308,43 @@ and are intentionally excluded from package exports. A local gate or package
 candidate is not evidence of remote GitHub Actions execution, live-account
 behavior, device/manual UX, publishing, or release readiness. Those evidence
 types must remain separately named and separately accepted.
+
+## P3.5–P4 release-validation direction
+
+The post-P3.4 path separates live behavior validation, manual PowerShell UX,
+release/security controls, and the final release decision:
+
+```text
+P3.5 Real Cloudflare account validation ─────────┐
+                                                  ├→ P4.3 Final RC Acceptance
+P4.1 Manual PowerShell UX and Help ───────────────┤
+                                                  │
+P4.2 Release and security groundwork ─────────────┘
+```
+
+P3.5 owns constrained real-account evidence. Its read-only, CRUD, and
+transport/rate-limit/error slices supplement mock contract tests and must not
+replace them. Live evidence must identify its account and resource scope and
+remain distinguishable from local, host, package, and mock evidence.
+
+P4.1 is a manual quality boundary for the five currently admitted public
+cmdlets. It evaluates parameters, parameter sets, pipeline behavior,
+`ShouldProcess`, errors, `Get-Help`, examples, and discoverability. Generated
+metadata or static checks may support the review but cannot stand in for user
+interaction evidence.
+
+P4.2 may begin before P3.5 or P4.1 finish. It supplies remote CI evidence,
+security/supply-chain review, secret-handling and release-policy evidence,
+version/tag/release-note checks, and a Gallery publish dry-run. These are
+release controls, not a second runtime or generator path.
+
+P4.3 is the only stage that assembles the P3.5, P4.1, and P4.2 evidence into a
+first release-candidate acceptance and publish/no-publish decision. It must
+wait for P3.5 and P4.1 conclusions. The first release candidate remains bound
+to the existing five formal public cmdlets; broader explicit public admission
+is a separate future decision.
+
+P5 continues the maintenance loop for schema updates, compatibility,
+regeneration, API drift, override debt, deprecated operations, and release
+automation. None of these boundaries converts unresolved evidence into an
+acceptance claim.

@@ -55,3 +55,10 @@
 48. Keep package assembly deterministic, keep PowerShell runtime assemblies out of the package, and do not publish automatically from validation CI.
 49. Reconcile package smoke and candidate contents with the explicit public-admission policy; bounded test slices must not become package exports by implication.
 50. Treat local/static CI, remote CI, host, package, real-account, device/manual, publishing, and release evidence as distinct acceptance boundaries; a local pass does not close the others.
+51. Real-account validation supplements mock contract tests and never replaces them.
+52. Keep P3.5 read-only, constrained CRUD, and transport/rate-limit/error evidence separately identified with account, permission, data-scope, and cleanup context.
+53. Treat manual PowerShell UX and Help review as a distinct evidence boundary; generated metadata, static checks, and mock execution do not prove discoverability or user experience.
+54. The first release candidate is explicitly bounded to the five admitted public cmdlets; broader public admission must not be inferred from projection readiness or made a hidden release prerequisite.
+55. P3.5 and P4.1 may run in parallel, and P4.2 groundwork may start early, but final release-candidate acceptance must wait for P3.5 and P4.1 conclusions.
+56. P4.3 must reconcile live-account, manual UX/Help, remote CI, security, supply-chain, secret-handling, package, provenance, and release-policy evidence before a publish/no-publish decision.
+57. P5 maintenance automation must preserve the same evidence boundaries and must not silently close legacy authentication, idempotency, retry, binary UX, or HTTP `2xx` with `success=false` semantics.

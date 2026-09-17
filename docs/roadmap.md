@@ -53,9 +53,10 @@ The engine compares old/new normalized revisions semantically and classifies end
 ## P3 — Productionization
 
 Status: active. P3.1, P3.2, and the bounded P3.3 coverage phase are complete in
-this workspace. The remaining P3 work is packaging/CI/update workflow and
-real-account validation; broader public admission and release readiness remain
-separate decisions.
+this workspace. P3.3 Projection Scalability / Admission and P3.4 CI /
+Packaging Foundation are complete. The remaining P3 work is real-account
+validation; broader public admission and release readiness remain separate
+decisions.
 
 ### P3.1 — Production Runtime
 
@@ -125,22 +126,97 @@ package exports. See [P3.4 integration summary](./P3.4-integration-summary.md).
 
 This closure does not claim remote GitHub Actions execution, real-account or
 device/manual acceptance, publishing, or release readiness. Those evidence
-boundaries remain part of P3.5/P4 and the deferred decisions below.
+boundaries move to P3.5, P4.1, P4.2, and P4.3 below.
 
 ### P3.5 — Real Integration Validation
 
-Only after mock contract coverage is sufficient, validate authentication, CRUD, pagination, retry/rate limits, multipart, binary, streaming, and error behavior against a constrained real Cloudflare account. Real-account tests supplement, and do not replace, mock tests.
+Status: planned. P3.5 validates real Cloudflare account behavior after mock
+contract coverage is sufficient. Real-account tests supplement, and do not
+replace, mock tests.
+
+#### P3.5a — Read-only live validation
+
+Validate authentication, account/zone selection, read-only commands,
+pagination, response/error mapping, and the operational safety boundary using a
+constrained real account. Record the account, permissions, data scope, command
+inputs, and cleanup assumptions without turning live data into a replacement
+for fixtures or mock contracts.
+
+#### P3.5b — Constrained CRUD validation
+
+Validate the admitted DNS CRUD behavior against explicitly scoped disposable or
+reversible resources. Cover create, read, update/edit, and delete behavior,
+presence/null semantics, `ShouldProcess`/confirmation expectations, and cleanup
+or rollback evidence. The exact account and resource protocol remain a later
+execution decision.
+
+#### P3.5c — Transport / rate-limit / error validation
+
+Use constrained live scenarios to validate transport failures, rate limits,
+authentication failures, pagination boundaries, mutation errors, and the
+documented retry/idempotency behavior. Preserve the distinction between
+observed live behavior, mock-only behavior, and unresolved semantics.
 
 ## P4 — Production Quality
 
-Complete help and examples, module manifest and semantic versioning, release notes and publishing, support matrix, performance review, telemetry policy (if any), security review, secret handling, and user documentation.
+Status: planned. P4 prepares and accepts the first release candidate using the
+current five-cmdlet public baseline. Broader explicit public admission is not a
+precondition for this first release candidate.
+
+### P4.1 — Manual PowerShell UX & Help
+
+Review the five formal public cmdlets — `Get-CfZone`, `Get-CfDnsRecord`,
+`New-CfDnsRecord`, `Remove-CfDnsRecord`, and `Set-CfDnsRecord` — as a
+PowerShell user. The review covers parameters, parameter sets, pipeline
+binding, `ShouldProcess`, confirmation and error experience, `Get-Help`,
+examples, discoverability, and consistency. This is manual UX/help evidence;
+local builds, generated metadata, and mock tests do not replace it.
+
+### P4.2 — Release & Security Hardening
+
+Establish the release evidence and controls needed before final acceptance:
+remote GitHub Actions execution evidence, security and supply-chain review,
+secret handling, release policy, version/tag/release notes, and a PowerShell
+Gallery publish dry-run. This phase may start while P3.5 and P4.1 are in
+progress, but its groundwork is not final release acceptance.
+
+### P4.3 — Final Release Candidate Acceptance
+
+Wait for the conclusions of P3.5 and P4.1 and the applicable P4.2 groundwork.
+Reconcile the evidence, unresolved risks, public-surface identity, package
+provenance, and release policy into a final release-candidate acceptance and
+publish/no-publish decision. A candidate is not accepted merely because local
+CI, package smoke, or generated-source checks pass.
+
+The execution relationship is:
+
+```text
+P3.5 ─────────┐
+              ├→ P4.3 Final RC Acceptance
+P4.1 ─────────┤
+              │
+P4.2 groundwork ─┘
+```
+
+P3.5 and P4.1 may proceed in parallel. P4.2 groundwork may also begin early,
+but P4.3 must wait for P3.5 and P4.1 conclusions.
 
 ## P5 — Long-term Maintenance
 
-Automate schema updates, compatibility reports, regeneration CI, breaking-change gates, API drift monitoring, override-debt tracking, deprecated-operation handling, and release automation.
+Status: planned. Continue schema update workflows, compatibility reports,
+regeneration CI, breaking-change gates, API drift monitoring, override-debt
+tracking, deprecated-operation handling, and release automation. P5 maintains
+the system after the first release decision; it does not expand the first
+release candidate's public surface by implication.
 
 ## Deferred items
 
-The following remain outside the completed P3.1 boundary or unresolved in P3.2: HTTP `2xx` with `success=false` semantics, production retry/idempotency policy details, legacy authentication, full PowerShell binary UX, final public generated `PSCmdlet` migration decision, complete real-account behavior, publishing, and release/security policy.
+The following remain open until their dedicated evidence closes them:
+real-account acceptance, device/manual UX, remote GitHub Actions execution,
+Gallery publishing, legacy authentication, automatic idempotency, complete
+mutation retry policy, full binary PowerShell UX, and HTTP `2xx` with
+`success=false` semantics. Broader explicit public admission is intentionally
+not bound to first-release readiness; the first release candidate remains
+based on the current five formal public cmdlets.
 
 The formal support baseline remains PowerShell 7.6+ and .NET 10 on the Windows-first host. See [ADR 0001](./adr/0001-net10-powershell76-baseline.md).

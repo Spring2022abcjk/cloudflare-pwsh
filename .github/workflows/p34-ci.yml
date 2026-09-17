@@ -87,8 +87,9 @@ jobs:
             if ([string]$value.stage -ceq 'P2.4') { $_.FullName }
           }) | Select-Object -First 1
           if ([string]::IsNullOrWhiteSpace([string]$report)) { throw 'Compatibility report was not produced.' }
-          ./tools/Invoke-P34CompatibilityGate.ps1 -ReportPath $report -OutputPath (Join-Path $root 'compatibility-gate.json')
-          Copy-Item -LiteralPath $report -Destination (Join-Path $root 'compatibility-report.json') -Force
+          $canonicalReport = Join-Path $root 'compatibility-report.json'
+          Copy-Item -LiteralPath $report -Destination $canonicalReport -Force
+          ./tools/Invoke-P34CompatibilityGate.ps1 -ReportPath $canonicalReport -OutputPath (Join-Path $root 'compatibility-gate.json')
       - uses: actions/upload-artifact@v4
         with:
           name: p34-compatibility-reports

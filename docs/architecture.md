@@ -236,6 +236,15 @@ family determines required identity fields, all impact dimensions and old/new
 values are included, missing fields do not become wildcards, and duplicate
 report/allowlist keys fail.
 
+For compatibility, the package verifier also requires the receipt's input
+filename to equal the actual report filename and binds receipt
+`comparisonIdentity.oldRevision/newRevision` to the report's old/new source
+revisions. The old side is checked against
+`fixtures/p2.4/openapi-previous-revision.json.previousRevision`; the new side
+is checked against that fixture's `currentRevision` and the pinned schema
+revision. Revisions are canonical lowercase Git SHA-1 values and missing or
+self-equal old/new identities fail closed.
+
 Coverage does not trust a report header histogram. It recomputes
 `classificationCounts` from every unique `operations[]` row, rejects unknown
 classifications and count keys, then applies the P3.3 semantic thresholds.

@@ -48,6 +48,11 @@ function Get-P34CurrentSourceRevision {
     if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($revision)) { throw 'Could not resolve the current Git source revision.' }
     return $revision
 }
+function Assert-P34GitRevision {
+    param([Parameter(Mandatory)][string]$Value, [Parameter(Mandatory)][string]$Label)
+    if ($Value -cnotmatch '^[0-9a-f]{40}$') { throw "$Label is not a canonical lowercase Git SHA-1 revision: '$Value'." }
+    return $Value
+}
 function Assert-P34GateReceipt {
     param(
         [Parameter(Mandatory)][string]$GatePath,
@@ -79,9 +84,10 @@ function Assert-P34GateReceipt {
 
     $inputIdentity = Get-P34ObjectProperty $gate 'inputReportIdentity' "$ExpectedGateType gate receipt"
     $expectedReportHash = Get-P34Sha256 $ReportPath
-    if ([string]::IsNullOrWhiteSpace([string](Get-P34ObjectProperty $inputIdentity 'fileName' "$ExpectedGateType input report identity")) -or
+    $expectedReportFileName = [IO.Path]::GetFileName($ReportPath)
+    if ([string](Get-P34ObjectProperty $inputIdentity 'fileName' "$ExpectedGateType input report identity") -cne $expectedReportFileName -or
         [string](Get-P34ObjectProperty $inputIdentity 'sha256' "$ExpectedGateType input report identity") -cne $expectedReportHash) {
-        throw "$ExpectedGateType gate input report hash does not match the report being packaged."
+        throw "$ExpectedGateType gate input report identity does not match the report being packaged."
     }
 
     $schemaIdentity = Get-P34ObjectProperty $gate 'schemaIdentity' "$ExpectedGateType gate receipt"
@@ -91,8 +97,21 @@ function Assert-P34GateReceipt {
         }
     }
     if ($ExpectedGateType -ceq 'Compatibility') {
+        $comparisonIdentity = Get-P34ObjectProperty $gate 'comparisonIdentity' "$ExpectedGateType gate receipt"
+        $receiptOldRevision = Assert-P34GitRevision -Value ([string](Get-P34ObjectProperty $comparisonIdentity 'oldRevision' "$ExpectedGateType comparison identity")) -Label "$ExpectedGateType receipt oldRevision"
+        $receiptNewRevision = Assert-P34GitRevision -Value ([string](Get-P34ObjectProperty $comparisonIdentity 'newRevision' "$ExpectedGateType comparison identity")) -Label "$ExpectedGateType receipt newRevision"
+        $reportOldRevision = Assert-P34GitRevision -Value ([string](Get-P34ObjectProperty $report 'oldSourceRevision' "$ExpectedGateType input report")) -Label "$ExpectedGateType report oldSourceRevision"
+        $reportNewRevision = Assert-P34GitRevision -Value ([string](Get-P34ObjectProperty $report 'newSourceRevision' "$ExpectedGateType input report")) -Label "$ExpectedGateType report newSourceRevision"
+        if ($receiptOldRevision -ceq $receiptNewRevision) { throw "$ExpectedGateType comparison revisions must differ." }
+        if ($receiptOldRevision -cne $reportOldRevision -or $receiptNewRevision -cne $reportNewRevision) { throw "$ExpectedGateType receipt comparison identity does not match the input report revisions." }
+        $previousFixturePath = Join-Path $root 'fixtures/p2.4/openapi-previous-revision.json'
+        $previousFixture = Read-P34PackageJson $previousFixturePath 'P2.4 previous-revision fixture'
+        $fixtureOldRevision = Assert-P34GitRevision -Value ([string](Get-P34ObjectProperty $previousFixture 'previousRevision' 'P2.4 previous-revision fixture')) -Label 'P2.4 previous-revision fixture previousRevision'
+        $fixtureCurrentRevision = Assert-P34GitRevision -Value ([string](Get-P34ObjectProperty $previousFixture 'currentRevision' 'P2.4 previous-revision fixture')) -Label 'P2.4 previous-revision fixture currentRevision'
+        if ($fixtureCurrentRevision -cne [string]$SchemaManifest.revision) { throw 'P2.4 previous-revision fixture currentRevision does not match the pinned schema revision.' }
+        if ($reportOldRevision -cne $fixtureOldRevision) { throw 'Compatibility input report oldSourceRevision does not match the approved previous-revision fixture.' }
         if ([string](Get-P34ObjectProperty $report 'stage' "$ExpectedGateType input report") -cne 'P2.4' -or
-            [string](Get-P34ObjectProperty $report 'newSourceRevision' "$ExpectedGateType input report") -cne [string]$SchemaManifest.revision) {
+            $reportNewRevision -cne [string]$SchemaManifest.revision) {
             throw 'Compatibility input report does not match the pinned schema revision.'
         }
     } else {
@@ -138,7 +157,7 @@ $projectPath = Join-Path $root 'src/Cloudflare.PowerShell/Cloudflare.PowerShell.
 $projectXml = [xml](Get-Content -Raw -LiteralPath $projectPath)
 $targetFramework = [string]$projectXml.Project.PropertyGroup.TargetFramework
 if ($targetFramework -cne 'net10.0') { throw "P3.4 package target framework must be net10.0; found '$targetFramework'." }
-$sourceRevision = Get-P34CurrentSourceRevision
+$sourceRevision = Assert-P34GitRevision -Value (Get-P34CurrentSourceRevision) -Label 'Current source revision'
 $buildOutput = Join-Path $root "src/Cloudflare.PowerShell/bin/$Configuration/$targetFramework/Cloudflare.PowerShell.dll"
 if (-not $SkipBuild) {
     & dotnet build $projectPath --configuration $Configuration --nologo "/p:P34SourceRevision=$sourceRevision" | Out-Host

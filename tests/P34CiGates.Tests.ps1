@@ -22,6 +22,10 @@ function Write-P34TestJson {
     $json = $Value | ConvertTo-Json -Depth 100
     [IO.File]::WriteAllText($Path, $json, [Text.UTF8Encoding]::new($false))
 }
+function Get-P34TestSha256 {
+    param([Parameter(Mandatory)][string]$Path)
+    return ((Get-FileHash -Algorithm SHA256 -LiteralPath $Path).Hash).ToLowerInvariant()
+}
 function Assert-P34ScriptParses {
     param([Parameter(Mandatory)][string]$Path)
     $tokens = $null
@@ -35,9 +39,10 @@ function Invoke-P34ProvenanceBuild {
     if ($LASTEXITCODE -ne 0) { throw "P3.4 provenance build failed with exit code $LASTEXITCODE." }
 }
 function Assert-P34PackageRejects {
-    param([Parameter(Mandatory)][string]$Label, [Parameter(Mandatory)][string]$CompatibilityGate, [Parameter(Mandatory)][string]$CoverageGate)
+    param([Parameter(Mandatory)][string]$Label, [Parameter(Mandatory)][string]$CompatibilityGate, [Parameter(Mandatory)][string]$CoverageGate, [string]$CompatibilityReport)
     $arguments = [object[]]$packageArguments.Clone()
     $arguments[3] = Join-Path $temporary ('reject-' + $Label)
+    if (-not [string]::IsNullOrWhiteSpace($CompatibilityReport)) { $arguments[5] = $CompatibilityReport }
     $arguments[7] = $CompatibilityGate
     $arguments[13] = $CoverageGate
     Assert-P34TestChildFails $packageScript ([string[]]$arguments) $Label
@@ -138,6 +143,50 @@ try {
     $mismatchedSchemaValue.schemaIdentity.revision = ('2' * 40)
     Write-P34TestJson $mismatchedSchemaGate $mismatchedSchemaValue
     Assert-P34PackageRejects 'mismatched-schema-revision' $mismatchedSchemaGate $coverageGate
+
+    $mismatchedFilenameGate = Join-Path $temporary 'mismatched-report-filename-gate.json'
+    $mismatchedFilenameValue = Get-Content -Raw -LiteralPath $compatibilityGate | ConvertFrom-Json
+    $mismatchedFilenameValue.inputReportIdentity.fileName = 'unrelated-report.json'
+    Write-P34TestJson $mismatchedFilenameGate $mismatchedFilenameValue
+    Assert-P34PackageRejects 'mismatched-report-filename' $mismatchedFilenameGate $coverageGate
+
+    $mismatchedReceiptOldGate = Join-Path $temporary 'mismatched-receipt-old-revision-gate.json'
+    $mismatchedReceiptOldValue = Get-Content -Raw -LiteralPath $compatibilityGate | ConvertFrom-Json
+    $mismatchedReceiptOldValue.comparisonIdentity.oldRevision = ('1' * 40)
+    Write-P34TestJson $mismatchedReceiptOldGate $mismatchedReceiptOldValue
+    Assert-P34PackageRejects 'mismatched-receipt-old-revision' $mismatchedReceiptOldGate $coverageGate
+
+    $mismatchedReceiptNewGate = Join-Path $temporary 'mismatched-receipt-new-revision-gate.json'
+    $mismatchedReceiptNewValue = Get-Content -Raw -LiteralPath $compatibilityGate | ConvertFrom-Json
+    $mismatchedReceiptNewValue.comparisonIdentity.newRevision = ('2' * 40)
+    Write-P34TestJson $mismatchedReceiptNewGate $mismatchedReceiptNewValue
+    Assert-P34PackageRejects 'mismatched-receipt-new-revision' $mismatchedReceiptNewGate $coverageGate
+
+    $wrongPreviousReport = Get-Content -Raw -LiteralPath $compatibilityReport | ConvertFrom-Json
+    $wrongPreviousRevision = '3' * 40
+    $wrongPreviousReport.oldSourceRevision = $wrongPreviousRevision
+    $wrongPreviousReportPath = Join-Path $temporary 'wrong-previous-revision-report.json'
+    Write-P34TestJson $wrongPreviousReportPath $wrongPreviousReport
+    $wrongPreviousGate = Get-Content -Raw -LiteralPath $compatibilityGate | ConvertFrom-Json
+    $wrongPreviousGate.comparisonIdentity.oldRevision = $wrongPreviousRevision
+    $wrongPreviousGate.inputReportIdentity.fileName = [IO.Path]::GetFileName($wrongPreviousReportPath)
+    $wrongPreviousGate.inputReportIdentity.sha256 = Get-P34TestSha256 $wrongPreviousReportPath
+    $wrongPreviousGatePath = Join-Path $temporary 'wrong-previous-revision-gate.json'
+    Write-P34TestJson $wrongPreviousGatePath $wrongPreviousGate
+    Assert-P34PackageRejects 'wrong-previous-revision' $wrongPreviousGatePath $coverageGate $wrongPreviousReportPath
+
+    $wrongPinnedNewReport = Get-Content -Raw -LiteralPath $compatibilityReport | ConvertFrom-Json
+    $wrongPinnedNewRevision = '4' * 40
+    $wrongPinnedNewReport.newSourceRevision = $wrongPinnedNewRevision
+    $wrongPinnedNewReportPath = Join-Path $temporary 'wrong-pinned-new-revision-report.json'
+    Write-P34TestJson $wrongPinnedNewReportPath $wrongPinnedNewReport
+    $wrongPinnedNewGate = Get-Content -Raw -LiteralPath $compatibilityGate | ConvertFrom-Json
+    $wrongPinnedNewGate.comparisonIdentity.newRevision = $wrongPinnedNewRevision
+    $wrongPinnedNewGate.inputReportIdentity.fileName = [IO.Path]::GetFileName($wrongPinnedNewReportPath)
+    $wrongPinnedNewGate.inputReportIdentity.sha256 = Get-P34TestSha256 $wrongPinnedNewReportPath
+    $wrongPinnedNewGatePath = Join-Path $temporary 'wrong-pinned-new-revision-gate.json'
+    Write-P34TestJson $wrongPinnedNewGatePath $wrongPinnedNewGate
+    Assert-P34PackageRejects 'wrong-pinned-new-revision' $wrongPinnedNewGatePath $coverageGate $wrongPinnedNewReportPath
 
     $staleRevision = 'a' * 40
     Invoke-P34ProvenanceBuild $staleRevision

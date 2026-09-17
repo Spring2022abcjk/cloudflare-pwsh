@@ -57,9 +57,19 @@ if ($PSVersionTable.PSVersion -lt [version]'7.6.0') { throw "Package smoke requi
 Import-Module -Name $manifestPath -Force
 $loaded = Get-Module -Name Cloudflare.PowerShell | Where-Object { [IO.Path]::GetFullPath($_.ModuleBase) -ceq [IO.Path]::GetFullPath($modulePath) } | Select-Object -First 1
 if ($null -eq $loaded) { throw 'Package module was not loaded from the candidate module path.' }
-foreach ($name in @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord', 'Get-CfD1Database', 'Get-CfHealthCheck')) {
+$expectedCmdlets = @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord')
+foreach ($name in $expectedCmdlets) {
     $command = Get-Command $name -ErrorAction Stop
     if ($command.CommandType -ne 'Cmdlet') { throw "Package command '$name' did not load as a cmdlet." }
+}
+$actualCmdlets = @(Get-Command -Module $loaded.Name -CommandType Cmdlet | ForEach-Object Name | Sort-Object)
+if (($actualCmdlets -join '|') -cne (($expectedCmdlets | Sort-Object) -join '|')) {
+    throw "Package public cmdlet surface mismatch. Expected: $($expectedCmdlets -join ', '); actual: $($actualCmdlets -join ', ')."
+}
+foreach ($name in @('Get-CfD1Database', 'Get-CfHealthCheck')) {
+    if ($null -ne (Get-Command -Module $loaded.Name -Name $name -ErrorAction SilentlyContinue)) {
+        throw "Bounded test-only cmdlet '$name' was exported by the package candidate."
+    }
 }
 $help = Get-Help Get-CfDnsRecord -ErrorAction Stop
 if ([string]::IsNullOrWhiteSpace([string]$help.Synopsis) -and [string]::IsNullOrWhiteSpace([string]$help.Description)) { throw 'Package help discovery returned no representative help text.' }

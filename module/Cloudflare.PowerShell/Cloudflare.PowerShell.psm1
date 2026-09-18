@@ -5,6 +5,14 @@ if (Test-Path -LiteralPath $generatedAssemblyPath) {
     Import-Module -Name $generatedAssemblyPath -Force
 }
 
+function Register-CfPipelineIdentityTypeData {
+    foreach ($identity in [Cloudflare.PowerShell.P32PipelineIdentityMetadata]::Aliases) {
+        Update-TypeData -TypeName $identity.TypeName -MemberType AliasProperty -MemberName $identity.AliasName -Value $identity.SourceProperty -Force
+    }
+}
+
+Register-CfPipelineIdentityTypeData
+
 function New-CfClient {
     param([string]$BaseUrl, [string]$Token, [System.Net.Http.HttpMessageHandler]$Handler)
     $options = [Cloudflare.PowerShell.CloudflareClientOptions]@{

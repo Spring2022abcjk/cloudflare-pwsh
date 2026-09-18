@@ -42,6 +42,7 @@ $helpNs = [Xml.XmlNamespaceManager]::new($helpXml.NameTable)
 $helpNs.AddNamespace('msh', 'http://msh')
 $helpNs.AddNamespace('maml', 'http://schemas.microsoft.com/maml/2004/10')
 $helpNs.AddNamespace('command', 'http://schemas.microsoft.com/maml/dev/command/2004/10')
+$helpNs.AddNamespace('dev', 'http://schemas.microsoft.com/maml/dev/2004/10')
 
 foreach ($name in $commands) {
     $command = Get-Command $name -ErrorAction Stop
@@ -62,8 +63,20 @@ foreach ($name in $commands) {
     $synopsis = [string]$helpNode.SelectSingleNode('command:details/maml:description/maml:para', $helpNs).InnerText
     $description = [string]$helpNode.SelectSingleNode('maml:description/maml:para', $helpNs).InnerText
     $examples = @($helpNode.SelectNodes('.//command:examples/command:example', $helpNs))
+    $exampleParseFailures = [Collections.Generic.List[string]]::new()
+    foreach ($example in $examples) {
+        $exampleCode = [string]$example.SelectSingleNode('dev:code', $helpNs).InnerText
+        $tokens = $null
+        $parseErrors = $null
+        [System.Management.Automation.Language.Parser]::ParseInput($exampleCode, [ref]$tokens, [ref]$parseErrors) | Out-Null
+        if (@($parseErrors).Count -gt 0) { $exampleParseFailures.Add(($parseErrors | ForEach-Object Message) -join ' / ') }
+    }
     $parameterHelp = @($helpNode.SelectNodes('.//command:parameter', $helpNs))
+    $inputHelp = @($helpNode.SelectNodes('.//command:inputTypes/command:inputType', $helpNs))
+    $outputHelp = @($helpNode.SelectNodes('.//command:returnValues/command:returnValue', $helpNs))
     $relatedLinks = @($helpNode.SelectNodes('.//maml:relatedLinks/*', $helpNs))
+    $syntax = @(Get-Command $name -Syntax | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
+    $syntaxItems = @($helpNode.SelectNodes('.//command:syntax/command:syntaxItem', $helpNs))
     $outputTypes = @($command.OutputType | ForEach-Object { [string]$_.Type })
     $parameterSets = @($command.ParameterSets | ForEach-Object { [ordered]@{ name = $_.Name; parameters = @($_.Parameters | ForEach-Object Name) } })
     $records.Add([ordered]@{
@@ -74,9 +87,10 @@ foreach ($name in $commands) {
         supportsShouldProcess = [bool]$cmdletAttribute.SupportsShouldProcess
         confirmImpact = [string]$cmdletAttribute.ConfirmImpact
         outputTypes = $outputTypes
-        help = [ordered]@{ synopsis = $synopsis; description = $description; parameterCount = $parameterHelp.Count; exampleCount = $examples.Count; relatedLinkCount = $relatedLinks.Count }
+        help = [ordered]@{ synopsis = $synopsis; description = $description; syntaxCount = $syntaxItems.Count; commandSyntaxPresent = ($syntax.Count -gt 0); parameterCount = $parameterHelp.Count; inputCount = $inputHelp.Count; outputCount = $outputHelp.Count; exampleCount = $examples.Count; exampleParseFailures = @($exampleParseFailures); relatedLinkCount = $relatedLinks.Count }
     })
-    Add-Observation "help:$name" $(if ($parameterHelp.Count -eq 0 -and $examples.Count -eq 0 -and $relatedLinks.Count -eq 0) { 'Missing' } else { 'Partial' }) "parameterHelp=$($parameterHelp.Count), examples=$($examples.Count), relatedLinks=$($relatedLinks.Count)"
+    Add-Observation "help:$name" $(if ($syntaxItems.Count -gt 0 -and $syntax.Count -gt 0 -and $parameterHelp.Count -gt 0 -and $inputHelp.Count -gt 0 -and $outputHelp.Count -gt 0 -and $examples.Count -gt 0 -and $relatedLinks.Count -gt 0) { 'Pass' } else { 'Fail' }) "syntaxItems=$($syntaxItems.Count), commandSyntaxPresent=$($syntax.Count -gt 0), parameterHelp=$($parameterHelp.Count), inputs=$($inputHelp.Count), outputs=$($outputHelp.Count), examples=$($examples.Count), relatedLinks=$($relatedLinks.Count)"
+    Add-Observation "examples:$name" $(if ($examples.Count -gt 0 -and $exampleParseFailures.Count -eq 0) { 'Pass' } else { 'Fail' }) "count=$($examples.Count), parseFailures=$($exampleParseFailures.Count)"
 }
 
 Add-Type -TypeDefinition @'
@@ -112,6 +126,8 @@ public sealed class P41UxMockHandler : HttpMessageHandler
         }
         if (path.Contains("/zones/zone", StringComparison.Ordinal) && !path.Contains("dns_records", StringComparison.Ordinal))
             return Task.FromResult(Response("{\"success\":true,\"result\":{\"id\":\"zone\",\"name\":\"example.com\",\"status\":\"active\",\"type\":\"full\"}}"));
+        if (path.Contains("/dns_records/", StringComparison.Ordinal))
+            return Task.FromResult(Response("{\"success\":true,\"result\":{\"id\":\"record\",\"name\":\"www.example.com\",\"type\":\"A\",\"content\":\"198.51.100.4\",\"zone_id\":\"zone\"}}"));
         var pageTwo = request.RequestUri?.Query.Contains("page=2", StringComparison.Ordinal) == true;
         var result = pageTwo ? "[]" : "[{\"id\":\"record\",\"name\":\"www.example.com\",\"type\":\"A\",\"content\":\"198.51.100.4\",\"zone_id\":\"zone\"}]";
         var body = "{\"success\":true,\"result\":" + result + ",\"result_info\":{\"page\":1,\"total_pages\":2}}";
@@ -130,21 +146,35 @@ Add-Observation 'workflow:Get-CfZone' $(if ($zones.Count -eq 1 -and $zones[0].Id
 Add-Observation 'output:Get-CfZone' 'Observed' ((@($zones | Out-String -Width 120).Trim()) -replace "\r?\n", ' / ')
 
 $pipelineError = $null
-try { @($zones | Get-CfDnsRecord @common -ErrorAction Stop) | Out-Null } catch { $pipelineError = $_ }
+try { $zonePipelineRecords = @($zones | Get-CfDnsRecord @common -ErrorAction Stop) } catch { $pipelineError = $_ }
 if ($null -eq $pipelineError) {
-    Add-Observation 'workflow:Zone-to-Dns-pipeline' 'Pass' 'Zone output bound successfully.'
+    Add-Observation 'workflow:Zone-to-Dns-pipeline' $(if ($zonePipelineRecords.Count -eq 1) { 'Pass' } else { 'Fail' }) "Zone output bound through ETS ZoneId alias; count=$($zonePipelineRecords.Count)."
 } else {
-    Add-Observation 'workflow:Zone-to-Dns-pipeline' 'Fail' "Cannot bind CfZone.Id to mandatory Get-CfDnsRecord.ZoneId: $($pipelineError.Exception.Message)"
+    Add-Observation 'workflow:Zone-to-Dns-pipeline' 'Fail' "CfZone.Id did not bind through the documented ETS ZoneId identity: $($pipelineError.Exception.Message)"
 }
 
 $recordsOut = @(Get-CfDnsRecord -ZoneId zone @common)
 Add-Observation 'workflow:Get-CfDnsRecord' $(if ($recordsOut.Count -eq 1 -and $recordsOut[0].Id -eq 'record') { 'Pass' } else { 'Fail' }) "count=$($recordsOut.Count), outputType=$($recordsOut[0].GetType().FullName), requests=$([P41UxMockHandler]::Requests.Count)"
+Add-Observation 'identity:ETS' $(if (@($zones[0] | Get-Member -Name ZoneId).Count -eq 1 -and @($recordsOut[0] | Get-Member -Name DnsRecordId).Count -eq 1) { 'Pass' } else { 'Fail' }) "CfZone.ZoneId and CfDnsRecord.DnsRecordId are discoverable aliases of Id."
+
+$recordPipelineError = $null
+try { $recordGetPipeline = @($recordsOut | Get-CfDnsRecord -ZoneId zone @common -ErrorAction Stop) } catch { $recordPipelineError = $_ }
+Add-Observation 'workflow:Record-to-Dns-pipeline-with-scope' $(if ($null -eq $recordPipelineError -and $recordGetPipeline.Count -eq 1) { 'Pass' } else { 'Fail' }) $(if ($null -eq $recordPipelineError) { 'Record identity bound through DnsRecordId; ZoneId supplied explicitly.' } else { $recordPipelineError.Exception.Message })
 
 $whatIfRequestsBefore = [P41UxMockHandler]::Requests.Count
 $removeWhatIfText = @(& { Remove-CfDnsRecord -ZoneId zone -DnsRecordId record @common -WhatIf } *>&1 | ForEach-Object { [string]$_ })
 $whatIfRequestsAfter = [P41UxMockHandler]::Requests.Count
 $removeWhatIfDetail = if ($removeWhatIfText.Count -gt 0) { $removeWhatIfText -join ' / ' } else { 'WhatIf message was emitted by the host warning path; direct console text is verified separately.' }
 Add-Observation 'workflow:Remove-CfDnsRecord-WhatIf' $(if ($whatIfRequestsBefore -eq $whatIfRequestsAfter) { 'Pass' } else { 'Fail' }) "requestsBefore=$whatIfRequestsBefore, requestsAfter=$whatIfRequestsAfter, message=$removeWhatIfDetail"
+
+$recordRemoveRequestsBefore = [P41UxMockHandler]::Requests.Count
+$recordRemovePipelineText = @(& { $recordsOut | Remove-CfDnsRecord -ZoneId zone @common -WhatIf } *>&1 | ForEach-Object { [string]$_ })
+$recordRemoveRequestsAfter = [P41UxMockHandler]::Requests.Count
+Add-Observation 'workflow:Record-to-Remove-with-scope-WhatIf' $(if ($recordRemoveRequestsBefore -eq $recordRemoveRequestsAfter) { 'Pass' } else { 'Fail' }) "requestsBefore=$recordRemoveRequestsBefore, requestsAfter=$recordRemoveRequestsAfter, message=$($recordRemovePipelineText -join ' / ')"
+
+$missingScopeFailed = $false
+try { $recordsOut | Remove-CfDnsRecord @common -WhatIf -ErrorAction Stop | Out-Null } catch { $missingScopeFailed = $true }
+Add-Observation 'workflow:Record-to-Remove-without-scope' $(if ($missingScopeFailed) { 'Pass' } else { 'Fail' }) 'ZoneId remains mandatory; the module does not infer parent scope from a record.'
 
 $typed = [Cloudflare.PowerShell.CfARecordInput]::new()
 $typed.Name = [Cloudflare.PowerShell.Optional[string]]::From('example.com')
@@ -157,6 +187,10 @@ Add-Observation 'workflow:New-CfDnsRecord' $(if ($created.Id -eq 'created') { 'P
 
 $setWhatIfText = @(& { Set-CfDnsRecord -ZoneId zone -DnsRecordId record -Edit @{ content = '198.51.100.5' } @common -WhatIf } *>&1 | ForEach-Object { [string]$_ })
 Add-Observation 'workflow:Set-CfDnsRecord-WhatIf' 'Observed' $(if ($setWhatIfText.Count -gt 0) { $setWhatIfText -join ' / ' } else { 'WhatIf message was emitted by the host warning path; direct console text is verified separately.' })
+$recordSetRequestsBefore = [P41UxMockHandler]::Requests.Count
+$recordSetPipelineText = @(& { $recordsOut | Set-CfDnsRecord -ZoneId zone -Edit @{ content = '198.51.100.6' } @common -WhatIf } *>&1 | ForEach-Object { [string]$_ })
+$recordSetRequestsAfter = [P41UxMockHandler]::Requests.Count
+Add-Observation 'workflow:Record-to-Set-with-scope-WhatIf' $(if ($recordSetRequestsBefore -eq $recordSetRequestsAfter) { 'Pass' } else { 'Fail' }) "requestsBefore=$recordSetRequestsBefore, requestsAfter=$recordSetRequestsAfter, message=$($recordSetPipelineText -join ' / ')"
 $updated = Set-CfDnsRecord -ZoneId zone -DnsRecordId record -Edit @{ content = '198.51.100.5' } @common -Confirm:$false
 Add-Observation 'workflow:Set-CfDnsRecord' $(if ($updated.Id -eq 'updated') { 'Pass' } else { 'Fail' }) "outputType=$($updated.GetType().FullName), id=$($updated.Id)"
 
@@ -179,7 +213,7 @@ Add-Observation 'formatting' $(if ($formatData.Count -gt 0 -or $formatFiles.Coun
 
 $report = [ordered]@{
     schemaVersion = 1
-    stage = 'P4.1-Phase0'
+    stage = 'P4.1a-b-candidate'
     modulePath = $resolvedModule
     moduleVersion = [string]$manifest.ModuleVersion
     powershell = [string]$PSVersionTable.PSVersion

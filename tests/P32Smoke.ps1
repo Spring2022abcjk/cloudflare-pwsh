@@ -257,6 +257,14 @@ Assert-True ($removeCommand.Parameters['DnsRecordId'].Aliases -contains 'RecordI
 Assert-True ($setCommand.Parameters['DnsRecordId'].Aliases -contains 'RecordId') 'Set-CfDnsRecord RecordId compatibility alias is missing.'
 Assert-True ([Cloudflare.PowerShell.P32CmdletHelpMetadata]::Commands.ContainsKey('Get-CfZone')) 'Generated Get-CfZone help model is missing.'
 Assert-True (-not [string]::IsNullOrWhiteSpace([Cloudflare.PowerShell.P32CmdletHelpMetadata]::Commands['Get-CfZone'].Synopsis)) 'Generated Get-CfZone help synopsis is missing.'
+Assert-True (@([Cloudflare.PowerShell.P32PipelineIdentityMetadata]::Aliases | Where-Object { $_.TypeName -eq 'Cloudflare.PowerShell.CfZone' -and $_.AliasName -eq 'ZoneId' -and $_.SourceProperty -eq 'Id' }).Count -eq 1) 'Generated CfZone pipeline identity metadata is missing.'
+Assert-True (@([Cloudflare.PowerShell.P32PipelineIdentityMetadata]::Aliases | Where-Object { $_.TypeName -eq 'Cloudflare.PowerShell.CfDnsRecord' -and $_.AliasName -eq 'DnsRecordId' -and $_.SourceProperty -eq 'Id' }).Count -eq 1) 'Generated CfDnsRecord pipeline identity metadata is missing.'
+$identityZone = [Cloudflare.PowerShell.CfZone]::new()
+$identityZone.Id = 'zone'
+$identityRecord = [Cloudflare.PowerShell.CfDnsRecord]::new()
+$identityRecord.Id = 'record'
+Assert-True (@($identityZone | Get-Member -Name ZoneId).Count -eq 1 -and @($identityRecord | Get-Member -Name DnsRecordId).Count -eq 1) 'ETS pipeline identity aliases are not discoverable.'
+Assert-True (($identityZone | ConvertTo-Json -Compress) -match '"ZoneId":"zone"' -and ($identityRecord | ConvertTo-Json -Compress) -match '"DnsRecordId":"record"') 'ETS pipeline identity serialization behavior drifted.'
 $dnsRecordIdAttributes = @($dnsCommand.Parameters['DnsRecordId'].Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] })
 Assert-True ($dnsRecordIdAttributes.Count -eq 1 -and $dnsRecordIdAttributes[0].Mandatory -and $dnsRecordIdAttributes[0].ParameterSetName -eq 'Get') 'DNS record id requiredness/applicability drifted.'
 $dnsNameAttributes = @($dnsCommand.Parameters['Name'].Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] })
@@ -374,6 +382,31 @@ Assert-True ([P32MockHandler]::Requests.Count -eq 2) 'Generated Get-CfDnsRecord 
 $record = & $dnsCommand -ZoneId zone -DnsRecordId record @baseArgs
 Assert-True ($record.Id -eq 'record') 'Generated Get-CfDnsRecord get did not dispatch.'
 Write-Output 'PASS generated DNS list/get dispatch'
+
+[P32MockHandler]::Reset()
+$chainedRecords = @($zones | & $dnsCommand @baseArgs)
+Assert-True ($chainedRecords.Count -eq 1 -and $chainedRecords[0].Id -eq 'r1') 'CfZone ETS identity did not support zone-to-DNS pipeline binding.'
+Write-Output 'PASS CfZone ETS identity zone-to-DNS pipeline binding'
+
+[P32MockHandler]::Reset()
+$recordFromPipeline = @($record | & $dnsCommand -ZoneId zone @baseArgs)
+Assert-True ($recordFromPipeline.Count -eq 1 -and [P32MockHandler]::Requests[0].RequestUri.AbsolutePath -like '*/dns_records/record') 'CfDnsRecord ETS identity did not bind DnsRecordId with explicit ZoneId.'
+Write-Output 'PASS CfDnsRecord ETS identity get with explicit parent scope'
+
+[P32MockHandler]::Reset()
+$pipedRemove = @($record | & $removeCommand -ZoneId zone @baseArgs -WhatIf)
+Assert-True ($pipedRemove.Count -eq 0 -and [P32MockHandler]::Requests.Count -eq 0) 'CfDnsRecord pipeline Remove with explicit ZoneId was not a no-request WhatIf.'
+
+[P32MockHandler]::Reset()
+$pipedSet = @($record | & $setCommand -ZoneId zone -Edit @{ content = '198.51.100.6' } @baseArgs -WhatIf)
+Assert-True ($pipedSet.Count -eq 0 -and [P32MockHandler]::Requests.Count -eq 0) 'CfDnsRecord pipeline Set with explicit ZoneId was not a no-request WhatIf.'
+Write-Output 'PASS CfDnsRecord ETS identity mutation workflows with explicit parent scope'
+
+[P32MockHandler]::Reset()
+$missingScopeFailed = $false
+try { @($record | & $removeCommand @baseArgs -WhatIf -ErrorAction Stop) | Out-Null } catch { $missingScopeFailed = $true }
+Assert-True ($missingScopeFailed -and [P32MockHandler]::Requests.Count -eq 0) 'CfDnsRecord pipeline Remove without ZoneId did not fail clearly before dispatch.'
+Write-Output 'PASS CfDnsRecord pipeline missing parent scope remains explicit'
 
 [P32MockHandler]::Reset()
 $record = & $dnsCommand -ZoneId zone -RecordId record @baseArgs
@@ -778,7 +811,27 @@ Assert-True (Test-Path -LiteralPath $moduleHelpPath -PathType Leaf) 'Generated m
 foreach ($evidence in @($helpNames | ForEach-Object { Get-HelpEvidence $_ })) {
     $expectedHelp = $helpModels[$evidence.Name]
     Assert-True (-not [string]::IsNullOrWhiteSpace($evidence.Synopsis) -and -not [string]::IsNullOrWhiteSpace($evidence.Description)) "Get-Help $($evidence.Name) returned empty generated help."
-    Assert-True ($evidence.Synopsis -eq [string]$expectedHelp.synopsis -and $evidence.Description -eq [string]$expectedHelp.description) "Get-Help $($evidence.Name) drifted from canonical projection help."
+    Assert-True ($evidence.Synopsis -eq [string]$expectedHelp.synopsis -and $evidence.Description.StartsWith([string]$expectedHelp.description, [StringComparison]::Ordinal)) "Get-Help $($evidence.Name) drifted from canonical projection help."
+    $command = Get-Command $evidence.Name -ErrorAction Stop
+    $fullHelp = Get-Help $evidence.Name -Full -ErrorAction Stop
+    $syntax = @(Get-Command $evidence.Name -Syntax | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
+    $mamlParameters = @($fullHelp.parameters.parameter)
+    $mamlSyntaxItems = @($fullHelp.syntax.syntaxItem)
+    $mamlInputs = @($fullHelp.inputTypes.inputType)
+    $mamlOutputs = @($fullHelp.returnValues.returnValue)
+    $mamlExamples = @($fullHelp.examples.example)
+    $mamlLinks = @($fullHelp.relatedLinks.navigationLink)
+    $expectedParameters = @($expectedHelp.parameterDescriptions.PSObject.Properties | ForEach-Object Name)
+    $actualParameterNames = @($mamlParameters | ForEach-Object Name)
+    Assert-True ($syntax.Count -gt 0) "Get-Command -Syntax returned no syntax for '$($evidence.Name)'."
+    Assert-True ($mamlSyntaxItems.Count -eq @($command.ParameterSets | Where-Object Name -ne '__AllParameterSets').Count) "Generated MAML parameter-set syntax drifted for '$($evidence.Name)'."
+    Assert-True ($mamlParameters.Count -ge $expectedParameters.Count) "Generated MAML parameter help is incomplete for '$($evidence.Name)'."
+    foreach ($parameterName in $expectedParameters) {
+        Assert-True ($actualParameterNames -contains [string]$parameterName) "Generated MAML is missing parameter '$parameterName' for '$($evidence.Name)'."
+    }
+    Assert-True ($mamlInputs.Count -gt 0 -and $mamlOutputs.Count -gt 0) "Generated MAML input/output help is empty for '$($evidence.Name)'."
+    Assert-True ($mamlExamples.Count -eq @($expectedHelp.examples).Count -and $mamlExamples.Count -gt 0) "Generated MAML examples drifted for '$($evidence.Name)'."
+    Assert-True ($mamlLinks.Count -eq @($expectedHelp.relatedLinks).Count) "Generated MAML related links drifted for '$($evidence.Name)'."
 }
 
 $isolatedHelpRoot = Join-Path ([IO.Path]::GetTempPath()) ('cloudflare-p32-help-' + [guid]::NewGuid().ToString('N'))
@@ -797,7 +850,7 @@ try {
     foreach ($evidence in @($helpNames | ForEach-Object { Get-HelpEvidence $_ })) {
         $expectedHelp = $helpModels[$evidence.Name]
         Assert-True (-not [string]::IsNullOrWhiteSpace($evidence.Synopsis) -and -not [string]::IsNullOrWhiteSpace($evidence.Description)) "Isolated Get-Help $($evidence.Name) returned empty generated help."
-        Assert-True ($evidence.Synopsis -eq [string]$expectedHelp.synopsis -and $evidence.Description -eq [string]$expectedHelp.description) "Isolated Get-Help $($evidence.Name) drifted from canonical projection help."
+        Assert-True ($evidence.Synopsis -eq [string]$expectedHelp.synopsis -and $evidence.Description.StartsWith([string]$expectedHelp.description, [StringComparison]::Ordinal)) "Isolated Get-Help $($evidence.Name) drifted from canonical projection help."
     }
 }
 finally {

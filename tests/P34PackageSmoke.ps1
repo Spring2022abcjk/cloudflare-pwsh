@@ -71,8 +71,18 @@ foreach ($name in @('Get-CfD1Database', 'Get-CfHealthCheck')) {
         throw "Bounded test-only cmdlet '$name' was exported by the package candidate."
     }
 }
-$help = Get-Help Get-CfDnsRecord -ErrorAction Stop
-if ([string]::IsNullOrWhiteSpace([string]$help.Synopsis) -and [string]::IsNullOrWhiteSpace([string]$help.Description)) { throw 'Package help discovery returned no representative help text.' }
+$helpNames = @('Get-CfZone', 'Get-CfDnsRecord', 'New-CfDnsRecord', 'Remove-CfDnsRecord', 'Set-CfDnsRecord')
+foreach ($helpName in $helpNames) {
+    $help = Get-Help $helpName -Full -ErrorAction Stop
+    if ([string]::IsNullOrWhiteSpace([string]$help.Synopsis) -or [string]::IsNullOrWhiteSpace([string]$help.Description.Text)) { throw "Package help discovery returned incomplete command help for '$helpName'." }
+    if (@($help.Parameters.Parameter).Count -eq 0 -or @($help.InputTypes.InputType).Count -eq 0 -or @($help.ReturnValues.ReturnValue).Count -eq 0 -or @($help.Examples.Example).Count -eq 0) { throw "Package full help is incomplete for '$helpName'." }
+    if (@(Get-Command $helpName -Syntax).Count -eq 0) { throw "Package Get-Command -Syntax returned no syntax for '$helpName'." }
+}
+$zoneIdentity = [Cloudflare.PowerShell.CfZone]::new()
+$zoneIdentity.Id = 'zone'
+$recordIdentity = [Cloudflare.PowerShell.CfDnsRecord]::new()
+$recordIdentity.Id = 'record'
+if (@($zoneIdentity | Get-Member -Name ZoneId).Count -ne 1 -or @($recordIdentity | Get-Member -Name DnsRecordId).Count -ne 1) { throw 'Package pipeline identity aliases were not registered.' }
 $assembly = [Cloudflare.PowerShell.CfDnsRecordRuntimeMetadata].Assembly
 $expectedAssemblyPath = Join-Path $modulePath 'Cloudflare.PowerShell.dll'
 if ([IO.Path]::GetFullPath($assembly.Location) -cne [IO.Path]::GetFullPath($expectedAssemblyPath)) { throw "Generated metadata assembly was not loaded from the package candidate: $($assembly.Location)" }

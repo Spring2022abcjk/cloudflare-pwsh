@@ -8,9 +8,10 @@ $temporary=Join-Path ([IO.Path]::GetTempPath()) ('cloudflare-p33-d2-readonly-'+[
 $initial=$null; $failure=$null
 . (Join-Path $root 'tools/ReadOnlyStaging.ps1') -Library
 . (Join-Path $root 'tools/P33ReadOnlyStaging.ps1') -Library
+. (Join-Path $root 'tools/P32Hash.ps1')
 function Status { $lines=@(& git -C $root status --short); if($LASTEXITCODE-ne 0){throw 'Could not read worktree status.'}; ($lines|ForEach-Object{[string]$_})-join "`n" }
 function Run { param([string]$File,[string[]]$CommandArgs,[string]$Label); & $File @CommandArgs|Out-Host; if($LASTEXITCODE-ne 0){throw "$Label failed with exit code $LASTEXITCODE."} }
-function HashParity { param([string[]]$Paths); foreach($relative in $Paths){$a=Join-Path $root $relative;$b=Join-Path $temporary $relative;if(-not(Test-Path -LiteralPath $a -PathType Leaf)-or-not(Test-Path -LiteralPath $b -PathType Leaf)){throw "D2 reproduction file is missing: $relative"};if((Get-FileHash -Algorithm SHA256 $a).Hash -cne (Get-FileHash -Algorithm SHA256 $b).Hash){throw "D2 isolated reproduction drifted: $relative"}} }
+function HashParity { param([string[]]$Paths); foreach($relative in $Paths){$a=Join-Path $root $relative;$b=Join-Path $temporary $relative;if(-not(Test-Path -LiteralPath $a -PathType Leaf)-or-not(Test-Path -LiteralPath $b -PathType Leaf)){throw "D2 reproduction file is missing: $relative"};if((Get-P32PortableFileHash -Path $a) -cne (Get-P32PortableFileHash -Path $b)){throw "D2 isolated reproduction drifted: $relative"}} }
 try{
     $initial=Status; New-Item -ItemType Directory -Force -Path $temporary|Out-Null
     $required=@(Get-P33D2RequiredInputPaths -ProjectRoot $root); Copy-ReadOnlyStagingFiles -SourceRoot $root -DestinationRoot $temporary -RelativePaths $required; [void](Assert-ReadOnlyStagingInputContract -Root $temporary -ExpectedRelativePaths $required); $diag=Get-ReadOnlyStagingDiagnostics -Root $temporary

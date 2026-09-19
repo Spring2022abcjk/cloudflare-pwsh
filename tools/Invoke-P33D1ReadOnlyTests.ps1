@@ -12,6 +12,7 @@ $p33Failure = $null
 $p33StagingLibrary = Join-Path $PSScriptRoot 'ReadOnlyStaging.ps1'
 if (-not (Test-Path -LiteralPath $p33StagingLibrary -PathType Leaf)) { throw "Read-only staging helper is missing: $p33StagingLibrary" }
 . $p33StagingLibrary -Library
+. (Join-Path $PSScriptRoot 'P32Hash.ps1')
 $p33ContractLibrary = Join-Path $PSScriptRoot 'P33ReadOnlyStaging.ps1'
 if (-not (Test-Path -LiteralPath $p33ContractLibrary -PathType Leaf)) { throw "P3.3 staging contract is missing: $p33ContractLibrary" }
 . $p33ContractLibrary -Library
@@ -34,8 +35,8 @@ function Assert-P33HashParity {
         $expectedPath = Join-Path $p33ProjectRoot $relativePath
         $actualPath = Join-Path $p33TemporaryRoot $relativePath
         if (-not (Test-Path -LiteralPath $expectedPath -PathType Leaf) -or -not (Test-Path -LiteralPath $actualPath -PathType Leaf)) { throw "P3.3 reproducible file is missing: $relativePath" }
-        $expected = (Get-FileHash -Algorithm SHA256 -LiteralPath $expectedPath).Hash
-        $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $actualPath).Hash
+        $expected = Get-P32PortableFileHash -Path $expectedPath
+        $actual = Get-P32PortableFileHash -Path $actualPath
         if ($expected -cne $actual) { throw "P3.3 isolated reproduction drifted for '$relativePath'." }
     }
 }

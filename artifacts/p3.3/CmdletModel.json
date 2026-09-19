@@ -50,7 +50,7 @@
     },
     {
       "path": "module/Cloudflare.PowerShell/Cloudflare.PowerShell.psd1",
-      "sha256": "f56e7712d83a55d79eb055be6a31f7558c305efe3c97e0d541abb934bec15fbd"
+      "sha256": "03818cd771f1e12fb726e228e8b94bc45d8ebf929f1fe9addf7829a6dfc5938d"
     },
     {
       "path": "module/Cloudflare.PowerShell/Cloudflare.PowerShell.psm1",
@@ -2831,5 +2831,5 @@
     "Token",
     "Handler"
   ],
-  "canonicalDigest": "5f310ed62b94afc8fe40e5ef1f2af509f07dabe6ca042f5e6ae2d5fe4f789d95"
+  "canonicalDigest": "e7d79b65a02c2a3dd69445a2e96b3983a7225d9111ed29a3db513b9353b52422"
 }

@@ -518,7 +518,7 @@ if ($null -ne $exportCheck -and -not [string]::IsNullOrWhiteSpace($exportCheck.C
         Finding = 'dns-export-live-media-type-diff'
         ExpectedPinnedMediaType = 'text/plain'
         ObservedMediaType = $exportCheck.ContentType
-        Classification = 'unclassified-review-required'
+        Classification = 'E-still-insufficient-evidence'
     })
 }
 

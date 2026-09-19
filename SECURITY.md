@@ -2,16 +2,20 @@
 
 ## Reporting a vulnerability
 
-This repository does not currently publish a dedicated security mailbox or
-public security intake address. Do not open a public issue and do not include
-tokens, private reports, or other secrets in a public pull request.
+This repository does not publish a security mailbox. Do not open a public issue
+and do not include tokens, private reports, or other secrets in a public pull
+request.
 
-Before the first public release, maintainers must configure and verify a
-private reporting channel, preferably GitHub Security Advisories for the
-repository or an organization-controlled security contact. Until that channel
-is configured, a report should be sent privately to the repository maintainers
-through the hosting organization's existing private contact path; this file
-does not invent an email address.
+GitHub private vulnerability reporting is enabled for this public repository.
+Use the repository's **Security** tab and choose **Advisories** → **Report a
+vulnerability**, or use the repository advisory page:
+
+<https://github.com/Spring2022abcjk/cloudflare-pwsh/security/advisories/new>
+
+This channel is the supported private intake path. If the link is unavailable,
+do not disclose details publicly; contact the repository owner through a
+private GitHub channel and include only a redacted summary until the advisory
+channel is restored.
 
 ## Supported versions
 

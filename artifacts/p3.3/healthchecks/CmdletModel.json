@@ -31,11 +31,11 @@
     },
     {
       "path": "tools/Project-P32Projection.ps1",
-      "sha256": "31add60b4656a60360cd1cbe62f6c80dc4498f9e851a38c47b5a91d3fff6dd70"
+      "sha256": "4994534441ceb51170deda869afcc430ca0a9cf2c6af01c8a456be20dd56f347"
     },
     {
       "path": "tools/Generate-P32Source.ps1",
-      "sha256": "ff991aa6a81fce6fca6155c244d6ffc3a90aff26141832d7d450d267417a7b55"
+      "sha256": "1c4134d02750c1ecda3ed81696b6ae757e62bbb2e299fd60cfd8188720c9414c"
     },
     {
       "path": "tools/P33ModelSchemaParity.ps1",
@@ -55,7 +55,7 @@
     },
     {
       "path": "module/Cloudflare.PowerShell/Cloudflare.PowerShell.psm1",
-      "sha256": "844878762eb511980403b012c64bf0466fd175edae58d2e6d6beea9e441b0592"
+      "sha256": "fd2a1f844aae9405263d67b9f6a8b9e6ccc1742e49688b7fa06443a81c832b84"
     }
   ],
   "cmdlets": [
@@ -4061,5 +4061,5 @@
     "Token",
     "Handler"
   ],
-  "canonicalDigest": "1d3389bf8517e9ec12496498b54b9cf3f7d218a2a80dbec4c2ed11ff8e75f79f"
+  "canonicalDigest": "f4fcf96ff150ee37234d1052d536a73954bd9912298e220f33a59eaa68678bbd"
 }

@@ -9,7 +9,7 @@
 - Input identity: source `ref/api-schemas/openapi.json` revision `4.0.0` SHA-256 `f71c82b532b284e41a0e9de41ac1ee398e1b7b658f521e7f8ee478ce922fbf45`
 - Input identity: corrections `overrides/api-corrections.json` SHA-256 `ff65a8757fad81bfe22e455580976a32fdf8a01b0c6b3d73d803e9e8f1fb496a`
 - Input identity: projection policy `overrides/powershell-projection.json` SHA-256 `e07a129b9e80b9efaa5653046214cb1c34ac04ee5f55e97ab356d0238e1bdd60`
-- Input identity: current public artifact `artifacts/p3.2/CmdletModel.json` SHA-256 `16f838d6271419b72d2fd43ff7e3723ec3fe4ff99230ec76684af9a363c28be8`
+- Input identity: current public artifact `artifacts/p3.2/CmdletModel.json` SHA-256 `38ac91cd945698b24b39566ecdbff8abf9e475360610e1d7f54ab777d84e65e7`
 - Deterministic artifact: `true`; generation timestamp intentionally omitted
 
 ## Stage counts

@@ -221,7 +221,10 @@ function Invoke-P35ReadOnlyHttpGet {
         }
     } catch {
         $row.ExceptionType = $_.Exception.GetType().FullName
-        $response = $_.Exception.Response
+        $response = $null
+        if ($null -ne $_.Exception.PSObject.Properties['Response']) {
+            $response = $_.Exception.Response
+        }
         if ($null -ne $response) {
             try { $row.HttpStatus = [int]$response.StatusCode } catch { }
             $row.RateLimit = Get-P35HeaderValue -Headers $response.Headers -Name 'Ratelimit'
@@ -327,15 +330,21 @@ function Get-P35StageStatus {
     )
 
     if ($Candidate.Status -ne 'Ready') { return 'Blocked' }
+    $accountVerify = @($Checks | Where-Object { $_.Check -ceq 'account-token-verify' } | Select-Object -First 1)
+    $accountGet = @($Checks | Where-Object { $_.Check -ceq 'account-get' } | Select-Object -First 1)
+    $zoneGet = @($Checks | Where-Object { $_.Check -ceq 'zone-get' } | Select-Object -First 1)
+    $dnsExport = @($Checks | Where-Object { $_.Check -ceq 'dns-export' } | Select-Object -First 1)
+    $wrongAuth = @($Checks | Where-Object { $_.Check -ceq 'wrong-auth' } | Select-Object -First 1)
+    $missingAuth = @($Checks | Where-Object { $_.Check -ceq 'missing-auth' } | Select-Object -First 1)
     $required = @(
-        @($Checks | Where-Object Check -eq 'account-token-verify').CloudflareSuccess -contains $true,
-        @($Checks | Where-Object Check -eq 'account-get').CloudflareSuccess -contains $true,
-        @($Checks | Where-Object Check -eq 'zone-get').CloudflareSuccess -contains $true,
+        ($null -ne $accountVerify -and $accountVerify.CloudflareSuccess -eq $true),
+        ($null -ne $accountGet -and $accountGet.CloudflareSuccess -eq $true),
+        ($null -ne $zoneGet -and $zoneGet.CloudflareSuccess -eq $true),
         $CandidateListSuccess,
         $CandidateGetSuccess,
-        @($Checks | Where-Object Check -eq 'dns-export').HttpStatus -contains 200,
-        @($Checks | Where-Object Check -eq 'wrong-auth').HttpStatus -contains 401,
-        @($Checks | Where-Object Check -eq 'missing-auth').HttpStatus -contains 401
+        ($null -ne $dnsExport -and $dnsExport.HttpStatus -eq 200),
+        ($null -ne $wrongAuth -and [int]$wrongAuth.HttpStatus -in @(400, 401, 403)),
+        ($null -ne $missingAuth -and [int]$missingAuth.HttpStatus -in @(400, 401, 403))
     )
     if (@($required | Where-Object { -not $_ }).Count -eq 0) { return 'Complete' }
     return 'Partial'
@@ -416,6 +425,7 @@ $candidateList = $null
 $candidateGet = $null
 $candidateRecordIds = @()
 try {
+    $script:liveRequestCount++
     $records = @(Get-CfDnsRecord -ZoneId $zoneId -PerPage 5 -Page 1 -BaseUrl $BaseUrl -Token $token -ErrorAction Stop)
     $candidateRecordIds = @($records | ForEach-Object {
         $value = Get-P35PropertyValue -InputObject $_ -Name 'Id'
@@ -433,6 +443,7 @@ try {
     if ($candidateRecordIds.Count -gt 0) {
         $selectedId = $candidateRecordIds[0]
         try {
+            $script:liveRequestCount++
             $got = @(Get-CfDnsRecord -ZoneId $zoneId -DnsRecordId $selectedId -BaseUrl $BaseUrl -Token $token -ErrorAction Stop)
             $candidateGetSuccess = ($got.Count -eq 1 -and [string](Get-P35PropertyValue -InputObject $got[0] -Name 'Id') -ceq $selectedId)
             $candidateGet = [pscustomobject][ordered]@{
@@ -464,6 +475,7 @@ try {
 $invalidId = [Guid]::NewGuid().ToString('N')
 $invalidError = $null
 try {
+    $script:liveRequestCount++
     $null = @(Get-CfDnsRecord -ZoneId $zoneId -DnsRecordId $invalidId -BaseUrl $BaseUrl -Token $token -ErrorAction Stop)
     $invalidError = [pscustomobject][ordered]@{
         Status = 'unexpected-success'
@@ -482,8 +494,17 @@ $directTotalRow = @($pageOne, $pageTwo) |
     Where-Object { $null -ne $_ -and $null -ne $_.TotalCount } |
     Select-Object -First 1
 $directTotal = if ($null -ne $directTotalRow) { $directTotalRow.TotalCount } else { $null }
-$candidateCount = if ($null -ne $candidateList) { $candidateList.RecordCount } else { $null }
-$paginationStatus = if ($candidateListSuccess -and $null -ne $directTotal -and $candidateCount -eq [int]$directTotal -and -not $candidateList.DuplicateIds) {
+$candidateCount = if ($null -ne $candidateList) {
+    Get-P35PropertyValue -InputObject $candidateList -Name 'RecordCount'
+} else {
+    $null
+}
+$candidateDuplicateIds = if ($null -ne $candidateList) {
+    Get-P35PropertyValue -InputObject $candidateList -Name 'DuplicateIds'
+} else {
+    $null
+}
+$paginationStatus = if ($candidateListSuccess -and $null -ne $directTotal -and $candidateCount -eq [int]$directTotal -and -not $candidateDuplicateIds) {
     'observed-basic-aggregate-and-unique-id-parity'
 } else {
     'insufficient-live-evidence'
@@ -510,8 +531,12 @@ $output.Pagination = [ordered]@{
     DirectPagesRequested = 2
     AggregateCount = $candidateCount
     DirectTotalCount = $directTotal
-    UniqueIdCount = if ($null -ne $candidateList) { $candidateList.UniqueIdCount } else { $null }
-    DuplicateIds = if ($null -ne $candidateList) { $candidateList.DuplicateIds } else { $null }
+    UniqueIdCount = if ($null -ne $candidateList) {
+        Get-P35PropertyValue -InputObject $candidateList -Name 'UniqueIdCount'
+    } else {
+        $null
+    }
+    DuplicateIds = $candidateDuplicateIds
 }
 $output.ErrorObservation = [ordered]@{
     InvalidDnsRecordGet = $invalidError

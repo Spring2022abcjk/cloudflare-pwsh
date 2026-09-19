@@ -56,6 +56,8 @@ try {
     }
     $galleryScript = Join-Path $root 'tools/Test-P42GalleryPreflight.ps1'
     Assert-P42 (Test-Path -LiteralPath $galleryScript -PathType Leaf) 'Gallery preflight tool is missing.'
+    $schemaScript = Get-Content -Raw -LiteralPath (Join-Path $root 'tools/Initialize-P34Schema.ps1')
+    Assert-P42 ($schemaScript -match 'core\.autocrlf.*false' -and $schemaScript -match 'core\.eol.*lf') 'Pinned schema bootstrap must force LF checkout bytes across Windows runners.'
     Write-Output 'PASS P4.2 workflow pinning, least privilege, secret boundary, host pin, and restore-lock checks'
 }
 catch {

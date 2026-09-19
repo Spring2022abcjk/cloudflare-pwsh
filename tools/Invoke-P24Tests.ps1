@@ -90,11 +90,11 @@ try {
         Copy-Item -LiteralPath $newSchemaPath -Destination $newPath -Force
     }
 
-    dotnet restore .\Cloudflare.P1.sln | Out-Host
+    dotnet restore .\Cloudflare.P1.sln --locked-mode | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'dotnet restore failed.' }
     dotnet clean .\Cloudflare.P1.sln --configuration Release | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'dotnet clean failed.' }
-    dotnet restore .\Cloudflare.P1.sln | Out-Host
+    dotnet restore .\Cloudflare.P1.sln --locked-mode | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'dotnet restore after clean failed.' }
     dotnet build .\Cloudflare.P1.sln --configuration Release --no-restore | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'dotnet build failed.' }

@@ -5,8 +5,14 @@ on:
   pull_request:
   workflow_dispatch:
 
+# This workflow runs untrusted contributions in the pull-request context only;
+# it has no repository secrets and only receives read access to repository content.
 permissions:
   contents: read
+
+concurrency:
+  group: p34-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 defaults:
   run:
@@ -16,13 +22,16 @@ jobs:
   build:
     name: Build
     runs-on: windows-2025
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/p34-windows-baseline
       - name: Bootstrap pinned schema
         run: ./tools/Initialize-P34Schema.ps1
       - name: Restore
-        run: dotnet restore ./Cloudflare.P1.sln --nologo
+        run: dotnet restore ./Cloudflare.P1.sln --nologo --locked-mode
       - name: Release build
         run: dotnet build ./Cloudflare.P1.sln --configuration Release --no-restore --nologo
 
@@ -30,8 +39,11 @@ jobs:
     name: Deterministic generation
     needs: build
     runs-on: windows-2025
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/p34-windows-baseline
       - run: ./tools/Initialize-P34Schema.ps1
       - name: Run isolated deterministic gates
@@ -41,13 +53,16 @@ jobs:
     name: Unit and runtime smoke
     needs: build
     runs-on: windows-2025
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/p34-windows-baseline
       - run: ./tools/Initialize-P34Schema.ps1
       - name: Restore and build
         run: |
-          dotnet restore ./Cloudflare.P1.sln --nologo
+          dotnet restore ./Cloudflare.P1.sln --nologo --locked-mode
           dotnet build ./Cloudflare.P1.sln --configuration Release --no-restore --nologo
       - name: Runtime contract tests
         run: dotnet run --project ./tests/Cloudflare.PowerShell.Tests/Cloudflare.PowerShell.Tests.csproj --configuration Release --no-build --nologo
@@ -58,8 +73,11 @@ jobs:
     name: P1-P2.4 regression
     needs: build
     runs-on: windows-2025
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/p34-windows-baseline
       - run: ./tools/Initialize-P34Schema.ps1
       - name: Full regression chain
@@ -69,13 +87,16 @@ jobs:
     name: Compatibility gate
     needs: regression
     runs-on: windows-2025
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/p34-windows-baseline
       - run: ./tools/Initialize-P34Schema.ps1
       - name: Restore and build compatibility engine
         run: |
-          dotnet restore ./Cloudflare.P1.sln --nologo
+          dotnet restore ./Cloudflare.P1.sln --nologo --locked-mode
           dotnet build ./Cloudflare.P1.sln --configuration Release --no-restore --nologo
       - name: Produce and evaluate compatibility report
         run: |
@@ -90,23 +111,27 @@ jobs:
           $canonicalReport = Join-Path $root 'compatibility-report.json'
           Copy-Item -LiteralPath $report -Destination $canonicalReport -Force
           ./tools/Invoke-P34CompatibilityGate.ps1 -ReportPath $canonicalReport -OutputPath (Join-Path $root 'compatibility-gate.json')
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: p34-compatibility-reports
           path: ${{ runner.temp }}/p34-compatibility
           if-no-files-found: error
+          retention-days: 14
 
   coverage:
     name: Coverage gate
     needs: build
     runs-on: windows-2025
+    timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/p34-windows-baseline
       - run: ./tools/Initialize-P34Schema.ps1
       - name: Restore and build discovery engine
         run: |
-          dotnet restore ./Cloudflare.P1.sln --nologo
+          dotnet restore ./Cloudflare.P1.sln --nologo --locked-mode
           dotnet build ./Cloudflare.P1.sln --configuration Release --no-restore --nologo
       - name: Produce repeated coverage reports and evaluate policy
         run: |
@@ -121,7 +146,7 @@ jobs:
           Copy-Item -LiteralPath (Join-Path $first 'coverage-baseline.md') -Destination (Join-Path $root 'coverage-report.md') -Force
           ./tests/P33Coverage.Tests.ps1 -ReportPath $canonicalJson
           ./tools/Invoke-P34CoverageGate.ps1 -ReportPath $canonicalJson -BaselinePath ./artifacts/p3.3/coverage-baseline.json -SecondReportPath (Join-Path $second 'coverage-baseline.json') -OutputPath (Join-Path $root 'coverage-gate.json')
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: p34-coverage-reports
           path: |
@@ -129,37 +154,60 @@ jobs:
             ${{ runner.temp }}/p34-coverage/coverage-report.md
             ${{ runner.temp }}/p34-coverage/coverage-gate.json
           if-no-files-found: error
+          retention-days: 14
+
+  release-preflight:
+    name: Release and security preflight
+    needs: build
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/p34-windows-baseline
+      - run: ./tools/Initialize-P34Schema.ps1
+      - name: Run P4.2 static security and release metadata checks
+        run: |
+          ./tests/P42Security.Tests.ps1
+          ./tools/Test-P42ReleaseMetadata.ps1 -RequirePinnedSchemaCheckout -RequireCleanWorktree
 
   package:
     name: Package candidate and smoke
-    needs: [deterministic-generation, unit-runtime, regression, compatibility, coverage]
+    needs: [deterministic-generation, unit-runtime, regression, compatibility, coverage, release-preflight]
     runs-on: windows-2025
+    timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/p34-windows-baseline
       - run: ./tools/Initialize-P34Schema.ps1
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: p34-compatibility-reports
           path: ${{ runner.temp }}/p34-compatibility
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: p34-coverage-reports
           path: ${{ runner.temp }}/p34-coverage
       - name: Restore and build package input
         run: |
-          dotnet restore ./Cloudflare.P1.sln --nologo
+          dotnet restore ./Cloudflare.P1.sln --nologo --locked-mode
           $sourceRevision = ((git rev-parse HEAD 2>$null) -join "`n").Trim()
           if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($sourceRevision)) { throw 'Could not resolve the package source revision.' }
           dotnet build ./Cloudflare.P1.sln --configuration Release --no-restore --nologo "/p:P34SourceRevision=$sourceRevision"
       - name: Assemble package candidate
         run: |
           ./tools/New-P34Package.ps1 -OutputRoot ./artifacts/p34-candidate -CompatibilityReportPath (Join-Path $env:RUNNER_TEMP 'p34-compatibility/compatibility-report.json') -CompatibilityGatePath (Join-Path $env:RUNNER_TEMP 'p34-compatibility/compatibility-gate.json') -CoverageJsonPath (Join-Path $env:RUNNER_TEMP 'p34-coverage/coverage-report.json') -CoverageMarkdownPath (Join-Path $env:RUNNER_TEMP 'p34-coverage/coverage-report.md') -CoverageGatePath (Join-Path $env:RUNNER_TEMP 'p34-coverage/coverage-gate.json') -SkipBuild
+      - name: Verify candidate provenance and secret boundary
+        run: ./tools/Test-P42PackageProvenance.ps1 -CandidateRoot ./artifacts/p34-candidate -RequireCleanWorktree
       - name: Smoke staged module
         run: ./tests/P34PackageSmoke.ps1 -ModulePath ./artifacts/p34-candidate/package/Cloudflare.PowerShell
       - name: Publish candidate artifact for inspection only
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: cloudflare-powershell-p34-candidate
           path: ./artifacts/p34-candidate
           if-no-files-found: error
+          retention-days: 14

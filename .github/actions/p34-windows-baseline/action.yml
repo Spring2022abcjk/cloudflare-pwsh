@@ -5,17 +5,22 @@ inputs:
     description: Stable PowerShell version used when the hosted image is older than the repository baseline
     required: false
     default: 7.6.6
+  powershell-msi-sha256:
+    description: SHA-256 for the pinned PowerShell MSI fallback download
+    required: false
+    default: 958838ff55091e1c8705d89efed0cc7e8245a3a6ef6c0ccfae20015227108ad8
 runs:
   using: composite
   steps:
     - name: Setup .NET 10 SDK
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
       with:
-        dotnet-version: 10.0.x
+        dotnet-version: 10.0.400
     - name: Ensure PowerShell baseline
       shell: powershell
       env:
         P34_POWERSHELL_VERSION: ${{ inputs.powershell-version }}
+        P34_POWERSHELL_MSI_SHA256: ${{ inputs.powershell-msi-sha256 }}
       run: |
         $required = [version]$env:P34_POWERSHELL_VERSION
         $current = Get-Command pwsh -ErrorAction SilentlyContinue
@@ -27,6 +32,9 @@ runs:
           $installer = Join-Path $env:RUNNER_TEMP "PowerShell-$env:P34_POWERSHELL_VERSION-win-x64.msi"
           $uri = "https://github.com/PowerShell/PowerShell/releases/download/v$env:P34_POWERSHELL_VERSION/PowerShell-$env:P34_POWERSHELL_VERSION-win-x64.msi"
           Invoke-WebRequest -Uri $uri -OutFile $installer
+          $actualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $installer).Hash.ToLowerInvariant()
+          $expectedHash = [string]$env:P34_POWERSHELL_MSI_SHA256
+          if ($actualHash -cne $expectedHash.ToLowerInvariant()) { throw "PowerShell MSI SHA-256 mismatch. Expected '$expectedHash', actual '$actualHash'." }
           $process = Start-Process msiexec.exe -ArgumentList @('/i', $installer, '/qn', 'USE_MU=0', 'ENABLE_MU=0', 'ADD_PATH=1') -Wait -PassThru
           if ($process.ExitCode -ne 0) { throw "PowerShell MSI installation failed with exit code $($process.ExitCode)." }
         }

@@ -27,6 +27,14 @@
 - [P3.3 进度](./P3.3-progress.md)：D1/D2 实现、修复、验证和证据边界。
 - [P3.3 总结](./P3.3-summary.md)：P3.3 有界阶段的最终结论和未解决边界。
 - `tools/Invoke-P33D2ReadOnlyTests.ps1`：在隔离临时副本中执行 P3.3 D1/D2 只读验收。
+- [P3.4 CI/package 计划](./P3.4-ci-packaging-plan.md)：Windows-first CI、候选包和 schema-update gate。
+- [P3.4 CI/package 总结](./P3.4-ci-packaging-summary.md)：合并后的 CI、provenance 和发布边界。
+- [P4.2 计划](./P4.2-plan.md)：发布与安全 hardening 的范围和退出规则。
+- [P4.2 安全审查](./P4.2-security-review.md)：Actions、secret、supply-chain 和 artifact boundary 评审。
+- [P4.2 release policy](./P4.2-release-policy.md)：版本、tag、release notes、Gallery 和 signing policy。
+- [P4.2 release checklist](./P4.2-release-checklist.md)：最终 RC 所需的跨阶段证据清单。
+- [P4.2 progress](./P4.2-progress.md)：当前 branch 的实现与未验证边界。
+- [Support matrix](./support-matrix.md)：当前 Windows-first / PowerShell 7.6+ / .NET 10 支持声明。
 - [ADR 0001](./adr/0001-net10-powershell76-baseline.md)：PowerShell 7.6/.NET 10 统一基线决策。
 
 ## 证据等级

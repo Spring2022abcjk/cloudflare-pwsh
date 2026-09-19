@@ -39,11 +39,17 @@ try {
     New-Item -ItemType Directory -Force -Path (Join-Path $temporary 'ref/api-schemas') | Out-Null
     Copy-Item -LiteralPath (Join-Path $root 'ref/api-schemas/openapi.json') -Destination (Join-Path $temporary 'ref/api-schemas/openapi.json') -Force
     Copy-Item -LiteralPath (Join-Path $root 'Directory.Build.props') -Destination (Join-Path $temporary 'Directory.Build.props') -Force
-    foreach ($path in @('build/p34-compatibility-policy.json', 'build/p34-coverage-policy.json', 'tools/Invoke-P34CompatibilityGate.ps1', 'tools/Invoke-P34CoverageGate.ps1', 'tests/P23Projection.Tests.ps1')) {
+    foreach ($path in @('global.json', 'build/p34-compatibility-policy.json', 'build/p34-coverage-policy.json', 'tools/Invoke-P24Tests.ps1', 'tools/Invoke-P2Tests.ps1', 'tools/Invoke-P22Tests.ps1', 'tools/Invoke-P34CompatibilityGate.ps1', 'tools/Invoke-P34CoverageGate.ps1', 'tests/P23Projection.Tests.ps1')) {
         $source = Join-Path $root $path
         $destination = Join-Path $temporary $path
         New-Item -ItemType Directory -Force -Path (Split-Path -Parent $destination) | Out-Null
         Copy-Item -LiteralPath $source -Destination $destination -Force
+    }
+    foreach ($lockFile in @(Get-ChildItem -LiteralPath $root -Recurse -Filter 'packages.lock.json' -File)) {
+        $relative = [IO.Path]::GetRelativePath($root, $lockFile.FullName)
+        $destination = Join-Path $temporary $relative
+        New-Item -ItemType Directory -Force -Path (Split-Path -Parent $destination) | Out-Null
+        Copy-Item -LiteralPath $lockFile.FullName -Destination $destination -Force
     }
     $tempManifest = Join-Path $temporary 'fixtures/p2.4/openapi-previous-revision.json'
     $tempArtifactRoot = Join-Path $temporary 'artifacts/p34-schema-update'

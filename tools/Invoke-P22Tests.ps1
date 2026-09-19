@@ -6,7 +6,7 @@ $ErrorActionPreference = 'Stop'
 Push-Location $ProjectRoot
 try {
     $solution = Join-Path $ProjectRoot 'Cloudflare.P1.sln'
-    dotnet restore $solution | Out-Host
+    dotnet restore $solution --locked-mode | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'dotnet restore failed.' }
 
     dotnet build $solution --configuration Release --no-restore | Out-Host

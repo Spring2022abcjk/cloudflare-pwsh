@@ -22,7 +22,7 @@ $schemaPath = Join-Path $schemaRoot ([string]$pin.sourcePath)
 
 function Invoke-P34Git {
     param([Parameter(Mandatory)][string]$WorkingDirectory, [Parameter(Mandatory)][string[]]$Arguments)
-    & git -C $WorkingDirectory @Arguments | Out-Host
+    & git -C $WorkingDirectory -c core.autocrlf=false -c core.eol=lf @Arguments | Out-Host
     if ($LASTEXITCODE -ne 0) { throw "git $($Arguments -join ' ') failed in '$WorkingDirectory'." }
 }
 
@@ -57,6 +57,8 @@ if ((Test-Path -LiteralPath $schemaRoot -PathType Container) -and @(Get-ChildIte
 }
 New-Item -ItemType Directory -Force -Path $schemaRoot | Out-Null
 Invoke-P34Git $schemaRoot @('init')
+Invoke-P34Git $schemaRoot @('config', 'core.autocrlf', 'false')
+Invoke-P34Git $schemaRoot @('config', 'core.eol', 'lf')
 Invoke-P34Git $schemaRoot @('remote', 'add', 'origin', [string]$pin.repository)
 Invoke-P34Git $schemaRoot @('fetch', '--depth', '1', 'origin', [string]$pin.revision)
 Invoke-P34Git $schemaRoot @('checkout', '--detach', [string]$pin.revision)

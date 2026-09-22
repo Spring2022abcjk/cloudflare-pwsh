@@ -54,3 +54,5 @@
 | Cloudflare Go SDK | `ref/cloudflare-go` | `a45114730bf2f913c5adff8f3ed7bf7534feffb9` | 验证性对照 |
 
 TypeScript commit 是任务说明指定的固定基线。Python、Go 和 schema commit 已在本地记录，用于可复核的对照；它们不是 TypeScript commit 的同一发布日期快照，跨版本差异需要继续标记。
+
+ABC integration status and exact-HEAD evidence: [ABC integration summary](./P4.2-abc-integration-summary.md). Earlier branch remote runs above are historical and do not certify the ABC integration commit.

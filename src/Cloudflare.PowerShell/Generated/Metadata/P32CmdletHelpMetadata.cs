@@ -9,10 +9,21 @@ public static class P32CmdletHelpMetadata
     public static IReadOnlyDictionary<string, GeneratedHelpModel> Commands { get; } =
         new Dictionary<string, GeneratedHelpModel>(StringComparer.Ordinal)
         {
-            ["Get-CfZone"] = new("Gets Cloudflare zones.", "Gets zones visible to the authenticated account and writes one typed zone per pipeline object.", "P3.2ProjectionPolicy"),
-            ["Get-CfDnsRecord"] = new("Gets Cloudflare DNS records.", "Gets one or more typed DNS records through the shared runtime.", "P3.2ProjectionPolicy"),
-            ["New-CfDnsRecord"] = new("Creates a Cloudflare DNS record.", "Creates a typed DNS record using the generated request model.", "P3.2ProjectionPolicy"),
-            ["Remove-CfDnsRecord"] = new("Removes a Cloudflare DNS record.", "Removes one DNS record by zone and record identifier.", "P3.2ProjectionPolicy"),
-            ["Set-CfDnsRecord"] = new("Updates a Cloudflare DNS record.", "Replaces or edits one DNS record through the shared runtime.", "P3.2ProjectionPolicy")
+            ["Get-CfZone"] = new("Gets Cloudflare zones.", "Lists zones visible to the authenticated account or gets one zone by ZoneId. The list parameters are sent as optional API filters; the projection's generated values and the API's own defaults are not interchangeable. Output objects are typed Cloudflare.PowerShell.CfZone values and expose ZoneId as a PowerShell identity alias for Id.", "P4.1HelpPolicy"),
+            ["Get-CfDnsRecord"] = new("Gets Cloudflare DNS records.", "Lists DNS records in a zone or gets one DNS record by zone and record identifier. Filter parameters are optional API query inputs. Output objects are typed Cloudflare.PowerShell.CfDnsRecord values and expose DnsRecordId as a PowerShell identity alias for Id; a record does not carry its parent ZoneId.", "P4.1HelpPolicy"),
+            ["New-CfDnsRecord"] = new("Creates a Cloudflare DNS record.", "Creates a DNS record from a typed CfDnsRecordInput variant. Use CfARecordInput, CfMxRecordInput, CfCaaRecordInput, CfHttpsRecordInput, or CfSvcbRecordInput to construct the Record body. The operation supports ShouldProcess; use -WhatIf to inspect the action without sending a request.", "P4.1HelpPolicy"),
+            ["Remove-CfDnsRecord"] = new("Removes a Cloudflare DNS record.", "Removes one DNS record by its parent ZoneId and DnsRecordId. The operation has no success output and uses high-impact ShouldProcess confirmation; use -WhatIf before a real delete. RecordId is a compatibility alias for DnsRecordId.", "P4.1HelpPolicy"),
+            ["Set-CfDnsRecord"] = new("Updates a Cloudflare DNS record.", "Edits or replaces one DNS record by ZoneId and DnsRecordId. Use exactly one body parameter: -Edit sends a partial PATCH-style body, while -Replace sends a complete PUT-style body. The operation supports high-impact ShouldProcess and -WhatIf.", "P4.1HelpPolicy")
         };
+}
+
+public sealed record GeneratedPipelineIdentityAlias(string TypeName, string AliasName, string SourceProperty);
+
+public static class P32PipelineIdentityMetadata
+{
+    public static IReadOnlyList<GeneratedPipelineIdentityAlias> Aliases { get; } =
+    [
+        new GeneratedPipelineIdentityAlias("Cloudflare.PowerShell.CfDnsRecord", "DnsRecordId", "Id"),
+        new GeneratedPipelineIdentityAlias("Cloudflare.PowerShell.CfZone", "ZoneId", "Id")
+    ];
 }

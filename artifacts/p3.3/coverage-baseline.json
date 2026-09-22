@@ -28,7 +28,7 @@
     },
     "publicArtifact": {
       "path": "artifacts/p3.2/CmdletModel.json",
-      "sha256": "16f838d6271419b72d2fd43ff7e3723ec3fe4ff99230ec76684af9a363c28be8"
+      "sha256": "38ac91cd945698b24b39566ecdbff8abf9e475360610e1d7f54ab777d84e65e7"
     }
   },
   "stageCounts": {

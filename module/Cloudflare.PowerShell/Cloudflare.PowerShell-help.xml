@@ -10,8 +10,1035 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Gets one or more typed DNS records through the shared runtime.</maml:para>
+      <maml:para>Lists DNS records in a zone or gets one DNS record by zone and record identifier. Filter parameters are optional API query inputs. Output objects are typed Cloudflare.PowerShell.CfDnsRecord values and expose DnsRecordId as a PowerShell identity alias for Id; a record does not carry its parent ZoneId.</maml:para>
+      <maml:para>Parameter set &apos;Get&apos;: Gets one record using both the required ZoneId and DnsRecordId. Supplying only a record object is insufficient because its parent zone is not inferable.</maml:para>
+      <maml:para>Parameter set &apos;List&apos;: Lists records in the required ZoneId. The shared paginator follows the API page results until an empty page.</maml:para>
     </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Get-CfDnsRecord</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="none">
+          <maml:name>ZoneId</maml:name>
+          <maml:description>
+            <maml:para>Identifies the parent zone and is mandatory for both list and get. It can bind by property name from CfZone.ZoneId, including the ETS alias projected from CfZone.Id.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="1" aliases="RecordId">
+          <maml:name>DnsRecordId</maml:name>
+          <maml:description>
+            <maml:para>Identifies one DNS record in the Get parameter set. RecordId is a compatibility alias. A CfDnsRecord object can provide this identity by property name through its ETS DnsRecordId alias, but it cannot provide the parent ZoneId.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>IncludeShadowMetadata</maml:name>
+          <maml:description>
+            <maml:para>When explicitly supplied, requests shadow metadata in the API response. Omission leaves this optional query parameter unbound.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+          <dev:type>
+            <maml:name>Boolean</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Get-CfDnsRecord</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="none">
+          <maml:name>ZoneId</maml:name>
+          <maml:description>
+            <maml:para>Identifies the parent zone and is mandatory for both list and get. It can bind by property name from CfZone.ZoneId, including the ETS alias projected from CfZone.Id.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Comment</maml:name>
+          <maml:description>
+            <maml:para>Matches the record comment.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>CommentAbsent</maml:name>
+          <maml:description>
+            <maml:para>Filters for records without the specified comment value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>CommentContains</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose comment contains the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>CommentEndswith</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose comment ends with the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>CommentExact</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose comment exactly matches the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>CommentPresent</maml:name>
+          <maml:description>
+            <maml:para>Filters for records that have a comment.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>CommentStartswith</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose comment starts with the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Content</maml:name>
+          <maml:description>
+            <maml:para>Matches the record content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ContentContains</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose content contains the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ContentEndswith</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose content ends with the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ContentExact</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose content exactly matches the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ContentStartswith</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose content starts with the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Direction</maml:name>
+          <maml:description>
+            <maml:para>Controls API list sort direction. The current projection initializer is asc; this is not asserted as the Cloudflare API default.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>asc</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>IncludeShadowMetadata</maml:name>
+          <maml:description>
+            <maml:para>When explicitly supplied, requests shadow metadata in the API response. Omission leaves this optional query parameter unbound.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+          <dev:type>
+            <maml:name>Boolean</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Match</maml:name>
+          <maml:description>
+            <maml:para>Controls how multiple record filters are matched. The current projection initializer is all; this is not asserted as the Cloudflare API default.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>all</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Name</maml:name>
+          <maml:description>
+            <maml:para>Matches the DNS record name.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NameContains</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose name contains the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NameEndswith</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose name ends with the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NameExact</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose name exactly matches the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NameStartswith</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose name starts with the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Order</maml:name>
+          <maml:description>
+            <maml:para>Selects the API list sort field. The current projection initializer is type; this is not asserted as the Cloudflare API default.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>type</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Page</maml:name>
+          <maml:description>
+            <maml:para>Sets the initial record-list page. The shared paginator requests subsequent pages until an empty page; this projection value is not a claim about an API-side default.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Decimal</command:parameterValue>
+          <dev:type>
+            <maml:name>Decimal</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>1</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>PerPage</maml:name>
+          <maml:description>
+            <maml:para>Requests the number of records per page. The API may apply its own limit.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Decimal</command:parameterValue>
+          <dev:type>
+            <maml:name>Decimal</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>100</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Proxied</maml:name>
+          <maml:description>
+            <maml:para>Filters records by proxied state. The current projection initializer is false; omission is preferred when no proxied filter is intended.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+          <dev:type>
+            <maml:name>Boolean</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Search</maml:name>
+          <maml:description>
+            <maml:para>Applies the API&apos;s broad record search text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ShadowedByName</maml:name>
+          <maml:description>
+            <maml:para>Filters by the name of a record that shadows this record.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ShadowingName</maml:name>
+          <maml:description>
+            <maml:para>Filters by the name of a record shadowed by this record.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Tag</maml:name>
+          <maml:description>
+            <maml:para>Filters by one or more record tags.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TagAbsent</maml:name>
+          <maml:description>
+            <maml:para>Filters for records without the specified tag.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TagContains</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose tags contain the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TagEndswith</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose tag value ends with the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TagExact</maml:name>
+          <maml:description>
+            <maml:para>Filters for records with an exact tag match.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TagMatch</maml:name>
+          <maml:description>
+            <maml:para>Controls how tag filters are matched. The current projection initializer is all; this is not asserted as the Cloudflare API default.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>all</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TagPresent</maml:name>
+          <maml:description>
+            <maml:para>Filters for records that have the specified tag.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TagStartswith</maml:name>
+          <maml:description>
+            <maml:para>Filters for records whose tag value starts with the supplied text.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Type</maml:name>
+          <maml:description>
+            <maml:para>Filters the record list by DNS record type.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Comment</maml:name>
+        <maml:description>
+          <maml:para>Matches the record comment.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>CommentAbsent</maml:name>
+        <maml:description>
+          <maml:para>Filters for records without the specified comment value.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>CommentContains</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose comment contains the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>CommentEndswith</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose comment ends with the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>CommentExact</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose comment exactly matches the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>CommentPresent</maml:name>
+        <maml:description>
+          <maml:para>Filters for records that have a comment.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>CommentStartswith</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose comment starts with the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Content</maml:name>
+        <maml:description>
+          <maml:para>Matches the record content.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ContentContains</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose content contains the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ContentEndswith</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose content ends with the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ContentExact</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose content exactly matches the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ContentStartswith</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose content starts with the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Direction</maml:name>
+        <maml:description>
+          <maml:para>Controls API list sort direction. The current projection initializer is asc; this is not asserted as the Cloudflare API default.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>asc</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="RecordId">
+        <maml:name>DnsRecordId</maml:name>
+        <maml:description>
+          <maml:para>Identifies one DNS record in the Get parameter set. RecordId is a compatibility alias. A CfDnsRecord object can provide this identity by property name through its ETS DnsRecordId alias, but it cannot provide the parent ZoneId.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>IncludeShadowMetadata</maml:name>
+        <maml:description>
+          <maml:para>When explicitly supplied, requests shadow metadata in the API response. Omission leaves this optional query parameter unbound.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+        <dev:type>
+          <maml:name>Boolean</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Match</maml:name>
+        <maml:description>
+          <maml:para>Controls how multiple record filters are matched. The current projection initializer is all; this is not asserted as the Cloudflare API default.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>all</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Name</maml:name>
+        <maml:description>
+          <maml:para>Matches the DNS record name.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>NameContains</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose name contains the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>NameEndswith</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose name ends with the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>NameExact</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose name exactly matches the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>NameStartswith</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose name starts with the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Order</maml:name>
+        <maml:description>
+          <maml:para>Selects the API list sort field. The current projection initializer is type; this is not asserted as the Cloudflare API default.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>type</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Page</maml:name>
+        <maml:description>
+          <maml:para>Sets the initial record-list page. The shared paginator requests subsequent pages until an empty page; this projection value is not a claim about an API-side default.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Decimal</command:parameterValue>
+        <dev:type>
+          <maml:name>Decimal</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>1</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>PerPage</maml:name>
+        <maml:description>
+          <maml:para>Requests the number of records per page. The API may apply its own limit.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Decimal</command:parameterValue>
+        <dev:type>
+          <maml:name>Decimal</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>100</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Proxied</maml:name>
+        <maml:description>
+          <maml:para>Filters records by proxied state. The current projection initializer is false; omission is preferred when no proxied filter is intended.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+        <dev:type>
+          <maml:name>Boolean</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Search</maml:name>
+        <maml:description>
+          <maml:para>Applies the API&apos;s broad record search text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ShadowedByName</maml:name>
+        <maml:description>
+          <maml:para>Filters by the name of a record that shadows this record.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ShadowingName</maml:name>
+        <maml:description>
+          <maml:para>Filters by the name of a record shadowed by this record.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Tag</maml:name>
+        <maml:description>
+          <maml:para>Filters by one or more record tags.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TagAbsent</maml:name>
+        <maml:description>
+          <maml:para>Filters for records without the specified tag.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TagContains</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose tags contain the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TagEndswith</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose tag value ends with the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TagExact</maml:name>
+        <maml:description>
+          <maml:para>Filters for records with an exact tag match.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TagMatch</maml:name>
+        <maml:description>
+          <maml:para>Controls how tag filters are matched. The current projection initializer is all; this is not asserted as the Cloudflare API default.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>all</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TagPresent</maml:name>
+        <maml:description>
+          <maml:para>Filters for records that have the specified tag.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TagStartswith</maml:name>
+        <maml:description>
+          <maml:para>Filters for records whose tag value starts with the supplied text.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Type</maml:name>
+        <maml:description>
+          <maml:para>Filters the record list by DNS record type.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
+        <maml:name>ZoneId</maml:name>
+        <maml:description>
+          <maml:para>Identifies the parent zone and is mandatory for both list and get. It can bind by property name from CfZone.ZoneId, including the ETS alias projected from CfZone.Id.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfZone</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>A CfZone object can provide ZoneId by property name for list or get.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfDnsRecord</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>A CfDnsRecord object can provide DnsRecordId by property name for Get, but -ZoneId must still be supplied explicitly.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Explicit ZoneId and, for Get, DnsRecordId values are also supported.</maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfDnsRecord</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>One typed DNS record object per result, or one object for the Get form.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- Example 1 -------------------------- List records in a zone</maml:title>
+        <dev:code>Get-CfDnsRecord -ZoneId &apos;zone-id&apos;</dev:code>
+        <dev:remarks>
+          <maml:para>Lists records using a placeholder zone identifier and the shared paginator.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 2 -------------------------- Get one record</maml:title>
+        <dev:code>Get-CfDnsRecord -ZoneId &apos;zone-id&apos; -DnsRecordId &apos;record-id&apos;</dev:code>
+        <dev:remarks>
+          <maml:para>Gets one record. RecordId is also accepted as an alias for DnsRecordId.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 3 -------------------------- Filter records</maml:title>
+        <dev:code>Get-CfDnsRecord -ZoneId &apos;zone-id&apos; -Type &apos;A&apos; -NameExact &apos;www.example.test&apos;</dev:code>
+        <dev:remarks>
+          <maml:para>Combines a type and exact-name filter. The values are placeholders and do not identify a real account.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 4 -------------------------- Pipe a zone identity</maml:title>
+        <dev:code>$zone = [Cloudflare.PowerShell.CfZone]::new()
+$zone.Id = &apos;zone-id&apos;
+$zone | Get-CfDnsRecord</dev:code>
+        <dev:remarks>
+          <maml:para>The PowerShell projection exposes ZoneId as an ETS alias of CfZone.Id. A DNS-record object does not supply its parent scope; use -ZoneId explicitly when piping a record.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Cloudflare API documentation</maml:linkText>
+        <maml:uri>https://developers.cloudflare.com/api/</maml:uri>
+      </maml:navigationLink>
+    </maml:relatedLinks>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
     <command:details>
@@ -23,8 +1050,339 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Gets zones visible to the authenticated account and writes one typed zone per pipeline object.</maml:para>
+      <maml:para>Lists zones visible to the authenticated account or gets one zone by ZoneId. The list parameters are sent as optional API filters; the projection&apos;s generated values and the API&apos;s own defaults are not interchangeable. Output objects are typed Cloudflare.PowerShell.CfZone values and expose ZoneId as a PowerShell identity alias for Id.</maml:para>
+      <maml:para>Parameter set &apos;Get&apos;: Gets one zone by its ZoneId and writes one CfZone object.</maml:para>
+      <maml:para>Parameter set &apos;List&apos;: Lists zones and writes one CfZone object per result. No ZoneId is required.</maml:para>
     </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Get-CfZone</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="none">
+          <maml:name>ZoneId</maml:name>
+          <maml:description>
+            <maml:para>Identifies one zone for the Get parameter set. It can bind by property name from CfZone.ZoneId, including the ETS alias projected from CfZone.Id.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Get-CfZone</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AccountId</maml:name>
+          <maml:description>
+            <maml:para>Filters the zone list by account identifier.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AccountName</maml:name>
+          <maml:description>
+            <maml:para>Filters the zone list by account name.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Direction</maml:name>
+          <maml:description>
+            <maml:para>Controls the API list sort direction when supported. The value is passed to the API; no constrained value set is asserted here.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Match</maml:name>
+          <maml:description>
+            <maml:para>Controls how multiple zone-list filters are matched. The current projection initializer is all; this is not asserted as the Cloudflare API default.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>all</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Name</maml:name>
+          <maml:description>
+            <maml:para>Filters the zone list by zone name.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Order</maml:name>
+          <maml:description>
+            <maml:para>Selects the API zone-list sort field when supported. The value is passed to the API.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Page</maml:name>
+          <maml:description>
+            <maml:para>Sets the initial zone-list page. The shared paginator may request subsequent pages; this projection value is not a claim about an API-side default.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Decimal</command:parameterValue>
+          <dev:type>
+            <maml:name>Decimal</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>1</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>PerPage</maml:name>
+          <maml:description>
+            <maml:para>Requests the number of zones per page. The API may apply its own limit.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Decimal</command:parameterValue>
+          <dev:type>
+            <maml:name>Decimal</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>20</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Status</maml:name>
+          <maml:description>
+            <maml:para>Filters the zone list by zone status.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Type</maml:name>
+          <maml:description>
+            <maml:para>Filters the zone list by one or more zone types.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>AccountId</maml:name>
+        <maml:description>
+          <maml:para>Filters the zone list by account identifier.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>AccountName</maml:name>
+        <maml:description>
+          <maml:para>Filters the zone list by account name.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Direction</maml:name>
+        <maml:description>
+          <maml:para>Controls the API list sort direction when supported. The value is passed to the API; no constrained value set is asserted here.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Match</maml:name>
+        <maml:description>
+          <maml:para>Controls how multiple zone-list filters are matched. The current projection initializer is all; this is not asserted as the Cloudflare API default.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>all</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Name</maml:name>
+        <maml:description>
+          <maml:para>Filters the zone list by zone name.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Order</maml:name>
+        <maml:description>
+          <maml:para>Selects the API zone-list sort field when supported. The value is passed to the API.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Page</maml:name>
+        <maml:description>
+          <maml:para>Sets the initial zone-list page. The shared paginator may request subsequent pages; this projection value is not a claim about an API-side default.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Decimal</command:parameterValue>
+        <dev:type>
+          <maml:name>Decimal</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>1</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>PerPage</maml:name>
+        <maml:description>
+          <maml:para>Requests the number of zones per page. The API may apply its own limit.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Decimal</command:parameterValue>
+        <dev:type>
+          <maml:name>Decimal</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>20</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Status</maml:name>
+        <maml:description>
+          <maml:para>Filters the zone list by zone status.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Type</maml:name>
+        <maml:description>
+          <maml:para>Filters the zone list by one or more zone types.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
+        <maml:name>ZoneId</maml:name>
+        <maml:description>
+          <maml:para>Identifies one zone for the Get parameter set. It can bind by property name from CfZone.ZoneId, including the ETS alias projected from CfZone.Id.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>The list form does not require pipeline input.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfZone</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>A zone object can provide ZoneId by property name when the Get form is selected.</maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfZone</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>One typed zone object per returned zone.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- Example 1 -------------------------- List zones</maml:title>
+        <dev:code>Get-CfZone -Name &apos;example.test&apos;</dev:code>
+        <dev:remarks>
+          <maml:para>Lists zones matching a placeholder name. Supply the normal module authentication configuration in the calling session.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 2 -------------------------- Get one zone</maml:title>
+        <dev:code>Get-CfZone -ZoneId &apos;zone-id&apos;</dev:code>
+        <dev:remarks>
+          <maml:para>Gets one zone by its placeholder identifier.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Cloudflare API documentation</maml:linkText>
+        <maml:uri>https://developers.cloudflare.com/api/</maml:uri>
+      </maml:navigationLink>
+    </maml:relatedLinks>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
     <command:details>
@@ -36,8 +1394,187 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Creates a typed DNS record using the generated request model.</maml:para>
+      <maml:para>Creates a DNS record from a typed CfDnsRecordInput variant. Use CfARecordInput, CfMxRecordInput, CfCaaRecordInput, CfHttpsRecordInput, or CfSvcbRecordInput to construct the Record body. The operation supports ShouldProcess; use -WhatIf to inspect the action without sending a request.</maml:para>
+      <maml:para>Parameter set &apos;Create&apos;: Creates one record with the mandatory ZoneId and typed Record body.</maml:para>
     </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>New-CfDnsRecord</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="none">
+          <maml:name>ZoneId</maml:name>
+          <maml:description>
+            <maml:para>Identifies the parent zone and is mandatory. It can bind by property name from CfZone.ZoneId.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Record</maml:name>
+          <maml:description>
+            <maml:para>A concrete typed request object derived from CfDnsRecordInput. The concrete class determines the DNS record type and serializes only specified Optional properties.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Cloudflare.PowerShell.CfDnsRecordInput</command:parameterValue>
+          <dev:type>
+            <maml:name>Cloudflare.PowerShell.CfDnsRecordInput</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>IncludeShadowMetadata</maml:name>
+          <maml:description>
+            <maml:para>When explicitly supplied, requests shadow metadata in the API response. Omission leaves this optional query parameter unbound.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+          <dev:type>
+            <maml:name>Boolean</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>IncludeShadowMetadata</maml:name>
+        <maml:description>
+          <maml:para>When explicitly supplied, requests shadow metadata in the API response. Omission leaves this optional query parameter unbound.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+        <dev:type>
+          <maml:name>Boolean</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Record</maml:name>
+        <maml:description>
+          <maml:para>A concrete typed request object derived from CfDnsRecordInput. The concrete class determines the DNS record type and serializes only specified Optional properties.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Cloudflare.PowerShell.CfDnsRecordInput</command:parameterValue>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfDnsRecordInput</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
+        <maml:name>ZoneId</maml:name>
+        <maml:description>
+          <maml:para>Identifies the parent zone and is mandatory. It can bind by property name from CfZone.ZoneId.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfZone</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>A CfZone object can provide ZoneId by property name.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfDnsRecordInput</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>The Record parameter accepts a concrete typed request variant.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfARecordInput</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Typed A-record request input.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfMxRecordInput</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Typed MX-record request input.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfCaaRecordInput</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Typed CAA-record request input.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfHttpsRecordInput</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Typed HTTPS-record request input.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfSvcbRecordInput</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Typed SVCB-record request input.</maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfDnsRecord</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>The typed DNS record returned by the API after creation.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- Example 1 -------------------------- Construct a typed A record safely</maml:title>
+        <dev:code>$record = [Cloudflare.PowerShell.CfARecordInput]::new()
+$record.Name = [Cloudflare.PowerShell.Optional[string]]::From(&apos;www.example.test&apos;)
+$record.Ttl = [Cloudflare.PowerShell.Optional[int]]::From(300)
+$record.Content = [Cloudflare.PowerShell.Optional[string]]::From(&apos;192.0.2.10&apos;)
+New-CfDnsRecord -ZoneId &apos;zone-id&apos; -Record $record -WhatIf</dev:code>
+        <dev:remarks>
+          <maml:para>This is a mock-safe construction example. WhatIf prevents the mutation request.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 2 -------------------------- Create a typed record</maml:title>
+        <dev:code>New-CfDnsRecord -ZoneId &apos;zone-id&apos; -Record $record -Confirm:$false</dev:code>
+        <dev:remarks>
+          <maml:para>After constructing a concrete typed input, remove -WhatIf only when the target and request are intentionally reviewed.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Cloudflare API documentation</maml:linkText>
+        <maml:uri>https://developers.cloudflare.com/api/</maml:uri>
+      </maml:navigationLink>
+    </maml:relatedLinks>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
     <command:details>
@@ -49,8 +1586,127 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Removes one DNS record by zone and record identifier.</maml:para>
+      <maml:para>Removes one DNS record by its parent ZoneId and DnsRecordId. The operation has no success output and uses high-impact ShouldProcess confirmation; use -WhatIf before a real delete. RecordId is a compatibility alias for DnsRecordId.</maml:para>
+      <maml:para>Parameter set &apos;Delete&apos;: Deletes one record using both its parent ZoneId and DnsRecordId.</maml:para>
     </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Remove-CfDnsRecord</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="none">
+          <maml:name>ZoneId</maml:name>
+          <maml:description>
+            <maml:para>Identifies the parent zone and is mandatory. Supply it explicitly when piping a CfDnsRecord.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="1" aliases="RecordId">
+          <maml:name>DnsRecordId</maml:name>
+          <maml:description>
+            <maml:para>Identifies the DNS record to remove. RecordId is an alias. A CfDnsRecord object can provide this resource identity by property name, but it cannot provide the required parent ZoneId.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="RecordId">
+        <maml:name>DnsRecordId</maml:name>
+        <maml:description>
+          <maml:para>Identifies the DNS record to remove. RecordId is an alias. A CfDnsRecord object can provide this resource identity by property name, but it cannot provide the required parent ZoneId.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
+        <maml:name>ZoneId</maml:name>
+        <maml:description>
+          <maml:para>Identifies the parent zone and is mandatory. Supply it explicitly when piping a CfDnsRecord.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfZone</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>A CfZone object can provide ZoneId by property name.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfDnsRecord</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>A CfDnsRecord object can provide DnsRecordId by property name; ZoneId remains mandatory and must be explicit.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Explicit ZoneId and DnsRecordId values are also supported.</maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>No object is written when the delete succeeds or when -WhatIf prevents the request.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- Example 1 -------------------------- Review a delete with WhatIf</maml:title>
+        <dev:code>Remove-CfDnsRecord -ZoneId &apos;zone-id&apos; -DnsRecordId &apos;record-id&apos; -WhatIf</dev:code>
+        <dev:remarks>
+          <maml:para>Shows the high-impact action without sending a delete request.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 2 -------------------------- Pipe record identity with explicit scope</maml:title>
+        <dev:code>$record | Remove-CfDnsRecord -ZoneId &apos;zone-id&apos; -WhatIf</dev:code>
+        <dev:remarks>
+          <maml:para>The record supplies DnsRecordId through the PowerShell identity alias; ZoneId is intentionally explicit because record output does not contain parent scope.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Cloudflare API documentation</maml:linkText>
+        <maml:uri>https://developers.cloudflare.com/api/</maml:uri>
+      </maml:navigationLink>
+    </maml:relatedLinks>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
     <command:details>
@@ -62,7 +1718,238 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Replaces or edits one DNS record through the shared runtime.</maml:para>
+      <maml:para>Edits or replaces one DNS record by ZoneId and DnsRecordId. Use exactly one body parameter: -Edit sends a partial PATCH-style body, while -Replace sends a complete PUT-style body. The operation supports high-impact ShouldProcess and -WhatIf.</maml:para>
+      <maml:para>Parameter set &apos;Edit&apos;: The Edit set sends a partial Hashtable using PATCH semantics. Provide exactly one -Edit body.</maml:para>
+      <maml:para>Parameter set &apos;Replace&apos;: The default set sends one replacement Hashtable using PUT semantics. Provide exactly one -Replace body.</maml:para>
     </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Set-CfDnsRecord</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="none">
+          <maml:name>ZoneId</maml:name>
+          <maml:description>
+            <maml:para>Identifies the parent zone and is mandatory. Supply it explicitly when piping a CfDnsRecord.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="1" aliases="RecordId">
+          <maml:name>DnsRecordId</maml:name>
+          <maml:description>
+            <maml:para>Identifies the DNS record to update. RecordId is an alias. A CfDnsRecord object can provide this resource identity by property name, but it cannot provide the required parent ZoneId.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+          <maml:name>Edit</maml:name>
+          <maml:description>
+            <maml:para>A Hashtable containing only fields to change. This parameter selects the Edit set and is serialized as a PATCH-style request body.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">Hashtable</command:parameterValue>
+          <dev:type>
+            <maml:name>Hashtable</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>IncludeShadowMetadata</maml:name>
+          <maml:description>
+            <maml:para>When explicitly supplied, requests shadow metadata in the API response. Omission leaves this optional query parameter unbound.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+          <dev:type>
+            <maml:name>Boolean</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Set-CfDnsRecord</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="none">
+          <maml:name>ZoneId</maml:name>
+          <maml:description>
+            <maml:para>Identifies the parent zone and is mandatory. Supply it explicitly when piping a CfDnsRecord.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="1" aliases="RecordId">
+          <maml:name>DnsRecordId</maml:name>
+          <maml:description>
+            <maml:para>Identifies the DNS record to update. RecordId is an alias. A CfDnsRecord object can provide this resource identity by property name, but it cannot provide the required parent ZoneId.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+          <maml:name>Replace</maml:name>
+          <maml:description>
+            <maml:para>A Hashtable containing the replacement record representation. This parameter selects the default Replace set and is serialized as a PUT-style request body.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">Hashtable</command:parameterValue>
+          <dev:type>
+            <maml:name>Hashtable</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>IncludeShadowMetadata</maml:name>
+          <maml:description>
+            <maml:para>When explicitly supplied, requests shadow metadata in the API response. Omission leaves this optional query parameter unbound.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+          <dev:type>
+            <maml:name>Boolean</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="RecordId">
+        <maml:name>DnsRecordId</maml:name>
+        <maml:description>
+          <maml:para>Identifies the DNS record to update. RecordId is an alias. A CfDnsRecord object can provide this resource identity by property name, but it cannot provide the required parent ZoneId.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Edit</maml:name>
+        <maml:description>
+          <maml:para>A Hashtable containing only fields to change. This parameter selects the Edit set and is serialized as a PATCH-style request body.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">Hashtable</command:parameterValue>
+        <dev:type>
+          <maml:name>Hashtable</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>IncludeShadowMetadata</maml:name>
+        <maml:description>
+          <maml:para>When explicitly supplied, requests shadow metadata in the API response. Omission leaves this optional query parameter unbound.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+        <dev:type>
+          <maml:name>Boolean</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Replace</maml:name>
+        <maml:description>
+          <maml:para>A Hashtable containing the replacement record representation. This parameter selects the default Replace set and is serialized as a PUT-style request body.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">Hashtable</command:parameterValue>
+        <dev:type>
+          <maml:name>Hashtable</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
+        <maml:name>ZoneId</maml:name>
+        <maml:description>
+          <maml:para>Identifies the parent zone and is mandatory. Supply it explicitly when piping a CfDnsRecord.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfZone</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>A CfZone object can provide ZoneId by property name.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfDnsRecord</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>A CfDnsRecord object can provide DnsRecordId by property name; ZoneId remains mandatory and must be explicit.</maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>Hashtable</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>The Edit or Replace body is a Hashtable; exactly one body parameter is accepted per invocation.</maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>Cloudflare.PowerShell.CfDnsRecord</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>The typed DNS record returned by the API after the edit or replacement.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- Example 1 -------------------------- Edit selected fields</maml:title>
+        <dev:code>Set-CfDnsRecord -ZoneId &apos;zone-id&apos; -DnsRecordId &apos;record-id&apos; -Edit @{ Comment = &apos;reviewed&apos;; Ttl = 300 } -WhatIf</dev:code>
+        <dev:remarks>
+          <maml:para>Edit uses PATCH-style semantics and sends only the fields in the Hashtable. WhatIf keeps this example safe.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 2 -------------------------- Replace a record</maml:title>
+        <dev:code>Set-CfDnsRecord -ZoneId &apos;zone-id&apos; -DnsRecordId &apos;record-id&apos; -Replace @{ Type = &apos;A&apos;; Name = &apos;www.example.test&apos;; Content = &apos;192.0.2.10&apos;; Ttl = 300 } -WhatIf</dev:code>
+        <dev:remarks>
+          <maml:para>Replace uses PUT-style semantics. The Hashtable is a placeholder representation; review required fields for the target record before removing WhatIf.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Cloudflare API documentation</maml:linkText>
+        <maml:uri>https://developers.cloudflare.com/api/</maml:uri>
+      </maml:navigationLink>
+    </maml:relatedLinks>
   </command:command>
 </helpItems>

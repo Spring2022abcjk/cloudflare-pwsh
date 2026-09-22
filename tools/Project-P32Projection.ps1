@@ -93,11 +93,12 @@ function Get-HelpModel {
     param([Parameter(Mandatory)][string]$CmdletName, [Parameter(Mandatory)][object]$Override, [Parameter(Mandatory)][string]$OperationKind, [Parameter(Mandatory)][string]$OperationId)
     $explicit = Get-JsonValue $Override 'help'
     if ($null -ne $explicit) {
-        return [ordered]@{
-            synopsis = [string]$explicit.synopsis
-            description = [string]$explicit.description
-            source = 'Override'
+        $help = [ordered]@{}
+        foreach ($property in @($explicit.PSObject.Properties)) {
+            $help[$property.Name] = $property.Value
         }
+        $help.source = 'Override'
+        return $help
     }
     $help = [ordered]@{
         synopsis = "$CmdletName $($OperationKind.ToLowerInvariant()) operation."
@@ -742,6 +743,7 @@ function New-P32CanonicalArtifact {
         sourceFiles = $sourceFiles
         cmdlets = @($cmdlets)
         models = $models
+        pipelineIdentity = Get-P32PolicyValue $p32PolicyDocument 'pipelineIdentity'
         commonInfrastructureParameters = @('BaseUrl', 'Token', 'Handler')
     }
     $artifact.canonicalDigest = Get-P32CanonicalDigest $artifact

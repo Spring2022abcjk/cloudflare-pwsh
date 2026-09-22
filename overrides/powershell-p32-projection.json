@@ -1,6 +1,20 @@
 {
   "version": 1,
   "stage": "P3.2",
+  "pipelineIdentity": {
+    "aliases": [
+      {
+        "typeName": "Cloudflare.PowerShell.CfZone",
+        "aliasName": "ZoneId",
+        "sourceProperty": "Id"
+      },
+      {
+        "typeName": "Cloudflare.PowerShell.CfDnsRecord",
+        "aliasName": "DnsRecordId",
+        "sourceProperty": "Id"
+      }
+    ]
+  },
   "commands": [
     {
       "cmdletName": "Get-CfZone",
@@ -23,8 +37,47 @@
       },
       "help": {
         "synopsis": "Gets Cloudflare zones.",
-        "description": "Gets zones visible to the authenticated account and writes one typed zone per pipeline object.",
-        "source": "P3.2ProjectionPolicy"
+        "description": "Lists zones visible to the authenticated account or gets one zone by ZoneId. The list parameters are sent as optional API filters; the projection's generated values and the API's own defaults are not interchangeable. Output objects are typed Cloudflare.PowerShell.CfZone values and expose ZoneId as a PowerShell identity alias for Id.",
+        "parameterDescriptions": {
+          "AccountId": "Filters the zone list by account identifier.",
+          "AccountName": "Filters the zone list by account name.",
+          "Direction": "Controls the API list sort direction when supported. The value is passed to the API; no constrained value set is asserted here.",
+          "Match": "Controls how multiple zone-list filters are matched. The current projection initializer is all; this is not asserted as the Cloudflare API default.",
+          "Name": "Filters the zone list by zone name.",
+          "Order": "Selects the API zone-list sort field when supported. The value is passed to the API.",
+          "Page": "Sets the initial zone-list page. The shared paginator may request subsequent pages; this projection value is not a claim about an API-side default.",
+          "PerPage": "Requests the number of zones per page. The API may apply its own limit.",
+          "Status": "Filters the zone list by zone status.",
+          "Type": "Filters the zone list by one or more zone types.",
+          "ZoneId": "Identifies one zone for the Get parameter set. It can bind by property name from CfZone.ZoneId, including the ETS alias projected from CfZone.Id."
+        },
+        "parameterSetDescriptions": {
+          "List": "Lists zones and writes one CfZone object per result. No ZoneId is required.",
+          "Get": "Gets one zone by its ZoneId and writes one CfZone object."
+        },
+        "inputs": [
+          { "type": "None", "description": "The list form does not require pipeline input." },
+          { "type": "Cloudflare.PowerShell.CfZone", "description": "A zone object can provide ZoneId by property name when the Get form is selected." }
+        ],
+        "outputs": [
+          { "type": "Cloudflare.PowerShell.CfZone", "description": "One typed zone object per returned zone." }
+        ],
+        "examples": [
+          {
+            "title": "List zones",
+            "code": "Get-CfZone -Name 'example.test'",
+            "remarks": "Lists zones matching a placeholder name. Supply the normal module authentication configuration in the calling session."
+          },
+          {
+            "title": "Get one zone",
+            "code": "Get-CfZone -ZoneId 'zone-id'",
+            "remarks": "Gets one zone by its placeholder identifier."
+          }
+        ],
+        "relatedLinks": [
+          { "text": "Cloudflare API documentation", "uri": "https://developers.cloudflare.com/api/" }
+        ],
+        "source": "P4.1HelpPolicy"
       },
       "model": {
         "className": "CfZone",
@@ -58,8 +111,85 @@
       },
       "help": {
         "synopsis": "Gets Cloudflare DNS records.",
-        "description": "Gets one or more typed DNS records through the shared runtime.",
-        "source": "P3.2ProjectionPolicy"
+        "description": "Lists DNS records in a zone or gets one DNS record by zone and record identifier. Filter parameters are optional API query inputs. Output objects are typed Cloudflare.PowerShell.CfDnsRecord values and expose DnsRecordId as a PowerShell identity alias for Id; a record does not carry its parent ZoneId.",
+        "parameterDescriptions": {
+          "Comment": "Matches the record comment.",
+          "CommentAbsent": "Filters for records without the specified comment value.",
+          "CommentContains": "Filters for records whose comment contains the supplied text.",
+          "CommentEndswith": "Filters for records whose comment ends with the supplied text.",
+          "CommentExact": "Filters for records whose comment exactly matches the supplied text.",
+          "CommentPresent": "Filters for records that have a comment.",
+          "CommentStartswith": "Filters for records whose comment starts with the supplied text.",
+          "Content": "Matches the record content.",
+          "ContentContains": "Filters for records whose content contains the supplied text.",
+          "ContentEndswith": "Filters for records whose content ends with the supplied text.",
+          "ContentExact": "Filters for records whose content exactly matches the supplied text.",
+          "ContentStartswith": "Filters for records whose content starts with the supplied text.",
+          "Direction": "Controls API list sort direction. The current projection initializer is asc; this is not asserted as the Cloudflare API default.",
+          "DnsRecordId": "Identifies one DNS record in the Get parameter set. RecordId is a compatibility alias. A CfDnsRecord object can provide this identity by property name through its ETS DnsRecordId alias, but it cannot provide the parent ZoneId.",
+          "IncludeShadowMetadata": "When explicitly supplied, requests shadow metadata in the API response. Omission leaves this optional query parameter unbound.",
+          "Match": "Controls how multiple record filters are matched. The current projection initializer is all; this is not asserted as the Cloudflare API default.",
+          "Name": "Matches the DNS record name.",
+          "NameContains": "Filters for records whose name contains the supplied text.",
+          "NameEndswith": "Filters for records whose name ends with the supplied text.",
+          "NameExact": "Filters for records whose name exactly matches the supplied text.",
+          "NameStartswith": "Filters for records whose name starts with the supplied text.",
+          "Order": "Selects the API list sort field. The current projection initializer is type; this is not asserted as the Cloudflare API default.",
+          "Page": "Sets the initial record-list page. The shared paginator requests subsequent pages until an empty page; this projection value is not a claim about an API-side default.",
+          "PerPage": "Requests the number of records per page. The API may apply its own limit.",
+          "Proxied": "Filters records by proxied state. The current projection initializer is false; omission is preferred when no proxied filter is intended.",
+          "Search": "Applies the API's broad record search text.",
+          "ShadowedByName": "Filters by the name of a record that shadows this record.",
+          "ShadowingName": "Filters by the name of a record shadowed by this record.",
+          "Tag": "Filters by one or more record tags.",
+          "TagAbsent": "Filters for records without the specified tag.",
+          "TagContains": "Filters for records whose tags contain the supplied text.",
+          "TagEndswith": "Filters for records whose tag value ends with the supplied text.",
+          "TagExact": "Filters for records with an exact tag match.",
+          "TagMatch": "Controls how tag filters are matched. The current projection initializer is all; this is not asserted as the Cloudflare API default.",
+          "TagPresent": "Filters for records that have the specified tag.",
+          "TagStartswith": "Filters for records whose tag value starts with the supplied text.",
+          "Type": "Filters the record list by DNS record type.",
+          "ZoneId": "Identifies the parent zone and is mandatory for both list and get. It can bind by property name from CfZone.ZoneId, including the ETS alias projected from CfZone.Id."
+        },
+        "parameterSetDescriptions": {
+          "List": "Lists records in the required ZoneId. The shared paginator follows the API page results until an empty page.",
+          "Get": "Gets one record using both the required ZoneId and DnsRecordId. Supplying only a record object is insufficient because its parent zone is not inferable."
+        },
+        "inputs": [
+          { "type": "Cloudflare.PowerShell.CfZone", "description": "A CfZone object can provide ZoneId by property name for list or get." },
+          { "type": "Cloudflare.PowerShell.CfDnsRecord", "description": "A CfDnsRecord object can provide DnsRecordId by property name for Get, but -ZoneId must still be supplied explicitly." },
+          { "type": "None", "description": "Explicit ZoneId and, for Get, DnsRecordId values are also supported." }
+        ],
+        "outputs": [
+          { "type": "Cloudflare.PowerShell.CfDnsRecord", "description": "One typed DNS record object per result, or one object for the Get form." }
+        ],
+        "examples": [
+          {
+            "title": "List records in a zone",
+            "code": "Get-CfDnsRecord -ZoneId 'zone-id'",
+            "remarks": "Lists records using a placeholder zone identifier and the shared paginator."
+          },
+          {
+            "title": "Get one record",
+            "code": "Get-CfDnsRecord -ZoneId 'zone-id' -DnsRecordId 'record-id'",
+            "remarks": "Gets one record. RecordId is also accepted as an alias for DnsRecordId."
+          },
+          {
+            "title": "Filter records",
+            "code": "Get-CfDnsRecord -ZoneId 'zone-id' -Type 'A' -NameExact 'www.example.test'",
+            "remarks": "Combines a type and exact-name filter. The values are placeholders and do not identify a real account."
+          },
+          {
+            "title": "Pipe a zone identity",
+            "code": "$zone = [Cloudflare.PowerShell.CfZone]::new()\n$zone.Id = 'zone-id'\n$zone | Get-CfDnsRecord",
+            "remarks": "The PowerShell projection exposes ZoneId as an ETS alias of CfZone.Id. A DNS-record object does not supply its parent scope; use -ZoneId explicitly when piping a record."
+          }
+        ],
+        "relatedLinks": [
+          { "text": "Cloudflare API documentation", "uri": "https://developers.cloudflare.com/api/" }
+        ],
+        "source": "P4.1HelpPolicy"
       }
     },
     {
@@ -82,8 +212,43 @@
       },
       "help": {
         "synopsis": "Creates a Cloudflare DNS record.",
-        "description": "Creates a typed DNS record using the generated request model.",
-        "source": "P3.2ProjectionPolicy"
+        "description": "Creates a DNS record from a typed CfDnsRecordInput variant. Use CfARecordInput, CfMxRecordInput, CfCaaRecordInput, CfHttpsRecordInput, or CfSvcbRecordInput to construct the Record body. The operation supports ShouldProcess; use -WhatIf to inspect the action without sending a request.",
+        "parameterDescriptions": {
+          "IncludeShadowMetadata": "When explicitly supplied, requests shadow metadata in the API response. Omission leaves this optional query parameter unbound.",
+          "Record": "A concrete typed request object derived from CfDnsRecordInput. The concrete class determines the DNS record type and serializes only specified Optional properties.",
+          "ZoneId": "Identifies the parent zone and is mandatory. It can bind by property name from CfZone.ZoneId."
+        },
+        "parameterSetDescriptions": {
+          "Create": "Creates one record with the mandatory ZoneId and typed Record body."
+        },
+        "inputs": [
+          { "type": "Cloudflare.PowerShell.CfZone", "description": "A CfZone object can provide ZoneId by property name." },
+          { "type": "Cloudflare.PowerShell.CfDnsRecordInput", "description": "The Record parameter accepts a concrete typed request variant." },
+          { "type": "Cloudflare.PowerShell.CfARecordInput", "description": "Typed A-record request input." },
+          { "type": "Cloudflare.PowerShell.CfMxRecordInput", "description": "Typed MX-record request input." },
+          { "type": "Cloudflare.PowerShell.CfCaaRecordInput", "description": "Typed CAA-record request input." },
+          { "type": "Cloudflare.PowerShell.CfHttpsRecordInput", "description": "Typed HTTPS-record request input." },
+          { "type": "Cloudflare.PowerShell.CfSvcbRecordInput", "description": "Typed SVCB-record request input." }
+        ],
+        "outputs": [
+          { "type": "Cloudflare.PowerShell.CfDnsRecord", "description": "The typed DNS record returned by the API after creation." }
+        ],
+        "examples": [
+          {
+            "title": "Construct a typed A record safely",
+            "code": "$record = [Cloudflare.PowerShell.CfARecordInput]::new()\n$record.Name = [Cloudflare.PowerShell.Optional[string]]::From('www.example.test')\n$record.Ttl = [Cloudflare.PowerShell.Optional[int]]::From(300)\n$record.Content = [Cloudflare.PowerShell.Optional[string]]::From('192.0.2.10')\nNew-CfDnsRecord -ZoneId 'zone-id' -Record $record -WhatIf",
+            "remarks": "This is a mock-safe construction example. WhatIf prevents the mutation request."
+          },
+          {
+            "title": "Create a typed record",
+            "code": "New-CfDnsRecord -ZoneId 'zone-id' -Record $record -Confirm:$false",
+            "remarks": "After constructing a concrete typed input, remove -WhatIf only when the target and request are intentionally reviewed."
+          }
+        ],
+        "relatedLinks": [
+          { "text": "Cloudflare API documentation", "uri": "https://developers.cloudflare.com/api/" }
+        ],
+        "source": "P4.1HelpPolicy"
       }
     },
     {
@@ -100,8 +265,38 @@
       },
       "help": {
         "synopsis": "Removes a Cloudflare DNS record.",
-        "description": "Removes one DNS record by zone and record identifier.",
-        "source": "P3.2ProjectionPolicy"
+        "description": "Removes one DNS record by its parent ZoneId and DnsRecordId. The operation has no success output and uses high-impact ShouldProcess confirmation; use -WhatIf before a real delete. RecordId is a compatibility alias for DnsRecordId.",
+        "parameterDescriptions": {
+          "DnsRecordId": "Identifies the DNS record to remove. RecordId is an alias. A CfDnsRecord object can provide this resource identity by property name, but it cannot provide the required parent ZoneId.",
+          "ZoneId": "Identifies the parent zone and is mandatory. Supply it explicitly when piping a CfDnsRecord."
+        },
+        "parameterSetDescriptions": {
+          "Delete": "Deletes one record using both its parent ZoneId and DnsRecordId."
+        },
+        "inputs": [
+          { "type": "Cloudflare.PowerShell.CfZone", "description": "A CfZone object can provide ZoneId by property name." },
+          { "type": "Cloudflare.PowerShell.CfDnsRecord", "description": "A CfDnsRecord object can provide DnsRecordId by property name; ZoneId remains mandatory and must be explicit." },
+          { "type": "None", "description": "Explicit ZoneId and DnsRecordId values are also supported." }
+        ],
+        "outputs": [
+          { "type": "None", "description": "No object is written when the delete succeeds or when -WhatIf prevents the request." }
+        ],
+        "examples": [
+          {
+            "title": "Review a delete with WhatIf",
+            "code": "Remove-CfDnsRecord -ZoneId 'zone-id' -DnsRecordId 'record-id' -WhatIf",
+            "remarks": "Shows the high-impact action without sending a delete request."
+          },
+          {
+            "title": "Pipe record identity with explicit scope",
+            "code": "$record | Remove-CfDnsRecord -ZoneId 'zone-id' -WhatIf",
+            "remarks": "The record supplies DnsRecordId through the PowerShell identity alias; ZoneId is intentionally explicit because record output does not contain parent scope."
+          }
+        ],
+        "relatedLinks": [
+          { "text": "Cloudflare API documentation", "uri": "https://developers.cloudflare.com/api/" }
+        ],
+        "source": "P4.1HelpPolicy"
       }
     },
     {
@@ -132,8 +327,42 @@
       },
       "help": {
         "synopsis": "Updates a Cloudflare DNS record.",
-        "description": "Replaces or edits one DNS record through the shared runtime.",
-        "source": "P3.2ProjectionPolicy"
+        "description": "Edits or replaces one DNS record by ZoneId and DnsRecordId. Use exactly one body parameter: -Edit sends a partial PATCH-style body, while -Replace sends a complete PUT-style body. The operation supports high-impact ShouldProcess and -WhatIf.",
+        "parameterDescriptions": {
+          "DnsRecordId": "Identifies the DNS record to update. RecordId is an alias. A CfDnsRecord object can provide this resource identity by property name, but it cannot provide the required parent ZoneId.",
+          "Edit": "A Hashtable containing only fields to change. This parameter selects the Edit set and is serialized as a PATCH-style request body.",
+          "IncludeShadowMetadata": "When explicitly supplied, requests shadow metadata in the API response. Omission leaves this optional query parameter unbound.",
+          "Replace": "A Hashtable containing the replacement record representation. This parameter selects the default Replace set and is serialized as a PUT-style request body.",
+          "ZoneId": "Identifies the parent zone and is mandatory. Supply it explicitly when piping a CfDnsRecord."
+        },
+        "parameterSetDescriptions": {
+          "Replace": "The default set sends one replacement Hashtable using PUT semantics. Provide exactly one -Replace body.",
+          "Edit": "The Edit set sends a partial Hashtable using PATCH semantics. Provide exactly one -Edit body."
+        },
+        "inputs": [
+          { "type": "Cloudflare.PowerShell.CfZone", "description": "A CfZone object can provide ZoneId by property name." },
+          { "type": "Cloudflare.PowerShell.CfDnsRecord", "description": "A CfDnsRecord object can provide DnsRecordId by property name; ZoneId remains mandatory and must be explicit." },
+          { "type": "Hashtable", "description": "The Edit or Replace body is a Hashtable; exactly one body parameter is accepted per invocation." }
+        ],
+        "outputs": [
+          { "type": "Cloudflare.PowerShell.CfDnsRecord", "description": "The typed DNS record returned by the API after the edit or replacement." }
+        ],
+        "examples": [
+          {
+            "title": "Edit selected fields",
+            "code": "Set-CfDnsRecord -ZoneId 'zone-id' -DnsRecordId 'record-id' -Edit @{ Comment = 'reviewed'; Ttl = 300 } -WhatIf",
+            "remarks": "Edit uses PATCH-style semantics and sends only the fields in the Hashtable. WhatIf keeps this example safe."
+          },
+          {
+            "title": "Replace a record",
+            "code": "Set-CfDnsRecord -ZoneId 'zone-id' -DnsRecordId 'record-id' -Replace @{ Type = 'A'; Name = 'www.example.test'; Content = '192.0.2.10'; Ttl = 300 } -WhatIf",
+            "remarks": "Replace uses PUT-style semantics. The Hashtable is a placeholder representation; review required fields for the target record before removing WhatIf."
+          }
+        ],
+        "relatedLinks": [
+          { "text": "Cloudflare API documentation", "uri": "https://developers.cloudflare.com/api/" }
+        ],
+        "source": "P4.1HelpPolicy"
       }
     }
   ]

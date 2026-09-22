@@ -31,6 +31,11 @@ P2.4 compatibility work is under `src/Cloudflare.Normalization/Compatibility` an
 - [P3.3 public admission policy](./docs/P3.3-public-admission-policy.md): explicit gates separating technical readiness from public cmdlet admission.
 - [P3.4 CI/package plan](./docs/P3.4-ci-packaging-plan.md): Windows-first validation, candidate packaging, and schema-update gates.
 - [P3.4 integration summary](./docs/P3.4-integration-summary.md): merged P3.3/P3.4 evidence, package provenance, and release boundaries.
+- [P4.2 plan](./docs/P4.2-plan.md): release and security hardening scope.
+- [P4.2 security review](./docs/P4.2-security-review.md): workflow, secret, and supply-chain findings.
+- [P4.2 release policy](./docs/P4.2-release-policy.md): version/tag/release-note/Gallery/signing policy.
+- [P4.2 checklist](./docs/P4.2-release-checklist.md): final RC evidence checklist.
+- [Support matrix](./docs/support-matrix.md): declared Windows-first support boundary.
 - [Development principles](./docs/development-principles.md): durable rules for model, generator, runtime, and evidence work.
 
 The current authoritative PowerShell surface is handwritten. Generated metadata must remain transport-neutral, and unresolved behavior—such as HTTP `2xx` with `success=false`—is not silently defined by the runtime.

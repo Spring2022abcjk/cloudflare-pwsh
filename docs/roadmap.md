@@ -174,7 +174,9 @@ local builds, generated metadata, and mock tests do not replace it.
 
 ### P4.2 — Release & Security Hardening
 
-Establish the release evidence and controls needed before final acceptance:
+In progress on `feature/p42-release-security`; see the [P4.2 plan](./P4.2-plan.md),
+[security review](./P4.2-security-review.md), [release policy](./P4.2-release-policy.md),
+and [progress](./P4.2-progress.md). Establish the release evidence and controls needed before final acceptance:
 remote GitHub Actions execution evidence, security and supply-chain review,
 secret handling, release policy, version/tag/release notes, and a PowerShell
 Gallery publish dry-run. This phase may start while P3.5 and P4.1 are in

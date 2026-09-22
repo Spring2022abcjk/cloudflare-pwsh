@@ -6,6 +6,7 @@
     <Version>$(VersionPrefix)</Version>
     <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
     <FileVersion>$(VersionPrefix).0</FileVersion>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <!-- Package validation supplies the current Git revision. A build that
          omits it remains visibly unproven and cannot be used with -SkipBuild. -->
     <P34SourceRevision Condition="'$(P34SourceRevision)' == ''">unproven</P34SourceRevision>

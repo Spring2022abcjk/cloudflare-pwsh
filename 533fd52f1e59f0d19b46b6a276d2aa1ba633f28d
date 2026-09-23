@@ -1,0 +1,155 @@
+# ABC final integration receipt
+
+Completed: 2026-09-23 (Asia/Taipei).
+Repository: Spring2022abcjk/cloudflare-pwsh.
+Final integration HEAD: 533fd52f1e59f0d19b46b6a276d2aa1ba633f28d.
+Remote main: same HEAD; normal fast-forward push completed.
+
+## Source and merge history
+
+| Item | SHA |
+| --- | --- |
+| Main base | 97f09dc3038fad95d32bca84dd5fbd0e28611cad |
+| A approved HEAD | e562b595ae17d82da58628ccd95b18b1ae2e1a82 |
+| A merge | c2625fe2bedcda16c2c02dd4a9e1ace96cda4907 |
+| B approved HEAD | 2f3f167f13f8d748657ad1e4c8b7836b36a11728 |
+| B rebased HEAD | 73ca5253772c927f0c799036fa9c0ee72747420c |
+| B merge | 2b7d6d42872629f427ab8705e4f6be02cc32c852 |
+| C approved HEAD | 8599509863587bba0e084804da1411c67dd9a982 |
+| C rebased HEAD | 1037a9fa98af6e00fa5883919879405137003e03 |
+| C merge | 00f63413afa196be93172be950e7d14c08eaafc6 |
+| Final documentation/validation HEAD | 533fd52f1e59f0d19b46b6a276d2aa1ba633f28d |
+
+This receipt is attached as a Git note to the exact source commit. It completes
+and supersedes the pending final-gate fields in docs/P4.2-abc-integration-summary.md.
+No source commit was made after building the final candidates. Git notes do not
+change the package source revision. Retrieve with:
+
+    git fetch origin refs/notes/abc-integration:refs/notes/abc-integration
+    git notes --ref=abc-integration show 533fd52f1e59f0d19b46b6a276d2aa1ba633f28d
+
+## Acceptance
+
+| Gate | Result |
+| --- | --- |
+| A/B/C technical merge | Complete |
+| P3.5a | Complete; sanitized historical live evidence preserved |
+| P4.1 | Complete; mock/candidate UX regression passed |
+| P4.2 technical integration/hardening | Complete |
+| Public cmdlets | Exactly 5 |
+| Derived Artifact Closure | PASS |
+| Local full regression | PASS |
+| Clean checkout | PASS |
+| Remote CI | Verified, 8/8 jobs success |
+| P4.2 overall | Partial |
+| Gallery preflight | NotReady; only LicenseUri-or-license.txt missing |
+| Ready for P4.3 | No |
+
+Formal exports: Get-CfZone, Get-CfDnsRecord, New-CfDnsRecord,
+Remove-CfDnsRecord, Set-CfDnsRecord. D1/D2 are test-only and not exported.
+CfZone.ZoneId and CfDnsRecord.DnsRecordId remain aliases of Id. CfDnsRecord
+has no ZoneId; both mutation cmdlets fail before dispatch without explicit
+ZoneId. JSON/CLIXML aliases, staged help/syntax, examples, and mock workflows
+passed. Formatter/completer work remains outside scope.
+
+## Exact-HEAD validation
+
+Local: pinned schema verification; locked restore; Release build;
+P1/P2.1/P2.2/P2.3/P2.4 regression; P3.1 runtime (18 tests);
+P3.2 canonical/runtime/help regression; P3.3 admission, coverage, D1/D2;
+P3.4 deterministic generation and freshness, formal compatibility/coverage,
+isolated schema-update, CI gate negative tests, package smoke and package
+repeat byte equality; P4.1 candidate walkthrough and supplemental JSON/CLIXML
+and missing-scope checks; P4.2 security, release metadata, and provenance.
+All passed. git diff --check and persistent worktree status checks passed.
+
+Clean checkout: a new local Git clone at the exact final HEAD, with no copied
+bin/obj, developer generated output, or other candidate. The schema was
+cloned from the local pinned Git checkout and verified by official bootstrap;
+the remote run independently fetched the pinned upstream schema. Canonical
+P3.2/D1/D2 regeneration produced zero tracked differences. Locked restore,
+build, compatibility, repeated coverage, isolated schema-update, fresh package
+repeat equality, smoke, readiness, and P4.2 checks passed. Checkout stayed clean.
+
+Pinned schema revision: 28bfb054e5fa106464e9fbbf0ffbf362bc85234d.
+Schema version: 4.0.0.
+Schema SHA-256: f71c82b532b284e41a0e9de41ac1ee398e1b7b658f521e7f8ee478ce922fbf45.
+Local and remote schema SHA-256 match; bootstrap retains core.autocrlf=false
+and core.eol=lf. C conflicts were resolved by canonical D1/D2 regeneration:
+only manifest input hashes and canonical digests changed relative to B.
+No runtime, normalizer, API correction, or public semantics regression was found.
+
+Formal compatibility and coverage report SHA-256 match between main,
+clean checkout, and remote. Candidate manifests, report hashes, receipts,
+module files, assembly informational version, exact ZIP entries and ZIP
+hashes were verified. All candidate source revisions equal the final HEAD;
+assembly informational version is 0.1.0+source.533fd52f1e59f0d19b46b6a276d2aa1ba633f28d.
+
+## Remote CI and hashes
+
+Workflow: P3.4 CI validation and package candidate.
+Run ID: 35753316072.
+Run URL: https://github.com/Spring2022abcjk/cloudflare-pwsh/actions/runs/35753316072
+Commit: 533fd52f1e59f0d19b46b6a276d2aa1ba633f28d.
+All 8 jobs succeeded: Build; Deterministic generation; Unit and runtime smoke;
+P1-P2.4 regression; Compatibility gate; Coverage gate; Release and security
+preflight; Package candidate and smoke.
+Downloaded remote candidate also passed local provenance, release metadata,
+isolated package smoke and Gallery preflight. Old C runs are not ABC evidence.
+
+Remote candidate package ZIP SHA-256: d744c33a225cf036ea79bafcdb5aa8a22a70ee1179af20a908c09a8eab7308e0.
+Coverage report JSON SHA-256: 43a400e9f0d28d0ea998946f4a6611e42f863e4e79e1ad38bc7b83b4ea859878.
+Compatibility report JSON SHA-256: 9f559d80f697715e10f4dc7872e09a649fe1a88012710b587eb93594eb0ae685.
+
+GitHub artifact archive digests (distinct from the contained ZIP/JSON hashes):
+
+- cloudflare-powershell-p34-candidate: `sha256:4ab4265eaff2eef11fef5d554569de2ea85c6b3fd84353b0929f24ae17d25361` (artifact ID 10707735976)
+- p34-compatibility-reports: `sha256:836f334e136e17f35862416b96e0f316d504fe9f84e2105004cdf64a3ffaed49` (artifact ID 10707755244)
+- p34-coverage-reports: `sha256:bc55638bc8dc2e7b5804cba466df329d8b942cfd72ac632322c745ec3d82a18d` (artifact ID 10706793224)
+
+Local main candidate ZIP SHA-256:
+5ef9beee3445e635a497008c77cde9bc637c4768b90d1a7176ac6df293196f67.
+Clean-checkout candidate ZIP SHA-256:
+03c8f505bd0870e2f38506abe7d91e5e59c2abc1620cf51307f7d2925065a702.
+Each local environment passed package-twice byte equality. Cross-checkout or
+cross-runner binary byte equality is not claimed: DLL CodeView entries retain
+absolute PDB paths. Help/PSD1/PSM1 and formal reports matched across environments;
+each distinct candidate passed provenance at the same source HEAD.
+
+## Output hygiene and evidence
+
+All A/B untracked paths were enumerated and classified before any merge.
+A's 4 roots and B's 8 roots were all reproducible validation output (Class A).
+No B/C-class files were found. Exact paths were previewed, containment checked,
+and cleaned without -x, reset, stash, or auto-committing outputs. C was not
+changed during cleanup. Detailed paths and generator attribution are in the
+tracked integration summary. Validation outputs remain outside worktrees.
+
+Validation output hygiene:
+candidate/schema-update/reproduction tooling can leave disposable untracked artifacts in persistent worktrees. Future maintenance should prefer disposable temp output roots or explicit cleanup so successful validation does not dirty integration worktrees.
+
+Durable local evidence: E:/桌面/edit/cloudflare-pwsh-abc-evidence-533fd52/.
+It contains Final/, CleanResults/, Remote/, deterministic logs, p42-final.log
+for both local environments, remote-candidate-validation.log, remote-run.json,
+remote-artifacts.json, remote-ci.log, and this receipt. Expected negative-policy
+exceptions end in an explicit CI-gate PASS. The separate P4.2 transcript also
+retains an initial incorrect tools/ script-path invocation, immediately followed
+by the correct tests/P42Security.Tests.ps1 and checked successful validators;
+this was an invocation typo, not a failed security gate.
+GitHub's only observed advisory annotations concern pinned Actions' Node.js 20
+deprecation; all jobs passed. Earlier connection timeouts were resolved before
+push and do not remain an execution blocker.
+
+## Remaining boundary
+
+The sole remaining release-metadata blocker is:
+Custom project license not finalized.
+
+LICENSE remains absent/unfinished, LicenseUri unset, Gallery NotReady;
+publishAttempted=false and apiKeyAccessed=false. No package publication,
+GitHub Release, tag, live Cloudflare request/mutation, or P4.3 work occurred.
+Authenticode remains explicitly deferred under the existing policy.
+
+P3.5b constrained CRUD remains Not ready; P3.5c full transport/rate-limit
+validation remains Partially ready. DNS export media-type classification
+remains E. still insufficient evidence. No new live resource detail was recorded.

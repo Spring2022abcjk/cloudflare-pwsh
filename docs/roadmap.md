@@ -231,6 +231,17 @@ release candidate's public surface by implication.
 
 ## Deferred items
 
+### Reference checkout/cache maintenance
+
+Status: deferred. The ignored `ref/` research and pinned-schema checkouts are
+currently kept per worktree to preserve existing relative paths and evidence
+boundaries. A future maintenance task may move Git objects into an external
+shared cache while retaining independent `ref/...` checkouts per worktree.
+The migration must preserve the pinned schema revision and SHA-256, isolated
+schema-update validation, report `sourcePath` identity, candidate provenance,
+and the historical ABC evidence directory. It must not introduce one shared
+writable reference directory. See [reference checkout/cache maintenance](./ref-checkout-cache-maintenance.md).
+
 The following remain open until their dedicated evidence closes them:
 real-account acceptance, device/manual UX, remote GitHub Actions execution,
 Gallery publishing, legacy authentication, automatic idempotency, complete

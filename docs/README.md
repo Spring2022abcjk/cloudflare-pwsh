@@ -12,6 +12,7 @@
 - [P1.2 总结](./P1.2-summary.md)：OpenAPI loader/ref resolver/normalizer、correction 和 DNS semantic diff。
 - [架构](./architecture.md)：长期 pipeline、层边界、已确认架构事实和 deferred boundary。
 - [路线图](./roadmap.md)：P1 完成项与 P2.1–P4 路线。
+- [Reference checkout/cache maintenance](./ref-checkout-cache-maintenance.md)：后续集中缓存、独立 checkout 和清理验收方案；当前不实施。
 - [开发原则](./development-principles.md)：后续 agent 必须遵守的长期规则。
 - [P2.1 总结](./P2.1-summary.md)：Zones、D1、AI Search 跨资源归一化、投影快照和回归结果。
 - [P2.2 总结](./P2.2-summary.md)：multipart、text、binary transport 的归一化结论和 runtime 边界。

@@ -29,11 +29,15 @@
 - `tools/Invoke-P33D2ReadOnlyTests.ps1`：在隔离临时副本中执行 P3.3 D1/D2 只读验收。
 - [P3.4 CI/package 计划](./P3.4-ci-packaging-plan.md)：Windows-first CI、候选包和 schema-update gate。
 - [P3.4 CI/package 总结](./P3.4-ci-packaging-summary.md)：合并后的 CI、provenance 和发布边界。
-- [P4.2 计划](./P4.2-plan.md)：发布与安全 hardening 的范围和退出规则。
+- [P3.5a 只读 live validation](./P3.5a-live-validation.md)：12 次低频 GET、0 次变更的限定范围真实账户证据。
+- [P3.5b constrained CRUD 任务文档](./P3.5b-constrained-crud-validation.md)：等待具体授权，尚未执行真实变更。
+- [P4.1 progress](./P4.1-progress.md)：五个正式 cmdlet 的 pipeline identity、help 和 candidate 状态。
+- [P4.1 manual acceptance](./P4.1-manual-acceptance.md)：P4.1 最终 acceptance 证据。
+- [P4.2 ABC integration summary](./P4.2-abc-integration-summary.md)：技术集成和 exact-HEAD 证据边界。
 - [P4.2 安全审查](./P4.2-security-review.md)：Actions、secret、supply-chain 和 artifact boundary 评审。
 - [P4.2 release policy](./P4.2-release-policy.md)：版本、tag、release notes、Gallery 和 signing policy。
 - [P4.2 release checklist](./P4.2-release-checklist.md)：最终 RC 所需的跨阶段证据清单。
-- [P4.2 progress](./P4.2-progress.md)：当前 branch 的实现与未验证边界。
+- [归档文档](./archive/2026-09-23/README.md)：已被当前证据取代的 Phase 0、旧计划和旧状态文档；不代表当前完成状态。
 - [Support matrix](./support-matrix.md)：当前 Windows-first / PowerShell 7.6+ / .NET 10 支持声明。
 - [ADR 0001](./adr/0001-net10-powershell76-baseline.md)：PowerShell 7.6/.NET 10 统一基线决策。
 

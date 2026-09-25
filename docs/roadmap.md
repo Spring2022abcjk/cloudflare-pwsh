@@ -115,6 +115,10 @@ through a manual workflow-dispatch entry in an isolated temporary checkout.
 PowerShell Gallery publication, real-account validation, and broader public
 admission remain later decisions.
 
+The follow-up CI trigger design for documentation-only changes is recorded in
+[CI Trigger Policy](./ci-trigger-policy.md). It is not yet implemented, so
+the current workflow still runs the complete graph for documentation commits.
+
 #### P3.4 integration closure
 
 Status: complete for the local/static release-engineering foundation. The P3.3

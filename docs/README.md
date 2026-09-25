@@ -31,7 +31,7 @@
 - [P3.4 CI/package 计划](./P3.4-ci-packaging-plan.md)：Windows-first CI、候选包和 schema-update gate。
 - [P3.4 CI/package 总结](./P3.4-ci-packaging-summary.md)：合并后的 CI、provenance 和发布边界。
 - [P3.5a 只读 live validation](./P3.5a-live-validation.md)：12 次低频 GET、0 次变更的限定范围真实账户证据。
-- [P3.5b constrained CRUD 任务文档](./P3.5b-constrained-crud-validation.md)：限定范围真实 CRUD 与精确清理已通过，失败路径本地证据待补。
+- [P3.5b constrained CRUD 任务文档](./P3.5b-constrained-crud-validation.md)：批准范围内的单记录真实 CRUD、精确清理及独立的本地故障路径验证已完成。
 - [P4.1 progress](./P4.1-progress.md)：五个正式 cmdlet 的 pipeline identity、help 和 candidate 状态。
 - [P4.1 manual acceptance](./P4.1-manual-acceptance.md)：P4.1 最终 acceptance 证据。
 - [P4.2 ABC integration summary](./P4.2-abc-integration-summary.md)：技术集成和 exact-HEAD 证据边界。

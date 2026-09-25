@@ -152,11 +152,11 @@ for fixtures or mock contracts.
 
 #### P3.5b — Constrained CRUD validation
 
-Status: **Live CRUD sequence passed; overall acceptance Partial**. See the
+Status: **Complete for the explicitly approved single-record scope**. See the
 [P3.5b constrained CRUD validation task document](./P3.5b-constrained-crud-validation.md).
 One explicitly approved record was created, read, edited, read, and deleted
-on 2026-09-25; the final exact scan found zero residue. Failure-path cleanup
-still needs controlled local/mock evidence before P3.5b can be marked Complete.
+on 2026-09-25; the final exact scan found zero residue. Separate local/mock
+fault injection covered the protocol's failure and `finally` cleanup paths.
 
 #### P3.5c — Transport / rate-limit / error validation
 
@@ -202,8 +202,8 @@ publication or final release acceptance.
 
 ### P4.3 — Final Release Candidate Acceptance
 
-Status: **Not started / blocked by remaining evidence**. P3.5b acceptance
-remains Partial, P3.5c remains incomplete, and P4.2 remains Partial with Gallery preflight
+Status: **Not started / blocked by remaining evidence**. P3.5b is complete for
+its approved scope; P3.5c remains incomplete, and P4.2 remains Partial with Gallery preflight
 NotReady. P4.3 must reconcile those boundaries before any release decision.
 
 Wait for the conclusions of P3.5 and P4.1 and the applicable P4.2 groundwork.

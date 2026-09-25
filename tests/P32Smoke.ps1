@@ -243,6 +243,9 @@ Assert-True $newMetadata.SupportsShouldProcess 'New-CfDnsRecord ShouldProcess me
 Assert-True $removeMetadata.SupportsShouldProcess 'Remove-CfDnsRecord ShouldProcess metadata is missing.'
 $setMetadata = [System.Management.Automation.CommandMetadata]::new($setCommand)
 Assert-True $setMetadata.SupportsShouldProcess 'Set-CfDnsRecord ShouldProcess metadata is missing.'
+Assert-True ($newMetadata.ConfirmImpact -eq [System.Management.Automation.ConfirmImpact]::Medium) 'New-CfDnsRecord confirmation impact drifted.'
+Assert-True ($removeMetadata.ConfirmImpact -eq [System.Management.Automation.ConfirmImpact]::High) 'Remove-CfDnsRecord confirmation impact drifted.'
+Assert-True ($setMetadata.ConfirmImpact -eq [System.Management.Automation.ConfirmImpact]::High) 'Set-CfDnsRecord confirmation impact drifted.'
 Assert-True (@($setCommand.ParameterSets.Name) -contains 'Replace' -and @($setCommand.ParameterSets.Name) -contains 'Edit') 'Set-CfDnsRecord operation parameter sets are incomplete.'
 $setReplaceAttributes = @($setCommand.Parameters['Replace'].Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] })
 $setEditAttributes = @($setCommand.Parameters['Edit'].Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] })
@@ -677,6 +680,12 @@ Assert-True ($handwrittenOutput -eq $generatedOutput) 'Set-CfDnsRecord Edit outp
 Assert-RequestFactsEqual $handwrittenFacts[0] $generatedFacts[0] 'Set-CfDnsRecord Edit'
 Assert-True ($generatedFacts[0].Method -eq 'PATCH' -and $generatedFacts[0].Body -match '"content":"198.51.100.9"') 'Set-CfDnsRecord Edit did not use PATCH/body.'
 Write-Output 'PASS Set-CfDnsRecord handwritten/generated PUT/PATCH method/path/query/headers/body/output parity'
+
+[P32MockHandler]::Reset()
+$null = @(& $setCommand -ZoneId zone -DnsRecordId record -Edit @{ content = $null } @baseArgs -Confirm:$false)
+Assert-True ([P32MockHandler]::Requests.Count -eq 1 -and [P32MockHandler]::Requests[0].Method -eq [System.Net.Http.HttpMethod]::Patch) 'Generated Set-CfDnsRecord explicit-null edit did not send one PATCH.'
+Assert-True ([P32MockHandler]::Bodies[0] -match '"content":null' -and [P32MockHandler]::Bodies[0] -notmatch '"name"') 'Generated Set-CfDnsRecord edit lost explicit-null versus omitted presence.'
+Write-Output 'PASS generated Set-CfDnsRecord edit explicit-null and omitted presence'
 
 [P32MockHandler]::Reset()
 $null = @(& $setCommand @setReplaceArgs)

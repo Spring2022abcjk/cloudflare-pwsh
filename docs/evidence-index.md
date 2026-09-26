@@ -1,5 +1,13 @@
 # 证据索引
 
+本页主要索引固定 SDK/schema 研究证据。当前阶段状态与证据边界见
+[路线图](./roadmap.md)、[P3.5a 历史只读证据](./P3.5a-live-validation.md)、
+[P3.5b 限定单记录完成证据](./P3.5b-constrained-crud-validation.md)、
+[P3.5c 证据矩阵](./P3.5c-transport-evidence-plan.md)及
+[P4.2 release checklist](./P4.2-release-checklist.md)。P3.5c 在用户接受的
+限定证据范围内 Complete，缺少真实账户证据的场景和 DNS export 差异仍明示；
+P4.2 总体 Partial，P4.3 尚未开始。
+
 ## 仓库与工作树
 
 本轮没有修改官方 SDK。`ref/api-schemas` 和 `ref/cloudflare-typescript` 原有未跟踪的研究证据文件均保留；Python 和 Go 仅以浅克隆方式加入 `ref`，用于验证性对照。

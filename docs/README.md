@@ -32,6 +32,7 @@
 - [P3.4 CI/package 总结](./P3.4-ci-packaging-summary.md)：合并后的 CI、provenance 和发布边界。
 - [P3.5a 只读 live validation](./P3.5a-live-validation.md)：12 次低频 GET、0 次变更的限定范围真实账户证据。
 - [P3.5b constrained CRUD 任务文档](./P3.5b-constrained-crud-validation.md)：批准范围内的单记录真实 CRUD、精确清理及独立的本地故障路径验证已完成。
+- [P3.5c transport evidence](./P3.5c-transport-evidence-plan.md)：限定证据范围 Complete；记录六次 GET、两次 export 对照、mock/local 验收及已知限制。
 - [P4.1 progress](./P4.1-progress.md)：五个正式 cmdlet 的 pipeline identity、help 和 candidate 状态。
 - [P4.1 manual acceptance](./P4.1-manual-acceptance.md)：P4.1 最终 acceptance 证据。
 - [P4.2 ABC integration summary](./P4.2-abc-integration-summary.md)：技术集成和 exact-HEAD 证据边界。
@@ -60,4 +61,9 @@
 
 TypeScript commit 是任务说明指定的固定基线。Python、Go 和 schema commit 已在本地记录，用于可复核的对照；它们不是 TypeScript commit 的同一发布日期快照，跨版本差异需要继续标记。
 
-ABC integration status and exact-HEAD evidence: [ABC integration summary](./P4.2-abc-integration-summary.md). Earlier branch remote runs above are historical and do not certify the ABC integration commit.
+P3.5a 为限定只读范围 Complete；P3.5b 为批准的单记录范围 Complete；P3.5c
+在用户接受的限定证据范围内 Complete，DNS export 上游原因仍未解。P4.1 为 Complete，P4.2 技术集成已完成但总体 Partial（Gallery preflight
+NotReady），P4.3 尚未开始且受剩余证据阻塞。ABC integration status and
+exact-HEAD evidence: [ABC integration summary](./P4.2-abc-integration-summary.md).
+Earlier branch remote runs above are historical and do not certify the ABC
+integration commit.

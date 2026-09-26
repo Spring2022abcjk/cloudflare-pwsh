@@ -241,6 +241,23 @@ static void TestRawTextDispatcher()
     };
     var text = dispatcher.ExecuteAsync<string>(metadata, new BoundParameters(new Dictionary<string, object?> { ["zoneId"] = "zone" })).GetAwaiter().GetResult();
     Equal("$ORIGIN example.com.", text);
+
+    // The observed export header differs from the pinned text representation.
+    // Status fallback must keep this endpoint's text parser without changing
+    // the separate binary representation contract.
+    var octetResponse = new HttpResponseMessage(HttpStatusCode.OK)
+    {
+        Content = new ByteArrayContent(Encoding.UTF8.GetBytes("$ORIGIN example.com."))
+    };
+    octetResponse.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+    var octetHandler = new SequenceHandler(octetResponse);
+    using var octetHttp = new HttpClient(octetHandler);
+    using var octetTransport = new HttpClientTransport(octetHttp);
+    var octetDispatcher = new CloudflareRuntimeDispatcher(new Uri("https://mock.test/"), octetTransport);
+    var octetText = octetDispatcher.ExecuteAsync<string>(metadata,
+        new BoundParameters(new Dictionary<string, object?> { ["zoneId"] = "zone" }))
+        .GetAwaiter().GetResult();
+    Equal("$ORIGIN example.com.", octetText);
 }
 
 static void TestBinaryDispatcher()

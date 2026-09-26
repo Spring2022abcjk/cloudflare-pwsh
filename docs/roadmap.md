@@ -115,6 +115,10 @@ through a manual workflow-dispatch entry in an isolated temporary checkout.
 PowerShell Gallery publication, real-account validation, and broader public
 admission remain later decisions.
 
+The follow-up CI trigger design for documentation-only changes is recorded in
+[CI Trigger Policy](./ci-trigger-policy.md). It is not yet implemented, so
+the current workflow still runs the complete graph for documentation commits.
+
 #### P3.4 integration closure
 
 Status: complete for the local/static release-engineering foundation. The P3.3
@@ -130,11 +134,15 @@ boundaries move to P3.5, P4.1, P4.2, and P4.3 below.
 
 ### P3.5 — Real Integration Validation
 
-Status: planned. P3.5 validates real Cloudflare account behavior after mock
+Status: active. P3.5 validates real Cloudflare account behavior after mock
 contract coverage is sufficient. Real-account tests supplement, and do not
-replace, mock tests.
+replace, mock tests. The formal public surface remains exactly the five
+cmdlets listed in P3.2; D1/D2 remain test-only.
 
 #### P3.5a — Read-only live validation
+
+Status: **Complete** for the bounded read-only scope. See
+[P3.5a live validation](./P3.5a-live-validation.md).
 
 Validate authentication, account/zone selection, read-only commands,
 pagination, response/error mapping, and the operational safety boundary using a
@@ -144,13 +152,20 @@ for fixtures or mock contracts.
 
 #### P3.5b — Constrained CRUD validation
 
-Validate the admitted DNS CRUD behavior against explicitly scoped disposable or
-reversible resources. Cover create, read, update/edit, and delete behavior,
-presence/null semantics, `ShouldProcess`/confirmation expectations, and cleanup
-or rollback evidence. The exact account and resource protocol remain a later
-execution decision.
+Status: **Complete for the explicitly approved single-record scope**. See the
+[P3.5b constrained CRUD validation task document](./P3.5b-constrained-crud-validation.md).
+One explicitly approved record was created, read, edited, read, and deleted
+on 2026-09-25; the final exact scan found zero residue. Separate local/mock
+fault injection covered the protocol's failure and `finally` cleanup paths.
 
 #### P3.5c — Transport / rate-limit / error validation
+
+Status: **Partially ready / incomplete**. Ordinary errors and passive
+rate-limit headers are observed, but real-account evidence for 429,
+multipart, binary, and 204/no-content remains missing. DNS export returned
+`application/octet-stream; charset=UTF-8` while the fixed contract remains
+`text/plain`; this is evidence insufficiency, not permission to change runtime
+or schema.
 
 Use constrained live scenarios to validate transport failures, rate limits,
 authentication failures, pagination boundaries, mutation errors, and the
@@ -159,11 +174,15 @@ observed live behavior, mock-only behavior, and unresolved semantics.
 
 ## P4 — Production Quality
 
-Status: planned. P4 prepares and accepts the first release candidate using the
+Status: active. P4 prepares and accepts the first release candidate using the
 current five-cmdlet public baseline. Broader explicit public admission is not a
 precondition for this first release candidate.
 
 ### P4.1 — Manual PowerShell UX & Help
+
+Status: **Complete**. See [P4.1 progress](./P4.1-progress.md) and [P4.1
+manual acceptance](./P4.1-manual-acceptance.md). The evidence is candidate,
+mock/local, and manual UX evidence; it is not real-account or release evidence.
 
 Review the five formal public cmdlets — `Get-CfZone`, `Get-CfDnsRecord`,
 `New-CfDnsRecord`, `Remove-CfDnsRecord`, and `Set-CfDnsRecord` — as a
@@ -174,15 +193,18 @@ local builds, generated metadata, and mock tests do not replace it.
 
 ### P4.2 — Release & Security Hardening
 
-In progress on `feature/p42-release-security`; see the [P4.2 plan](./P4.2-plan.md),
+Status: **Partial**. Technical integration is complete, but the overall phase
+remains Partial because Gallery preflight is **NotReady** while explicit
+license information is missing. See the [P4.2 ABC integration summary](./P4.2-abc-integration-summary.md),
 [security review](./P4.2-security-review.md), [release policy](./P4.2-release-policy.md),
-and [progress](./P4.2-progress.md). Establish the release evidence and controls needed before final acceptance:
-remote GitHub Actions execution evidence, security and supply-chain review,
-secret handling, release policy, version/tag/release notes, and a PowerShell
-Gallery publish dry-run. This phase may start while P3.5 and P4.1 are in
-progress, but its groundwork is not final release acceptance.
+and [release checklist](./P4.2-release-checklist.md). The phase does not claim
+publication or final release acceptance.
 
 ### P4.3 — Final Release Candidate Acceptance
+
+Status: **Not started / blocked by remaining evidence**. P3.5b is complete for
+its approved scope; P3.5c remains incomplete, and P4.2 remains Partial with Gallery preflight
+NotReady. P4.3 must reconcile those boundaries before any release decision.
 
 Wait for the conclusions of P3.5 and P4.1 and the applicable P4.2 groundwork.
 Reconcile the evidence, unresolved risks, public-surface identity, package
@@ -212,6 +234,17 @@ the system after the first release decision; it does not expand the first
 release candidate's public surface by implication.
 
 ## Deferred items
+
+### Reference checkout/cache maintenance
+
+Status: deferred. The ignored `ref/` research and pinned-schema checkouts are
+currently kept per worktree to preserve existing relative paths and evidence
+boundaries. A future maintenance task may move Git objects into an external
+shared cache while retaining independent `ref/...` checkouts per worktree.
+The migration must preserve the pinned schema revision and SHA-256, isolated
+schema-update validation, report `sourcePath` identity, candidate provenance,
+and the historical ABC evidence directory. It must not introduce one shared
+writable reference directory. See [reference checkout/cache maintenance](./ref-checkout-cache-maintenance.md).
 
 The following remain open until their dedicated evidence closes them:
 real-account acceptance, device/manual UX, remote GitHub Actions execution,

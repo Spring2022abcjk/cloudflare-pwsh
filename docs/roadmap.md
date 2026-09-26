@@ -160,17 +160,24 @@ fault injection covered the protocol's failure and `finally` cleanup paths.
 
 #### P3.5c — Transport / rate-limit / error validation
 
-Status: **Partially ready / incomplete**. Ordinary errors and passive
-rate-limit headers are observed, but real-account evidence for 429,
-multipart, binary, and 204/no-content remains missing. DNS export returned
+Status: **Complete for the owner-accepted bounded evidence scope**. Ordinary errors and passive
+rate-limit headers are observed. A separately approved six-GET P3.5c tranche
+completed on 2026-09-25 without mutation or 429, but real-account evidence for 429,
+multipart, binary, and 204/no-content remains missing. On 2026-09-26 the owner
+accepted mock/local evidence and explicit limitations for scenarios that
+cannot be safely triggered. DNS export returned
 `application/octet-stream; charset=UTF-8` while the fixed contract remains
-`text/plain`; this is evidence insufficiency, not permission to change runtime
-or schema.
+`text/plain`. Two separately authorized export GETs with different
+`Accept` headers reproduced that media type. The owner accepted this as a
+known limitation; its upstream cause remains unresolved and no runtime or
+schema change follows. See the
+[P3.5c evidence record](./P3.5c-transport-evidence-plan.md) for the
+scenario matrix, bounded results, and retained limits.
 
-Use constrained live scenarios to validate transport failures, rate limits,
-authentication failures, pagination boundaries, mutation errors, and the
-documented retry/idempotency behavior. Preserve the distinction between
-observed live behavior, mock-only behavior, and unresolved semantics.
+Any broader live validation requires a new, explicit scope for transport
+failures, rate limits, mutation errors, or retry/idempotency behavior.
+Preserve the distinction between observed live behavior, mock-only behavior,
+and unresolved semantics.
 
 ## P4 — Production Quality
 
@@ -202,9 +209,10 @@ publication or final release acceptance.
 
 ### P4.3 — Final Release Candidate Acceptance
 
-Status: **Not started / blocked by remaining evidence**. P3.5b is complete for
-its approved scope; P3.5c remains incomplete, and P4.2 remains Partial with Gallery preflight
-NotReady. P4.3 must reconcile those boundaries before any release decision.
+Status: **Not started / blocked by remaining release evidence**. P3.5b and
+P3.5c are complete only within their approved bounded scopes; P4.2 remains
+Partial with Gallery preflight NotReady. P4.3 must reconcile those retained
+limits and release blockers before any release decision.
 
 Wait for the conclusions of P3.5 and P4.1 and the applicable P4.2 groundwork.
 Reconcile the evidence, unresolved risks, public-surface identity, package
